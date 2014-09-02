@@ -15,7 +15,6 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.collections.CollectionException;
 import org.aieonf.concept.datauri.DataURI;
 import org.aieonf.concept.datauri.IDataURI;
 import org.aieonf.concept.library.CategoryAieon;
@@ -140,7 +139,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 						urlEon.setResource( datauri );
 				}
 				catch (ConceptException e) {
-					throw new CollectionException( e );
+					throw new ConceptException( e );
 				}
 			}
 			
@@ -211,7 +210,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 						urlEon.setResource( datauri );
 				}
 				catch (ConceptException e) {
-					throw new CollectionException( e );
+					throw new ConceptException( e );
 				}
 			}
 		}

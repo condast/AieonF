@@ -18,7 +18,6 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.IFixedConcept;
-import org.aieonf.concept.IFullConcept;
 import org.aieonf.concept.IRelationship;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
@@ -275,14 +274,10 @@ public class BodyFactory<T extends Object>
     BodyFactory.transfer( result, descriptor, true );
     result.set( IDescriptor.Attributes.CLASS.toString(), result.getClass().getName() );
     if((( descriptor instanceof IFixedConcept ) == false ) ||
-    	(( result instanceof IFullConcept ) == false ))
+    	(( result instanceof IFixedConcept ) == false ))
     	return result;
     IFixedConcept fixed = ( IFixedConcept )descriptor;
-    IFullConcept full = ( IFullConcept )result;
-    List<IRelationship> relationships = fixed.getRelationships();
-    for( IRelationship relationship: relationships )
-      full.addRelationship( relationship );
-    return full;
+    return fixed;
   }
   
   /**

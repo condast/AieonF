@@ -37,11 +37,11 @@ public class ConceptWeightComparator<T extends IDescriptor> implements Comparato
     if( fConcept.equals( sConcept ) == false )
       return 0;
 
-    String weight1 = fConcept.get( IExtendedConcept.Attribute.Weight.name() );
+    String weight1 = fConcept.get( IExtendedConcept.Attribute.WEIGHT.toString() );
     if( weight1 == null )
       weight1 = "0";
 
-    String weight2 = sConcept.get( IExtendedConcept.Attribute.Weight.name() );
+    String weight2 = sConcept.get( IExtendedConcept.Attribute.WEIGHT.toString() );
     if( weight2 == null )
       weight2 = "0";
 

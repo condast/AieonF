@@ -20,8 +20,6 @@ import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.ConceptInstance;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.EmbeddedRelationship;
-import org.aieonf.concept.core.RelationshipInstance;
 import org.aieonf.concept.persist.ConceptPersistException;
 
 /**
@@ -243,11 +241,7 @@ public class StoreConcept
   throws ConceptPersistException, ConceptException
   {
     setAttributes( doc, parent, relation );
-    IDescriptor embedded;
-    if( EmbeddedRelationship.isEmbedded( relation ))
-    	embedded = relation.getConceptDescriptor();
-    else
-    	embedded = relation.getConceptDescriptor();
+    IDescriptor embedded = relation.getConceptDescriptor();
     Element embeddedRoot  =
       doc.createElement( IDescriptor.DESCRIPTOR );
     parent.appendChild( embeddedRoot );
@@ -318,24 +312,11 @@ public class StoreConcept
    */
   protected static IDescriptor createMinimalDescriptor( IDescriptor descriptor, String[] attrs ) throws ConceptException
   {
-  	IFullConcept concept = new ConceptInstance();
+  	IFixedConcept concept = new ConceptInstance();
   	setValues( descriptor, concept, attrs );
   	if(!( descriptor instanceof IFixedConcept ))
   		return concept;
-  	IFixedConcept fixed = ( IFixedConcept )descriptor;
-  	IRelationship target;
-  	for( IRelationship relation: fixed.getRelationships() ){
-    	target = new RelationshipInstance();
-  		if(!( relation instanceof EmbeddedRelationship )){
-  			setValues( relation, target, attrs );
-  			concept.addRelationship( target );
-  		}else{
-  			EmbeddedRelationship er = ( EmbeddedRelationship )relation;
-  			setValues( er.getConceptDescriptor(), target, attrs );
-  			concept.addRelationship( target );
-  		}
-  	}
-  	return concept;
+ 	return concept;
   }
   
   /**

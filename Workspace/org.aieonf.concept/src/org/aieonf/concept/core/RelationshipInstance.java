@@ -125,9 +125,6 @@ public class RelationshipInstance extends MinimalConcept
   @Override
 	public IDescriptor getConceptDescriptor()
   {
-  	if( super.getBoolean( EmbeddedRelationship.EMBEDDED ))
-  		return this;
-
   	Descriptor descriptor = new Descriptor( this );
     descriptor.setVersion( this.getVersion() );
     return descriptor;
@@ -269,26 +266,6 @@ public class RelationshipInstance extends MinimalConcept
   	return Descriptor.isValid( relationship.getConceptDescriptor() );
   }
   
-  /**
-   * Removes all the relationships with the given descriptor of the given concept.
-   * Returns a list of relationships of the removed concept
-   *
-   * @param concept IFullConcept
-   * @param descriptor IDescriptor
-   * @return List
-   * @throws ConceptException
-   */
-  public final static List<IRelationship> removeRelationships( IFullConcept concept, IDescriptor descriptor )
-    throws ConceptException
-  {
-    List<IRelationship> relations = concept.getRelationships();
-    for( IRelationship relation: relations ){
-      if( relation.getConceptDescriptor().equals( descriptor ))
-    	concept.removeRelationship( relation );
-    }
-    return relations;
-  }
-
   /**
    * Return the concept descriptors of the relations of the given concept
    *

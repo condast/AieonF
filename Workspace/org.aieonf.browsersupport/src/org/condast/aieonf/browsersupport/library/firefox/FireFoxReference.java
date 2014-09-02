@@ -11,9 +11,9 @@ import org.aieonf.concept.core.ConceptInstance;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.datauri.IDataURI;
-import org.aieonf.concept.wrapper.FullConceptWrapper;
+import org.aieonf.concept.wrapper.ConceptWrapper;
 
-public class FireFoxReference extends FullConceptWrapper implements IDataResource
+public class FireFoxReference extends ConceptWrapper implements IDataResource
 {
 	
 	/**

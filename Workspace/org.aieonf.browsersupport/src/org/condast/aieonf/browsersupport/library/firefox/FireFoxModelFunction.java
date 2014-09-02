@@ -2,10 +2,10 @@ package org.condast.aieonf.browsersupport.library.firefox;
 
 import java.net.URI;
 
-import org.aieonf.concept.IConcept;
-import org.aieonf.collections.CollectionException;
 import org.aieonf.collections.connector.AbstractFileConnector;
+import org.aieonf.concept.IConcept;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelFunction;
 import org.aieonf.model.IModelLeaf;
@@ -56,7 +56,7 @@ public class FireFoxModelFunction extends AbstractFunction<ILoaderAieon, IModelP
 	 * @param reference
 	 * @throws DatabaseException
 	 */
-	public static void fillLoader( ILoaderAieon loader ) throws CollectionException{
+	public static void fillLoader( ILoaderAieon loader ) throws ConceptException{
 		fillLoader( loader, DEFAULT_FIREFOX_IDENTIFIER, DEFAULT_FIREFOX_PROVIDER_NAME, DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
 	}
 

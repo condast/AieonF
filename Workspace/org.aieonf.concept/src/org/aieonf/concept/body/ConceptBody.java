@@ -63,16 +63,6 @@ public class ConceptBody<T extends IDescriptor>
 					throw new ConceptException( descriptor,
 							ConceptException.S_TRANSFORMATION_FAILED_MSG );
 			}
-
-			//Add relationships if required
-			if(( newConcept instanceof IFixedConcept ) == false )
-				return newConcept;
-
-			IFixedConcept fixedConcept = ( IFixedConcept )descriptor;
-			IFullConcept newFixedConcept = ( IFullConcept )newConcept;
-			List<IRelationship> relations = fixedConcept.getRelationships();
-			for( IRelationship relation: relations )
-				newFixedConcept.addRelationship(relation );
 			return newConcept;
 		}
 		catch( Exception e ){
