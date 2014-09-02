@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AieonF Graph
+Bundle-SymbolicName: org.aieonf.graph
+Bundle-Version: 1.0.0.v20140722
+Bundle-Vendor: AieonF
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.aieonf.graph,
+ org.aieonf.graph.context,
+ org.aieonf.graph.controller,
+ org.aieonf.template.graph
+Import-Package: org.aieonf.concept,
+ org.aieonf.concept.body,
+ org.aieonf.concept.context,
+ org.aieonf.concept.core,
+ org.aieonf.concept.implicit,
+ org.aieonf.concept.library,
+ org.aieonf.concept.loader,
+ org.aieonf.model,
+ org.aieonf.model.builder,
+ org.aieonf.template,
+ org.aieonf.template.builder,
+ org.aieonf.template.context,
+ org.aieonf.template.graph,
+ org.aieonf.util.filter,
+ org.aieonf.util.graph,
+ org.aieonf.util.logger

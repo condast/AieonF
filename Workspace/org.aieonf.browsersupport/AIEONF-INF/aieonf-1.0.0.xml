@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<application version="0" name="saight" domain="org.condast.saight" id="6B2F71AFDFCD4947815FA4CDE5C5F392E4CD9463A3F74ACD954CCB0E49E0ED9F04">
+  <model id="org.saight.browsersupport" name="Browser Support">
+    <context name="Links">
+		<version type="int">1</version>
+		<source>org.condast.aieonf.browsersupport/Template/Template.xml</source>
+		<read-only>true</read-only>
+		<id type="string" regex="[a..z\\.]*[:]//d">org.condast.concept.template:-4914886299605302745</id>
+		<scope type="enum">Application</scope>
+		<organisation>Condast</organisation>
+		<website>"www.saight.com"</website>
+		<author>Kees Pieters</author>
+		<copyright>2004-2014 condast.com</copyright>
+		<license>Apache 2.0</license>
+	  </context>
+	  <children>
+		  <model>
+		  	<domain>
+		       <domain type="string" use="mandatory" create="template">org.aieonf.saight.domain.Browsersupport</domain>
+		       <short-name type="string" use="mandatory" create="template">BrowserSupport</short-name>
+		    </domain>
+		  </model>
+          <model id="org.aieonf.browser.chromium">
+            <loader>
+              <read-only>true</read-only>
+              <creatable>true</creatable>
+            </loader>
+          </model>
+          <model id="org.aieonf.browser.firefox">
+            <loader>
+              <read-only>true</read-only>
+              <creatable>true</creatable>
+            </loader>
+          </model>
+          <model id="org.aieonf.browser.ie">
+            <loader>
+              <read-only>true</read-only>
+              <creatable>true</creatable>
+            </loader>
+          </model>
+		  <model>
+		    <category>
+		      <category init="clear" use="mandatory">{Category}</category>
+		    </category>
+		    <children>
+		       <model>
+				 <url id="descriptor">
+		 		   <version type="int" use="mandatory" create="auto">1</version>
+			 	   <description type="string" use="optional">{Description}</description>
+				   <url type="url" use="mandatory">{http://www.url.org}</url>
+                 <scope type="enum" use="mandatory">{Scope}</scope>
+ 		         </url>
+ 		       </model>
+ 		     </children>  
+		 </model>
+	 </children>
+  </model>
+</application>
