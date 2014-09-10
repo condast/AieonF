@@ -3,6 +3,7 @@ package org.condast.aieonf.browsersupport.library.chromium;
 import java.net.URI;
 
 import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelFunction;
@@ -12,7 +13,7 @@ import org.aieonf.model.function.AbstractFunction;
 import org.aieonf.util.Utils;
 import org.condast.aieonf.osgi.utils.ProjectFolderUtils;
 
-public class ChromiumModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IConcept>>> implements IModelFunction<ILoaderAieon, IModelLeaf<IConcept>> {
+public class ChromiumModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>>> implements IModelFunction<ILoaderAieon, IModelLeaf<IDescriptor>> {
 
 	//Default identifier
 	public static final String DEFAULT_IDENTIFIER =
@@ -41,7 +42,7 @@ public class ChromiumModelFunction extends AbstractFunction<ILoaderAieon, IModel
 	}
 
 	@Override
-	protected IModelProvider<ILoaderAieon,IModelLeaf<IConcept>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
+	protected IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
 		ILoaderAieon baseLoader = getDefaultLoader(leaf);
 		URI uri = ProjectFolderUtils.appendToUserDir(DEFAULT_CHROMIUM_ROOT + "//" + DEFAULT_BOOKMARKS_FILE, false );
 		baseLoader.set( IConcept.Attributes.SOURCE, uri.toString() );
@@ -50,7 +51,7 @@ public class ChromiumModelFunction extends AbstractFunction<ILoaderAieon, IModel
 		IModelLeaf<ILoaderAieon> model = getModelForLoader(baseLoader, leaf);
 		if( Utils.isNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
-		IModelProvider<ILoaderAieon,IModelLeaf<IConcept>> gdb = new ChromiumBookmarkProvider<ILoaderAieon>( super.getAieon(), model );
+		IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider<ILoaderAieon>( super.getAieon(), model );
 		return gdb;
 	}
 }

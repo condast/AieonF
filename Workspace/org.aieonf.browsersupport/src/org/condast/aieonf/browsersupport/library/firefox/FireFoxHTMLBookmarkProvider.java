@@ -24,17 +24,17 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
 import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
-import org.aieonf.util.filter.IFilter;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 
-public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IConcept, IModelLeaf<IConcept>>
+public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>>
 {
 	private int depth = 0;
 	private boolean category = false;
 	private FireFoxReference currentURL;
-	private Stack<IModelNode<IConcept>> stack;
+	private Stack<IModelNode<IDescriptor>> stack;
 
 	public FireFoxHTMLBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
 	{
@@ -46,14 +46,14 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 	}
 
 	@Override
-	public Collection<IModelLeaf<IConcept>> onSearch(IFilter<IDescriptor> filter) {
-		Collection<IModelLeaf<IConcept>> results = super.getModels();
-		stack = new Stack<IModelNode<IConcept>>();
+	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor> filter) {
+		Collection<IModelLeaf<IDescriptor>> results = super.getModels();
+		stack = new Stack<IModelNode<IDescriptor>>();
 		CategoryAieon root = new CategoryAieon();
 		root.setHidden( true );
 		root.setReadOnly( true );
 		root.setCategory( "root" );
-		stack.push( new Model<IConcept>( root ));
+		stack.push( new Model<IDescriptor>( root ));
 
 		URI uri = URI.create( super.getManifest().getSource());
 		File file = new File( uri );
@@ -108,7 +108,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 		if( depth == 0 )
 			return;
 
-		IModelNode<IConcept> cat;
+		IModelNode<IDescriptor> cat;
 		if( category ){
 			cat = this.createCategoryEon( split[ 0 ], split[ 1 ] );
 			if( cat != null )
@@ -119,7 +119,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 			this.currentURL = urlEon;
 
 		if(( this.currentURL != null ) && ( split[ 0 ].startsWith( "Txt" ) == true )){
-			cat = ( IModelNode<IConcept> )this.stack.lastElement();
+			cat = ( IModelNode<IDescriptor> )this.stack.lastElement();
 			urlEon = this.currentURL;
 
 			String[] split1 = split[ 1 ].trim().split( "[:]" );
@@ -158,7 +158,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 	 * @return CategoryEon
 	 * @throws Exception
 	 */
-	protected IModelNode<IConcept> createCategoryEon( String split0, String split1 )
+	protected IModelNode<IDescriptor> createCategoryEon( String split0, String split1 )
 			throws Exception
 	{
 		if(( split0.startsWith( "Txt" ) == false ) || ( split1.trim().startsWith( "\\" )))
@@ -176,7 +176,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 
 		cat.set( IConcept.Attributes.SOURCE.toString(), super.getManifest().getIdentifier() );
 		BodyFactory.sign( super.getManifest(), cat );
-		IModelNode<IConcept> model = new Model<IConcept>( cat );
+		IModelNode<IDescriptor> model = new Model<IDescriptor>( cat );
 		stack.push( model );
 		return model;
 	}
@@ -215,7 +215,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 			}
 		}
 		super.fill( urlEon );
-		super.getModels().add( new ModelLeaf<IConcept>( urlEon ));
+		super.getModels().add( new ModelLeaf<IDescriptor>( urlEon ));
 		return urlEon;
 	}
 }

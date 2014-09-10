@@ -23,18 +23,18 @@ import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.library.FileModel;
 import org.aieonf.template.provider.AbstractModelProvider;
-import org.aieonf.util.filter.IFilter;
 import org.aieonf.util.logger.*;
 
 /**
  * This class overrides the default concept database in order to
  * exploit a unique key within the scope of this package
  */
-public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IConcept, IModelLeaf<IConcept>>
+public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IDescriptor, IModelLeaf<IDescriptor>>
 {
-	private IFilePersistence<IModelLeaf<IConcept>> persistence;
+	private IFilePersistence<IModelLeaf<IDescriptor>> persistence;
 	
 	private File root;
 	
@@ -59,7 +59,6 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 		persistence.open();
 	}
 	
-	
 	@Override
 	public void close() {
 		persistence.close();
@@ -67,10 +66,10 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 	}
 
 	@Override
-	public Collection<IModelLeaf<IConcept>> onSearch(IFilter<IDescriptor> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor> filter) {
 		FileModel model = new FileModel( root );
 		this.parseFileModel(model);
-		return new ArrayList<IModelLeaf<IConcept>>();
+		return new ArrayList<IModelLeaf<IDescriptor>>();
 	}
 
 	protected void parseFileModel( FileModel model ){
@@ -90,7 +89,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 	 */
 	protected void setFileEon( FileModel model ) throws Exception
 	{
-		IConcept fileEon = model.getDescriptor();
+		IConcept fileEon = (IConcept) model.getDescriptor();
 		logger.trace( "Concept found: " + fileEon.getName() );
 		fileEon.setVersion(1);
 		fileEon.setReadOnly( true );
@@ -135,7 +134,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 	 * @param model IConcept
 	 * @return boolean
 	 */
-	public static boolean isValidModel( IModelLeaf<IConcept> model )
+	public static boolean isValidModel( IModelLeaf<IDescriptor> model )
 	{
 		Logger logger = Logger.getLogger( IEFavoritesProvider.class );
 		if(!( model instanceof FileModel))
@@ -154,7 +153,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 		return false;
 	}
 
-	protected IModelLeaf<IConcept> getDirectoryAieon(File directory)
+	protected IModelLeaf<IDescriptor> getDirectoryAieon(File directory)
 	{
 		FileModel fileAieon = new FileModel( directory );
 		return fileAieon;

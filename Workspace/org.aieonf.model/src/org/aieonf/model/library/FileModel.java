@@ -24,7 +24,7 @@ import org.aieonf.util.hex.HexConvertor.Convert;
 /**
  * Create a concept, using a properties file
  */
-public class FileModel extends Model<IConcept> implements IDataResource
+public class FileModel extends Model<IDescriptor> implements IDataResource
 {
 	public static final String FILE = "File";
 

@@ -26,12 +26,12 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
 import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
-import org.aieonf.util.filter.IFilter;
 import org.aieonf.util.parser.ParseException;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
-public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IConcept, IModelLeaf<IConcept>>
+public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>>
 {
 	private Connection connection;
 
@@ -65,7 +65,7 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 	}
 
 	@Override
-	public Collection<IModelLeaf<IConcept>> onSearch(IFilter<IDescriptor> filter) throws ParseException {
+	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor> filter ) throws ParseException {
 		{
 			super.getModels().clear();
 			Map<Integer, FireFoxReference>resources;
@@ -73,8 +73,11 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 			try {
 				places = this.getPlaces();
 				resources = this.getResources();
-				super.getModels().addAll( this.getBookmarks( places, resources ));
-				super.getModels().add( this.getHistory());
+				
+				super.getModels().addAll( this.getBookmarks( places, resources, filter ));
+				IModelLeaf<IDescriptor> result = this.getHistory(filter);
+				if( result != null )
+					super.getModels().add( result );
 				//super.getModels().add( this.getHistoryVisits());
 				//super.getModels().add( this.getPopularSites() );
 			}
@@ -159,11 +162,11 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected Collection<IModelNode<IConcept>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources ) throws ConceptException{
+	protected Collection<IModelNode<IDescriptor>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources, IModelFilter<IDescriptor> filter ) throws ConceptException{
 		String query_bookmarks = "SELECT * FROM moz_bookmarks";
 
-		Collection<IModelLeaf<IConcept>> results = new ArrayList<IModelLeaf<IConcept>>();
-		Map<Integer, IModelNode<IConcept>> categories = new TreeMap<Integer, IModelNode<IConcept>>();
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
+		Map<Integer, IModelNode<IDescriptor>> categories = new TreeMap<Integer, IModelNode<IDescriptor>>();
 		try
 		{
 			Statement statement = connection.createStatement();
@@ -180,9 +183,13 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 					if( CategoryAieon.isCategory( concept )){
 						category = new CategoryAieon( concept );
 						category.setProvider( super.getManifest().getIdentifier() );
-						categories.put( BookmarkAieon.getPrimKey( category ), new Model<IConcept>(category ));
-					}else
-						results.add(new ModelLeaf<IConcept>(concept));
+						if( filter.accept( category ))
+							categories.put( BookmarkAieon.getPrimKey( category ), new Model<IDescriptor>(category ));
+					}else{
+						IModelLeaf<IDescriptor> child = new ModelLeaf<IDescriptor>(concept);
+						if( filter.acceptChild(child))
+							results.add( child );
+					}
 				}
 				catch (ConceptException e) {
 					e.printStackTrace();
@@ -192,7 +199,7 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 			BookmarkAieon aieon;
 			PlacesAieon placesAieon;
 			FireFoxReference faviconAieon;
-			for( IModelLeaf<IConcept> result: results ){
+			for( IModelLeaf<IDescriptor> result: results ){
 				aieon = ( BookmarkAieon )result.getDescriptor();
 				String fk = aieon.getFK();
 
@@ -208,7 +215,7 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 				faviconAieon = resources.get( placesAieon.getFavIconID() );
 				if(( faviconAieon != null ) && ! Descriptor.isNull( faviconAieon.getSource()))
 					aieon.fill("ICON", faviconAieon.getSource() );
-				IModelNode<IConcept> cat = categories.get( Integer.valueOf( aieon.getParentID()));
+				IModelNode<IDescriptor> cat = categories.get( Integer.valueOf( aieon.getParentID()));
 				if( cat == null )
 					continue;
 
@@ -228,9 +235,9 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IConcept> getHistory() throws ConceptException{
+	protected IModelLeaf<IDescriptor> getHistory( IModelFilter<IDescriptor> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places, moz_inputhistory WHERE moz_places.id = moz_inputhistory.place_id";
-		return this.getConceptsFromQuery("Input History", query_inputhistory);
+		return this.getConceptsFromQuery("Input History", query_inputhistory, filter );
 	}
 
 	/**
@@ -239,9 +246,9 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IConcept> getPopularSites() throws ConceptException{
+	protected IModelLeaf<IDescriptor> getPopularSites( IModelFilter<IDescriptor> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places ORDER by visit_count DESC LIMIT 20";
-		return this.getConceptsFromQuery("Most Popular", query_inputhistory);
+		return this.getConceptsFromQuery("Most Popular", query_inputhistory, filter );
 	}
 
 	/**
@@ -250,8 +257,8 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IConcept> getConceptsFromQuery( String title, String query ) throws ConceptException{
-		IModelNode<IConcept> model = null;
+	protected IModelLeaf<IDescriptor> getConceptsFromQuery( String title, String query, IModelFilter<IDescriptor> filter ) throws ConceptException{
+		IModelNode<IDescriptor> model = null;
 		try
 		{
 			Statement statement = connection.createStatement();
@@ -261,14 +268,18 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 			CategoryAieon category = new CategoryAieon( title );
 			super.fill(category);
 			category.setProvider( super.getManifest().getIdentifier() );
-			model = new Model<IConcept>( category );
+			model = new Model<IDescriptor>( category );
+			if( !filter.accept( model ))
+				return null;
 			while(rs.next())
 			{
 				try {
 					concept = new PlacesAieon();
 					concept.fill(rs);
 					super.fill(concept);
-					model.addChild( new ModelLeaf<IConcept>( concept ));
+					IModelLeaf<IDescriptor> child = new ModelLeaf<IDescriptor>( concept ); 
+					if( filter.acceptChild(child))
+						model.addChild( child );
 				}
 				catch (ConceptException e) {
 					e.printStackTrace();
@@ -288,10 +299,10 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IConcept> getHistoryVisits() throws ConceptException{
+	protected IModelLeaf<IDescriptor> getHistoryVisits() throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places WHERE moz_places.id = ( SELECT place_id FROM moz_historyvisits )";
 
-		IModelNode<IConcept> model;
+		IModelNode<IDescriptor> model;
 		try
 		{
 			Statement statement = connection.createStatement();
@@ -301,14 +312,14 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 			CategoryAieon category = new CategoryAieon("History Visits");
 			super.fill(category);
 			category.setProvider( super.getManifest().getIdentifier() );
-			model = new Model<IConcept>( category );
+			model = new Model<IDescriptor>( category );
 			while(rs.next())
 			{
 				try {
 					concept = new PlacesAieon();
 					concept.fill(rs);
 					super.fill(concept);
-					model.addChild( new ModelLeaf<IConcept>( concept ));
+					model.addChild( new ModelLeaf<IDescriptor>( concept ));
 				}
 				catch (ConceptException e) {
 					e.printStackTrace();

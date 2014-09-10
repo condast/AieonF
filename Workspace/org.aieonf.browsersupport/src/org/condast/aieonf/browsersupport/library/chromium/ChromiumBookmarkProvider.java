@@ -30,13 +30,13 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
 import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.aieonf.util.StringStyler;
 import org.aieonf.util.Utils;
-import org.aieonf.util.filter.IFilter;
 import org.aieonf.util.parser.ParseException;
 
-public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IConcept, IModelLeaf<IConcept>> 
+public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>> 
 {
 	public static final String S_ROOTS = "roots";
 	public static final String S_BOOKMARK_BAR = "bookmark_bar";
@@ -53,17 +53,16 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 	}
 
 	@Override
-	public Collection<IModelLeaf<IConcept>> onSearch( IFilter<IDescriptor> filter) {
-		super.setFilter(filter);
+	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor> filter) {
 		try {
-			parseTree();
+			parseTree( filter );
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return super.getModels();
 	}
 
-	public void parseTree() throws ParseException{
+	private void parseTree( IModelFilter<IDescriptor> filter) throws ParseException{
 		ObjectMapper m = new ObjectMapper();
 		JsonNode rootNode;
 		URI uri = super.getManifest().getURI();
@@ -71,7 +70,7 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 		try {
 			rootNode = m.readValue( file, JsonNode.class);
 			JsonNode roots = rootNode.path( S_ROOTS );	
-			this.parseTree( null, roots );
+			this.parseTree( null, roots, filter );
 		}
 		catch (IOException e) {
 			throw new ParseException( e );
@@ -81,15 +80,15 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 		}
 	}
 
-	public void parseTree( IModelNode<IConcept> leaf, JsonNode node ) throws ParseException, ConceptException{
-		Collection<IModelLeaf<IConcept>> models = super.getModels();
-		if(( leaf != null ) && ( super.getFilter().accept( leaf )))
+	private void parseTree( IModelNode<IDescriptor> leaf, JsonNode node, IModelFilter<IDescriptor> filter ) throws ParseException, ConceptException{
+		Collection<IModelLeaf<IDescriptor>> models = super.getModels();
+		if(( leaf != null ) && ( filter.accept( leaf )))
 			models.add( leaf );
 
 		String type = node.path("type").textValue();
 		ChromiumAieon.Types ctype = ( Utils.isNull( type )? ChromiumAieon.Types.OTHER: ChromiumAieon.Types.valueOf( StringStyler.styleToEnum( type )));
-		IModelNode<IConcept> parent = leaf;
-		IModelLeaf<IConcept> model = null;
+		IModelNode<IDescriptor> parent = leaf;
+		IModelLeaf<IDescriptor> model = null;
 		ChromiumAieon aieon = new ChromiumAieon( ctype );
 		aieon.fill(node );
 		fill(aieon);
@@ -97,23 +96,24 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 
 		switch( ctype ){
 		case FOLDER:
-			parent = new Model<IConcept>( new CategoryAieon( aieon ));
+			parent = new Model<IDescriptor>( new CategoryAieon( aieon ));
 			model = parent;
-			models.add( model );
+			if( filter.accept( model ))
+				models.add( model );
 			break;
 		case URL:
-			model = new ModelLeaf<IConcept>( aieon );
-			if( parent != null )
+			model = new ModelLeaf<IDescriptor>( aieon );
+			if(( parent != null ) && ( filter.acceptChild(model )))
 				parent.addChild( model );
 			break;
 		default:
-			model = new Model<IConcept>( aieon );
+			model = new Model<IDescriptor>( aieon );
 			break;
 		}
 		Iterator<JsonNode> iterator = node.iterator();
 		while( iterator.hasNext() ){
 			JsonNode child = iterator.next();
-			this.parseTree(parent, child );
+			this.parseTree(parent, child, filter );
 		}
 	}
 
@@ -163,10 +163,10 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 	 * @param concept
 	 * @throws ConceptException
 	 */
-	protected void fill( IConcept concept ) throws ConceptException{
+	protected void fill( IDescriptor concept ) throws ConceptException{
 		try {
 			ILoaderAieon manifest = super.getManifest();
-			IDFactory( concept );
+			IDFactory( (IConcept) concept );
 			concept.setProvider( manifest.getIdentifier() );
 			concept.setProviderName( manifest.getProviderName() );
 			concept.set( IConcept.Attributes.SOURCE.name(), manifest.getIdentifier() );

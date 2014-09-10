@@ -1,7 +1,6 @@
 package org.aieonf.concept.filter;
 
 import org.aieonf.concept.IDescribable;
-import org.aieonf.util.StringStyler;
 import org.aieonf.util.filter.FilterException;
 import org.aieonf.util.filter.HierarchicalFilter;
 import org.aieonf.util.filter.IFilter;
@@ -9,26 +8,9 @@ import org.aieonf.util.filter.WildcardFilter;
 
 public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends HierarchicalFilter<T>
 {
-	public enum HierarchyRules{
-		ALLPARENTS,
-		ALLCHILDREN,
-		AS_IS;
-
-		/* (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return StringStyler.prettyString( super.toString() );
-		}
-	}
-	private HierarchyRules rule;
-	
 	private String defaultParentRefVal;
 	private String defaultChildRefVal;
 	
-
 	public HierarchicalAttributeFilter(AttributeFilter<T> parentFilter, AttributeFilter<T> childFilter)
 			throws FilterException
 	{
@@ -39,22 +21,12 @@ public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends Hier
 			IFilter<T> childFilter) throws FilterException
 	{
 		super(chainRule, parentFilter, childFilter);
-		rule = HierarchyRules.AS_IS;
 	}
 
 	public HierarchicalAttributeFilter(HierarchyRules rule,
 			IFilter<T> parentFilter, IFilter<T> childFilter) throws FilterException
 	{
 		this( Rules.OrChain, parentFilter, childFilter);
-		this.rule = rule;
-	}
-
-	/**
-	 * @return the rule
-	 */
-	public final HierarchyRules getHierarchyRule()
-	{
-		return rule;
 	}
 
 	/**
@@ -62,7 +34,7 @@ public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends Hier
 	 */
 	public final void setHierarchyRule(HierarchyRules rule)
 	{
-		this.rule = rule;
+		super.setHierarchyRule(rule);
 		this.setFiltersForRule();
 	}
 
@@ -71,7 +43,7 @@ public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends Hier
 		this.defaultParentRefVal = parentFilter.refVal;
 		AttributeFilter<T> childFilter = ( AttributeFilter<T> )super.getChildFilter();
 		this.defaultChildRefVal = childFilter.refVal;
-		switch( rule ){
+		switch( super.getHierarchyRule()){
 			case ALLPARENTS:
 				parentFilter.setRefVal( WildcardFilter.S_ALL );
 				break;

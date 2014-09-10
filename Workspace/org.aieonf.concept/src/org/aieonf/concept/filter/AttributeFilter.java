@@ -2,6 +2,7 @@ package org.aieonf.concept.filter;
 
 //Condast imports
 import org.aieonf.concept.*;
+import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.util.filter.*;
 import org.aieonf.util.logger.Logger;
 
@@ -79,9 +80,9 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
    * @param refKey String
    * @throws FilterException
   */
-  public AttributeFilter( Rules rule, IDescriptor.Attributes refKey ) throws FilterException
+  public AttributeFilter( Rules rule, Enum<?> refKey ) throws FilterException
   {
-    this( rule, refKey.toString() );
+    this( rule, ConceptBase.getAttributeKey( refKey ));
     logger = Logger.getLogger( this.getClass() );
   }
 
@@ -109,7 +110,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
    * @param refVal String
    * @throws FilterException
   */
-  public AttributeFilter( Rules rule, IDescriptor.Attributes refKey, String refVal )
+  public AttributeFilter( Rules rule, Enum<?> refKey, String refVal )
     throws FilterException
   {
     this( rule, refKey );
@@ -143,7 +144,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
    * @param refVal String
    * @throws FilterException
   */
-  public AttributeFilter( Rules rule, String name, IDescriptor.Attributes refKey, String refVal )
+  public AttributeFilter( Rules rule, String name, Enum<?> refKey, String refVal )
     throws FilterException
   {
     this( rule, name, refKey.toString() );

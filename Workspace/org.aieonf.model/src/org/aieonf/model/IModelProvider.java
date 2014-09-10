@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.util.filter.IFilter;
+import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.util.parser.ParseException;
 
 public interface IModelProvider<T extends IDescriptor, U extends Object> {
@@ -23,7 +23,7 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 
 	public Collection<U> get( IDescriptor descriptor ) throws ParseException;
 
-	public Collection<U> search( IFilter<IDescriptor> filter ) throws ParseException;
+	public Collection<U> search( IModelFilter<IDescriptor> filter ) throws ParseException;
 	
 	/**
 	 * Deactivate the function

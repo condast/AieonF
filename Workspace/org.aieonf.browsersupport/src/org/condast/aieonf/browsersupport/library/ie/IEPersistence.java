@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.aieonf.collections.CollectionException;
 import org.aieonf.collections.persistence.AbstractFilePersistence;
 import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.datauri.IDataResource;
@@ -30,7 +31,7 @@ public class IEPersistence extends AbstractFilePersistence
 
 
 	@Override
-	protected void fillModel(IModelLeaf<IConcept> model, InputStream in)
+	protected void fillModel(IModelLeaf<IDescriptor> model, InputStream in)
 			throws IOException {
 		String str = IOUtils.toString( in, "UTF-8" );
 
@@ -51,7 +52,7 @@ public class IEPersistence extends AbstractFilePersistence
 	 */
 	protected void setURI( FileModel model, String resourceString ) throws CollectionException
 	{
-		IConcept fileEon = model.getDescriptor();
+		IConcept fileEon = (IConcept) model.getDescriptor();
 		if( model.getFile().isDirectory() == true ){
 			model.setSource( null );
 			return;

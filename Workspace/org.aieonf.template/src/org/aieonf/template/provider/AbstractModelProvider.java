@@ -11,14 +11,14 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.filter.DescriptorFilter;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
-import org.aieonf.util.filter.IFilter;
+import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
+import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.util.parser.ParseException;
 
 public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends IDescriptor,V extends IDescribable<U>> implements IModelProvider<T,V> {
@@ -32,7 +32,6 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 
 	private IModelLeaf<T> model;
 	private ManifestAieon manifest;
-	private IFilter<? extends IDescribable<?>> filter;
 	
 	private IContextAieon context;
 
@@ -48,16 +47,8 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 		return manifest;
 	}
 
-	protected IFilter<? extends IDescribable<?>> getFilter() {
-		return filter;
-	}
-
 	protected Collection<V> getModels() {
 		return models;
-	}
-
-	protected void setFilter(IFilter<? extends IDescribable<?>> filter) {
-		this.filter = filter;
 	}
 
 	public void addListener( IModelBuilderListener listener ){
@@ -105,17 +96,17 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 
 	@Override
 	public Collection<V> get(IDescriptor descriptor) throws ParseException {
-		IFilter<IDescriptor> flt = new DescriptorFilter<IDescriptor>( DescriptorFilter.Rules.Equals, descriptor );
+		IModelFilter<IDescriptor> flt = new HierarchicalModelDescriptorFilter<IDescriptor>( descriptor );
 		return this.search(flt);
 	}
 
-	protected abstract Collection<V> onSearch(IFilter<IDescriptor> filter) throws ParseException;
+	protected abstract Collection<V> onSearch(IModelFilter<IDescriptor> filter) throws ParseException;
 
 	@Override
-	public Collection<V> search(IFilter<IDescriptor> filter) throws ParseException {
+	public Collection<V> search(IModelFilter<IDescriptor> filter) throws ParseException {
 		if( !open )
 			throw new ParseException( S_ERR_PROVIDER_NOT_OPEN );
-		models = onSearch(filter);
+		models = onSearch( filter);
 		return models;
 	}
 

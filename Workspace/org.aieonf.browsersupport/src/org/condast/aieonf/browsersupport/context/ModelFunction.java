@@ -1,6 +1,7 @@
 package org.condast.aieonf.browsersupport.context;
 
 import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelFunction;
@@ -11,7 +12,7 @@ import org.condast.aieonf.browsersupport.library.chromium.ChromiumModelFunction;
 import org.condast.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.condast.aieonf.browsersupport.library.ie.IEFavoritesFunction;
 
-public class ModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IConcept>>> implements IModelFunction<ILoaderAieon,IModelLeaf<IConcept>>{
+public class ModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>>> implements IModelFunction<ILoaderAieon,IModelLeaf<IDescriptor>>{
 
 	private ChromiumModelFunction cmf;
 	private FireFoxModelFunction ffmf;
@@ -33,7 +34,7 @@ public class ModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider
 	}
 
 	@Override
-	protected IModelProvider<ILoaderAieon,IModelLeaf<IConcept>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
+	protected IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
 		CombinedProvider<ILoaderAieon> provider = new CombinedProvider<ILoaderAieon>( super.getAieon(), leaf );
 		if( cmf.canProvide(leaf))
 			provider.addProvider( cmf.getFunction(leaf));
