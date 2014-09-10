@@ -8,7 +8,6 @@ Eclipse-BuddyPolicy: registered
 Export-Package: org.aieonf.concept,
  org.aieonf.concept.body,
  org.aieonf.concept.context,
- org.aieonf.concept.context.collection,
  org.aieonf.concept.core,
  org.aieonf.concept.datauri,
  org.aieonf.concept.directive,

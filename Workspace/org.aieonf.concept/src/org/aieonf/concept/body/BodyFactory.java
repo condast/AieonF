@@ -8,7 +8,6 @@ import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.xml.parsers.DocumentBuilder;
@@ -17,12 +16,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.IFixedConcept;
-import org.aieonf.concept.IRelationship;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.MinimalConcept;
-import org.aieonf.concept.core.RelationshipInstance;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.security.AieonFEncryption;
 import org.aieonf.concept.util.DescribableSet;
@@ -161,22 +157,6 @@ public class BodyFactory<T extends Object>
     		if(( desc.getID() == null ) && ( Descriptor.isValid( desc ) == false ))
     			desc.set( IDescriptor.Attributes.ID.name(), BodyFactory.IDFactory() );
     	}
-    	IDescriptor cdesc;
-    	if( descriptor instanceof IFixedConcept ){
-    		IFixedConcept fixed = ( IFixedConcept )descriptor;
-    		List<IRelationship> relationships = fixed.getRelationships();
-    		for( IRelationship relationship: relationships ){
-    			if( RelationshipInstance.isValid( relationship ))
-    				continue;
-    			setDescriptor( relationship );
-    			cdesc = relationship.getConceptDescriptor();
-    			if( !Descriptor.isValid( cdesc ))
-    				setDescriptor( cdesc );
-    			if( RelationshipInstance.isValid( relationship ))
-    				continue;
-    			throw new IOException( S_ERR_INVALID_RELATIONSHIP + descriptor.toString() );
-    		}
-    	}
     	StoreConcept store = new StoreConcept( descriptor );
       Document doc = store.createDocument();
       StoreDocument.sendToStream( doc, out );
@@ -273,11 +253,7 @@ public class BodyFactory<T extends Object>
     }
     BodyFactory.transfer( result, descriptor, true );
     result.set( IDescriptor.Attributes.CLASS.toString(), result.getClass().getName() );
-    if((( descriptor instanceof IFixedConcept ) == false ) ||
-    	(( result instanceof IFixedConcept ) == false ))
-    	return result;
-    IFixedConcept fixed = ( IFixedConcept )descriptor;
-    return fixed;
+    return result;
   }
   
   /**

@@ -9,7 +9,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
-import org.aieonf.concept.core.ConceptInstance;
+import org.aieonf.concept.core.MinimalConcept;
 import org.aieonf.concept.domain.DomainAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
@@ -149,7 +149,7 @@ public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemp
 				}
 			}else	
 				logger.warning( S_WRN_CONCEPT_NOT_FOUND + name + S_WRN_DEFAULTING_TO );
-			descriptor = new ConceptInstance();
+			descriptor = new MinimalConcept();
 			break;
 		}
 		descriptor.set( IDescriptor.Attributes.NAME, desc );

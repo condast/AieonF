@@ -14,8 +14,8 @@ import java.io.File;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.ConceptInstance;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.MinimalConcept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.Model;
@@ -49,6 +49,7 @@ public class FileModel extends Model<IConcept> implements IDataResource
 	public FileModel( File file )
 	{
 		super( selectConcept(file));
+		this.file = file;
 		if( this.hasChildren() ){
 			for( File child: file.listFiles() )
 				super.addChild( new FileModel( child ));
@@ -152,7 +153,7 @@ public class FileModel extends Model<IConcept> implements IDataResource
 		return file.isDirectory() ? new DirAieon( file ): new FileAieon( file );
 	}
 	
-	private static class FileAieon extends ConceptInstance{
+	private static class FileAieon extends MinimalConcept{
 		private static final long serialVersionUID = 1L;
 		
 		private File file;

@@ -4,11 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.ConceptInstance;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.MinimalConcept;
 import org.aieonf.concept.datauri.IDataResource;
 
-public class InputHistoryAieon extends ConceptInstance implements IDataResource
+public class InputHistoryAieon extends MinimalConcept implements IDataResource
 {
 
 	/**

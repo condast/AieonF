@@ -11,7 +11,7 @@ import javax.crypto.Cipher;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.body.ConceptBody;
-import org.aieonf.concept.core.ConceptInstance;
+import org.aieonf.concept.core.MinimalConcept;
 import org.aieonf.util.encryption.Encryption;
 import org.aieonf.util.encryption.IEncryption;
 
@@ -62,7 +62,7 @@ public class Signer implements ISigner
 	public final String getSignature( IConcept concept ) throws SecurityException
 	{	
 		try{
-			IConcept clone = new ConceptInstance();
+			IConcept clone = new MinimalConcept();
 			BodyFactory.transfer( clone, concept, true );
 			return this.condense( clone );
 		}

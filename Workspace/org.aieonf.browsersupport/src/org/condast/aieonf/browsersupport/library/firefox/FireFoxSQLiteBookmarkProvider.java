@@ -16,9 +16,8 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.ConceptInstance;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.RelationshipInstance;
+import org.aieonf.concept.core.MinimalConcept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
@@ -309,7 +308,6 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 					concept = new PlacesAieon();
 					concept.fill(rs);
 					super.fill(concept);
-					concept.addRelationship( new RelationshipInstance( concept, category ));
 					model.addChild( new ModelLeaf<IConcept>( concept ));
 				}
 				catch (ConceptException e) {
@@ -407,7 +405,7 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 		}
 	}
 
-	private static class PlacesAieon extends ConceptInstance implements IDataResource
+	private static class PlacesAieon extends MinimalConcept implements IDataResource
 	{
 		private static final long serialVersionUID = 3919937519277313629L;
 		

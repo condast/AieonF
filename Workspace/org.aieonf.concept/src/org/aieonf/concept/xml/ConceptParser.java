@@ -14,10 +14,9 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.IRelationship;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.ConceptInstance;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.MinimalConcept;
 import org.aieonf.util.xml.StoreDocument;
 //Concept imports
 
@@ -105,8 +104,6 @@ public class ConceptParser
 				for( Node attr: attributeList )
 					fillElements( doc, attributes, attr, attr.getNodeName() );
 			}
-			if( str.toLowerCase().equals( IRelationship.RELATIONSHIPS.toLowerCase() ))
-				relationships = child;
 		}
 		ConceptDbInstance concept = new ConceptDbInstance();
 		concept.fill( doc, attributes, relationships );
@@ -156,8 +153,6 @@ public class ConceptParser
 				for( Node attr: attributeList )
 					fillElements( doc, attributes, attr, attr.getNodeName() );
 			}
-			if( str.toLowerCase().equals( IRelationship.RELATIONSHIPS.toLowerCase() ))
-				relationships = child;
 		}
 		ConceptDbInstance concept = new ConceptDbInstance();
 		concept.fill( doc, attributes, relationships );
@@ -202,7 +197,7 @@ public class ConceptParser
 	 * @author Kees Pieters
 	 * @version 1.0
 	*/
-	private static class ConceptDbInstance extends ConceptInstance
+	private static class ConceptDbInstance extends MinimalConcept
 	{
 		/**
 		 * For serialization purposes
@@ -223,7 +218,6 @@ public class ConceptParser
 	  public void fill( Document doc, Node attributes, Node relationships ) throws ConceptException{
 	    super.clear();
 	  	this.getAttributes( attributes );
-	    this.getRelations( doc, relationships );
 	  	
 	  }
 	  /**
@@ -241,30 +235,5 @@ public class ConceptParser
 	    ConceptParser.setAttributes( this, root );
 	  }
 
-	  /**
-	   * Get the relationships corresponding to the element for the given concept
-	   *
-	   * @param root Node
-	  */
-	  protected void getRelations( Document doc, Node root )
-	  {
-	    //Add the properties of the relationship
-	  	if(( root == null ) ||
-	       ( root.getNodeName().equals( IRelationship.RELATIONSHIPS ) == false))
-	  		return;
-	    
-	    this.clearRelationships();
-	  	List<Node> relationships = StoreDocument.getElements( root.getChildNodes(), Node.ELEMENT_NODE );
-	    for( Node element: relationships ){
-	      try{
-	        IRelationship relationship = new RelationshipDbInstance( doc, element );
-	        this.addRelationship( relationship );
-	      }
-	      catch( ConceptException ce ){
-	        ce.printStackTrace();
-	      }
-	    }
-	  }
 	}
-
 }

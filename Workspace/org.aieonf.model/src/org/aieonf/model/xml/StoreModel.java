@@ -143,7 +143,7 @@ public class StoreModel<T extends IDescriptor>
 	{
 		String str;
 		ConceptParser parser = new ConceptParser();
-		IFixedConcept parent = ( IFixedConcept )parser.parseConceptNode( node );
+		IConcept parent = ( IConcept )parser.parseConceptNode( node );
 		IModelNode<IDescriptor> treeNode = new Model<IDescriptor>(parent );
 		treeNode.fill(parent);
 		Node childNode = null;

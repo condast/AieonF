@@ -227,7 +227,7 @@ public class MinimalConcept extends Descriptor implements IConcept
 	public Object clone()
 	{
 		try{
-			ConceptInstance clone = ( ConceptInstance )this.getClass().newInstance();
+			MinimalConcept clone = ( MinimalConcept )this.getClass().newInstance();
 			BodyFactory.transfer( clone, this, true );
 			return clone;
 		}

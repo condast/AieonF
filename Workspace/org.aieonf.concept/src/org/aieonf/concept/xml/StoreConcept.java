@@ -18,8 +18,8 @@ import javax.xml.parsers.*;
 
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.ConceptInstance;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.MinimalConcept;
 import org.aieonf.concept.persist.ConceptPersistException;
 
 /**
@@ -145,13 +145,6 @@ public class StoreConcept
 				buffer.append("[" + key + ": " + descriptor.get( key ) + "]\n" );
 			}
 		}
-		if(( descriptor instanceof IFixedConcept ) == false )
-			return;
-		IFixedConcept concept = ( IFixedConcept )descriptor;
-		for( IRelationship child: concept.getRelationships() ){
-			print( "Relationship", buffer, child, depth + 1, includeAttrs);
-			print( "Descriptor", buffer, child.getConceptDescriptor(), depth + 2, includeAttrs);
-		}
 	}
 	
   /**
@@ -208,44 +201,6 @@ public class StoreConcept
   {
   	//Add the attributes and the relationships (if they are present)
   	setAttributes( doc, root, descriptor );
-    if(( descriptor instanceof IFixedConcept ) == false )
-      return;
-
-    IFixedConcept fixedConcept = ( IFixedConcept )descriptor;
-    Iterator<IRelationship>relIterator = fixedConcept.getRelationships().iterator();
-    if( relIterator.hasNext() == false )
-    	return;
-    
-    IRelationship relation;  
-    Element relationRoot = doc.createElement( IRelationship.RELATIONSHIPS );
-    root.appendChild( relationRoot );
-    Element relationElement;
-    while( relIterator.hasNext() ){
-      relation = relIterator.next();
-      relationElement = doc.createElement( relation.toString() );
-      relationRoot.appendChild( relationElement );
-     createRelation( doc, relationElement, relation );
-    }
-  }
-
-  /**
-   * Creates the elements corresponding to relationships for the concept stored
-   * in the given document
-   *
-   * @param doc Document
-   * @param root Element
-   * @param relation IRelationship
-   * @throws ConceptException
-  */
-  protected static void createRelation( Document doc, Element parent, IRelationship relation  ) 
-  throws ConceptPersistException, ConceptException
-  {
-    setAttributes( doc, parent, relation );
-    IDescriptor embedded = relation.getConceptDescriptor();
-    Element embeddedRoot  =
-      doc.createElement( IDescriptor.DESCRIPTOR );
-    parent.appendChild( embeddedRoot );
-  	setAttributes( doc, embeddedRoot, embedded );
   }
 
   /**
@@ -312,10 +267,8 @@ public class StoreConcept
    */
   protected static IDescriptor createMinimalDescriptor( IDescriptor descriptor, String[] attrs ) throws ConceptException
   {
-  	IFixedConcept concept = new ConceptInstance();
+  	IConcept concept = new MinimalConcept();
   	setValues( descriptor, concept, attrs );
-  	if(!( descriptor instanceof IFixedConcept ))
-  		return concept;
  	return concept;
   }
   

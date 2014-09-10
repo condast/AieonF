@@ -162,18 +162,11 @@ public class ConceptBody<T extends IDescriptor>
 	 */
 	protected static final void printConceptStructure( StringBuffer buffer, IDescriptor descriptor, int depth )
 			throws ConceptException
-			{
+	{
 		for( int i =0; i< depth; i++ )
 			buffer.append( "\t" );
 		buffer.append( descriptor.toString() + "\n" );
-
-		if(( descriptor instanceof IFixedConcept ) == false )
-			return;
-		IFixedConcept concept = ( IFixedConcept )descriptor;
-		Collection<IRelationship> relationships = concept.getRelationships();
-		for( IRelationship relationship: relationships )
-			printConceptStructure( buffer, relationship.getConceptDescriptor(), depth + 1);
-			}  
+	}  
 
 	/**
 	 * Returns true if the given string is a valid scope
