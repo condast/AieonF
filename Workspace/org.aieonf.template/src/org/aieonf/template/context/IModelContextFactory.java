@@ -7,7 +7,7 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.template.ITemplateLeaf;
 
-public interface IModelContextFactory<T extends IContextAieon, U extends IContext<T>> {
+public interface IModelContextFactory<T extends IContextAieon> {
 
 	public abstract void addListener(IModelBuilderListener listener);
 
@@ -37,11 +37,4 @@ public interface IModelContextFactory<T extends IContextAieon, U extends IContex
 	 * @return
 	 */
 	public abstract IDomainAieon getDomain();
-
-	/**
-	 * Create the model
-	 * @return
-	 */
-	public abstract U createContext();
-
 }

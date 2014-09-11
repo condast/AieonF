@@ -5,7 +5,6 @@ import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.builder.DefaultModelCreator;
 import org.aieonf.template.context.AbstractSimpleContextFactory;
-import org.aieonf.template.context.DefaultContext;
 import org.aieonf.template.graph.IGraphModelProvider;
 
 /**
@@ -21,11 +20,5 @@ public class GraphContextFactory extends AbstractSimpleContextFactory<IGraphMode
 	@Override
 	public ITemplateLeaf<IContextAieon> onCreateTemplate() {
 		return this.createDefaultTemplate( super.getBundleId(), new DefaultModelCreator( this.getClass()));	
-	}
-
-	
-	@Override
-	protected DefaultContext onCreateContext(ITemplateLeaf<IContextAieon> model) {
-		return new DefaultContext( super.getTemplate() );
 	}
 }

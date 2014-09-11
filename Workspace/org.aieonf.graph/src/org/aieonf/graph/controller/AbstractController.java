@@ -11,13 +11,12 @@ import org.aieonf.model.IModelNode;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.context.IContext;
 import org.aieonf.template.context.IModelContextFactory;
 import org.aieonf.template.graph.IGraphModelProvider;
 
 public abstract class AbstractController<T extends IContextAieon>
 {
-	private IModelContextFactory<T,IContext<T>> factory;
+	private IModelContextFactory<T> factory;
 	private IModelLeaf<IDescriptor> model;
 	
 	private IGraphModelProvider<T,IConcept> provider;
@@ -25,13 +24,13 @@ public abstract class AbstractController<T extends IContextAieon>
 	private Collection<IModelBuilderListener> listeners;
 	private boolean initialised;
 		
-	protected AbstractController( IModelContextFactory<T,IContext<T>> factory ) {
+	protected AbstractController( IModelContextFactory<T> factory ) {
 		this.factory = factory;
 		listeners = new ArrayList<IModelBuilderListener>();
 		this.initialised = false;
 	}
 
-	protected IModelContextFactory<T, IContext<T>> getFactory() {
+	protected IModelContextFactory<T> getFactory() {
 		return factory;
 	}
 
@@ -70,7 +69,7 @@ public abstract class AbstractController<T extends IContextAieon>
 			
 		};
 		factory.addListener(listener);
-		factory.createContext();
+		factory.createTemplate();
 		factory.removeListener(listener);
 		this.initialised = true;
 	}

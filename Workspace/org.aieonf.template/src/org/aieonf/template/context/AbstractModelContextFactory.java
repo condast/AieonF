@@ -22,10 +22,9 @@ import org.aieonf.template.builder.TemplateModelBuilderEvent;
 import org.aieonf.template.property.BindingDescriptor;
 import org.aieonf.util.Utils;
 
-public abstract class AbstractModelContextFactory<T extends IContextAieon> implements IModelContextFactory<T, IContext<T>> {
+public abstract class AbstractModelContextFactory<T extends IContextAieon> implements IModelContextFactory<T> {
 
 	private ITemplateLeaf<T> template;
-	private IContext<T> context;
 
 	private Collection<IModelBuilderListener> listeners;
 
@@ -89,26 +88,6 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	@Override
 	public IModelLeaf<IDescriptor> createModel() {
 		return this.createModel( this.template );
-	}
-
-	public IContext<T> getContext() {
-		return context;
-	}
-
-	/**
-	 * Create the model
-	 * @return
-	 */
-	protected abstract IContext<T> onCreateContext( ITemplateLeaf<T> model );
-
-	/* (non-Javadoc)
-	 * @see org.aieonf.template.context.IModelContextFactory#createContext()
-	 */
-	@Override
-	public IContext<T> createContext(){
-		this.template = this.createTemplate();
-		this.context = onCreateContext(template);
-		return context;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

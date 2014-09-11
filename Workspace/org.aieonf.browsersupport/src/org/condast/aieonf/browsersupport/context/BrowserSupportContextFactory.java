@@ -11,9 +11,7 @@ import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelProvider;
-import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.context.AbstractSimpleContextFactory;
-import org.aieonf.template.context.IContext;
 import org.aieonf.util.logger.Logger;
 
 /**
@@ -41,13 +39,6 @@ public class BrowserSupportContextFactory extends AbstractSimpleContextFactory<I
 		logger = Logger.getLogger( this.getClass() );
 	}
 	
-	@Override
-	protected IContext<IContextAieon> onCreateContext(
-			ITemplateLeaf<IContextAieon> model) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * Create a loader for this context
 	 * @param context
