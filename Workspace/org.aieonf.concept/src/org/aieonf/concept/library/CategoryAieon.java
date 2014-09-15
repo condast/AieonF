@@ -50,7 +50,7 @@ public class CategoryAieon extends ConceptWrapper implements IImplicitAieon<IDes
   */
   public CategoryAieon()
   {
-    this( new MinimalConcept());
+    this( new Concept());
     this.set( IDescriptor.Attributes.NAME, Attributes.CATEGORY.toString() );
   }
 

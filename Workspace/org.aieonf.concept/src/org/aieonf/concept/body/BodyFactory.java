@@ -18,7 +18,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.security.AieonFEncryption;
 import org.aieonf.concept.util.DescribableSet;
@@ -242,7 +242,7 @@ public class BodyFactory<T extends Object>
   public final static IConcept transform(Class<? extends IConcept> clazz, IDescriptor descriptor ) throws ConceptException
   {
     if( IConcept.class.isAssignableFrom( clazz ) == false )
-      throw new ConceptException( MinimalConcept.S_ERR_INVALID_CLASS );
+      throw new ConceptException( Concept.S_ERR_INVALID_CLASS );
 
     IConcept result = null;
     try{

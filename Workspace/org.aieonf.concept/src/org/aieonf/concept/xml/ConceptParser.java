@@ -16,7 +16,7 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.util.xml.StoreDocument;
 //Concept imports
 
@@ -197,7 +197,7 @@ public class ConceptParser
 	 * @author Kees Pieters
 	 * @version 1.0
 	*/
-	private static class ConceptDbInstance extends MinimalConcept
+	private static class ConceptDbInstance extends Concept
 	{
 		/**
 		 * For serialization purposes

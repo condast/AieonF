@@ -5,10 +5,10 @@ import java.sql.SQLException;
 
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 
-public class HistoryVisitsAieon extends MinimalConcept implements IDataResource
+public class HistoryVisitsAieon extends Concept implements IDataResource
 {
 
 	/**

@@ -19,7 +19,7 @@ import javax.xml.parsers.*;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.persist.ConceptPersistException;
 
 /**
@@ -267,7 +267,7 @@ public class StoreConcept
    */
   protected static IDescriptor createMinimalDescriptor( IDescriptor descriptor, String[] attrs ) throws ConceptException
   {
-  	IConcept concept = new MinimalConcept();
+  	IConcept concept = new Concept();
   	setValues( descriptor, concept, attrs );
  	return concept;
   }

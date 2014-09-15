@@ -7,11 +7,11 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.CategoryAieon;
 
-public class BookmarkAieon extends MinimalConcept implements IDataResource
+public class BookmarkAieon extends Concept implements IDataResource
 {
 	private static final long serialVersionUID = 3919937519277313629L;
 

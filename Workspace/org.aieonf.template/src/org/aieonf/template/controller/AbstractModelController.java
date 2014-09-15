@@ -29,7 +29,7 @@ public abstract class AbstractModelController<T extends IContextAieon> implement
 		this.initialised = false;
 		listeners = new ArrayList<IModelBuilderListener>();
 	}
-
+	
 	public void addBuilderListener( IModelBuilderListener listener ){
 		this.listeners.add( listener );
 	}
@@ -84,6 +84,12 @@ public abstract class AbstractModelController<T extends IContextAieon> implement
 	 */
 	protected abstract IModelBuilder<T> getModelBuilder();
 	
+	/**
+	 * Verify the model with the given string for categories
+	 * @param categories
+	 * @return
+	 */
+	public abstract boolean verifyModel();
 	
 	@Override
 	public IModelLeaf<T> createModel(){
@@ -106,6 +112,15 @@ public abstract class AbstractModelController<T extends IContextAieon> implement
 	@Override
 	public IModelLeaf<T> getModel(IDescriptor descriptor) {
 		return model;
+	}
+
+	/**
+	 * It is possible that a certain model is created externally. In that case it can be included here
+	 * @param factory
+	 * @param root
+	 */
+	protected void setModel( IModelLeaf<T> root ) {
+		this.model = root;
 	}
 
 	@Override

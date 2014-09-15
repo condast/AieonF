@@ -31,13 +31,6 @@ public abstract class AbstractGraphController<T extends IContextAieon> extends A
 	}
 
 	/**
-	 * Verify the model with the given string for categories
-	 * @param categories
-	 * @return
-	 */
-	public abstract boolean verifyModel();
-
-	/**
 	 * Add a model to the database
 	 */
 	public boolean addModel(){
