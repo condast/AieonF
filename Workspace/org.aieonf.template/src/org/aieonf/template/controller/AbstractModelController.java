@@ -110,7 +110,7 @@ public abstract class AbstractModelController<T extends IContextAieon> implement
 	}
 
 	@Override
-	public IModelLeaf<T> getModel(IDescriptor descriptor) {
+	public IModelLeaf<T> getModel() {
 		return model;
 	}
 

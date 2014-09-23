@@ -112,7 +112,7 @@ public class BodyFactory<T extends Object>
   */
   public static void IDFactory( IDescribable<? extends IDescriptor> describable ){
   	String id = IDFactory( describable, new DescribableSet<Object>( new ArrayList<Object>()));
-  	describable.getDescriptor().set( IDescriptor.Attributes.ID.name(), id );
+  	describable.getDescriptor().set( IDescriptor.Attributes.ID, id );
   }
 
   /**
@@ -155,7 +155,7 @@ public class BodyFactory<T extends Object>
     	if( descriptor instanceof Descriptor ){
     		Descriptor desc = ( Descriptor )descriptor;
     		if(( desc.getID() == null ) && ( Descriptor.isValid( desc ) == false ))
-    			desc.set( IDescriptor.Attributes.ID.name(), BodyFactory.IDFactory() );
+    			desc.set( IDescriptor.Attributes.ID, BodyFactory.IDFactory() );
     	}
     	StoreConcept store = new StoreConcept( descriptor );
       Document doc = store.createDocument();
@@ -176,7 +176,7 @@ public class BodyFactory<T extends Object>
 		if( Descriptor.isNull( descriptor.getName() ))
 			throw new ConceptException( S_ERR_INVALID_DESCRIPTOR + descriptor.toString() );
 		if( Descriptor.isNull( descriptor.getID() ))
-			descriptor.set( IDescriptor.Attributes.ID.name(), BodyFactory.IDFactory() );
+			descriptor.set( IDescriptor.Attributes.ID, BodyFactory.IDFactory() );
 		if( descriptor.getVersion() < 0 )
 			descriptor.setVersion( 0 );
   	

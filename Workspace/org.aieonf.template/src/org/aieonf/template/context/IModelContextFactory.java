@@ -1,11 +1,11 @@
 package org.aieonf.template.context;
 
-import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.template.ITemplateLeaf;
 
-public interface IModelContextFactory<T extends IContextAieon> {
+public interface IModelContextFactory<T extends IDescriptor> {
 
 	public abstract void addListener(IModelBuilderListener listener);
 

@@ -1,26 +1,30 @@
 package org.aieonf.graph.controller;
 
-import org.aieonf.concept.IConcept;
+import java.util.Collection;
+
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.graph.IGraphModel;
+import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.template.context.IModelContextFactory;
 import org.aieonf.template.controller.AbstractModelController;
-import org.aieonf.template.graph.IGraphModelProvider;
+import org.aieonf.util.graph.IVertex;
 
-public abstract class AbstractGraphController<T extends IContextAieon> extends AbstractModelController<T>
+public abstract class AbstractGraphController<T extends IContextAieon, U extends IDescriptor> extends AbstractModelController<T>
 {
-	private IGraphModelProvider<T,IConcept> provider;
+	private IGraphModel<T, IVertex<U>> provider;
 	
 	protected AbstractGraphController( IModelContextFactory<T> factory ) {
 		super( factory );
 	}
 	
-	protected IGraphModelProvider<T,IConcept> getProvider() {
+	protected IGraphModel<T, IVertex<U>> getProvider() {
 		return provider;
 	}
 
-	protected void setProvider(IGraphModelProvider<T,IConcept> provider) {
+	protected void setProvider(IGraphModel<T, IVertex<U>> provider) {
 		this.provider = provider;
 	}
 
@@ -44,7 +48,7 @@ public abstract class AbstractGraphController<T extends IContextAieon> extends A
 			};
 			provider.addListener(listener);
 			provider.open();
-			provider.create( super.getTemplate() );
+			provider.add( this.convertFrom( super.getModel()));
 			provider.removeListener(listener);
 			return true;
 		}
@@ -70,7 +74,9 @@ public abstract class AbstractGraphController<T extends IContextAieon> extends A
 			};
 			provider.addListener(listener);
 			provider.open();
-			provider.create( super.getTemplate() );
+			Collection<IVertex<U>> vertices = provider.get( super.getModel().getDescriptor() );
+			for( IVertex<U> vertex: vertices )
+				provider.delete( vertex );
 			provider.removeListener(listener);
 			return true;
 		}
@@ -106,5 +112,9 @@ public abstract class AbstractGraphController<T extends IContextAieon> extends A
 			provider.close();
 			provider.deactivate();
 		}
+	}
+
+	protected IVertex<U> convertFrom( IModelLeaf<T> model ){
+		return null;
 	}
 }
