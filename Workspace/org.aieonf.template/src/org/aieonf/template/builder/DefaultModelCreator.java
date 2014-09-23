@@ -192,7 +192,10 @@ public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemp
 			super.setKey( enm );			
 			break;
 		case LOADER:
-			enm = ILoaderAieon.Attributes.valueOf(key);
+			if( ILoaderAieon.Attributes.isValid(key ))
+				enm = ILoaderAieon.Attributes.valueOf(key);
+			else
+				enm = IPasswordAieon.Attributes.valueOf( key );
 			break;
 		case CONCEPT:
 			enm = IConcept.Attributes.valueOf( key );

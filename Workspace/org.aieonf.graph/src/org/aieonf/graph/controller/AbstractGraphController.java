@@ -12,7 +12,7 @@ import org.aieonf.template.context.IModelContextFactory;
 import org.aieonf.template.controller.AbstractModelController;
 import org.aieonf.util.graph.IVertex;
 
-public abstract class AbstractGraphController<T extends IContextAieon, U extends IDescriptor> extends AbstractModelController<T>
+public abstract class AbstractGraphController<T extends IContextAieon, U extends IDescriptor> extends AbstractModelController<T,U>
 {
 	private IGraphModel<T, IVertex<U>> provider;
 	
@@ -114,7 +114,7 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 		}
 	}
 
-	protected IVertex<U> convertFrom( IModelLeaf<T> model ){
+	protected IVertex<U> convertFrom( IModelLeaf<U> model ){
 		return null;
 	}
 }
