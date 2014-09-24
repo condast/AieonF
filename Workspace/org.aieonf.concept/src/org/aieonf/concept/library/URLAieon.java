@@ -72,6 +72,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	public URLAieon( String uri ) 
 	{
 		super( new DataURI( uri ), IConcept.Attributes.SOURCE.toString() );
+		super.setSource( uri );
 	}
 
 	/**

@@ -8,7 +8,7 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.datauri.IDataURI;
 import org.aieonf.concept.wrapper.ConceptWrapper;
@@ -41,7 +41,7 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource
 	
 	public FireFoxReference()
 	{
-		super( new MinimalConcept());
+		super( new Concept());
 	}
 
 	/**

@@ -13,10 +13,10 @@ import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.builder.IModelBuilder;
 import org.aieonf.template.context.IModelContextFactory;
 
-public abstract class AbstractModelController<T extends IContextAieon> implements IModelController<T> {
+public abstract class AbstractModelController<T extends IContextAieon, U extends IDescriptor> implements IModelController<U> {
 
 	private boolean initialised;
-	private IModelLeaf<T> model;
+	private IModelLeaf<U> model;
 	private ITemplateLeaf<T> template;
 	
 	private IModelContextFactory<T> factory;	
@@ -29,7 +29,7 @@ public abstract class AbstractModelController<T extends IContextAieon> implement
 		this.initialised = false;
 		listeners = new ArrayList<IModelBuilderListener>();
 	}
-
+	
 	public void addBuilderListener( IModelBuilderListener listener ){
 		this.listeners.add( listener );
 	}
@@ -82,12 +82,18 @@ public abstract class AbstractModelController<T extends IContextAieon> implement
 	 * add the required model builder to build the model
 	 * @return
 	 */
-	protected abstract IModelBuilder<T> getModelBuilder();
+	protected abstract IModelBuilder<U> getModelBuilder();
 	
+	/**
+	 * Verify the model with the given string for categories
+	 * @param categories
+	 * @return
+	 */
+	public abstract boolean verifyModel();
 	
 	@Override
-	public IModelLeaf<T> createModel(){
-		IModelBuilder<T> builder = this.getModelBuilder();
+	public IModelLeaf<U> createModel(){
+		IModelBuilder<U> builder = this.getModelBuilder();
 		IModelBuilderListener listener = new IModelBuilderListener(){
 
 			@Override
@@ -104,8 +110,17 @@ public abstract class AbstractModelController<T extends IContextAieon> implement
 	}
 
 	@Override
-	public IModelLeaf<T> getModel(IDescriptor descriptor) {
+	public IModelLeaf<U> getModel() {
 		return model;
+	}
+
+	/**
+	 * It is possible that a certain model is created externally. In that case it can be included here
+	 * @param factory
+	 * @param root
+	 */
+	protected void setModel( IModelLeaf<U> root ) {
+		this.model = root;
 	}
 
 	@Override

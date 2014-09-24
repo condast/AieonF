@@ -17,7 +17,7 @@ import org.aieonf.concept.Universe;
 import org.aieonf.concept.body.IBodyAieon;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.domain.DomainAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
@@ -37,7 +37,7 @@ import org.aieonf.concept.xml.StoreConcept;
  * @author Kees Pieters
  * @version 1.0
  */
-public class ContextAieon extends MinimalConcept implements IContextAieon
+public class ContextAieon extends Concept implements IContextAieon
 {
 	/**
 	 * Serialization

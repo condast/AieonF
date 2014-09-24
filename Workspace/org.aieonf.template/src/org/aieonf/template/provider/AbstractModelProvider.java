@@ -94,6 +94,13 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 		this.open = false;
 	}
 
+	
+	@Override
+	public boolean contains(IModelLeaf<?> leaf) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	@Override
 	public Collection<V> get(IDescriptor descriptor) throws ParseException {
 		IModelFilter<IDescriptor> flt = new HierarchicalModelDescriptorFilter<IDescriptor>( descriptor );

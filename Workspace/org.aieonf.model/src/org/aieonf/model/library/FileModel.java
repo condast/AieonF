@@ -15,7 +15,7 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.Model;
@@ -153,7 +153,7 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 		return file.isDirectory() ? new DirAieon( file ): new FileAieon( file );
 	}
 	
-	private static class FileAieon extends MinimalConcept{
+	private static class FileAieon extends Concept{
 		private static final long serialVersionUID = 1L;
 		
 		private File file;

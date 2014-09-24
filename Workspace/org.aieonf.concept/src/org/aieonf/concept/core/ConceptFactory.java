@@ -22,7 +22,7 @@ public class ConceptFactory
 	public static IConcept create( IDescriptor descriptor ) throws ConceptException
 	{
 		Iterator<String> keys = descriptor.iterator();
-		IConcept concept = new MinimalConcept();
+		IConcept concept = new Concept();
 		String key, value;
 		while( keys.hasNext() ){
 			key = keys.next();

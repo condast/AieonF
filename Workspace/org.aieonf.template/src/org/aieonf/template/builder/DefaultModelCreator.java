@@ -9,7 +9,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.domain.DomainAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
@@ -149,7 +149,7 @@ public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemp
 				}
 			}else	
 				logger.warning( S_WRN_CONCEPT_NOT_FOUND + name + S_WRN_DEFAULTING_TO );
-			descriptor = new MinimalConcept();
+			descriptor = new Concept();
 			break;
 		}
 		descriptor.set( IDescriptor.Attributes.NAME, desc );
@@ -192,7 +192,10 @@ public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemp
 			super.setKey( enm );			
 			break;
 		case LOADER:
-			enm = ILoaderAieon.Attributes.valueOf(key);
+			if( ILoaderAieon.Attributes.isValid(key ))
+				enm = ILoaderAieon.Attributes.valueOf(key);
+			else
+				enm = IPasswordAieon.Attributes.valueOf( key );
 			break;
 		case CONCEPT:
 			enm = IConcept.Attributes.valueOf( key );

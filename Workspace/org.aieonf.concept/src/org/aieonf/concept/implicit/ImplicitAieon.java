@@ -22,7 +22,7 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 	 */
 	public ImplicitAieon()
 	{
-		super( new MinimalConcept() );
+		super( new Concept() );
 		this.setClassName( this.getClass().getName() );
 	}
 
@@ -33,7 +33,7 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 	 */
 	protected ImplicitAieon( String name )
 	{
-		this( new MinimalConcept( name ), name );
+		this( new Concept( name ), name );
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 	 */
 	public ImplicitAieon( String name, String attribute )
 	{
-		this( new MinimalConcept( name ), attribute );
+		this( new Concept( name ), attribute );
 	}
 
 	/**

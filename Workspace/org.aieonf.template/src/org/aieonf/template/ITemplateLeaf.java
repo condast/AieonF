@@ -5,6 +5,7 @@ import java.util.Map;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.template.property.ITemplateProperty;
+import org.aieonf.util.StringStyler;
 
 /**
  * A template leaf extends a regular model leaf with a list of attributes that
@@ -17,6 +18,14 @@ import org.aieonf.template.property.ITemplateProperty;
  */
 public interface ITemplateLeaf<T extends IDescriptor> extends IModelLeaf<T>
 {
+	public enum Attributes{
+		IMPLIES;
+
+		@Override
+		public String toString() {
+			return StringStyler.prettyString( super.toString() );
+		}	
+	}
 
 	public static final String S_TEMPLATE = "Template";
 

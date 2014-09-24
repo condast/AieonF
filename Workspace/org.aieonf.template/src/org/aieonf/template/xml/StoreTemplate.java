@@ -117,7 +117,7 @@ public class StoreTemplate implements IParser<ITemplate>
 	@Override
 	public Document createDocument( ITemplate model ) 
 			throws ParseException
-			{
+	{
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
 		try {
@@ -137,7 +137,7 @@ public class StoreTemplate implements IParser<ITemplate>
 		catch (ConceptException e) {
 			throw new ParseException( e );
 		}
-			}
+	}
 
 	/**
 	 * Creates a document from a descriptor
@@ -147,7 +147,7 @@ public class StoreTemplate implements IParser<ITemplate>
 	 */
 	protected Document createDocument( IModelLeaf<? extends IDescriptor> template, Document doc, Element parentNode ) 
 			throws ConceptException, ConceptPersistException
-			{
+	{
 		ITemplateAieon parent = ( TemplateAieon )template.getDescriptor();
 		StoreConcept.createElement( doc, parentNode, parent );
 		if(!( template instanceof ITemplateNode ))
@@ -172,7 +172,7 @@ public class StoreTemplate implements IParser<ITemplate>
 		}
 		parentNode.appendChild( childNode );
 		return doc;
-			}
+	}
 
 	/**
 	 * Parse a tree node model from the given document
@@ -224,7 +224,6 @@ public class StoreTemplate implements IParser<ITemplate>
 		BodyFactory.transfer(td, parent, true );
 
 		ITemplateNode<IDescriptor> treeNode = new TemplateNode<IDescriptor>( td );
-		treeNode.fill( td );
 		Node childNode = null;
 		List<Node> children = StoreDocument.getElements( node.getChildNodes(), Node.ELEMENT_NODE );
 		for( Node child: children ){
@@ -265,7 +264,6 @@ public class StoreTemplate implements IParser<ITemplate>
 		BodyFactory.transfer(td, parent, true );
 		ITemplateNode<IDescriptor> treeNode = 
 				new TemplateNode<IDescriptor>( new Descriptor());
-		treeNode.fill( td );
 		ITemplateNode<IDescriptor> root = null;
 		//IAspect pa = node.getAspect( aspect );
 		//if((( pa != null ) && pa.getAspect().equals( aspect.getAspect() ))){

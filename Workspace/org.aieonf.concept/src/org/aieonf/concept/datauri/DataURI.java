@@ -2,7 +2,7 @@ package org.aieonf.concept.datauri;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.wrapper.ConceptWrapper;
 
 public class DataURI extends ConceptWrapper implements IDataURI
@@ -33,17 +33,17 @@ public class DataURI extends ConceptWrapper implements IDataURI
 
 	public DataURI()
 	{
-		super( new MinimalConcept());
+		super( new Concept());
 	}
 
 	public DataURI( String name )
 	{
-		super( new MinimalConcept( name ));
+		super( new Concept( name ));
 	}
 
 	public DataURI( String id, String name )
 	{
-		super( new MinimalConcept( id, name ));
+		super( new Concept( id, name ));
 	}
 
 	public DataURI( IDescriptor descriptor ){

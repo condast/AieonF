@@ -21,6 +21,13 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 	
 	public void close();
 
+	/**
+	 * Returns true if the given leaf is contained in the provider 
+	 * @param descriptor
+	 * @return
+	 */
+	public boolean contains( IModelLeaf<? extends IDescriptor> leaf );
+
 	public Collection<U> get( IDescriptor descriptor ) throws ParseException;
 
 	public Collection<U> search( IModelFilter<IDescriptor> filter ) throws ParseException;

@@ -44,7 +44,7 @@ public class TemplateWrapper implements ITemplate
 
 	
 	@Override
-	public void set(Attributes attr, String value) {
+	public void set( IModelLeaf.Attributes attr, String value) {
 		this.model.set(attr, value);
 	}
 
@@ -227,12 +227,6 @@ public class TemplateWrapper implements ITemplate
 	}
 
 	@Override
-	public IDescriptor getNodeDescriptor()
-	{
-		return this.model.getNodeDescriptor();
-	}
-
-	@Override
 	public ITemplateNode<? extends IDescriptor> getParent()
 	{
 		return (ITemplateNode<? extends IDescriptor>) this.model.getParent();
@@ -243,15 +237,6 @@ public class TemplateWrapper implements ITemplate
 	{
 		this.model.setParent(parent);
 	}
-
-	@Override
-	public void fill(IDescriptor descriptor)
-	{
-		if( !( descriptor instanceof ITemplateAieon ))
-			throw new IllegalArgumentException( S_ERR_INVALID_DESCRIPTOR );
-		this.model.fill(descriptor);
-	}
-
 
 	@Override
 	public ITemplateProperty.Attributes[] attributes(Enum<?> key) {
@@ -276,5 +261,11 @@ public class TemplateWrapper implements ITemplate
 	@Override
 	public void removeAttribute(Enum<?> key, ITemplateProperty.Attributes attr) {
 		this.model.removeAttribute(key, attr);
+	}
+
+
+	@Override
+	public int implies(IDescriptor descriptor) {
+		return this.model.implies(descriptor);
 	}
 }

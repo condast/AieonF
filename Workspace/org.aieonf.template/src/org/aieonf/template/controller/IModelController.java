@@ -51,7 +51,7 @@ public interface IModelController<T extends IDescriptor> {
 	 * Get a model which contains the given descriptor
 	 * @return
 	 */
-	public IModelLeaf<T> getModel( IDescriptor descriptor );
+	public IModelLeaf<T> getModel();
 
 	/**
 	 * Get a submodel which contains the given descriptor

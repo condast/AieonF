@@ -84,12 +84,6 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>
 	 * @param parent
 	 */
 	void setParent( IModelLeaf<? extends IDescriptor> parent );
-
-	/**
-	 * Fill the model with the given descriptor
-	 * @param descriptor
-	 */
-	public void fill( IDescriptor descriptor );
 	
 	/**
 	 * Set the leaf with the given value
@@ -103,12 +97,6 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>
 	 * @return
 	 */
 	public boolean isRoot();
-
-	/**
-	 * Get the descriptor that this tree node represents
-	 * @return
-	 */
-	public IDescriptor getNodeDescriptor();
 
 	/**
 	 * Get the direction of this model with 
@@ -142,5 +130,12 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>
 	 * @param depth
 	 * @throws ConceptException
 	 */
-	public void setDepth( int depth ) throws ConceptException;
+	void setDepth( int depth ) throws ConceptException;
+	
+	/**
+	 * If the given descriptor is considered the same as that of the leaf, this method returns '0'.
+	 * Otherwise it returns a comparable result, depending on the provided implies operator 
+	 * @return
+	 */
+	public int implies( IDescriptor descriptor );
 }

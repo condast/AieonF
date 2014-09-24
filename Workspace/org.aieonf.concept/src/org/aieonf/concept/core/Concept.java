@@ -18,7 +18,7 @@ import org.aieonf.util.StringStyler;
 /**
  * Create a minimal concept, using a properties file
  */
-public class MinimalConcept extends Descriptor implements IConcept
+public class Concept extends Descriptor implements IConcept
 {
 	/**
 	 *
@@ -34,7 +34,7 @@ public class MinimalConcept extends Descriptor implements IConcept
 	/**
 	 * Create a minimal concept
 	 */
-	public MinimalConcept()
+	public Concept()
 	{
 		super();
 	}
@@ -42,7 +42,7 @@ public class MinimalConcept extends Descriptor implements IConcept
 	/**
 	 * Create a minimal concept
 	 */
-	protected MinimalConcept( IConceptBase base )
+	protected Concept( IConceptBase base )
 	{
 		super( base );
 	}
@@ -51,7 +51,7 @@ public class MinimalConcept extends Descriptor implements IConcept
 	 * Create a minimal concept with the given name
 	 * @param name String
 	 */
-	public MinimalConcept( String name )
+	public Concept( String name )
 	{
 		this();
 		this.setName( name );
@@ -63,7 +63,7 @@ public class MinimalConcept extends Descriptor implements IConcept
 	 * @param id String
 	 * @param name String
 	 */
-	public MinimalConcept( String id, String name )
+	public Concept( String id, String name )
 	{
 		this( name );
 		this.set( IDescriptor.Attributes.ID, id );
@@ -227,7 +227,7 @@ public class MinimalConcept extends Descriptor implements IConcept
 	public Object clone()
 	{
 		try{
-			MinimalConcept clone = ( MinimalConcept )this.getClass().newInstance();
+			Concept clone = ( Concept )this.getClass().newInstance();
 			BodyFactory.transfer( clone, this, true );
 			return clone;
 		}
@@ -246,7 +246,7 @@ public class MinimalConcept extends Descriptor implements IConcept
 	 */
 	public static Properties getDifference( Descriptor desc ) throws ConceptException
 	{
-		MinimalConcept mc = new MinimalConcept();
+		Concept mc = new Concept();
 		return Descriptor.getDifference( mc, desc );
 	}
 }

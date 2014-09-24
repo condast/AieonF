@@ -3,7 +3,7 @@ package org.aieonf.concept.domain;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.ConceptBody;
-import org.aieonf.concept.core.MinimalConcept
+import org.aieonf.concept.core.Concept
 ;
 import org.aieonf.concept.implicit.ImplicitAieon;
 
@@ -17,7 +17,7 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	*/
 	public DomainAieon() 
 	{
-	  super( new MinimalConcept( IDomainAieon.Attributes.DOMAIN.toString() ), IDomainAieon.Attributes.DOMAIN.name() );
+	  super( new Concept( IDomainAieon.Attributes.DOMAIN.toString() ), IDomainAieon.Attributes.DOMAIN.name() );
 	  super.getDescriptor().set( IDescriptor.Attributes.CLASS, this.getClass().getName() );
 	}
 
@@ -27,7 +27,7 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	*/
 	public DomainAieon( String prefix, String shortName )
 	{
-	  super( new MinimalConcept( IDomainAieon.Attributes.DOMAIN.name() ),IDomainAieon.Attributes.DOMAIN.name());
+	  super( new Concept( IDomainAieon.Attributes.DOMAIN.name() ),IDomainAieon.Attributes.DOMAIN.name());
 	  this.setDomain( prefix, shortName );
 	  super.getDescriptor().set( IDescriptor.Attributes.CLASS, this.getClass().getName() );
 	}

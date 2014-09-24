@@ -21,7 +21,7 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.MinimalConcept;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.library.URLAieon;
@@ -232,7 +232,7 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 		return buffer.toString();
 	}
 
-	private static class ChromiumAieon extends MinimalConcept
+	private static class ChromiumAieon extends Concept
 	{
 		private static final long serialVersionUID = -948073322887755282L;
 
