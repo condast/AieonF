@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.concept.implicit.Implies;
 
 public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModelNode<T>
 {	
@@ -16,6 +17,16 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	public Model( T descriptor )
 	{
 		super( descriptor );
+		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
+	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public Model( T descriptor, Implies<T,IDescriptor> implies )
+	{
+		super( descriptor, implies );
 		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
 	}
 

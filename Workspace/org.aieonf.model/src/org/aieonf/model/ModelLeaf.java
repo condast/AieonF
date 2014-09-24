@@ -6,14 +6,16 @@ import java.util.Collection;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.wrapper.ChildDescriptor;
+import org.aieonf.concept.implicit.AbstractImplies;
+import org.aieonf.concept.implicit.Implies;
 import org.aieonf.util.Utils;
 
 public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IModelLeaf<T>, Comparable<IModelLeaf<T>>
 {	
 	//The concept that is modelled
-	private IDescriptor descriptor;
+	private T descriptor;
 	private boolean leaf;
+	private Implies<T,IDescriptor> implies;
 	
 	private IModelLeaf<? extends IDescriptor> parent;
 	
@@ -23,7 +25,17 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	public ModelLeaf( T descriptor )
 	{
+		this( descriptor, new DefaultImplies<T>( descriptor ));
+ 	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public ModelLeaf( T descriptor, Implies<T,IDescriptor> implies )
+	{
 		this.descriptor = descriptor;
+		this.implies = implies;
 		this.leaf = true;
 	}
 
@@ -43,18 +55,6 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	public void fill(){
 		super.set( IModelLeaf.Attributes.DIRECTION, Direction.UNI_DIRECTIONAL.toString() );
 		super.set( IModelLeaf.Attributes.DEPTH, String.valueOf( 0 ));
-	}
-
-	/**
-	 * Fill the model with the given descriptor
-	 * @param descriptor
-	 */
-	@Override
-	public void fill( IDescriptor descriptor ){
-		if( descriptor == null )
-			throw new NullPointerException( S_ERR_NO_DESCRIPTOR );
-		this.descriptor = descriptor;
-		this.fill();
 	}
 
 	/**
@@ -127,7 +127,6 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * Get the descriptor that this tree node represents
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public T getDescriptor()
 	{
@@ -204,11 +203,24 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 			return -1;
 		return this.descriptor.compareTo( node.getDescriptor() );
 	}
+
 	
 	@Override
-	public IDescriptor getNodeDescriptor()
-	{
-		return new ChildDescriptor<ModelLeaf<T>>( this, this.descriptor );
+	public int implies(IDescriptor descriptor) {
+		return implies.compareTo( descriptor);
+	}
+
+	private static class DefaultImplies<T extends IDescriptor> extends AbstractImplies<T,IDescriptor>{
+
+		DefaultImplies(T reference) {
+			super(reference, Conditions.ID);
+		}
+
+		@Override
+		protected int compareOnAttribute(IDescriptor obj) {
+			return 0;
+		}
+		
 	}
 	
 	/**

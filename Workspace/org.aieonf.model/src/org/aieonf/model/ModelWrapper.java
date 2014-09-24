@@ -18,31 +18,20 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * Create a wrapper for the given model
 	 * @param model
 	 */
-	public ModelWrapper( IModelLeaf<? extends IDescriptor> model )
-	{
+	public ModelWrapper( IModelLeaf<? extends IDescriptor> model ){
 		this.model = model;
 		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
 	}
 
-	
 	@Override
 	public void set(Attributes attr, String value) {
 		this.model.set(attr, value);
 	}
 
-
-	@Override
-	public void fill( IDescriptor descriptor)
-	{
-		this.model.fill( descriptor);
-	}
-
-	
 	@Override
 	public String getID() {
 		return this.model.getID();
 	}
-
 	
 	@Override
 	public String getIdentifier() {
@@ -233,12 +222,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 		this.model.setDepth( depth );
 	}
 
-	@Override
-	public IDescriptor getNodeDescriptor()
-	{
-		return this.model.getNodeDescriptor();
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public IModelLeaf<? extends IDescriptor> getParent()
@@ -251,5 +234,10 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	public void setParent(IModelLeaf<? extends IDescriptor> parent)
 	{
 		this.model.setParent( parent );
+	}
+
+	@Override
+	public int implies(IDescriptor descriptor) {
+		return this.model.implies(descriptor);
 	}
 }
