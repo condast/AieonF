@@ -99,6 +99,16 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 		return results;
 	}
 
+	
+	@Override
+	public String printDatabase() {
+		StringBuffer buffer = new StringBuffer();
+		for( IModelProvider<T, U> provider: this.providers ){
+			buffer.append( provider.printDatabase() + "\n\n" );
+		}
+		return buffer.toString();
+	}
+
 	@Override
 	public void deactivate() {
 		for( IModelProvider<T, U> provider: this.providers ){

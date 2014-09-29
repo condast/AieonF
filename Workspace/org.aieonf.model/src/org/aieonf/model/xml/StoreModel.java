@@ -169,7 +169,7 @@ public class StoreModel<T extends IDescriptor>
 	 * @param boolean includeattrs: if true the attributes 
 	 * @return
 	 */
-	public static final String print( IModelLeaf<? extends IDescriptor> model, boolean includeAttrs )
+	public static final String printModel( IModelLeaf<? extends IDescriptor> model, boolean includeAttrs )
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("{ Created: " + Descriptor.getCreateDate( model.getDescriptor()) + "}\n" );

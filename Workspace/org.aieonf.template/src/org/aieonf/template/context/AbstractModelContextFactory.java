@@ -106,11 +106,15 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static ITemplateLeaf<IDescriptor> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
+	protected ITemplateLeaf<IDescriptor> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
 		if( Utils.isNull( identifier ))
 			return null;
-		if( identifier.equals( leaf.getID()))
+		if( identifier.equals( leaf.getID())){
+			if( Utils.isNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE ) )){
+				leaf.getDescriptor().set( IConcept.Attributes.SOURCE, template.getID() );
+			}
 			return (ITemplateLeaf<IDescriptor>) leaf;
+		}
 		if( leaf.isLeaf())
 			return null;
 		ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) leaf;

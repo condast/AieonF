@@ -354,4 +354,16 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 			super.fill();
 		}
 	}
+
+	@Override
+	public boolean contains(IModelLeaf<? extends IDescriptor> leaf) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String printDatabase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

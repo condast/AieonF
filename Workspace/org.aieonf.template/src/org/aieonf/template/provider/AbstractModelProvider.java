@@ -118,6 +118,12 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 	}
 
 	@Override
+	public String printDatabase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public void deactivate() {
 		this.close();
 	}

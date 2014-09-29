@@ -117,7 +117,7 @@ public class ModelController<T extends IModelLeaf<? extends IDescriptor>> implem
 		}
 		ITemplate template = factory.getTemplate();
 		builder.assembleModel( template );
-		logger.info("Model found:\n" + StoreModel.print( builder.getModel(), true ));					
+		logger.info("Model found:\n" + StoreModel.printModel( builder.getModel(), true ));					
 		this.modelCreated = true;
 	}
 		

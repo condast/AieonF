@@ -438,7 +438,10 @@ public class Descriptor implements IDescriptor
 	@Override
 	public String toString()
 	{
-		return this.createDescriptorString();
+		StringBuffer buffer = new StringBuffer();
+		buffer.append( this.createDescriptorString());
+		buffer.append( base.toString() );
+		return buffer.toString();
 	}
 
 	/**
