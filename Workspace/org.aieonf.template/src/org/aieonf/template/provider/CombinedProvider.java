@@ -92,13 +92,19 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 			IModelFilter<IDescriptor> filter) throws ParseException {
 		Collection<U> results = new ArrayList<U>();
 		for( IModelProvider<T, U> provider: this.providers ){
-			Collection<U> temp = provider.search( filter );
-			if(( temp != null ) && ( !temp.isEmpty() ))
-				results.addAll( (Collection<? extends U>) temp );
+			try{
+				if( !provider.isOpen())
+					continue;
+				Collection<U> temp = provider.search( filter );
+				if(( temp != null ) && ( !temp.isEmpty() ))
+					results.addAll( (Collection<? extends U>) temp );
+			}
+			catch( ParseException e ){
+				e.printStackTrace();
+			}
 		}
 		return results;
 	}
-
 	
 	@Override
 	public String printDatabase() {

@@ -8,10 +8,10 @@
  */
 package org.condast.aieonf.browsersupport.library.ie;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Calendar;
 import java.util.Collection;
-import java.io.*;
+import java.util.logging.Logger;
 
 import org.aieonf.collections.persistence.IFilePersistence;
 import org.aieonf.concept.context.IContextAieon;
@@ -26,7 +26,6 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.library.FileModel;
 import org.aieonf.template.provider.AbstractModelProvider;
-import org.aieonf.util.logger.*;
 
 /**
  * This class overrides the default concept database in order to
@@ -43,7 +42,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 	public IEFavoritesProvider( IContextAieon context, IModelLeaf<T> model )
 	{
 		super( context, model );
-		logger = Logger.getLogger( this.getClass() );
+		logger = Logger.getLogger( this.getClass().getName() );
 	}
 
 	@Override
@@ -67,9 +66,10 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 
 	@Override
 	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor> filter) {
+		super.getModels().clear();
 		FileModel model = new FileModel( root );
 		this.parseFileModel(model);
-		return new ArrayList<IModelLeaf<IDescriptor>>();
+		return super.getModels();
 	}
 
 	protected void parseFileModel( FileModel model ){
@@ -90,7 +90,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 	protected void setFileEon( FileModel model ) throws Exception
 	{
 		IConcept fileEon = (IConcept) model.getDescriptor();
-		logger.trace( "Concept found: " + fileEon.getName() );
+		logger.fine( "Concept found: " + fileEon.getName() );
 		fileEon.setVersion(1);
 		fileEon.setReadOnly( true );
 		fileEon.setScope( IConcept.Scope.PRIVATE );
@@ -136,7 +136,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 	 */
 	public static boolean isValidModel( IModelLeaf<IDescriptor> model )
 	{
-		Logger logger = Logger.getLogger( IEFavoritesProvider.class );
+		Logger logger = Logger.getLogger( IEFavoritesProvider.class.getName() );
 		if(!( model instanceof FileModel))
 			return true;
 
@@ -145,7 +145,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 			return true;
 
 		File file = fileEon.getFile();
-		logger.trace( "File is file: " + file.isFile() +
+		logger.fine( "File is file: " + file.isFile() +
 				" ends with url: " + file.getName().endsWith( ".url") );
 		if(( file.isFile() == true ) &&
 				( file.getName().endsWith( ".url") == true ))
