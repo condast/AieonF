@@ -54,6 +54,7 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 
 	@Override
 	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor> filter) {
+		super.getModels().clear();
 		try {
 			parseTree( filter );
 		} catch (ParseException e) {
@@ -81,21 +82,21 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 	}
 
 	private void parseTree( IModelNode<IDescriptor> leaf, JsonNode node, IModelFilter<IDescriptor> filter ) throws ParseException, ConceptException{
-		Collection<IModelLeaf<IDescriptor>> models = super.getModels();
-		if(( leaf != null ) && ( filter.accept( leaf )))
-			models.add( leaf );
+		//if(( leaf != null ) && ( filter.accept( leaf )))
+		//	models.add( leaf );
 
 		String type = node.path("type").textValue();
 		ChromiumAieon.Types ctype = ( Utils.isNull( type )? ChromiumAieon.Types.OTHER: ChromiumAieon.Types.valueOf( StringStyler.styleToEnum( type )));
-		IModelNode<IDescriptor> parent = leaf;
 		IModelLeaf<IDescriptor> model = null;
 		ChromiumAieon aieon = new ChromiumAieon( ctype );
 		aieon.fill(node );
 		fill(aieon);
 		IDFactory( aieon );
 
+		IModelNode<IDescriptor> parent = leaf;
 		switch( ctype ){
 		case FOLDER:
+			Collection<IModelLeaf<IDescriptor>> models = super.getModels();
 			parent = new Model<IDescriptor>( new CategoryAieon( aieon ));
 			model = parent;
 			if( filter.accept( model ))
@@ -353,5 +354,17 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 			super.remove( IDescriptor.Attributes.NAME );
 			super.fill();
 		}
+	}
+
+	@Override
+	public boolean contains(IModelLeaf<? extends IDescriptor> leaf) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String printDatabase() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

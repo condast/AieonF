@@ -140,4 +140,25 @@ public class StringStyler
 			return null;
 		return str.replace("_", "-").toLowerCase();
 	}
+
+	/**
+	 * Create a pretty string from the given one
+	 * @param strng
+	 * @return
+	 */
+	public static String fromPackageString( String strng ){
+		String str = strng.replaceAll("[.]", "_8");
+		return str;
+	}
+
+	/**
+	 * Create a pretty string from the given one
+	 * @param strng
+	 * @return
+	 */
+	public static String toPackageString( String strng ){
+		String str = strng.replaceAll("_8", ".");
+		return str;
+	}
+
 }

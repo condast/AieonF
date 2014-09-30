@@ -218,4 +218,16 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 		super.getModels().add( new ModelLeaf<IDescriptor>( urlEon ));
 		return urlEon;
 	}
+
+	@Override
+	public boolean contains(IModelLeaf<? extends IDescriptor> leaf) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String printDatabase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -64,13 +64,13 @@ public class FireFoxModelFunction extends AbstractFunction<ILoaderAieon, IModelP
 	@Override
 	protected IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
 		ILoaderAieon baseLoader = getDefaultLoader(leaf);
-		URI uri = AbstractFileConnector.getDefaultSource( DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
-		baseLoader.set( IConcept.Attributes.SOURCE, uri.getPath());
-
 		baseLoader.setDescription( DEFAULT_FIREFOX_PROVIDER_NAME );
 		IModelLeaf<ILoaderAieon> model = getModelForLoader(baseLoader, leaf);
 		if( Utils.isNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_FIREFOX_IDENTIFIER );
+		URI uri = AbstractFileConnector.getDefaultSource( DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
+		baseLoader.set( IConcept.Attributes.SOURCE, uri.getPath());
+
 		IModelProvider<ILoaderAieon, IModelLeaf<IDescriptor>> provider;
 		if( version == FireFoxVersion.firefox3 )
 			provider = new FireFoxSQLiteBookmarkProvider<ILoaderAieon>( super.getAieon(), model );

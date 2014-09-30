@@ -31,7 +31,7 @@ public class ModelFunctionProvider extends AbstractProvider<String, Object, IMod
 		if(!( datum instanceof IModelLeaf ))
 			return;
 		IModelLeaf<ILoaderAieon> leaf = (IModelLeaf<ILoaderAieon>) datum;
-		if(!IModelProvider.S_MODEL_PROVIDER_ID.equals( leaf.getIdentifier()))
+		if(!IModelProvider.S_MODEL_PROVIDER_ID.equals( leaf.getID()))
 			return;
 		super.onDataReceived(datum);
 		

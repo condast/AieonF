@@ -48,10 +48,10 @@ public class IEFavoritesFunction extends AbstractFunction<ILoaderAieon, IModelPr
 	@Override
 	protected IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
 		ILoaderAieon baseLoader = getDefaultLoader(leaf);
-		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
-
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
 		IModelLeaf<ILoaderAieon> model = getModelForLoader(baseLoader, leaf);
+		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
+
 		if( Utils.isNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IDENTIFIER );
 		IModelProvider<ILoaderAieon, IModelLeaf<IDescriptor>> provider = new IEFavoritesProvider<ILoaderAieon>( super.getAieon(), model );

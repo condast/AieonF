@@ -36,4 +36,9 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 	 * Deactivate the function
 	 */
 	public void deactivate();
+
+	/**
+	 * Print the given database
+	 */
+	public String printDatabase();
 }

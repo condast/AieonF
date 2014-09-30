@@ -43,6 +43,7 @@ public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends Abstr
 
 	@Override
 	protected void onSetup( ManifestAieon manifest ) {
+		
 	}
 
 	@Override
