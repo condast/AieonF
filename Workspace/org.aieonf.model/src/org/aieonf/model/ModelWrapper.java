@@ -9,8 +9,7 @@ import org.aieonf.concept.core.ConceptException;
 public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 {
 	//The model that is wrapped
-	@SuppressWarnings("rawtypes")
-	private IModelLeaf model;
+	private IModelLeaf<T> model;
 	
 	private Vector<IModelLeaf<? extends IDescriptor>> children;
 	
@@ -18,13 +17,19 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * Create a wrapper for the given model
 	 * @param model
 	 */
-	public ModelWrapper( IModelLeaf<? extends IDescriptor> model ){
+	public ModelWrapper( IModelLeaf<T> model ){
 		this.model = model;
 		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
 	}
+	
+	@Override
+	public String get(Enum<?> attr) {
+		return this.model.get(attr);
+	}
+
 
 	@Override
-	public void set(Attributes attr, String value) {
+	public void set(Enum<?> attr, String value) {
 		this.model.set(attr, value);
 	}
 
@@ -70,7 +75,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * Get the descriptor that this tree node represents
 	 * @return
 	*/
-	@SuppressWarnings("unchecked")
 	@Override
 	public T getDescriptor()
 	{
@@ -93,7 +97,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * @param model
 	 * @returns the created model
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child)
 	{
@@ -108,7 +111,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * Remove a child model from the parent
 	 * @param concept
 	*/
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean removeChild(IModelLeaf<? extends IDescriptor> child)
 	{
@@ -123,7 +125,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * Remove a child model from the parent
 	 * @param concept
 	*/
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<IModelLeaf<? extends IDescriptor>> getChildren()
 	{
@@ -139,7 +140,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * @param descriptor
 	 * @return
 	*/
-	@SuppressWarnings("unchecked")
 	@Override
 	public IModelLeaf<? extends IDescriptor> getChild( IDescriptor descriptor)
 	{
@@ -167,7 +167,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * Returns true if the model has children
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean hasChildren()
 	{
@@ -182,7 +181,6 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	 * Get the number of children
 	 * @return
 	*/
-	@SuppressWarnings("unchecked")
 	@Override
 	public int nrOfchildren()
 	{
@@ -222,14 +220,12 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 		this.model.setDepth( depth );
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public IModelLeaf<? extends IDescriptor> getParent()
 	{
 		return this.model.getParent();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void setParent(IModelLeaf<? extends IDescriptor> parent)
 	{

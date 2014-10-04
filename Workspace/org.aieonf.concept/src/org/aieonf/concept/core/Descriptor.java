@@ -782,6 +782,18 @@ public class Descriptor implements IDescriptor
 	}		
 
 	/**
+	 * Get the given attribute as a boolean. If the value is null, a default is returned
+	 * @param descriptor
+	 * @param attribute
+	 * @param defaultValue
+	 * @return
+	 */
+	public static boolean getBoolean( IDescriptor descriptor, Enum<?> attribute, boolean defaultValue ){
+		String str = descriptor.get(attribute);
+		return Utils.isNull(str)?defaultValue: Boolean.valueOf(str );
+	}
+	
+	/**
 	 * Overwrite the values of the target with those of the reference, if they are not null
 	 * @param target
 	 * @param reference

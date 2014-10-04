@@ -42,9 +42,13 @@ public class TemplateWrapper implements ITemplate
 		this.model.setIdentifier(identifier);
 	}
 
+	@Override
+	public String get(Enum<?> attr) {
+		return this.model.get(attr);
+	}
 	
 	@Override
-	public void set( IModelLeaf.Attributes attr, String value) {
+	public void set( Enum<?> attr, String value) {
 		this.model.set(attr, value);
 	}
 

@@ -84,13 +84,20 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>
 	 * @param parent
 	 */
 	void setParent( IModelLeaf<? extends IDescriptor> parent );
-	
+
+	/**
+	 * Get the attribute
+	 * @param attr
+	 * @param value
+	 */
+	public String get( Enum<?> attr ); 
+
 	/**
 	 * Set the leaf with the given value
 	 * @param attr
 	 * @param value
 	 */
-	public void set( Attributes attr, String value ); 
+	public void set( Enum<?> attr, String value ); 
 
 	/**
 	 * Returns true if the node is a root

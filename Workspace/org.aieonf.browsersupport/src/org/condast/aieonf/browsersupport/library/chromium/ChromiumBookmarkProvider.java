@@ -170,7 +170,7 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 			IDFactory( (IConcept) concept );
 			concept.setProvider( manifest.getIdentifier() );
 			concept.setProviderName( manifest.getProviderName() );
-			concept.set( IConcept.Attributes.SOURCE.name(), manifest.getIdentifier() );
+			concept.set( IConcept.Attributes.SOURCE, manifest.getIdentifier() );
 			BodyFactory.sign( manifest, concept );
 		}
 		catch (IOException e) {
@@ -270,6 +270,7 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 					break;
 				case URL:
 					convert = IConcept.Attributes.SOURCE;
+					break;
 				case TYPE:
 					convert = ILoaderAieon.Attributes.TYPE;
 					break;
@@ -344,11 +345,12 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 			}
 			String type = super.get( Attributes.TYPE );
 			if( type.equals( Types.FOLDER.name() )){
-				super.set( IDescriptor.Attributes.NAME.toString(), CategoryAieon.Attributes.CATEGORY.toString() );
+				super.set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
 				super.set( CategoryAieon.Attributes.CATEGORY, super.get( Attributes.NAME ));
 			}else{
 				String name = super.get( Attributes.NAME );
-				super.set( IDescriptor.Attributes.NAME.toString(), URLAieon.Attributes.URL.toString() );
+				super.set( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
+				super.set( IConcept.Attributes.SOURCE, URLAieon.Attributes.URL.toString() );
 				super.setDescription( name );
 			}
 			super.remove( IDescriptor.Attributes.NAME );

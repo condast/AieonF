@@ -45,7 +45,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * @param value
 	 */
 	@Override
-	public void set( Attributes attr, String value ){
+	public void set( Enum<?> attr, String value ){
 		super.set( attr, value);
 	}
 

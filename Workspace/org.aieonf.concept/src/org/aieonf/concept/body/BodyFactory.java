@@ -399,7 +399,7 @@ public class BodyFactory<T extends Object>
     int hashCode = BodyFactory.hashCode( loader, loader );
     long signature = ( long )hashCode << 32;
     signature += BodyFactory.hashCode( loader, descriptor.getDescriptor() );
-    descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE.name(), String.valueOf( signature ));
+    descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE, String.valueOf( signature ));
   }
   
   /**
