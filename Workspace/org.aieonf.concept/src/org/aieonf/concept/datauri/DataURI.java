@@ -9,6 +9,7 @@ public class DataURI extends ConceptWrapper implements IDataURI
 {
 	public static final String S_ICON = "icon";
 	
+	public static final String S_DATA_URI = "Data";
 	public static final String S_DATA = "data";
 	public static final String S_CHARSET = "charset";
 	public static final String S_BASE64 = "base64";
@@ -38,12 +39,14 @@ public class DataURI extends ConceptWrapper implements IDataURI
 
 	public DataURI( String name )
 	{
-		super( new Concept( name ));
+		super( new Concept( S_DATA_URI ));
+		super.setSource(name);
 	}
 
 	public DataURI( String id, String name )
 	{
-		super( new Concept( id, name ));
+		super( new Concept( id, S_DATA_URI ));
+		super.setSource(name);
 	}
 
 	public DataURI( IDescriptor descriptor ){

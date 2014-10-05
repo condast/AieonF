@@ -1,5 +1,7 @@
 package org.aieonf.concept.library;
 
+import java.net.URL;
+
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.datauri.DataURI;
@@ -75,6 +77,10 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 		super.setSource( uri );
 	}
 
+	public URLAieon( URL url ){
+		this( url.toExternalForm() );
+	}
+	
 	/**
 	 * Create a domain aieon with the given id and name
 	 * @param id
