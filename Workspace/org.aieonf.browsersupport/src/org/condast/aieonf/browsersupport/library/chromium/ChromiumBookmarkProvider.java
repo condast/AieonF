@@ -38,6 +38,7 @@ import org.aieonf.util.parser.ParseException;
 
 public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>> 
 {
+	public static final String S_CHROMIUM = "Chromiun";
 	public static final String S_ROOTS = "roots";
 	public static final String S_BOOKMARK_BAR = "bookmark_bar";
 	public static final String S_CHILDREN = "children";
@@ -45,9 +46,9 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 
 	public ChromiumBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
 	{
-		super( context, model );
+		super( S_CHROMIUM, context, model );
 	}
-
+	
 	@Override
 	protected void onSetup( ManifestAieon manifest ) {
 	}

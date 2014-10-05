@@ -31,6 +31,8 @@ import org.htmlparser.lexer.Page;
 
 public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>>
 {
+	public static final String S_IDENTIFER = "FirefoxHtmlBookmarks";
+	
 	private int depth = 0;
 	private boolean category = false;
 	private FireFoxReference currentURL;
@@ -38,7 +40,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 
 	public FireFoxHTMLBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
 	{
-		super( context, model );
+		super( S_IDENTIFER, context, model );
 	}
 
 	@Override

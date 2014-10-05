@@ -11,6 +11,12 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 
 	public static final String S_MODEL_PROVIDER_ID = "org.condast.concept.model";
 
+	/**
+	 * Get a unique identifier for this model provider
+	 * @return
+	 */
+	public String getIdentifier();
+	
 	public void addListener( IModelBuilderListener listener );
 
 	public void removeListener( IModelBuilderListener listener );
@@ -18,6 +24,11 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 	public void open();
 	
 	public boolean isOpen();
+	
+	/**
+	 * Sync the actual model with the database
+	 */
+	public void sync();
 	
 	public void close();
 

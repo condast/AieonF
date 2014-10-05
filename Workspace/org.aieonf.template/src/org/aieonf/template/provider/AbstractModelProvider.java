@@ -34,14 +34,21 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 	private ManifestAieon manifest;
 	
 	private IContextAieon context;
+	private String identifier;
 
-	protected AbstractModelProvider( IContextAieon context, IModelLeaf<T> model ) {
+	protected AbstractModelProvider( String identifier, IContextAieon context, IModelLeaf<T> model ) {
 		listeners = new ArrayList<IModelBuilderListener>();
+		this.identifier = identifier;
 		this.context = context;
 		manifest = this.setup( model);
 		this.model = model;
 		models = new ArrayList<V>();
 	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
 
 	protected ManifestAieon getManifest() {
 		return manifest;
@@ -89,6 +96,11 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 	public boolean isOpen() {
 		return open;
 	}
+
+	/**
+	 * Sync the actual model with the database
+	 */
+	public void sync(){}
 
 	public void close(){
 		this.open = false;

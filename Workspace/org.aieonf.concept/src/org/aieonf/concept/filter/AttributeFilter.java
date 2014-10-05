@@ -253,7 +253,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
         if( desc.getDescriptor().get( this.refKey ) == null )
           return false;
         WildcardFilter filter = new WildcardFilter( this.refVal );
-        return filter.accept( desc.getDescriptor().get( this.refKey ));
+        return filter.accept( value );
       }
   }
 

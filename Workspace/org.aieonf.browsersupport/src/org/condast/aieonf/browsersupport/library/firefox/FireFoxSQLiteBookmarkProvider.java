@@ -33,12 +33,14 @@ import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkA
 
 public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>>
 {
+	public static final String S_IDENTIFER = "FirefoxSQLBookmarks";
+
 	private Connection connection;
 
 
 	public FireFoxSQLiteBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
 	{
-		super( context, model );
+		super( S_IDENTIFER, context, model );
 	}
 
 	@Override

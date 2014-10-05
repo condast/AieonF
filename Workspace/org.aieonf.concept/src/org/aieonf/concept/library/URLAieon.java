@@ -75,23 +75,28 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	{
 		super( new DataURI( uri ), IConcept.Attributes.SOURCE.toString() );
 		super.setSource( uri );
+		super.setDescription(uri);
+		DataURI data = (DataURI) super.getDescriptor();
+		data.setDataName(uri);
+	}
+
+	/**
+	 * Create a domain name with the given name
+	 * @param domain
+	 */
+	public URLAieon( String name, String uri ) 
+	{
+		super( new DataURI( uri ), IConcept.Attributes.SOURCE.toString() );
+		super.setSource( uri );
+		super.setDescription(name);
+		DataURI data = (DataURI) super.getDescriptor();
+		data.setDataName(name);
 	}
 
 	public URLAieon( URL url ){
 		this( url.toExternalForm() );
 	}
 	
-	/**
-	 * Create a domain aieon with the given id and name
-	 * @param id
-	 * @param domain
-	 */
-	public URLAieon( String id, String uri )
-	{
-		super( new DataURI( id, IConcept.Attributes.SOURCE.toString() ), IConcept.Attributes.SOURCE.toString() );
-		this.setSource( uri );		
-	}
-
 	/**
 	 * Create a domain aieon with the given id and name
 	 * @param id

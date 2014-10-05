@@ -33,6 +33,8 @@ import org.aieonf.template.provider.AbstractModelProvider;
  */
 public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IDescriptor, IModelLeaf<IDescriptor>>
 {
+	public static final String S_IDENTIFER = "InternetExplorerFavourites";
+
 	private IFilePersistence<IModelLeaf<IDescriptor>> persistence;
 	
 	private File root;
@@ -41,7 +43,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 
 	public IEFavoritesProvider( IContextAieon context, IModelLeaf<T> model )
 	{
-		super( context, model );
+		super( S_IDENTIFER, context, model );
 		logger = Logger.getLogger( this.getClass().getName() );
 	}
 

@@ -19,6 +19,17 @@ public interface IModelController<T extends IDescriptor> {
 	public void initialise();
 	
 	/**
+	 * Open ther controller
+	 */
+	public void open();
+	
+	/**
+	 * Returns true if the controller is open
+	 * @return
+	 */
+	public boolean isOpen();
+	
+	/**
 	 * Close the controller
 	 */
 	public void close();

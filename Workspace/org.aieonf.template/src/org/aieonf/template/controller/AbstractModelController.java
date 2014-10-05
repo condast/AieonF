@@ -18,6 +18,7 @@ public abstract class AbstractModelController<T extends IContextAieon, U extends
 	private boolean initialised;
 	private IModelLeaf<U> model;
 	private ITemplateLeaf<T> template;
+	private boolean open;
 	
 	private IModelContextFactory<T> factory;	
 
@@ -25,11 +26,22 @@ public abstract class AbstractModelController<T extends IContextAieon, U extends
 	
 	protected AbstractModelController( IModelContextFactory<T> factory ) {
 		super();
+		this.open = false;
 		this.factory = factory;
 		this.initialised = false;
 		listeners = new ArrayList<IModelBuilderListener>();
 	}
 	
+	public void open(){
+		this.open = (this.factory != null );
+	}
+	
+	@Override
+	public boolean isOpen() {
+		return open;
+	}
+
+
 	public void addBuilderListener( IModelBuilderListener listener ){
 		this.listeners.add( listener );
 	}

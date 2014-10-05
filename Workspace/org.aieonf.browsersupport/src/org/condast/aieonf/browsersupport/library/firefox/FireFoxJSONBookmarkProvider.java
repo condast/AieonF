@@ -20,10 +20,11 @@ import org.aieonf.template.provider.AbstractModelProvider;
 
 public class FireFoxJSONBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IConcept, IModelLeaf<IConcept>>
 {
+	public static final String S_IDENTIFER = "FirefoxJsonBookmarks";
 
 	public FireFoxJSONBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
 	{
-		super( context, model );
+		super( S_IDENTIFER, context, model );
 	}
 
 	@Override

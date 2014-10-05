@@ -41,16 +41,26 @@ public class DataURI extends ConceptWrapper implements IDataURI
 	{
 		super( new Concept( S_DATA_URI ));
 		super.setSource(name);
+		super.setDescription(name);
 	}
 
 	public DataURI( String id, String name )
 	{
 		super( new Concept( id, S_DATA_URI ));
 		super.setSource(name);
+		super.setDescription(name);
 	}
 
 	public DataURI( IDescriptor descriptor ){
 		super( descriptor );
+	}
+	
+	public String getDataName(){
+		return super.get( S_DATA );
+	}
+	
+	public void setDataName( String value ){
+		super.set( S_DATA, value);
 	}
 	
 	/**

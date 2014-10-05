@@ -231,7 +231,22 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 				break;
 			}
 		parent.addChild(replace);
-		return retVal;
+		return retVal;		
+	}
+	
+	/**
+	 * Return the parents of the given collection, if they are not null
+	 * @param models
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Collection<IModelLeaf<IDescriptor>> getParents( Collection<IModelLeaf<IDescriptor>> models ){
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
+		for( IModelLeaf<?> model: models ){
+			if( model.getParent() != null )
+				results.add( (IModelLeaf<IDescriptor>) model.getParent() );
+		}
+		return results;
 		
 	}
 }

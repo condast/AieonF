@@ -23,6 +23,11 @@ public class HierarchicalModelAttributeFilter<T extends IDescriptor> extends Hie
 
 	
 	@Override
+	protected boolean acceptEnabled(Object obj) throws FilterException {
+		return super.getParentFilter().accept(obj);
+	}
+
+	@Override
 	public boolean acceptChild( IModelLeaf<T> child) {
 		HierarchyRules rules = super.getHierarchyRule();
 		boolean retval = false;
