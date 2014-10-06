@@ -6,6 +6,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.util.parser.ParseException;
+import org.aieonf.util.transaction.ITransaction;
 
 public interface IModelProvider<T extends IDescriptor, U extends Object> {
 
@@ -42,6 +43,13 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 	public Collection<U> get( IDescriptor descriptor ) throws ParseException;
 
 	public Collection<U> search( IModelFilter<IDescriptor> filter ) throws ParseException;
+	
+	/**
+	 * Create a transaction for the given object in this provider
+	 * @param data
+	 * @return
+	 */
+	public ITransaction<U> createTransaction( U data );
 	
 	/**
 	 * Deactivate the function

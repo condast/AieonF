@@ -15,6 +15,7 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.DateAieon;
 import org.aieonf.concept.library.LocaleAieon;
+import org.aieonf.concept.library.LogEntryAieon;
 import org.aieonf.concept.library.URLAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
@@ -45,6 +46,7 @@ public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemp
 		CONCEPT,
 		CATEGORY,
 		URL,
+		LOG_ENTRY,
 		LOGIN,
 		BIRTH_DATE,
 		LOCALE;
@@ -126,6 +128,9 @@ public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemp
 		case URL:
 			descriptor = new URLAieon();
 			break;			
+		case LOG_ENTRY:
+			descriptor = new LogEntryAieon();
+			break;			
 		case LOGIN:
 			descriptor = new PasswordAieon();
 			break;
@@ -205,6 +210,9 @@ public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemp
 			break;
 		case URL:
 			enm = URLAieon.Attributes.valueOf( key );
+			break;
+		case LOG_ENTRY:
+			enm = LogEntryAieon.Attributes.valueOf( key );
 			break;
 		case LOGIN:
 			enm = IPasswordAieon.Attributes.valueOf( key );

@@ -10,6 +10,7 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.util.Utils;
 import org.aieonf.util.parser.ParseException;
+import org.aieonf.util.transaction.ITransaction;
 
 public class CombinedProvider<T extends IDescriptor, U extends Object> implements IModelProvider<T, U> 
 {
@@ -80,6 +81,17 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 		for( IModelProvider<T, U> provider: this.providers ){
 			provider.close();
 		}
+	}
+
+	
+	@Override
+	public ITransaction<U> createTransaction(U data) {
+		for( IModelProvider<T, U> provider: this.providers ){
+			ITransaction<U> transaction = provider.createTransaction(data);
+			if( transaction != null )
+				return transaction;
+		}
+		return null;
 	}
 
 	@Override

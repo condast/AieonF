@@ -9,8 +9,6 @@ target/
 .settings/
 
 .cache
-.classpath
 .jxta
-.project
 .settings
 target

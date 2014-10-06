@@ -27,6 +27,7 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>
 	public enum Attributes{
 		ID,
 		NAME,
+		TYPE,
 		IDENTIFIER,
 		ROOT,
 		LEAF,

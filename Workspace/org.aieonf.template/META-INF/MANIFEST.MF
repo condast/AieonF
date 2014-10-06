@@ -48,5 +48,6 @@ Import-Package: org.aieonf.concept,
  org.aieonf.util.logger,
  org.aieonf.util.parser,
  org.aieonf.util.persistence,
+ org.aieonf.util.transaction,
  org.aieonf.util.validation,
  org.aieonf.util.xml

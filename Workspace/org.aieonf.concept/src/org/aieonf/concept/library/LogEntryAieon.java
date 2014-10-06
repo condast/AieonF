@@ -11,6 +11,7 @@ import org.aieonf.util.Utils;
 public class LogEntryAieon extends DateAieon
 {
 	public enum Attributes{
+		TITLE,
 		LOG_ENTRY;
 
 		/* (non-Javadoc)
@@ -31,6 +32,11 @@ public class LogEntryAieon extends DateAieon
 	public LogEntryAieon()
 	{
 		super( Attributes.LOG_ENTRY.toString() );
+	}
+
+	public LogEntryAieon(String title)
+	{
+		this( title, Calendar.getInstance());
 	}
 
 	public LogEntryAieon(String title, Calendar calendar)
@@ -58,11 +64,11 @@ public class LogEntryAieon extends DateAieon
 	}
 
 	public String getTitle(){
-		return super.get(Attributes.LOG_ENTRY );
+		return super.get(Attributes.TITLE );
 	}
 	
 	public void setTitle( String title ){
-		super.set( Attributes.LOG_ENTRY, title);
+		super.set( Attributes.TITLE, title);
 	}
 
 	@Override

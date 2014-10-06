@@ -20,6 +20,7 @@ import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.util.parser.ParseException;
+import org.aieonf.util.transaction.ITransaction;
 
 public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends IDescriptor,V extends IDescribable<U>> implements IModelProvider<T,V> {
 
@@ -132,6 +133,12 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 	@Override
 	public String printDatabase() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	@Override
+	public ITransaction<V> createTransaction(V data) {
 		return null;
 	}
 
