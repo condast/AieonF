@@ -24,6 +24,7 @@ Export-Package: org.aieonf.util,
  org.aieonf.util.petition,
  org.aieonf.util.search,
  org.aieonf.util.stardate,
+ org.aieonf.util.transaction,
  org.aieonf.util.tree,
  org.aieonf.util.validation,
  org.aieonf.util.xml

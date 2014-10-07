@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.aieonf.feature"
+      label="AieonF Feature"
+      version="1.0.0.v20141007"
+      provider-name="Condast">
+
+   <description url="https://github.com/condast/AieonF">
+      The Aieon Framework (AieonF) provides means to link urls into models; groups of websites that are meaningful for a user. Instances of these models can be shared
+   </description>
+
+   <copyright>
+      Copyright 2002-2014 AieonF
+   </copyright>
+
+   <license url="http://www.apache.org/licenses/LICENSE-2.0.html">
+      This software is licensed with an apache 2.0
+   </license>
+
+   <plugin
+         id="org.aieonf.collections"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.concept"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.graph"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.model"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.template"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
