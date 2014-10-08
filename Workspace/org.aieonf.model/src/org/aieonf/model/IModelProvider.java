@@ -10,7 +10,7 @@ import org.aieonf.util.transaction.ITransaction;
 
 public interface IModelProvider<T extends IDescriptor, U extends Object> {
 
-	public static final String S_MODEL_PROVIDER_ID = "org.condast.concept.model";
+	public static final String S_MODEL_PROVIDER_ID = "org.aieonf.model.provider";
 
 	/**
 	 * Get a unique identifier for this model provider

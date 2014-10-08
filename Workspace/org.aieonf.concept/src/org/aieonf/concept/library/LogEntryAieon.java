@@ -41,7 +41,7 @@ public class LogEntryAieon extends DateAieon
 
 	public LogEntryAieon(String title, Calendar calendar)
 	{
-		super(calendar);
+		super( Attributes.LOG_ENTRY.toString(), calendar);
 		this.setTitle(title);
 	}
 

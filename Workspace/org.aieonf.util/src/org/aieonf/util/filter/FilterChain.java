@@ -64,8 +64,11 @@ public class FilterChain<T> extends AbstractFilter<T>
   private Collection<T> andFilter( Collection<T> list ) throws FilterException
   {
   	Collection<T> results = list;
-    for( IFilter<T> filter: this.filterChain )
+    for( IFilter<T> filter: this.filterChain ){
+    	if( results.size() == 0 )
+    		break;
     	results = filter.doFilter( results );
+    }
     return results;
   }
 

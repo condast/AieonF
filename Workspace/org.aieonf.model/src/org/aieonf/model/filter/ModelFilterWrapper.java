@@ -11,16 +11,41 @@ import org.aieonf.util.filter.IFilter;
 public class ModelFilterWrapper<T extends IDescriptor> implements
 		IModelFilter<T> {
 
+	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";
 	private IFilter<IModelLeaf<T>> filter;
 	
+	private int minDepth, maxDepth;
+	
 	public ModelFilterWrapper( IFilter<IModelLeaf<T>> filter ) {
+		this( filter, 0, -1 );
+	}
+
+	public ModelFilterWrapper( IFilter<IModelLeaf<T>> filter, int minDepth, int maxDepth ) {
 		super();
 		this.filter = filter;
+		if( minDepth < 0 )
+			throw new IllegalArgumentException( S_ERR_MIN_DEPTH_WRONG);
+		this.minDepth = minDepth;
+		this.maxDepth = maxDepth;
+	}
+
+	public ModelFilterWrapper( IFilter<IModelLeaf<T>> filter, int maxDepth ) {
+		this( filter, 0, maxDepth );
 	}
 
 	@Override
 	public String getName() {
 		return filter.getName();
+	}
+	
+	@Override
+	public int getMinDepth() {
+		return this.minDepth;
+	}
+
+	@Override
+	public int getMaxDepth() {
+		return this.maxDepth;
 	}
 
 	@Override
@@ -45,7 +70,9 @@ public class ModelFilterWrapper<T extends IDescriptor> implements
 
 	@Override
 	public boolean accept(Object obj) throws FilterException {
-		return filter.accept(obj);
+		if( !acceptDepth(minDepth, maxDepth, obj ))
+			return false;
+		return filter.accept( obj );
 	}
 
 	@Override
@@ -65,10 +92,30 @@ public class ModelFilterWrapper<T extends IDescriptor> implements
 	public Collection<IModelLeaf<T>> getRejected() {
 		return filter.getRejected();
 	}
-
+	
 	@Override
 	public boolean acceptChild(IModelLeaf<T> child) {
-		return filter.accept(child );
+		if( !acceptDepth(minDepth, maxDepth, child ))
+				return false;
+		return filter.accept( child );
 	}
 
+	/**
+	 * Accept the object with a check on minimum and maximum depth
+	 * @param filter
+	 * @param minDepth
+	 * @param maxDepth
+	 * @param obj
+	 * @return
+	 */
+	public static boolean acceptDepth( int minDepth, int maxDepth, Object obj ){
+		if( obj instanceof IModelLeaf<?>){
+			IModelLeaf<?> leaf = (IModelLeaf<?>) obj;
+			if( minDepth > leaf.getDepth() )
+				return false;
+			if(( maxDepth >=0 ) && ( maxDepth < leaf.getDepth() ))
+				return false;
+		}
+		return true;
+	}
 }

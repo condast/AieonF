@@ -86,8 +86,7 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	*/
 	public DateAieon() 
 	{
-		super( DATE );
-		implicit = new ImplicitAieon( this, super.getKeyName( Attributes.TIME_IN_MILLIS ));
+		this( DATE );
 	}
 
 	/**

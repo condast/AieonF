@@ -4,12 +4,14 @@
 package org.condast.aieonf.browsersupport.context;
 
 import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
+import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.template.context.AbstractSimpleContextFactory;
 import org.aieonf.util.logger.Logger;
@@ -54,5 +56,16 @@ public class BrowserSupportContextFactory extends AbstractSimpleContextFactory<I
 		loader.setCreatable(false);
 		logger.info( "Getting source " + loader.getSource() );	
 		return new ManifestAieon( loader );
+	}
+
+	@Override
+	public IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> getModelProvider() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> getDatabase() {
+		return null;
 	}
 }
