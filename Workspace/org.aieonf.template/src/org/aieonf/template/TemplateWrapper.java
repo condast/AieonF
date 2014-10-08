@@ -3,6 +3,7 @@ package org.aieonf.template;
 import java.util.Collection;
 import java.util.Map;
 
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.model.IModelLeaf;
@@ -271,5 +272,10 @@ public class TemplateWrapper implements ITemplate
 	@Override
 	public int implies(IDescriptor descriptor) {
 		return this.model.implies(descriptor);
+	}
+
+	@Override
+	public int compareTo(IDescribable<?> o) {
+		return this.model.compareTo(o);
 	}
 }

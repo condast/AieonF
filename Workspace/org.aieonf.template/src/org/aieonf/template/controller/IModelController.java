@@ -63,6 +63,11 @@ public interface IModelController<T extends IDescriptor> {
 	 * @return
 	 */
 	public IModelLeaf<T> getModel();
+	
+	/**
+	 *Set the model
+	 */
+	public void setModel( IModelLeaf<T> model );
 
 	/**
 	 * Get a submodel which contains the given descriptor

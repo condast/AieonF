@@ -21,6 +21,7 @@ Import-Package: org.aieonf.concept,
  org.aieonf.template.builder,
  org.aieonf.template.context,
  org.aieonf.template.controller,
+ org.aieonf.util,
  org.aieonf.util.filter,
  org.aieonf.util.graph,
  org.aieonf.util.logger

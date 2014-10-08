@@ -49,7 +49,7 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 	 * @param data
 	 * @return
 	 */
-	public ITransaction<U> createTransaction( U data );
+	public ITransaction<U, IModelProvider<T, U>> createTransaction();
 	
 	/**
 	 * Deactivate the function

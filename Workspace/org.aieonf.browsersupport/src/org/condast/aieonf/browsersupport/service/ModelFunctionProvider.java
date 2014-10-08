@@ -7,7 +7,7 @@ import org.aieonf.model.IModelFunction;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.template.ITemplateLeaf;
-import org.condast.aieonf.browsersupport.context.BrowserSupportContextFactory;
+import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunction;
 import org.eclipselabs.osgi.ds.broker.service.AbstractPalaver;
 import org.eclipselabs.osgi.ds.broker.service.AbstractProvider;
@@ -35,7 +35,7 @@ public class ModelFunctionProvider extends AbstractProvider<String, Object, IMod
 			return;
 		super.onDataReceived(datum);
 		
-		BrowserSupportContextFactory factory = new BrowserSupportContextFactory();
+		ContextFactory factory = new ContextFactory();
 		ITemplateLeaf<IContextAieon> template = factory.createTemplate();
 		IModelFunction function = (IModelFunction) new ModelFunction( template.getDescriptor() );
 		super.provide( function );

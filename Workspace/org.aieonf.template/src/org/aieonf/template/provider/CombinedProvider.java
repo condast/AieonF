@@ -82,12 +82,11 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 			provider.close();
 		}
 	}
-
 	
 	@Override
-	public ITransaction<U> createTransaction(U data) {
+	public ITransaction<U,IModelProvider<T, U>> createTransaction() {
 		for( IModelProvider<T, U> provider: this.providers ){
-			ITransaction<U> transaction = provider.createTransaction(data);
+			ITransaction<U,IModelProvider<T, U>> transaction = provider.createTransaction();
 			if( transaction != null )
 				return transaction;
 		}

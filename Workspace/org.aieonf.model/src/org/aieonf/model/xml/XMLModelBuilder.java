@@ -129,7 +129,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		try {
 			in = url.openStream();
 		} catch (Exception e1) {
-			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.creator.getLocation());
+			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.creator.getLocation() + "\n");
 			e1.printStackTrace();
 			return null;
 		}
@@ -137,7 +137,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		//First parse the XML file
 		IModelLeaf<T> root = null;
 		try {
-			logger.info("Parsing SAIGHT Bundle: " + this.bundleId );
+			logger.info("Parsing SAIGHT Bundle: " + this.bundleId + "\n");
 			//Schema schema = schemaFactory.newSchema(schemaFile);
 			//factory.setSchema(schema);//saxParser.
 			
@@ -163,7 +163,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 			root = parser.getRoot();
 			parser.removeDescriptorCreator( creator );
 			parser.clear();
-			logger.info("AIEONF Bundle Parsed: " + this.bundleId );
+			logger.info("AIEONF Bundle Parsed: " + this.bundleId + "\n");
 		} catch( SAXNotRecognizedException e ){
 			failed = true;
 			e.printStackTrace();			

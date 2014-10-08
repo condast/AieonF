@@ -10,6 +10,8 @@ import org.aieonf.util.Utils;
 
 public class LogEntryAieon extends DateAieon
 {
+	public static final String S_DATE_FORMAT = "dd.MM.yyyy-HH:mm:ss";
+
 	public enum Attributes{
 		TITLE,
 		LOG_ENTRY;
@@ -89,6 +91,8 @@ public class LogEntryAieon extends DateAieon
 	 */
 	public static String getDescription( IDescriptor descriptor ){
 		String desc = descriptor.getDescription();
+		if( desc == null )
+			desc = descriptor.get( Attributes.TITLE );
 		if( desc == null )
 			desc = descriptor.getName();
 		return desc;

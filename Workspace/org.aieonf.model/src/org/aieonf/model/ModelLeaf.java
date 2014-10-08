@@ -10,7 +10,7 @@ import org.aieonf.concept.implicit.AbstractImplies;
 import org.aieonf.concept.implicit.Implies;
 import org.aieonf.util.Utils;
 
-public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IModelLeaf<T>, Comparable<IModelLeaf<T>>
+public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IModelLeaf<T>
 {	
 	//The concept that is modelled
 	private T descriptor;
@@ -197,7 +197,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * Implement the compare to
 	 */
 	@Override
-	public int compareTo( IModelLeaf<T> node ) 
+	public int compareTo( IDescribable<?> node ) 
 	{
 		if( this.descriptor == null )
 			return -1;

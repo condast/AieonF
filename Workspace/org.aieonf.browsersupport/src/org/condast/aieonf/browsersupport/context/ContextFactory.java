@@ -3,7 +3,6 @@
  */
 package org.condast.aieonf.browsersupport.context;
 
-import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.*;
@@ -13,14 +12,14 @@ import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
-import org.aieonf.template.context.AbstractSimpleContextFactory;
+import org.aieonf.template.context.AbstractProviderContextFactory;
 import org.aieonf.util.logger.Logger;
 
 /**
  * @author Kees Pieters
  *
  */
-public class BrowserSupportContextFactory extends AbstractSimpleContextFactory<IModelProvider<IContextAieon, IConcept>>
+public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<IDescriptor>>
 {
 	private static final String S_BUNDLE_ID = "org.condast.aieonf.browsersupport";
 	public static final String S_ERR_NO_CONNECTION = "The connection could not be made!";
@@ -35,7 +34,7 @@ public class BrowserSupportContextFactory extends AbstractSimpleContextFactory<I
 	 * @param aieon
 	 * @throws ConceptException
 	 */
-	public BrowserSupportContextFactory()
+	public ContextFactory()
 	{
 		super( S_BUNDLE_ID );
 		logger = Logger.getLogger( this.getClass() );

@@ -131,7 +131,7 @@ public abstract class AbstractModelController<T extends IContextAieon, U extends
 	 * @param factory
 	 * @param root
 	 */
-	protected void setModel( IModelLeaf<U> root ) {
+	public void setModel( IModelLeaf<U> root ) {
 		this.model = root;
 	}
 

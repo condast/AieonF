@@ -3,6 +3,7 @@ package org.aieonf.model;
 import java.util.Collection;
 import java.util.Vector;
 
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 
@@ -235,5 +236,10 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	@Override
 	public int implies(IDescriptor descriptor) {
 		return this.model.implies(descriptor);
+	}
+
+	@Override
+	public int compareTo(IDescribable<?> o) {
+		return this.model.compareTo(o);
 	}
 }

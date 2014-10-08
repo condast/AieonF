@@ -4,7 +4,7 @@ import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.util.StringStyler;
 
-public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>
+public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comparable<IDescribable<?>>
 {
 	//Supported attributes
 	public static final String S_MODEL = "Model";
