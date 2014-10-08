@@ -3,11 +3,11 @@ package org.aieonf.util.transaction;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class AbstractTransactionContainer<T extends Object> {
+public abstract class AbstractTransactionFactory<T extends Object> {
 
 	private Collection<ITransaction<T>> transactions;
 
-	protected AbstractTransactionContainer() {
+	protected AbstractTransactionFactory() {
 		this.transactions = new ArrayList<ITransaction<T>>();
 	}
 	
