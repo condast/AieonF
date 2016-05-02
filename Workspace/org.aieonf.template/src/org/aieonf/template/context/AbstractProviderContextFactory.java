@@ -85,6 +85,8 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 	@Override
 	public ITransaction<T, IModelProvider<IContextAieon, T>> search( IModelFilter<IDescriptor> filter ){
 		IModelProvider<IContextAieon,T> provider = getDatabase();
+		if( provider == null )
+			return null;
 		Collection<T> models = null;
 		ITransaction<T, IModelProvider<IContextAieon, T>> transaction = provider.createTransaction();
 		try {

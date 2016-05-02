@@ -31,7 +31,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	
 	public static final String S_IDENTIFIER = "GraphModel";
 	
-	private static final String S_LOCAL = "local:";
+	private static final String S_LOCAL = "plocal:";
 	private static final String S_FILE = "file:";
 	protected static final String S_ROOT = "Root";
 	private static final String S_CLASS = "class:";

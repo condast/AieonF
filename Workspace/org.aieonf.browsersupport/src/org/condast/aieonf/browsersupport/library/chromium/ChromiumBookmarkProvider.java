@@ -53,6 +53,15 @@ public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractMo
 	protected void onSetup( ManifestAieon manifest ) {
 	}
 
+	
+	@Override
+	public void open() {
+		URI uri = super.getManifest().getURI();
+		File file = new File( uri );
+		if( file.exists() )
+			super.open();
+	}
+
 	@Override
 	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor> filter) {
 		super.getModels().clear();
