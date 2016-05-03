@@ -17,6 +17,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.*;
+import org.aieonf.commons.parser.IParser;
+import org.aieonf.commons.parser.IParserListener;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
@@ -38,10 +42,6 @@ import org.aieonf.template.TemplateWrapper;
 import org.aieonf.template.parser.attr.TemplateAttributeValidator;
 import org.aieonf.template.property.TemplateProperty;
 import org.aieonf.template.xml.XMLTemplateNode;
-import org.aieonf.util.parser.IParser;
-import org.aieonf.util.parser.IParserListener;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.xml.StoreDocument;
 
 /**
  *

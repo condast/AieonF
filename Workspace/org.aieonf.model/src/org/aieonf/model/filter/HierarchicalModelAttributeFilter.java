@@ -1,11 +1,11 @@
 package org.aieonf.model.filter;
 
+import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.filter.IFilter;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.filter.HierarchicalAttributeFilter;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.util.filter.FilterException;
-import org.aieonf.util.filter.IFilter;
 
 public class HierarchicalModelAttributeFilter<T extends IDescriptor> extends HierarchicalAttributeFilter<IModelLeaf<T>> implements IModelFilter<T>
 {

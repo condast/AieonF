@@ -16,15 +16,15 @@ import org.aieonf.collections.CollectionException;
 import org.aieonf.collections.locator.Locator;
 import org.aieonf.collections.persistence.IFilePersistence;
 import org.aieonf.collections.persistence.LocationManager;
+import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.*;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.ILocationManager;
-import org.aieonf.util.filter.IFilter;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.persistence.IPersistence;
 
 import java.util.logging.Logger;
 

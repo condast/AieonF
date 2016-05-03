@@ -1,8 +1,8 @@
 package org.aieonf.concept.persist;
 
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.util.persistence.IPersistence;
 
 public interface ILocatedPersistence<T extends IDescribable<?>> extends
 		IPersistence<T>

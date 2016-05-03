@@ -4,12 +4,12 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.EmbeddedAieon;
 import org.aieonf.concept.implicit.ImplicitAieon;
-import org.aieonf.util.Utils;
 
 /**
  * <p>Title: Conceptual Network Database</p>

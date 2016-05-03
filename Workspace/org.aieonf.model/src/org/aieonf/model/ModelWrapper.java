@@ -79,7 +79,7 @@ public class ModelWrapper<T extends IDescriptor> implements IModelNode<T>
 	@Override
 	public T getDescriptor()
 	{
-		return (T)this.model.getDescriptor();
+		return this.model.getDescriptor();
 	}
 
 	/**

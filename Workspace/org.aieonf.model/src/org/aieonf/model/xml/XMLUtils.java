@@ -3,8 +3,8 @@ package org.aieonf.model.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.xml.sax.Attributes;
 
 public class XMLUtils {

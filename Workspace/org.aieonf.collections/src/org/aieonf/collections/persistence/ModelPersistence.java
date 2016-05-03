@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.aieonf.commons.io.IOUtils;
+import org.aieonf.commons.persistence.AbstractPersistence;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.ConceptBody;
@@ -16,8 +18,6 @@ import org.aieonf.concept.persist.ILocatedPersistence;
 import org.aieonf.concept.xml.ConceptParser;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.Model;
-import org.aieonf.util.io.IOUtils;
-import org.aieonf.util.persistence.AbstractPersistence;
 import org.w3c.dom.Document;
 
 public class ModelPersistence extends AbstractPersistence<IModelLeaf<IConcept>> implements ILocatedPersistence<IModelLeaf<IConcept>>

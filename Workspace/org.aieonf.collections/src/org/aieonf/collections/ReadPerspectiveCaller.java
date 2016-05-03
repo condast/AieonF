@@ -3,14 +3,15 @@ package org.aieonf.collections;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.aieonf.commons.filter.AbstractFilter;
+import org.aieonf.commons.filter.FilterException;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.filter.DescriptorFilter;
-import org.aieonf.util.filter.AbstractFilter;
-import org.aieonf.util.filter.FilterException;
-import org.aieonf.util.logger.Logger;
 
 public class ReadPerspectiveCaller implements Callable<Collection<IConcept>>
 {
@@ -20,7 +21,7 @@ public class ReadPerspectiveCaller implements Callable<Collection<IConcept>>
 	//All the calls are translated to filter calls
 	private AbstractFilter<IConcept> filter;
 	
-	private Logger logger;
+	private Logger logger = Logger.getLogger( this.getClass().getName());
 	
 	/**
 	 * Create the caller
@@ -30,7 +31,6 @@ public class ReadPerspectiveCaller implements Callable<Collection<IConcept>>
 	{
 		this.collection = collection;
 		this.filter = null;
-		this.logger = Logger.getLogger( this.getClass() );
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class ReadPerspectiveCaller implements Callable<Collection<IConcept>>
 			return results;
 		}
 		catch( CollectionException ex ){
-			logger.error( ex.getMessage(), ex );
+			logger.log( Level.SEVERE, ex.getMessage(), ex );
 			return new ArrayList<IConcept>();
 		}
 	}

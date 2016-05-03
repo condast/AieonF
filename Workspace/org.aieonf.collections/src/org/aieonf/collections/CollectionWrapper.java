@@ -11,10 +11,10 @@ package org.aieonf.collections;
 //J2SE imports
 import java.util.*;
 
+import org.aieonf.commons.filter.*;
 import org.aieonf.concept.*;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.util.filter.*;
 
 /**
  *

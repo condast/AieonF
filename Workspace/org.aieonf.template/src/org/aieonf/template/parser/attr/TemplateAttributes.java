@@ -1,11 +1,11 @@
 package org.aieonf.template.parser.attr;
 
+import org.aieonf.commons.constraints.Cardinality;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.constraints.Aspect;
 import org.aieonf.model.constraints.IAspect;
 import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.util.constraints.Cardinality;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 

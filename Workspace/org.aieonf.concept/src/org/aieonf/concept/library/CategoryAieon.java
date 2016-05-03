@@ -8,13 +8,13 @@
 */
 package org.aieonf.concept.library;
 
+import org.aieonf.commons.strings.StringStyler;
 //Concept imports
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.*;
 import org.aieonf.concept.implicit.IImplicitAieon;
 import org.aieonf.concept.implicit.ImplicitAieon;
 import org.aieonf.concept.wrapper.ConceptWrapper;
-import org.aieonf.util.StringStyler;
 
 /**
  * <p>Title: Conceptual Network Database</p>

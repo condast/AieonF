@@ -4,9 +4,9 @@ package org.aieonf.concept.body;
 import java.io.*;
 import java.util.*;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.*;
-import org.aieonf.util.Utils;
 
 /**
  * <p>Title: Conceptual Network Database</p>

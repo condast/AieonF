@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -28,7 +29,6 @@ import org.aieonf.model.Model;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
-import org.aieonf.util.parser.ParseException;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
 public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>>

@@ -1,8 +1,8 @@
 package org.aieonf.concept.datauri;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.util.StringStyler;
 
 
 public interface IDataURI extends IDataResource, IConcept

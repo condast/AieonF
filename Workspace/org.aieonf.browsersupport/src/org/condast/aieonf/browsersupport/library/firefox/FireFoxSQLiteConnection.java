@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.util.parser.ParseException;
 
 public class FireFoxSQLiteConnection
 {

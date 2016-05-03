@@ -2,13 +2,13 @@ package org.aieonf.concept.library;
 
 import java.net.URL;
 
+import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.xml.URICompletion;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.datauri.DataURI;
 import org.aieonf.concept.datauri.IDataURI;
 import org.aieonf.concept.implicit.ImplicitAieon;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.xml.URICompletion;
 
 /**
  * Create an url aieon

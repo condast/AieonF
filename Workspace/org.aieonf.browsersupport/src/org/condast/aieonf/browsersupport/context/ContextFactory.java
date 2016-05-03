@@ -3,6 +3,8 @@
  */
 package org.condast.aieonf.browsersupport.context;
 
+import java.util.logging.Logger;
+
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.*;
@@ -13,7 +15,6 @@ import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.template.context.AbstractProviderContextFactory;
-import org.aieonf.util.logger.Logger;
 
 /**
  * @author Kees Pieters
@@ -27,7 +28,7 @@ public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<ID
 	public static final String S_USER_HOME_PROPERTY = "user.home";
 
 	//Get the logger
-	private Logger logger;
+	  private Logger logger = Logger.getLogger( this.getClass().getName());
 
 	/**
 	 * Create the application
@@ -37,7 +38,6 @@ public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<ID
 	public ContextFactory()
 	{
 		super( S_BUNDLE_ID );
-		logger = Logger.getLogger( this.getClass() );
 	}
 	
 	/**

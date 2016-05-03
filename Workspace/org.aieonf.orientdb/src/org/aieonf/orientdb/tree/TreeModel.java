@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.loader.ILoaderAieon;
@@ -17,8 +19,6 @@ import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.builder.TemplateModelBuilderEvent;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;

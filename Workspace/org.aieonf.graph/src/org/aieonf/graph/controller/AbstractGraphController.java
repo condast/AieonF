@@ -2,6 +2,7 @@ package org.aieonf.graph.controller;
 
 import java.util.Collection;
 
+import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.graph.IGraphModel;
@@ -10,7 +11,6 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.template.context.IModelContextFactory;
 import org.aieonf.template.controller.AbstractModelController;
-import org.aieonf.util.graph.IVertex;
 
 public abstract class AbstractGraphController<T extends IContextAieon, U extends IDescriptor> extends AbstractModelController<T,U>
 {
@@ -37,6 +37,7 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 	/**
 	 * Add a model to the database
 	 */
+	@Override
 	public boolean addModel(){
 		try {
 			IModelBuilderListener listener = new IModelBuilderListener(){

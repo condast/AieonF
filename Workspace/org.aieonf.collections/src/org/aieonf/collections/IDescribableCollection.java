@@ -11,8 +11,8 @@ package org.aieonf.collections;
 //J2SE imports
 import java.util.Collection;
 
+import org.aieonf.commons.filter.IFilter;
 import org.aieonf.concept.*;
-import org.aieonf.util.filter.IFilter;
 
 /**
  * Defines the base interface to read concepts from the database.

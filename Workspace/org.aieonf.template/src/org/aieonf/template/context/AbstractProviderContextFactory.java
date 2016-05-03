@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Stack;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -13,8 +15,6 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.builder.DefaultModelCreator;
 import org.aieonf.template.context.AbstractModelContextFactory;
-import org.aieonf.util.Utils;
-import org.aieonf.util.transaction.ITransaction;
 
 /**
  * The simple context factory creates a default context and model
@@ -90,11 +90,15 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 		Collection<T> models = null;
 		ITransaction<T, IModelProvider<IContextAieon, T>> transaction = provider.createTransaction();
 		try {
+			provider.open();
 			models = provider.search( filter);
 			for( T model: models )
 				transaction.addData( model );
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally{
+			provider.close();
 		}
 		return transaction;
 	}

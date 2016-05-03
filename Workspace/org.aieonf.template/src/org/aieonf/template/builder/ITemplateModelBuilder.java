@@ -1,5 +1,7 @@
 package org.aieonf.template.builder;
 
+import org.aieonf.commons.parser.IParserListener;
+import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
@@ -7,8 +9,6 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.template.ITemplate;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.databinding.TemplateConceptValidator;
-import org.aieonf.util.parser.IParserListener;
-import org.aieonf.util.parser.ParseException;
 
 public interface ITemplateModelBuilder extends IParserListener<ITemplateLeaf<? extends IDescriptor>>
 {

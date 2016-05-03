@@ -2,13 +2,13 @@ package org.aieonf.orientdb.graph;
 
 import java.net.URI;
 
+import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModel;
 import org.aieonf.graph.IGraphModelFunction;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunction;
 import org.aieonf.orientdb.OrientGraphContextAieon;
-import org.aieonf.util.graph.IVertex;
 import org.condast.aieonf.osgi.utils.ProjectFolderUtils;
 
 public class GraphModelFunction<T extends ILoaderAieon> extends AbstractFunction<T, IGraphModel<T,IVertex<T>>> implements IGraphModelFunction<T> {

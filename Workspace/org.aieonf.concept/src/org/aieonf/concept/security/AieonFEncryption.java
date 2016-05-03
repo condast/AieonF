@@ -5,8 +5,8 @@ import java.security.*;
 
 import javax.crypto.*;
 
-import org.aieonf.util.encryption.Encryption;
-import org.aieonf.util.encryption.IEncryption;
+import org.aieonf.commons.encryption.Encryption;
+import org.aieonf.commons.encryption.IEncryption;
 
 /**
  * <p>Title: Conceptual Network Database</p>

@@ -12,11 +12,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
 
+import org.aieonf.commons.parser.IParser;
+import org.aieonf.commons.parser.IParserListener;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.*;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.ConceptException;
@@ -33,12 +39,6 @@ import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.TemplateAieon;
 import org.aieonf.template.TemplateNode;
 import org.aieonf.template.TemplateWrapper;
-import org.aieonf.util.logger.Logger;
-import org.aieonf.util.parser.IParser;
-import org.aieonf.util.parser.IParserListener;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.xml.StoreDocument;
-//Concept
 
 /**
  *
@@ -61,7 +61,7 @@ public class StoreTemplate implements IParser<ITemplate>
 
 	private IAspect aspect;
 
-	private Logger logger;
+	  private Logger logger = Logger.getLogger( this.getClass().getName());
 
 	/**
 	 * Create a relationship from the given element
@@ -70,7 +70,6 @@ public class StoreTemplate implements IParser<ITemplate>
 	 */
 	public StoreTemplate() throws ParserConfigurationException
 	{
-		this.logger = Logger.getLogger( this.getClass() );
 	}
 
 	/**
@@ -81,7 +80,6 @@ public class StoreTemplate implements IParser<ITemplate>
 	public StoreTemplate( IAspect aspect ) throws ParserConfigurationException
 	{
 		this.aspect = aspect;
-		this.logger = Logger.getLogger( this.getClass() );
 	}
 
 	/**
@@ -160,13 +158,13 @@ public class StoreTemplate implements IParser<ITemplate>
 		Element conceptNode;
 		Collection<? extends IModelLeaf<? extends IDescriptor>>children = tn.getChildren();
 		for( IModelLeaf<? extends IDescriptor> child: children ){
-			logger.trace( "Adding child: " + child.getDescriptor().toString() );
+			logger.log( Level.FINE, "Adding child: " + child.getDescriptor().toString() );
 			conceptNode = doc.createElement( IConcept.CONCEPT );
 			try{
 				createDocument( child, doc, conceptNode );
 			}
 			catch( Exception ex ){
-				logger.error( ex.getMessage(), ex );
+				logger.log( Level.SEVERE, ex.getMessage(), ex );
 			}
 			childNode.appendChild( conceptNode );
 		}

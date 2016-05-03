@@ -1,8 +1,8 @@
 package org.aieonf.model.filter;
 
+import org.aieonf.commons.filter.IFilter;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.util.filter.IFilter;
 
 public interface IModelFilter<T extends IDescriptor> extends IFilter<IModelLeaf<T>> {
 

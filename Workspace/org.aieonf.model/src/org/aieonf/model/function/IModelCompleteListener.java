@@ -1,6 +1,6 @@
 package org.aieonf.model.function;
 
-import org.aieonf.util.StringStyler;
+import org.aieonf.commons.strings.StringStyler;
 
 public interface IModelCompleteListener {
 

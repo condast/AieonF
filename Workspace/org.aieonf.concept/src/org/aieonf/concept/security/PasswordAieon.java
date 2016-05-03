@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.Universe;
@@ -22,7 +23,6 @@ import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.loader.LoaderAieon;
-import org.aieonf.util.Utils;
 
 /**
  *

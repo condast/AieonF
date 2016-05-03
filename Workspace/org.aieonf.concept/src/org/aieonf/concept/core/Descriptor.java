@@ -15,12 +15,12 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.DescriptorViewer;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.IDescriptorViewer;
 import org.aieonf.concept.body.BodyFactory;
-import org.aieonf.util.Utils;
 
 /**
  * Create a descriptor, using a properties file

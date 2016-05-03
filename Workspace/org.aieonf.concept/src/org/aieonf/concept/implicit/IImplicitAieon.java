@@ -1,7 +1,7 @@
 package org.aieonf.concept.implicit;
 
+import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.util.implicit.IImplicit;
 
 /**
  * An implicit concept adds two methods to a standard concept that

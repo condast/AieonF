@@ -10,11 +10,14 @@ package org.aieonf.model.xml;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.*;
 
 import javax.xml.parsers.*;
 
+import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
@@ -24,9 +27,6 @@ import org.aieonf.concept.xml.StoreConcept;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
-import org.aieonf.util.logger.Logger;
-import org.aieonf.util.xml.StoreDocument;
-//Concept
 
 /**
  *
@@ -50,7 +50,8 @@ public class StoreModel<T extends IDescriptor>
 	private Document doc;
 	private Element root;
 
-	private Logger logger;
+	private Logger logger = Logger.getLogger( this.getClass().getName());
+	  
 	/**
 	 * Create a relationship from the given element
 	 *
@@ -58,7 +59,6 @@ public class StoreModel<T extends IDescriptor>
 	 */
 	public StoreModel() throws ParserConfigurationException
 	{
-		this.logger = Logger.getLogger( this.getClass() );
 		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 		this.doc = docBuilder.newDocument();
@@ -101,13 +101,13 @@ public class StoreModel<T extends IDescriptor>
 		Element conceptNode;
 		Collection<? extends IModelLeaf<? extends IDescriptor>>children = md.getChildren();
 		for( IModelLeaf<? extends IDescriptor> child: children ){
-			logger.trace( "Adding child: " + child.getDescriptor().toString() );
+			logger.log( Level.FINE, "Adding child: " + child.getDescriptor().toString() );
 			conceptNode = doc.createElement( IConcept.CONCEPT );
 			try{
 				createDocument( child, conceptNode );
 			}
 			catch( Exception ex ){
-				logger.error( ex.getMessage(), ex );
+				logger.log( Level.SEVERE, ex.getMessage(), ex );
 			}
 			childNode.appendChild( conceptNode );
 		}
@@ -143,7 +143,7 @@ public class StoreModel<T extends IDescriptor>
 	{
 		String str;
 		ConceptParser parser = new ConceptParser();
-		IConcept parent = ( IConcept )parser.parseConceptNode( node );
+		IConcept parent = parser.parseConceptNode( node );
 		IModelNode<IDescriptor> treeNode = new Model<IDescriptor>(parent );
 		Node childNode = null;
 		List<Node> children = StoreDocument.getElements( node.getChildNodes(), Node.ELEMENT_NODE );

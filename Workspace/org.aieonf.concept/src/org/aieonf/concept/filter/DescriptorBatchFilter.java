@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.aieonf.commons.filter.BatchFilter;
+import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.filter.IFilter;
 import org.aieonf.concept.IDescribable;
-import org.aieonf.util.filter.BatchFilter;
-import org.aieonf.util.filter.FilterException;
-import org.aieonf.util.filter.IFilter;
 
 public class DescriptorBatchFilter<T extends IDescribable<?>> extends BatchFilter<T>
 {

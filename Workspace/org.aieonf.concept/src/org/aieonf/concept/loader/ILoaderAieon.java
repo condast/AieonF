@@ -1,10 +1,10 @@
 package org.aieonf.concept.loader;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.locator.ILocatorAieon;
 import org.aieonf.concept.security.IEncryptionAieon;
-import org.aieonf.util.StringStyler;
 
 public interface ILoaderAieon extends ILocatorAieon, IEncryptionAieon, IConcept
 {

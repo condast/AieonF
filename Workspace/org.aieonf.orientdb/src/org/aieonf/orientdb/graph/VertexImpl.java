@@ -2,12 +2,12 @@ package org.aieonf.orientdb.graph;
 
 import java.util.Iterator;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.graph.IVertex;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
-import org.aieonf.util.graph.IVertex;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;

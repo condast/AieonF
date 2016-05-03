@@ -7,6 +7,9 @@ import java.io.OutputStream;
 
 import org.aieonf.collections.CollectionException;
 import org.aieonf.collections.locator.FileLocator;
+import org.aieonf.commons.encryption.IEncryption;
+import org.aieonf.commons.hex.HexConvertor;
+import org.aieonf.commons.persistence.AbstractPersistence;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
@@ -15,9 +18,6 @@ import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.security.AieonFEncryption;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.library.FileModel;
-import org.aieonf.util.encryption.IEncryption;
-import org.aieonf.util.hex.HexConvertor;
-import org.aieonf.util.persistence.AbstractPersistence;
 
 public abstract class AbstractFilePersistence extends
 AbstractPersistence<IModelLeaf<IDescriptor>> implements IFilePersistence<IModelLeaf<IDescriptor>>

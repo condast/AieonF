@@ -8,12 +8,12 @@ import java.util.List;
 
 import javax.crypto.Cipher;
 
+import org.aieonf.commons.encryption.Encryption;
+import org.aieonf.commons.encryption.IEncryption;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.body.ConceptBody;
 import org.aieonf.concept.core.Concept;
-import org.aieonf.util.encryption.Encryption;
-import org.aieonf.util.encryption.IEncryption;
 
 /**
  * The default signer creates an encrypted byte array of a concept, and 

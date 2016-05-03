@@ -1,9 +1,11 @@
 package org.aieonf.concept.filter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.aieonf.commons.filter.*;
 import org.aieonf.concept.*;
 import org.aieonf.concept.filter.AttributeMapFilter.Rules;
-import org.aieonf.util.filter.*;
-import org.aieonf.util.logger.*;
 
 /**
  * <p>Title: Conceptual Network Database</p>
@@ -31,7 +33,7 @@ public class VersionFilter<T extends IDescribable<?>> extends AbstractFilter<T>
   }
   private String version;
 
-  //private Logger logger;
+  private Logger logger = Logger.getLogger( this.getClass().getName());
 
   /**
    * Create a version filter for the given reference version
@@ -155,18 +157,17 @@ public class VersionFilter<T extends IDescribable<?>> extends AbstractFilter<T>
   @Override
 	protected boolean acceptRule( String rule )
   {
-    Logger logger = Logger.getLogger( this.getClass() );
-    logger.trace( "Checking rule: " + rule );
+    logger.log( Level.FINE, "Checking rule: " + rule );
     try{
       Compare.valueOf( rule );
       return true;
     }
     catch( IllegalStateException ex ){
-        logger.trace( "Rule not accepted: " + ex.getMessage() );
+        logger.log( Level.FINE, "Rule not accepted: " + ex.getMessage() );
     	return false;
     }
     catch( Exception ex ){
-      logger.trace( "Rule not accepted: " + ex.getMessage() );
+      logger.log( Level.FINE, "Rule not accepted: " + ex.getMessage() );
       return false;
     }
   }

@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.NoSuchPaddingException;
 
+import org.aieonf.commons.encryption.IEncryption;
+import org.aieonf.commons.encryption.IEncryption.Algorithms;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.Universe;
@@ -13,8 +15,6 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.loader.AbstractLocationManager;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.security.AieonFEncryption;
-import org.aieonf.util.encryption.IEncryption;
-import org.aieonf.util.encryption.IEncryption.Algorithms;
 
 public class LocationManager extends AbstractLocationManager<IDescriptor>
 {

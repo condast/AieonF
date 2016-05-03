@@ -11,8 +11,8 @@ package org.aieonf.concept;
 import java.io.*;
 import java.util.Iterator;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.util.StringStyler;
 
 /**
  * Defines a concept, basically a wrapper around the underlying XML definition

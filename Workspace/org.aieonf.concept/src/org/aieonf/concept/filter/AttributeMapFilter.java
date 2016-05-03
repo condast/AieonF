@@ -2,10 +2,11 @@ package org.aieonf.concept.filter;
 
 //J2SE
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.aieonf.commons.filter.*;
 import org.aieonf.concept.*;
-import org.aieonf.util.filter.*;
-import org.aieonf.util.logger.*;
 
 /**
  * <p>Title: Conceptual Network Database</p>
@@ -35,7 +36,7 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
   public Map<String,String> refMap;
 
   //logger
-  private Logger logger;
+  private Logger logger = Logger.getLogger( this.getClass().getName());
 
   /**
    * Create the filter
@@ -45,7 +46,6 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
   public AttributeMapFilter() throws FilterException
   {
     super.setName( AttributeMapFilter.class.getName() );
-    this.logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -60,7 +60,6 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
   {
     super( AttributeMapFilter.class.getName(), rule.name() );
     this.refMap = attributes;
-    this.logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -76,7 +75,6 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
   {
     super( name, rule.name() );
     this.refMap = attributes;
-    this.logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -144,7 +142,7 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
     if( descriptor == null )
     	return false;
     
-  	logger.trace( "Testing Descriptor: " + descriptor.toString() );
+  	logger.log( Level.FINE, "Testing Descriptor: " + descriptor.toString() );
 
     Set<Map.Entry<String,String>> set = refMap.entrySet();
     Iterator<Map.Entry<String,String>> iterator = set.iterator();
@@ -160,15 +158,15 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
       if( filter.accept( descriptor ) == false ){
         if( this.getRule().equals( AttributeMapFilter.Rules.WildcardAnd.name() ) == true )
           continue;
-        logger.trace( "Descriptor not accepted: " + descriptor.toString() + ", key: " + key + "-"  + value );
+        logger.log( Level.FINE, "Descriptor not accepted: " + descriptor.toString() + ", key: " + key + "-"  + value );
         return false;
       }
       if( this.getRule().equals( AttributeMapFilter.Rules.WildcardOr.name() ) == true ){
-        logger.trace( "Descriptor not accepted: " + descriptor.toString() + ", accepted" );
+        logger.log( Level.FINE, "Descriptor not accepted: " + descriptor.toString() + ", accepted" );
         return true;
       }
     }
-    logger.trace( "Descriptor not accepted: " + descriptor.toString() + ", not accepted" );
+    logger.log( Level.FINE, "Descriptor not accepted: " + descriptor.toString() + ", not accepted" );
     return ( this.getRule().equals( AttributeMapFilter.Rules.WildcardAnd.name() ) == false );
   }
 

@@ -3,12 +3,12 @@ package org.aieonf.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.implicit.AbstractImplies;
 import org.aieonf.concept.implicit.Implies;
-import org.aieonf.util.Utils;
 
 public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IModelLeaf<T>
 {	
@@ -130,7 +130,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public T getDescriptor()
 	{
-		return ( T )this.descriptor;
+		return this.descriptor;
 	}
 
 	/**

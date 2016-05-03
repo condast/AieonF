@@ -22,14 +22,14 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.io.IOUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.xml.XMLModelParser;
-import org.aieonf.util.Utils;
-import org.aieonf.util.io.IOUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 

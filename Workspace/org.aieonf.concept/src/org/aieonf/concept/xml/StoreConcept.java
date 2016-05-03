@@ -175,7 +175,7 @@ public class StoreConcept
       if( value == null )
       	continue;
       value = value.replaceAll("'", "`" ); //Use unicode for quotes to prevent javascript problems 
-      appendRoot = org.aieonf.util.xml.StoreDocument.getAttributeRoot( doc, attributesRoot, key);
+      appendRoot = org.aieonf.commons.xml.StoreDocument.getAttributeRoot( doc, attributesRoot, key);
       split = key.split("[\\.]");
       name = split[ split.length - 1 ];
       element = doc.createElement( name );
@@ -231,7 +231,7 @@ public class StoreConcept
     try {
       StoreConcept store = new StoreConcept( descriptor );
       Document doc = store.createDocument();
-      return org.aieonf.util.xml.StoreDocument.styledXML( doc );
+      return org.aieonf.commons.xml.StoreDocument.styledXML( doc );
     }
     catch( ConceptPersistException ex ) {
       throw new IOException( ex.getMessage(), ex );
@@ -252,7 +252,7 @@ public class StoreConcept
     try {
       StoreConcept store = new StoreConcept( createMinimalDescriptor( descriptor, attrs ));
       Document doc = store.createDocument();
-      return org.aieonf.util.xml.StoreDocument.styledXML( doc );
+      return org.aieonf.commons.xml.StoreDocument.styledXML( doc );
     }
     catch( ConceptPersistException ex ) {
       throw new IOException( ex.getMessage() );

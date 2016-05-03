@@ -2,13 +2,13 @@ package org.aieonf.template.context;
 
 import java.io.File;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.builder.DefaultModelCreator;
 import org.aieonf.template.context.AbstractModelContextFactory;
-import org.aieonf.util.Utils;
 
 /**
  * The simple context factory creates a default context and model

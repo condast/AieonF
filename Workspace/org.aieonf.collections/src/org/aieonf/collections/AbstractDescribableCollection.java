@@ -13,14 +13,14 @@ import java.io.*;
 import java.util.*;
 
 import org.aieonf.collections.parser.ICollectionParser;
+import org.aieonf.commons.filter.*;
+import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.*;
 import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.filter.DescriptorBatchFilter;
 import org.aieonf.concept.filter.DescriptorFilter;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.util.filter.*;
-import org.aieonf.util.parser.ParseException;
 
 //condast imports
 

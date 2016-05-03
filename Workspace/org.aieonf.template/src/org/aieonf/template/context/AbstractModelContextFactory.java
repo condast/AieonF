@@ -3,6 +3,7 @@ package org.aieonf.template.context;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -14,7 +15,6 @@ import org.aieonf.model.xml.IModelCreator;
 import org.aieonf.model.xml.XMLModelBuilder;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
-import org.aieonf.util.Utils;
 
 public abstract class AbstractModelContextFactory<T extends IContextAieon> implements IModelContextFactory<T> {
 

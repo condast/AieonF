@@ -2,8 +2,8 @@ package org.aieonf.collections.persistence;
 
 import java.io.File;
 
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
-import org.aieonf.util.persistence.IPersistence;
 
 public interface IFilePersistence<T extends IDescribable<?>> extends IPersistence<T>
 {

@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.aieonf.commons.parser.IParser;
+import org.aieonf.commons.persistence.AbstractPersistence;
+import org.aieonf.commons.persistence.IPersistence;
+import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.xml.StoreModel;
 import org.aieonf.template.ITemplate;
 import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.util.parser.IParser;
-import org.aieonf.util.persistence.AbstractPersistence;
-import org.aieonf.util.persistence.IPersistence;
-import org.aieonf.util.xml.StoreDocument;
 import org.w3c.dom.Document;
 
 public class TemplatePersistence extends AbstractPersistence<ITemplate> implements

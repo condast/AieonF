@@ -1,11 +1,11 @@
 package org.aieonf.concept.wrapper;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
 
 /**
  * In general, a concept can best be wrapped in

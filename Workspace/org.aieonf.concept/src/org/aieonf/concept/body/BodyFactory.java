@@ -13,6 +13,9 @@ import javax.crypto.Cipher;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.aieonf.commons.encryption.IEncryption;
+import org.aieonf.commons.hex.HexConvertor;
+import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -25,9 +28,6 @@ import org.aieonf.concept.util.DescribableSet;
 import org.aieonf.concept.util.IDescribableSet;
 import org.aieonf.concept.xml.ConceptParser;
 import org.aieonf.concept.xml.StoreConcept;
-import org.aieonf.util.encryption.IEncryption;
-import org.aieonf.util.hex.HexConvertor;
-import org.aieonf.util.xml.StoreDocument;
 import org.w3c.dom.Document;
 
 public class BodyFactory<T extends Object>

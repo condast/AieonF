@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.implicit.IImplicitAieon;
 import org.aieonf.concept.implicit.ImplicitAieon;
-import org.aieonf.util.StringStyler;
 
 public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor>
 {

@@ -6,6 +6,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.aieonf.commons.graph.IVertex;
+import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.transaction.AbstractTransaction;
+import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.Descriptor;
@@ -15,10 +19,6 @@ import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.graph.IVertex;
-import org.aieonf.util.transaction.AbstractTransaction;
-import org.aieonf.util.transaction.ITransaction;
 import org.condast.aieonf.osgi.utils.ProjectFolderUtils;
 
 import com.tinkerpop.blueprints.Edge;

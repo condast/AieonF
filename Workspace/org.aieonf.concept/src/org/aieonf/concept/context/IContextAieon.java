@@ -2,9 +2,9 @@ package org.aieonf.concept.context;
 
 import java.net.URI;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.util.StringStyler;
 
 public interface IContextAieon extends IConcept
 {

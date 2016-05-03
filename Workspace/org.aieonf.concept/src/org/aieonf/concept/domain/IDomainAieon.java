@@ -1,7 +1,7 @@
 package org.aieonf.concept.domain;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.util.StringStyler;
 
 public interface IDomainAieon extends IDescriptor
 {

@@ -3,6 +3,7 @@ package org.condast.aieonf.browsersupport.library.firefox;
 import java.net.URI;
 
 import org.aieonf.collections.connector.AbstractFileConnector;
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -12,7 +13,6 @@ import org.aieonf.model.IModelFunction;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.function.AbstractFunction;
-import org.aieonf.util.Utils;
 
 public class FireFoxModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>>> implements IModelFunction<ILoaderAieon, IModelLeaf<IDescriptor>>
 {

@@ -3,10 +3,10 @@ package org.aieonf.template;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.model.ModelException;
 import org.aieonf.model.IPersistModel.Persistence;
 import org.aieonf.template.factory.ITemplateFactory;
-import org.aieonf.util.persistence.IPersistence;
 
 public abstract class AbstractPersistTemplateFactory<T extends ITemplate> implements ITemplateFactory
 {

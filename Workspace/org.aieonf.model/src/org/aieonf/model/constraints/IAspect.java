@@ -1,7 +1,7 @@
 package org.aieonf.model.constraints;
 
+import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.util.implicit.IImplicit;
 
 public interface IAspect extends IDescriptor, IImplicit<IDescriptor>
 {

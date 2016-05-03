@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.*;
 
 import org.aieonf.collections.parser.ICollectionParser;
+import org.aieonf.commons.encryption.IEncryption;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -21,7 +22,6 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.security.AieonFEncryption;
-import org.aieonf.util.encryption.IEncryption;
 
 /**
  *

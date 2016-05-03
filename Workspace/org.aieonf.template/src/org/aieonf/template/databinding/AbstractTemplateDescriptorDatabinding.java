@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.aieonf.commons.activator.AbstractActivator;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.validation.AbstractValidationDatabinding;
+import org.aieonf.commons.validation.IValidator;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.template.property.TemplateProperty;
-import org.aieonf.util.activator.AbstractActivator;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.validation.AbstractValidationDatabinding;
-import org.aieonf.util.validation.IValidator;
 
 public abstract class AbstractTemplateDescriptorDatabinding<T,U extends Object> extends AbstractActivator
 {

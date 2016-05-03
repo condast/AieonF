@@ -3,10 +3,10 @@ package org.aieonf.concept.library;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
 
 public class LogEntryAieon extends DateAieon
 {

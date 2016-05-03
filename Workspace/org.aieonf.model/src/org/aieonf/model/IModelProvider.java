@@ -2,11 +2,11 @@ package org.aieonf.model;
 
 import java.util.Collection;
 
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.transaction.ITransaction;
 
 public interface IModelProvider<T extends IDescriptor, U extends Object> {
 

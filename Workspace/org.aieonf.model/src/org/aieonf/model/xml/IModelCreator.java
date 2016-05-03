@@ -2,9 +2,9 @@ package org.aieonf.model.xml;
 
 import java.net.URL;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.util.StringStyler;
 import org.xml.sax.Attributes;
 
 public interface IModelCreator<T extends IDescriptor, U extends IModelLeaf<T>> {

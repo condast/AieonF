@@ -1,10 +1,10 @@
 package org.aieonf.concept.filter;
 
+import org.aieonf.commons.filter.*;
 //Concept imports
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.util.filter.*;
 
 //Condast imports
 

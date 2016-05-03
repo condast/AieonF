@@ -2,9 +2,9 @@ package org.aieonf.concept.library;
 
 import java.util.Locale;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.implicit.ImplicitAieon;
-import org.aieonf.util.StringStyler;
 
 public class LocaleAieon extends ImplicitAieon 
 {

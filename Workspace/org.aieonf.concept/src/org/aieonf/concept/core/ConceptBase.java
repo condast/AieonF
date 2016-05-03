@@ -10,8 +10,8 @@ package org.aieonf.concept.core;
 
 import java.util.*;
 
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 
 /**
  * Create a concept, using a properties file

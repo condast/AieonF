@@ -3,14 +3,20 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Concept Collections
 Bundle-SymbolicName: org.aieonf.collections
 Bundle-Version: 1.0.0.20142008
-Bundle-Vendor: Saight
+Bundle-Vendor: AieonF.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.aieonf.collections,
  org.aieonf.collections.connector,
  org.aieonf.collections.locator,
  org.aieonf.collections.parser,
  org.aieonf.collections.persistence
-Import-Package: org.aieonf.concept,
+Import-Package: org.aieonf.commons.encryption,
+ org.aieonf.commons.filter,
+ org.aieonf.commons.hex,
+ org.aieonf.commons.io,
+ org.aieonf.commons.parser,
+ org.aieonf.commons.persistence,
+ org.aieonf.concept,
  org.aieonf.concept.body,
  org.aieonf.concept.core,
  org.aieonf.concept.filter,
@@ -23,11 +29,4 @@ Import-Package: org.aieonf.concept,
  org.aieonf.concept.wrapper,
  org.aieonf.concept.xml,
  org.aieonf.model,
- org.aieonf.model.library,
- org.aieonf.util.encryption,
- org.aieonf.util.filter,
- org.aieonf.util.hex,
- org.aieonf.util.io,
- org.aieonf.util.logger,
- org.aieonf.util.parser,
- org.aieonf.util.persistence
+ org.aieonf.model.library

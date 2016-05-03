@@ -1,10 +1,12 @@
 package org.aieonf.concept.filter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.aieonf.commons.filter.*;
 //Condast imports
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptBase;
-import org.aieonf.util.filter.*;
-import org.aieonf.util.logger.Logger;
 
 //Concept imports
 
@@ -34,7 +36,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   public String refKey;
   public String refVal;
 
-  private Logger logger;
+  private Logger logger = Logger.getLogger( this.getClass().getName());
   
   /**
    * Create the filter
@@ -44,8 +46,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   public AttributeFilter() throws FilterException
   {
     super.setName( AttributeFilter.class.getName() );
-    logger = Logger.getLogger( this.getClass() );
-  }
+ }
 
   /**
    * Create the filter
@@ -56,8 +57,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   public AttributeFilter( Rules rule ) throws FilterException
   {
     super( AttributeFilter.class.getName(), rule.name() );
-    logger = Logger.getLogger( this.getClass() );
-  }
+   }
 
   /**
    * Create the filter
@@ -70,7 +70,6 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   {
     super( AttributeFilter.class.getName(), rule.name() );
     this.refKey = refKey;
-    logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -83,7 +82,6 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   public AttributeFilter( Rules rule, Enum<?> refKey ) throws FilterException
   {
     this( rule, ConceptBase.getAttributeKey( refKey ));
-    logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -99,7 +97,6 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   {
     this( rule, refKey );
     this.refVal = refVal;
-    logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -115,8 +112,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   {
     this( rule, refKey );
     this.refVal = refVal;
-    logger = Logger.getLogger( this.getClass() );
-  }
+    }
 
   /**
    * Create the filter
@@ -132,7 +128,6 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   {
     this( rule, name, refKey );
     this.refVal = refVal;
-    logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -149,7 +144,6 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
   {
     this( rule, name, refKey.toString() );
     this.refVal = refVal;
-    logger = Logger.getLogger( this.getClass() );
   }
 
   /**
@@ -218,7 +212,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
     IDescribable<?> desc = ( IDescribable<?> )obj;
     String value = desc.getDescriptor().get( this.refKey );
     boolean contains = ( value != null );
-    logger.trace( "The descriptor " + obj.toString() + " contains " + this.refKey + ": " + contains  + " " + value);
+    logger.log( Level.FINE, "The descriptor " + obj.toString() + " contains " + this.refKey + ": " + contains  + " " + value);
     switch( Rules.valueOf( super.getRule() )){
     	case Contains:
     		return contains;
@@ -238,10 +232,10 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
       //return true if the attribute is present and not equal, or it is not present
       //and the reference is null
     	case EqualsNot:
-    		logger.trace( "Accepting " + this.getRule() );
-    		logger.trace( "The descriptor contains " + this.refKey + ": " + contains  + " " + value);
+    		logger.log( Level.FINE, "Accepting " + this.getRule() );
+    		logger.log( Level.FINE, "The descriptor contains " + this.refKey + ": " + contains  + " " + value);
     		if( contains ){
-    			logger.trace( "Accepting " + this.refVal );
+    			logger.log( Level.FINE, "Accepting " + this.refVal );
     			return( value.equals( this.refVal ) == false );
     		}
     		else

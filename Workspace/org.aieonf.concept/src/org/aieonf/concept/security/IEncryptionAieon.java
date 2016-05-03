@@ -1,6 +1,6 @@
 package org.aieonf.concept.security;
 
-import org.aieonf.util.encryption.IEncryption;
+import org.aieonf.commons.encryption.IEncryption;
 
 /**
  * Designates a concept that contains a key and algorithm for encryption.

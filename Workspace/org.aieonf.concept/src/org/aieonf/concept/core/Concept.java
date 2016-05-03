@@ -11,9 +11,9 @@ package org.aieonf.concept.core;
 //J2SE imports
 import java.util.*;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.*;
 import org.aieonf.concept.body.BodyFactory;
-import org.aieonf.util.StringStyler;
 
 /**
  * Create a minimal concept, using a properties file
@@ -227,7 +227,7 @@ public class Concept extends Descriptor implements IConcept
 	public Object clone()
 	{
 		try{
-			Concept clone = ( Concept )this.getClass().newInstance();
+			Concept clone = this.getClass().newInstance();
 			BodyFactory.transfer( clone, this, true );
 			return clone;
 		}

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
@@ -13,12 +14,7 @@ import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.datauri.IDataURI;
 import org.aieonf.concept.wrapper.ConceptWrapper;
 
-public class FireFoxReference extends ConceptWrapper implements IDataResource
-{
-	
-	/**
-	 * 
-	 */
+public class FireFoxReference extends ConceptWrapper implements IDataResource{
 	private static final long serialVersionUID = -290451331218647891L;
 
 	public static final String S_HREF = "href";
@@ -37,6 +33,23 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource
 	
 	public enum Attribute{
 		DataUri
+	}
+	
+	public enum Columns{
+		ID,
+		MIME_TYPE,
+		DATA,
+		URL;
+
+		@Override
+		public String toString() {
+			return StringStyler.prettyString( super.toString() );
+		}
+		
+		public static String toColumnName( Columns column){
+			String str = column.name().toLowerCase();
+			return str;
+		}	
 	}
 	
 	public FireFoxReference()
@@ -111,18 +124,18 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource
 	 */
 	public void fill( ResultSet rs ) throws ConceptException{
 		try {
-			String str =  rs.getString("guid");
+			String str =  rs.getString( Columns.toColumnName( Columns.ID ));
 			if( !Descriptor.isNull(str))
 				set( IDescriptor.Attributes.ID, str );		
-			str =  rs.getString("mime_type");
+			str =  rs.getString( Columns.toColumnName( Columns.MIME_TYPE ));
 			if( !Descriptor.isNull(str))
 				set( IDataURI.Attribute.MIME_TYPE, str );		
-			str =  rs.getString("data");
+			str =  rs.getString( Columns.toColumnName( Columns.DATA ));
 			if( !Descriptor.isNull(str)){
 				set( IDataResource.Attribute.Resource, str );		
 				super.set( Attribute.DataUri.name(), "true");
 			}
-			str =  rs.getString("url");
+			str =  rs.getString( Columns.toColumnName( Columns.URL ));
 			if( !Descriptor.isNull(str)){
 				setSource( str );		
 			}

@@ -1,12 +1,12 @@
 package org.aieonf.template.context;
 
+import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.util.transaction.ITransaction;
 
 public interface IProviderContextFactory<T extends IDescriptor, U extends IDescribable<?>> {
 

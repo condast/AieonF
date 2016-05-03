@@ -10,11 +10,11 @@ import java.io.OutputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.aieonf.commons.persistence.AbstractPersistence;
+import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.xml.StoreModel;
-import org.aieonf.util.persistence.AbstractPersistence;
-import org.aieonf.util.xml.StoreDocument;
 import org.w3c.dom.Document;
 
 /**

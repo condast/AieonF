@@ -9,13 +9,13 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import org.aieonf.collections.persistence.LocationManager;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.ILocationManager;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.persistence.IPersistence;
 
 public abstract class AbstractJarParser<T extends IDescribable<?>> extends DefaultCollectionParser<T>
 {

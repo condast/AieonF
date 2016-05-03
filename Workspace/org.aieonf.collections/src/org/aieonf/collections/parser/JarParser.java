@@ -9,12 +9,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.aieonf.collections.persistence.EncryptedStream;
+import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.io.IOUtils;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.util.filter.IFilter;
-import org.aieonf.util.io.IOUtils;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.persistence.IPersistence;
 
 public class JarParser<T extends IDescribable<?>> extends AbstractJarParser<T>
 {

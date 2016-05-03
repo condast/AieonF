@@ -5,14 +5,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.validation.IValidationListener;
+import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.parser.attr.TemplateAttributeValidator;
 import org.aieonf.template.property.TemplateProperty;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.validation.IValidationListener;
-import org.aieonf.util.validation.ValidationEvent;
 
 public class TemplateConceptValidator
 {

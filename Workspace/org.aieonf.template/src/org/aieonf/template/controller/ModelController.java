@@ -5,6 +5,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.parser.IParser;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.validation.IValidationListener;
+import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
@@ -18,10 +22,6 @@ import org.aieonf.template.builder.ITemplateModelBuilder;
 import org.aieonf.template.databinding.TemplateConceptValidator;
 import org.aieonf.template.factory.ITemplateFactory;
 import org.aieonf.template.parser.ReadableTemplateParser;
-import org.aieonf.util.parser.IParser;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.validation.IValidationListener;
-import org.aieonf.util.validation.ValidationEvent;
 
 public class ModelController<T extends IModelLeaf<? extends IDescriptor>> implements IValidationListener<String, String>
 {

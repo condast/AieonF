@@ -1,7 +1,7 @@
 package org.aieonf.template.property;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.util.StringStyler;
 
 public interface ITemplateProperty<T extends Enum<?>, U extends Enum<?>, V extends Object> {
 

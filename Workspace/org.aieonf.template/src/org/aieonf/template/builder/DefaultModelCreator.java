@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
@@ -27,8 +29,6 @@ import org.aieonf.model.xml.AbstractModelCreator;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.TemplateNode;
 import org.aieonf.template.property.ITemplateProperty;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
 import org.xml.sax.Attributes;
 
 public class DefaultModelCreator extends AbstractModelCreator<IDescriptor, ITemplateLeaf<IDescriptor>> {

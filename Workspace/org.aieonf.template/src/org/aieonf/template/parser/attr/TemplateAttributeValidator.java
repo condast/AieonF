@@ -1,10 +1,10 @@
 package org.aieonf.template.parser.attr;
 
+import org.aieonf.commons.validation.AbstractValidator;
+import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.template.property.TemplateProperty;
-import org.aieonf.util.validation.AbstractValidator;
-import org.aieonf.util.validation.ValidationEvent;
 
 public class TemplateAttributeValidator<T extends Enum<?>> extends AbstractValidator<T, String>
 {

@@ -4,6 +4,7 @@ import org.aieonf.collections.connector.AbstractCollectionConnector;
 import org.aieonf.collections.connector.ConnectionException;
 import org.aieonf.collections.locator.FileLocator;
 import org.aieonf.collections.persistence.ConceptPersistence;
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.*;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.ConceptBase;
@@ -15,11 +16,11 @@ import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.concept.locator.LocatorAieon;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.concept.security.PasswordAieon;
-import org.aieonf.util.logger.Logger;
-import org.aieonf.util.persistence.IPersistence;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>Title: </p>
@@ -63,7 +64,7 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
   */
   private boolean created;
 
-  private Logger logger;
+  private Logger logger = Logger.getLogger( this.getClass().getName());
 
   /**
    * The loader manager Manages loading of the manifest aieons
@@ -76,7 +77,6 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
   {
     //Check the loader aieon
     super( loader, true );
-  	this.logger = Logger.getLogger( this.getClass() );
     this.persist = new ConceptPersistence();
     this.checkLoader( loader );
     this.created = false;
@@ -101,7 +101,7 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
   {
   	ILoaderAieon loader=  super.getLoader();
   	File file = LocatorAieon.getFileFromURI( loader.getURI() );
-    logger.trace( "Initialising source: " + loader.getURI() + ": " + file.exists());
+    logger.log( Level.FINE, "Initialising source: " + loader.getURI() + ": " + file.exists());
     if( file.exists() == false ){
     	try{
     		if( this.allowCreate() ){
@@ -128,7 +128,7 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
   public boolean allowCreate() throws ConceptException
   {
   	ILoaderAieon loader=  super.getLoader();
-    logger.trace( "Is password aieon " + PasswordAieon.isPasswordAieon( loader ) );
+    logger.log( Level.FINE, "Is password aieon " + PasswordAieon.isPasswordAieon( loader ) );
 		if( PasswordAieon.isPasswordAieon( loader ) == false )
 			return true;
 		
@@ -150,7 +150,7 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
   	ILoaderAieon loader=  super.getLoader();
 		if( PasswordAieon.isPasswordAieon( loader ) == false )
 			return true;
-    logger.trace( "The loader is a registering: " + 
+    logger.log( Level.FINE, "The loader is a registering: " + 
     		loader.getURI() + ": " + this.allowCreate());		
 		return true;
   }
@@ -167,11 +167,11 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
 		if(( manifest == null ) || ( manifest.getURI() == null ))
 			return false;
   	ILoaderAieon loader=  super.getLoader();
-   	logger.trace( "Checking source: " + manifest.getURI() + 
+   	logger.log( Level.FINE, "Checking source: " + manifest.getURI() + 
 				" with " + loader.getURI() );
   	if( manifest.implies( loader ) == false )
     	return false;
-    logger.trace( "Checking manifest with password " );
+    logger.log( Level.FINE, "Checking manifest with password " );
 		if( PasswordAieon.isPasswordAieon( manifest ) == false )
 			return true;
 		
@@ -217,28 +217,28 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
   	if( loader instanceof PasswordAieon ){
 
   		String key = loader.get( ConceptBase.getAttributeKey( ILoaderAieon.Attributes.LOADER ));
-  		logger.trace( "Extended name = null: " + ( key== null ));
+  		logger.log( Level.FINE, "Extended name = null: " + ( key== null ));
   		if( PasswordAieon.isPasswordAieon( loader ) == false ){
-  			logger.trace( "Did not pass as a password aieon");
+  			logger.log( Level.FINE, "Did not pass as a password aieon");
   			throw new CollectionException( S_ERR_NOT_A_PASSWORD + loader.getURI() );
   		}
   	}else{
   		if( LoaderAieon.isLoaderAieon( loader ) == false ){
-  			logger.trace( "Did not pass as a loader aieon");
+  			logger.log( Level.FINE, "Did not pass as a loader aieon");
   			throw new CollectionException( S_ERR_NOT_A_LOADER + loader.getURI() );
   		}
   	}
-		logger.trace( "Checking source");
+		logger.log( Level.FINE, "Checking source");
     String source = loader.getURI().getPath().trim();
 		if(( loader.getURI() == null ) || Descriptor.isNull( source ))
 			throw new CollectionException( S_ERR_NO_SOURCE_FOUND + loader.toString() );
- 		logger.trace( "Checking identifier");
+ 		logger.log( Level.FINE, "Checking identifier");
   	if(( loader.getIdentifier() == null ) || loader.getIdentifier().trim().equals( "" ))
 			throw new CollectionException( S_ERR_NO_IDENTIFIER_FOUND + loader.getURI() );
-		logger.trace( "Checking uri");
+		logger.log( Level.FINE, "Checking uri");
     if(( loader.getURI() == null ) || Descriptor.isNull( loader.getURI().getPath() ))
 			throw new CollectionException( S_ERR_NO_URI_FOUND + loader.getURI() );
-		logger.trace( "Checking key");
+		logger.log( Level.FINE, "Checking key");
   }
 
   /**
@@ -259,7 +259,7 @@ public class FileCollectionConnector<T extends IDescribable<?>> extends Abstract
                                   Calendar.getInstance().getTime() );
     manAieon.set( IDescriptor.Attributes.ID.name(), BodyFactory.IDFactory());
     manAieon.setURI( loader.getURI() );
-    logger.trace( "Adding name " + loader.get( IPasswordAieon.Attributes.USER_NAME.name() ));
+    logger.log( Level.FINE, "Adding name " + loader.get( IPasswordAieon.Attributes.USER_NAME.name() ));
     return manAieon;
   }
 }

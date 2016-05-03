@@ -7,10 +7,10 @@ import java.io.OutputStream;
 
 import javax.crypto.Cipher;
 
+import org.aieonf.commons.encryption.IEncryption;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.security.AieonFEncryption;
-import org.aieonf.util.encryption.IEncryption;
 
 public class EncryptedStream<T extends IDescribable<?>>
 {

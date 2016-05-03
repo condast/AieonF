@@ -1,10 +1,10 @@
 package org.aieonf.concept.filter;
 
+import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.filter.HierarchicalFilter;
+import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.WildcardFilter;
 import org.aieonf.concept.IDescribable;
-import org.aieonf.util.filter.FilterException;
-import org.aieonf.util.filter.HierarchicalFilter;
-import org.aieonf.util.filter.IFilter;
-import org.aieonf.util.filter.WildcardFilter;
 
 public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends HierarchicalFilter<T>
 {
@@ -32,6 +32,7 @@ public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends Hier
 	/**
 	 * @param rule the rule to set
 	 */
+	@Override
 	public final void setHierarchyRule(HierarchyRules rule)
 	{
 		super.setHierarchyRule(rule);

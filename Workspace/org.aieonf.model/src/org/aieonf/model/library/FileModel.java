@@ -11,6 +11,8 @@ package org.aieonf.model.library;
 //J2SE imports
 import java.io.File;
 
+import org.aieonf.commons.hex.HexConvertor;
+import org.aieonf.commons.hex.HexConvertor.Convert;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
@@ -19,8 +21,6 @@ import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.Model;
-import org.aieonf.util.hex.HexConvertor;
-import org.aieonf.util.hex.HexConvertor.Convert;
 /**
  * Create a concept, using a properties file
  */

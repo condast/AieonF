@@ -2,8 +2,8 @@ package org.aieonf.collections;
 
 import java.util.*;
 
+import org.aieonf.commons.filter.*;
 import org.aieonf.concept.*;
-import org.aieonf.util.filter.*;
 
 /**
  * <p>Title: Conceptual Network Database</p>

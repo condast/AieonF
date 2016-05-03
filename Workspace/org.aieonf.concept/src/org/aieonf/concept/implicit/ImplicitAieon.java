@@ -1,11 +1,11 @@
 package org.aieonf.concept.implicit;
 
+import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.IDescriptorViewer;
 import org.aieonf.concept.core.*;
 import org.aieonf.concept.wrapper.ConceptWrapper;
-import org.aieonf.util.implicit.IImplicit;
 
 public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDescriptor>
 {

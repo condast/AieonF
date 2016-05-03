@@ -12,13 +12,12 @@ package org.aieonf.concept.xml;
 import java.util.*;
 
 import org.w3c.dom.*;
+import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
-import org.aieonf.util.xml.StoreDocument;
-//Concept imports
 
 /**
  *

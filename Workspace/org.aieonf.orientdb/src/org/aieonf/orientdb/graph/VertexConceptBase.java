@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.IConceptBase;
-import org.aieonf.util.StringStyler;
 
 import com.tinkerpop.blueprints.Vertex;
 

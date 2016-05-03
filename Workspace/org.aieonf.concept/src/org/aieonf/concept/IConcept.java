@@ -8,7 +8,7 @@
  */
 package org.aieonf.concept;
 
-import org.aieonf.util.StringStyler;
+import org.aieonf.commons.strings.StringStyler;
 
 /**
  * Defines a concept, basically a wrapper around the underlying XML definition

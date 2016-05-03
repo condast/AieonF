@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.model.IModelLeaf;
@@ -23,8 +25,6 @@ import org.aieonf.model.IModelNode;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.xml.IModelParser;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

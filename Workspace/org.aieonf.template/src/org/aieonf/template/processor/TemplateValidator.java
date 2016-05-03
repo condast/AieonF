@@ -1,11 +1,11 @@
 package org.aieonf.template.processor;
 
+import org.aieonf.commons.validation.AbstractValidator;
+import org.aieonf.commons.validation.IValidator;
+import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.template.ITemplate;
 import org.aieonf.template.parser.attr.TemplateAttributes;
-import org.aieonf.util.validation.AbstractValidator;
-import org.aieonf.util.validation.IValidator;
-import org.aieonf.util.validation.ValidationEvent;
 
 public class TemplateValidator extends AbstractValidator<String, String> implements IValidator<String,String>
 {

@@ -2,12 +2,12 @@ package org.aieonf.collections.parser;
 
 import java.util.Collection;
 
+import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.parser.IParserListener;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.util.filter.IFilter;
-import org.aieonf.util.parser.IParserListener;
-import org.aieonf.util.parser.ParseException;
-import org.aieonf.util.persistence.IPersistence;
 
 public interface ICollectionParser<T extends IDescribable<?>>
 {

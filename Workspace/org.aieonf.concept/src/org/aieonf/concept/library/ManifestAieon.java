@@ -4,13 +4,13 @@ package org.aieonf.concept.library;
 import java.net.MalformedURLException;
 import java.net.URI;
 
+import org.aieonf.commons.encryption.IEncryption;
 import org.aieonf.concept.*;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.*;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.concept.security.AieonFEncryption;
 import org.aieonf.concept.xml.StoreConcept;
-import org.aieonf.util.encryption.IEncryption;
 
 /**
  * <p>Title: Conceptual Network Database</p>

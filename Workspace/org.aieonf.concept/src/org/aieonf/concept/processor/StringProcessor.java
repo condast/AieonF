@@ -1,16 +1,15 @@
 package org.aieonf.concept.processor;
 
+import org.aieonf.commons.encryption.Encryption;
+import org.aieonf.commons.encryption.IEncryption;
+import org.aieonf.commons.hex.HexConvertor;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.*;
-import org.aieonf.util.encryption.Encryption;
-import org.aieonf.util.encryption.IEncryption;
-import org.aieonf.util.hex.HexConvertor;
-import org.aieonf.util.logger.*;
-
-
 
 //java2 imports
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>Title: Conceptual Network Database</p>
@@ -70,7 +69,7 @@ public class StringProcessor
   public static List<IDescriptor> getDescriptors( String stringArray )
     throws ConceptException
   {
-    Logger logger = Logger.getLogger( StringProcessor.class );
+	Logger logger = Logger.getLogger( StringProcessor.class.getName());
 
     List<IDescriptor> descriptors = new ArrayList<IDescriptor>();
     if( stringArray.replace( " ", "" ).equals( "[]" ))
@@ -79,14 +78,14 @@ public class StringProcessor
     //remove leading' and trailing brackets
     stringArray = stringArray.replaceAll( "\\[\\[","" );
     stringArray = stringArray.replaceAll( "\\]\\]","" );
-    logger.trace( "String array is: " + stringArray);
+    logger.log( Level.FINE, "String array is: " + stringArray);
     stringArray = stringArray.trim();
     //Remove in-between brackets
     String[] split = stringArray.split( "\\]\\,\\[" );
     IDescriptor descriptor;
-    logger.trace( "Split length is: " + split.length );
+    logger.log( Level.FINE, "Split length is: " + split.length );
     for( int i = 0; i < split.length; i++ ){
-      logger.trace( "Split is: " + split [ i ] );
+      logger.log( Level.FINE, "Split is: " + split [ i ] );
       descriptor = Descriptor.getDescriptor( split[ i ] );
       descriptors.add( descriptor );
     }
@@ -105,7 +104,7 @@ public class StringProcessor
                                                   String stringArray )
     throws Exception
   {
-    Logger logger = Logger.getLogger( StringProcessor.class );
+    Logger logger = Logger.getLogger( StringProcessor.class.getName() );
 
     List<IDescriptor> descriptors = new ArrayList<IDescriptor>();
     if( stringArray.replace( " ", "" ).equals( "[]" ))
@@ -114,14 +113,14 @@ public class StringProcessor
     //remove leading' and trailing brackets
     stringArray = stringArray.replaceAll( "\\[","" );
     stringArray = stringArray.replaceAll( "\\]" ,"" );
-    logger.trace( "String array is: " + stringArray);
+    logger.log( Level.FINE, "String array is: " + stringArray);
     stringArray = stringArray.trim();
     //Remove in-between brackets
     String[] split = stringArray.split( "[,]" );
     IDescriptor descriptor;
-    logger.trace( "Split length is: " + split.length );
+    logger.log( Level.FINE, "Split length is: " + split.length );
     for( int i = 0; i < split.length; i++ ){
-      logger.trace( "Split is: " + split [ i ] );
+      logger.log( Level.FINE, "Split is: " + split [ i ] );
       descriptor = StringProcessor.getDescriptor( applicationKey, split[ i ] );
       descriptors.add( descriptor );
     }

@@ -1,9 +1,9 @@
 package org.aieonf.concept.util;
 
+import org.aieonf.commons.comparator.IHierarchicalComparator;
 //J2SE imports
 import org.aieonf.concept.*;
 import org.aieonf.concept.filter.VersionFilter;
-import org.aieonf.util.comparator.IHierarchicalComparator;
 
 /**
  * <p>Title: Conceptual Network Database</p>

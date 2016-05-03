@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.aieonf.commons.graph.IEdge;
+import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Concept;
-import org.aieonf.util.graph.IEdge;
-import org.aieonf.util.graph.IVertex;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;

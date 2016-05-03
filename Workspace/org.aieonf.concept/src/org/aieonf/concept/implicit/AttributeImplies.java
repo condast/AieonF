@@ -1,8 +1,8 @@
 package org.aieonf.concept.implicit;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
-import org.aieonf.util.Utils;
 
 public class AttributeImplies<T extends IDescriptor, U extends IDescriptor>
 		extends AbstractImplies<T, U> {

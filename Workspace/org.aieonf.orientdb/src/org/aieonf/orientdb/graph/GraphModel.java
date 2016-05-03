@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.loader.ILoaderAieon;
@@ -16,7 +17,6 @@ import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.builder.TemplateModelBuilderEvent;
-import org.aieonf.util.graph.IVertex;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;

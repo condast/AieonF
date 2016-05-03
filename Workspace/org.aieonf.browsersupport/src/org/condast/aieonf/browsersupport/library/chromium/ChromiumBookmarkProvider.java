@@ -14,6 +14,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -32,9 +35,6 @@ import org.aieonf.model.Model;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.Utils;
-import org.aieonf.util.parser.ParseException;
 
 public class ChromiumBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>> 
 {

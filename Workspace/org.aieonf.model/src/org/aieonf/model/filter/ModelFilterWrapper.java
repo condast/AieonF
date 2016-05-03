@@ -2,11 +2,11 @@ package org.aieonf.model.filter;
 
 import java.util.Collection;
 
+import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.util.filter.AbstractFilter.Mode;
-import org.aieonf.util.filter.FilterException;
-import org.aieonf.util.filter.IFilter;
 
 public class ModelFilterWrapper<T extends IDescriptor> implements
 		IModelFilter<T> {

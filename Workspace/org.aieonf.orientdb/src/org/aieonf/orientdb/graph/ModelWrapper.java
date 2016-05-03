@@ -3,10 +3,10 @@ package org.aieonf.orientdb.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.aieonf.commons.graph.IEdge;
+import org.aieonf.commons.graph.IModel;
+import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.util.graph.IEdge;
-import org.aieonf.util.graph.IModel;
-import org.aieonf.util.graph.IVertex;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;

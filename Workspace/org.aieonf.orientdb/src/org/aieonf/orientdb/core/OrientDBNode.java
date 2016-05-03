@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.IModelLeaf;
@@ -12,8 +14,6 @@ import org.aieonf.model.ModelLeaf;
 import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
 import org.aieonf.orientdb.graph.VertexConceptBase;
 import org.aieonf.orientdb.graph.VertexImpl;
-import org.aieonf.util.Utils;
-import org.aieonf.util.graph.IVertex;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;

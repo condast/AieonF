@@ -3,11 +3,11 @@ package org.aieonf.model.filter;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.aieonf.commons.filter.AbstractFilter;
+import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.filter.AbstractFilter;
-import org.aieonf.util.filter.FilterException;
-import org.aieonf.util.filter.IFilter;
 
 public class HierarchicalFilter<T extends IModelLeaf<?>> extends AbstractFilter<T>
 {

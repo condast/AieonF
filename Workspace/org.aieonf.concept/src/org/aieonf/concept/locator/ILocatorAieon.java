@@ -2,8 +2,8 @@ package org.aieonf.concept.locator;
 
 import java.net.URI;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.util.StringStyler;
 
 public interface ILocatorAieon extends IDescriptor
 {

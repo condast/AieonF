@@ -13,11 +13,16 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.jar.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.aieonf.collections.parser.ICollectionParser;
 import org.aieonf.collections.persistence.ConceptPersistence;
 import org.aieonf.collections.persistence.EncryptedStream;
 import org.aieonf.collections.persistence.LocationManager;
+import org.aieonf.commons.filter.*;
+import org.aieonf.commons.io.IOUtils;
+import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.*;
 import org.aieonf.concept.body.*;
 import org.aieonf.concept.core.*;
@@ -25,11 +30,6 @@ import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.persist.ILocatedPersistence;
-import org.aieonf.util.filter.*;
-import org.aieonf.util.io.IOUtils;
-import org.aieonf.util.logger.*;
-import org.aieonf.util.persistence.IPersistence;
-//various third party
 
 //condast imports
 
@@ -73,7 +73,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 	//If the external jar file is not null, the jar collection is open
 	private JarFile externalJarFile;
 
-	private Logger logger;
+	private Logger logger = Logger.getLogger( this.getClass().getName());
 
 	/**
 	 * Initialise and create this class
@@ -86,7 +86,6 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 			throws CollectionException
 			{
 		super( parser );
-		this.logger = Logger.getLogger( this.getClass() );
 			}
 
 	/**
@@ -186,10 +185,10 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 				try{
 					descriptor = new Descriptor( ManifestAieon.MANIFEST );
 					String name = descriptor.getDescriptor().getName();
-					this.logger.trace( "found entry: " + entry.getName() + " = name " + name );
+					this.logger.log( Level.FINE, "found entry: " + entry.getName() + " = name " + name );
 					if( name == null )
 						throw new NullPointerException( S_ERR_TRANSLATION_FAILURE );
-					this.logger.trace( "found name: " + name );
+					this.logger.log( Level.FINE, "found name: " + name );
 
 					entryStream = jar.getInputStream( entry );
 					ein = EncryptedStream.getEncryptedInputStream(loader, entryStream );
@@ -208,7 +207,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 				catch( Exception ex ){
 					ex.printStackTrace();
 					this.addIncorrectentry( entry.getName() );
-					this.logger.error( "Incorrect entry " + descriptor.toString() +
+					this.logger.severe( "Incorrect entry " + descriptor.toString() +
 							":" + ex.getMessage() );
 				}
 				finally{
@@ -246,7 +245,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 		try{
 			jar = new JarFile( file );
 			this.externalJarFile = jar;
-			this.logger.trace( "Getting manifest: " );
+			this.logger.log( Level.FINE, "Getting manifest: " );
 			for( Enumeration<JarEntry> list = jar.entries(); list.hasMoreElements(); ){
 				try{
 					entry = list.nextElement();
@@ -291,7 +290,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 			return super.access();
 		}
 		catch( Exception ex ){
-			this.logger.error( ex.getMessage() + ": " + source, ex );
+			this.logger.log( Level.SEVERE, ex.getMessage() + ": " + source, ex );
 			return false;
 		}
 	}
@@ -330,7 +329,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 			jar.close();
 		}
 		catch( IOException ioex ){
-			this.logger.error( ioex.getMessage(), ioex );
+			this.logger.log( Level.SEVERE, ioex.getMessage(), ioex );
 		}
 		finally{
 			super.leave();

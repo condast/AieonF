@@ -1,9 +1,9 @@
 package org.aieonf.concept.security;
 
+import org.aieonf.commons.implicit.IImplicit;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.implicit.IImplicit;
 
 public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 {

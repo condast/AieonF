@@ -3,11 +3,11 @@ package org.aieonf.concept.filter;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.aieonf.commons.filter.AbstractComparableAttributeFilter;
+import org.aieonf.commons.filter.FilterException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.util.filter.AbstractComparableAttributeFilter;
-import org.aieonf.util.filter.FilterException;
 
 public class DateFilter<T extends IDescribable<?>> extends AbstractComparableAttributeFilter<T,Date>
 {

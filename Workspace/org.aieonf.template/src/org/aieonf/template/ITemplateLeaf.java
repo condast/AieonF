@@ -2,10 +2,10 @@ package org.aieonf.template;
 
 import java.util.Map;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.template.property.ITemplateProperty;
-import org.aieonf.util.StringStyler;
 
 /**
  * A template leaf extends a regular model leaf with a list of attributes that

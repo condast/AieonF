@@ -4,11 +4,8 @@ package org.aieonf.concept.loader;
 import java.net.*;
 import java.util.logging.Logger;
 
-
-
-
-
-
+import org.aieonf.commons.encryption.IEncryption;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.IBodyAieon;
@@ -16,9 +13,6 @@ import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.locator.ILocatorAieon;
 import org.aieonf.concept.locator.LocatorAieon;
-import org.aieonf.util.StringStyler;
-import org.aieonf.util.encryption.IEncryption;
-//Concept
 
 /**
  * <p>Title: Conceptual Network Database</p>
