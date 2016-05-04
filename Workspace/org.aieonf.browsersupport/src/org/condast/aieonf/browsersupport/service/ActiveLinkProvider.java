@@ -20,7 +20,6 @@ public class ActiveLinkProvider extends AbstractProvider<String, Object, ActiveL
 	protected void onDataReceived(Object datum) {
 		if(!( datum instanceof String ))
 			return;
-		//super.update(data);
 	}
 
 	private static class Palaver extends AbstractPalaver<String>{

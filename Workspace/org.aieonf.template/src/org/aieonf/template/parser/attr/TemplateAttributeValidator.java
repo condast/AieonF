@@ -19,6 +19,10 @@ public class TemplateAttributeValidator<T extends Enum<?>> extends AbstractValid
 		this.attr = attr;
 	}
 	
+	protected TemplateProperty<IDescriptor, T, String> getAttr() {
+		return attr;
+	}
+
 	/**
 	 * Initialises the attribute with the given string. Returns a String if this is allowed or possible
 	 * @param str
