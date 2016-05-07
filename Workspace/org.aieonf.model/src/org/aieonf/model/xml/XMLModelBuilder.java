@@ -51,8 +51,8 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		
 	private boolean completed, failed;
 	
-	private String bundleId;
-	private IXMLModelBuilder<T, IModelLeaf<T>> creator;
+	private String modelId;
+	private IXMLModelBuilder<T, IModelLeaf<T>> builder;
 
 	private Collection<IModelBuilderListener> listeners;
 		
@@ -60,14 +60,14 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	
 	/**
 	 * Build the factories from the given resource in the class file and add them to the container
-	 * @param bundleId
+	 * @param modelId
 	 * @param clss
 	 * @param location
 	 * @param builder
 	 */
-	public XMLModelBuilder( String bundleId, IXMLModelBuilder<T, IModelLeaf<T>> creator ) {
-		this.bundleId = bundleId;
-		this.creator = creator;
+	public XMLModelBuilder( String modelId, IXMLModelBuilder<T, IModelLeaf<T>> builder ) {
+		this.modelId = modelId;
+		this.builder = builder;
 		this.completed = false;
 		this.failed = false;
 		this.listeners = new ArrayList<IModelBuilderListener>();
@@ -98,7 +98,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	 * @return
 	 */
 	public boolean canCreate(){
-		URL url = this.creator.getURL();
+		URL url = this.builder.getURL();
 		if( url == null )
 			return false;
 		try {
@@ -125,11 +125,11 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		// note that if your XML already declares the XSD to which it has to conform, then there's no need to create a validator from a Schema object
 		Source schemaFile = new StreamSource( XMLModelParser.class.getResourceAsStream( S_SCHEMA_LOCATION ));
 		InputStream in;
-		URL url = this.creator.getURL();
+		URL url = this.builder.getURL();
 		try {
 			in = url.openStream();
 		} catch (Exception e1) {
-			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.creator.getLocation() + "\n");
+			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.builder.getLocation() + "\n");
 			e1.printStackTrace();
 			return null;
 		}
@@ -137,7 +137,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		//First parse the XML file
 		IModelLeaf<T> root = null;
 		try {
-			logger.info("Parsing SAIGHT Bundle: " + this.bundleId + "\n");
+			logger.info("Parsing SAIGHT Bundle: " + this.modelId + "\n");
 			//Schema schema = schemaFactory.newSchema(schemaFile);
 			//factory.setSchema(schema);//saxParser.
 			
@@ -157,13 +157,13 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 				}	
 			};
 			parser.addModelBuilderListener(listener);
-			parser.addDescriptorCreator( creator);
+			parser.addDescriptorCreator( builder);
 			saxParser.parse( in, parser );
 			parser.removeModelBuilderListener(listener);
 			root = parser.getRoot();
-			parser.removeDescriptorCreator( creator );
+			parser.removeDescriptorCreator( builder );
 			parser.clear();
-			logger.info("AIEONF Bundle Parsed: " + this.bundleId + "\n");
+			logger.info("AIEONF Bundle Parsed: " + this.modelId + "\n");
 		} catch( SAXNotRecognizedException e ){
 			failed = true;
 			e.printStackTrace();			

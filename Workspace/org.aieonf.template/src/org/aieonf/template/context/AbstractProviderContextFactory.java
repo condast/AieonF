@@ -104,7 +104,8 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 			e.printStackTrace();
 		}
 		finally{
-			provider.close();
+			if( provider != null )
+				provider.close();
 		}
 		return transaction;
 	}

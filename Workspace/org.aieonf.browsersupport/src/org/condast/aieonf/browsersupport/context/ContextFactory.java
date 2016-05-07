@@ -38,7 +38,7 @@ public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<ID
 	 */
 	public ContextFactory()
 	{
-		super( S_BUNDLE_ID, new DefaultModelBuilder( ContextFactory.class, S_BUNDLE_ID ) );
+		super( S_BUNDLE_ID, new DefaultModelBuilder( ContextFactory.class ) );
 	}
 	
 	/**
