@@ -14,8 +14,6 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.concept.security.IPasswordAieon;
-import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
@@ -46,7 +44,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	private Collection<IModelBuilderListener> listeners;
 	
 	public AbstractOrientGraphModel( ILoaderAieon loader ) {
-		IPasswordAieon password = new PasswordAieon( loader );
+		//IPasswordAieon password = new PasswordAieon( loader );
 		String user = "admin";//password.getUserName();
 		String pwd = "admin";//password.getPassword();
 		source = ProjectFolderUtils.getDefaultUserDir(loader, true).toString();
@@ -83,7 +81,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	
 	protected void setup(){
 		try{
-			this.graph = factory.getTx();
+			this.graph = factory.getTx();//If this doesn't work then changes are that the file location is invalid
 			Set<String> indices = graph.getIndexedKeys( Vertex.class );
 			if( !indices.contains( S_ROOT ))
 				graph.createKeyIndex( S_ROOT, Vertex.class, new Parameter<String, String>("type", "UNIQUE"));
@@ -94,8 +92,9 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 			graph.shutdown();
 		}
 		catch( Exception ex ){
-			graph.rollback();
 			ex.printStackTrace();
+			if( graph != null )
+				graph.rollback();
 		}
 		
 	}
@@ -111,7 +110,8 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
-			graph.rollback();
+			if( graph != null )
+				graph.rollback();
 		}
 	}
 
@@ -125,7 +125,10 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
-			graph.rollback();
+		}
+		finally{
+			if( graph != null )
+				graph.rollback();
 		}
 	}
 
@@ -138,7 +141,8 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 
 	public void close(){
 		this.sync();
-		graph.shutdown();
+		if( graph != null )
+			graph.shutdown();
 	}
 
 	/**
@@ -203,7 +207,6 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 			String value = descriptor.get( key );
 			key = StringStyler.fromPackageString(key);
 			vtx.setProperty(key, value );
-			String retval = vtx.getProperty( key );
 		}  
 		createDescriptor(graph, vtx);
 		return vtx;

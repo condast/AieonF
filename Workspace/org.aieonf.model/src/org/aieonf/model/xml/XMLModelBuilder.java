@@ -52,7 +52,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	private boolean completed, failed;
 	
 	private String bundleId;
-	private IModelCreator<T, IModelLeaf<T>> creator;
+	private IXMLModelBuilder<T, IModelLeaf<T>> creator;
 
 	private Collection<IModelBuilderListener> listeners;
 		
@@ -65,7 +65,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	 * @param location
 	 * @param builder
 	 */
-	public XMLModelBuilder( String bundleId, IModelCreator<T, IModelLeaf<T>> creator ) {
+	public XMLModelBuilder( String bundleId, IXMLModelBuilder<T, IModelLeaf<T>> creator ) {
 		this.bundleId = bundleId;
 		this.creator = creator;
 		this.completed = false;

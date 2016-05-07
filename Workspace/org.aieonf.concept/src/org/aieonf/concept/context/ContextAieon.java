@@ -18,8 +18,6 @@ import org.aieonf.concept.body.IBodyAieon;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Concept;
-import org.aieonf.concept.domain.DomainAieon;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.xml.StoreConcept;
 
@@ -80,30 +78,18 @@ public class ContextAieon extends Concept implements IContextAieon
 		super( id, source );
 		super.set( ILoaderAieon.Attributes.INTERNAL, Boolean.TRUE.toString());
 		super.set( IContextAieon.S_APPLICATION, applicationName );
-		super.set( IDomainAieon.Attributes.DOMAIN, applicationName );
-		super.set( IDomainAieon.Attributes.SHORT_NAME, applicationName );
 		super.setScope( IConcept.Scope.APPLICATION );
 		this.set( IContextAieon.Attributes.APPLICATION_ID.toString(), applicationID );
+		this.set( IContextAieon.Attributes.APPLICATION_DOMAIN.toString(), source );
 		this.setLocationType( LocationType.APPLICATION );
 		super.set( IDescriptor.Attributes.VERSION, String.valueOf(1 ));
 	}
 
-	
 	public ContextAieon(IDescriptor base) {
 		super();
 	}
 
-	/**
-	 * A context aieon is always associated with one domain.
-	 * @return
-	 */
-	@Override
-	public IDomainAieon getDomain(){
-		IDomainAieon domain = new DomainAieon( this );
-		return domain;
-	}
-
-
+	
 	/**
 	 * Get the user directory
 	 *
@@ -118,6 +104,7 @@ public class ContextAieon extends Concept implements IContextAieon
 		File file = new File( user, this.getOrganisation() );
 		return file.toURI();
 	}
+
 
 	/**
 	 * Get the location type for this context aieon
@@ -240,25 +227,15 @@ public class ContextAieon extends Concept implements IContextAieon
 		this.set( IContextAieon.Attributes.APPLICATION_VERSION, applicationVersion );
 	}
 
-	/* (non-Javadoc)
-	 * @see org.condast.concept.context.IContextAieon#getApplicationDomain()
+	/**
+	 * Get the application domain. By default this is the bundle id.
+	 *
+	 * @return String
 	 */
-	@Override
-	public String getApplicationDomain()
-	{
+	public String getApplicationDomain(){
 		return this.get( IContextAieon.Attributes.APPLICATION_DOMAIN );
 	}
-
-	/**
-	 * Set the domain of the application
-	 *
-	 * @param applicationName String
-	 */
-	public void setApplicationDomain( String domain )
-	{
-		this.set( IContextAieon.Attributes.APPLICATION_DOMAIN, domain );
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.condast.concept.context.IContextAieon#getApplicationName()
 	 */
@@ -360,20 +337,6 @@ public class ContextAieon extends Concept implements IContextAieon
 	/**
 	 * Return the default user directory. This is '%system-user%\<organisation>\'
 	 * @param aieon
-	 * @return 
-	 */
-	public static URI getDefaultPublicDatabase( IContextAieon aieon )
-	{
-		DomainAieon domain = new DomainAieon( aieon );
-		File file = new File( S_DATABASE + File.separator + 
-				aieon.getApplicationName() + File.separator +
-				aieon.getSource() + File.separator + domain.getDomain() + ".cdx" );
-		return file.toURI();
-	}
-
-	/**
-	 * Return the default user directory. This is '%system-user%\<organisation>\'
-	 * @param aieon
 	 * @return
 	 */
 	public static URI getDefaultUserDir( IContextAieon aieon )
@@ -383,20 +346,6 @@ public class ContextAieon extends Concept implements IContextAieon
 		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator +
 				"." + aieon.getApplicationName().toLowerCase() + File.separator +
 				aieon.getSource() + File.separator );
-		return file.toURI();
-	}
-
-	/**
-	 * Return the default user directory. This is '%system-user%\<organisation>\'
-	 * @param aieon
-	 * @return 
-	 */
-	public static URI getDefaultUserDatabase( IContextAieon aieon )
-	{
-		DomainAieon domain = new DomainAieon( aieon );
-		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator + 
-				aieon.getApplicationName() + File.separator +
-				aieon.getSource() + File.separator + domain.getDomain() + ".cdx" );
 		return file.toURI();
 	}
 

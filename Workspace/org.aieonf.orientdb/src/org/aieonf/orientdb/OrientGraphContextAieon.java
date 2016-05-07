@@ -14,8 +14,6 @@ import java.net.URI;
 import org.aieonf.concept.Universe;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
 
@@ -41,16 +39,6 @@ public class OrientGraphContextAieon extends ContextAieon
   private static final long serialVersionUID = -3648972713512835462L;
   
   public static final String S_AIEONF_DOMAIN = "AieonF";
-  /**
-   * Default constructor
-   * @throws ConceptException
-   */
-  public OrientGraphContextAieon()
-  {
-    super();
-    super.set( IDomainAieon.Attributes.DOMAIN, S_AIEONF_DOMAIN );
-    super.set( IDomainAieon.Attributes.SHORT_NAME, S_AIEONF_DOMAIN );
-  }
 
   /**
    * Get the configuration source

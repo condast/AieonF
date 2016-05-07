@@ -11,7 +11,8 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
-import org.aieonf.model.xml.IModelCreator;
+import org.aieonf.model.search.ModelSearch;
+import org.aieonf.model.xml.IXMLModelBuilder;
 import org.aieonf.model.xml.XMLModelBuilder;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
@@ -76,11 +77,13 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 */
 	@Override
 	public IDomainAieon getDomain(){
-		return this.template.getDescriptor().getDomain();
+		ModelSearch<T> search = new ModelSearch<T>( this.template );
+		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
+		return domain;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected final ITemplateLeaf<IContextAieon> createDefaultTemplate( String identifier, IModelCreator creator ) {
+	protected final ITemplateLeaf<IContextAieon> createDefaultTemplate( String identifier, IXMLModelBuilder creator ) {
 		IModelBuilderListener listener = new IModelBuilderListener(){
 
 			@Override

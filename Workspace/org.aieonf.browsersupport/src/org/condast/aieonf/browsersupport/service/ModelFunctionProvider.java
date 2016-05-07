@@ -34,10 +34,15 @@ public class ModelFunctionProvider extends AbstractProvider<String, Object, IMod
 		if(!IModelProvider.S_MODEL_PROVIDER_ID.equals( leaf.getID()))
 			return;
 		super.onDataReceived(datum);
-		
-		ContextFactory factory = new ContextFactory();
-		ITemplateLeaf<IContextAieon> template = factory.createTemplate();
-		IModelFunction function = (IModelFunction) new ModelFunction( template.getDescriptor() );
+		IModelFunction function = null;
+		try{
+			ContextFactory factory = new ContextFactory();
+			ITemplateLeaf<IContextAieon> template = factory.createTemplate();
+			function = (IModelFunction) new ModelFunction( template.getDescriptor() );
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+		}
 		super.provide( function );
 	}
 

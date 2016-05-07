@@ -14,6 +14,7 @@ import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
+import org.aieonf.template.builder.DefaultModelBuilder;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 /**
@@ -37,7 +38,7 @@ public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<ID
 	 */
 	public ContextFactory()
 	{
-		super( S_BUNDLE_ID );
+		super( S_BUNDLE_ID, new DefaultModelBuilder( ContextFactory.class, S_BUNDLE_ID ) );
 	}
 	
 	/**

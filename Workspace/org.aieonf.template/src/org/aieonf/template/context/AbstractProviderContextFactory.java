@@ -12,8 +12,8 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.xml.IXMLModelBuilder;
 import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.builder.DefaultModelCreator;
 import org.aieonf.template.context.AbstractModelContextFactory;
 
 /**
@@ -29,9 +29,12 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 	
 	private Stack<ITransaction<T, IModelProvider<IContextAieon, T>>> transactionStack;
 	
-	protected AbstractProviderContextFactory( String bundle_id ) {
+	private IXMLModelBuilder<IDescriptor,ITemplateLeaf<IDescriptor>> creator;
+
+	protected AbstractProviderContextFactory( String bundle_id, IXMLModelBuilder<IDescriptor,ITemplateLeaf<IDescriptor>> creator ) {
 		this.bundle_id = bundle_id;
 		transactionStack = new Stack<ITransaction<T, IModelProvider<IContextAieon, T>>>();
+		this.creator = creator;
 	}
 
 	protected String getBundleId() {
@@ -56,7 +59,7 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 	
 	@Override
 	public ITemplateLeaf<IContextAieon> onCreateTemplate() {
-		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, new DefaultModelCreator( this.getClass()));	
+		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, this.creator );	
 		IDescriptor descriptor = template.getDescriptor();
 		String source = descriptor.get( IConcept.Attributes.SOURCE );
 		if( Utils.isNull( source ))
@@ -84,12 +87,15 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 	 */
 	@Override
 	public ITransaction<T, IModelProvider<IContextAieon, T>> search( IModelFilter<IDescriptor> filter ){
-		IModelProvider<IContextAieon,T> provider = getDatabase();
-		if( provider == null )
-			return null;
-		Collection<T> models = null;
-		ITransaction<T, IModelProvider<IContextAieon, T>> transaction = provider.createTransaction();
+		IModelProvider<IContextAieon,T> provider = null;
+		ITransaction<T, IModelProvider<IContextAieon, T>> transaction = null;
 		try {
+			provider = getDatabase();
+			if( provider == null )
+				return null;
+			Collection<T> models = null;
+			transaction = provider.createTransaction();
+
 			provider.open();
 			models = provider.search( filter);
 			for( T model: models )

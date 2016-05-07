@@ -8,15 +8,15 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.xml.sax.Attributes;
 
-public abstract class AbstractModelCreator<T extends IDescriptor, U extends IModelLeaf<T>> implements IModelCreator<T,U> {
+public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IModelLeaf<T>> implements IXMLModelBuilder<T,U> {
 
 	private boolean active;
 	private U model;
-	private Enum<?> key;
+	private String key;
 	private String resourceLocation;
 	private Class<?> clss;
 
-	protected AbstractModelCreator( Class<?> clss, String resourceLocation) {
+	protected AbstractModelBuilder( Class<?> clss, String resourceLocation) {
 		this.resourceLocation = resourceLocation;
 		this.clss = clss;
 	}
@@ -29,7 +29,7 @@ public abstract class AbstractModelCreator<T extends IDescriptor, U extends IMod
 		this.active = false;
 		this.key = null;
 	}
-	
+
 	@Override
 	public String getLocation(){
 		return this.resourceLocation;
@@ -44,8 +44,11 @@ public abstract class AbstractModelCreator<T extends IDescriptor, U extends IMod
 		return clss;
 	}
 
-	protected Enum<?> getKey() {
-		return key;
+	@Override
+	public String getKey() {
+		if( key == null )
+			return key;
+		return key.toString();
 	}
 
 	/**
@@ -74,7 +77,7 @@ public abstract class AbstractModelCreator<T extends IDescriptor, U extends IMod
 	 * @return
 	 */
 	protected abstract U onCreate( String name, Attributes attributes );
-	
+
 	@Override
 	public synchronized U create( String name, Attributes attributes) {
 		this.model = this.onCreate( name, attributes);
@@ -115,7 +118,7 @@ public abstract class AbstractModelCreator<T extends IDescriptor, U extends IMod
 		return null;
 	}
 
-	protected boolean setKey( Enum<?> key) {
+	protected boolean setKey( String key ) {
 		this.key = key;
 		return true;
 	}
@@ -127,7 +130,7 @@ public abstract class AbstractModelCreator<T extends IDescriptor, U extends IMod
 	}
 
 	@Override
-	public void endProperty( Enum<?> key ) {
+	public void endProperty() {
 		this.key = null;
 	}
 

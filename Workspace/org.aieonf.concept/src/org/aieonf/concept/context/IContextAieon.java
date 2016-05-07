@@ -4,7 +4,6 @@ import java.net.URI;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
-import org.aieonf.concept.domain.IDomainAieon;
 
 public interface IContextAieon extends IConcept
 {
@@ -43,8 +42,8 @@ public interface IContextAieon extends IConcept
 	{
 		APPLICATION_NAME,
 		APPLICATION_ID,
-		APPLICATION_DOMAIN,
 		APPLICATION_VERSION,
+		APPLICATION_DOMAIN,
 		CONTEXT,
 		LOCATION_TYPE,
 		ORGANISATION,
@@ -64,12 +63,6 @@ public interface IContextAieon extends IConcept
 			return false;
 		}
 	}
-	
-	/**
-	 * A context aieon is always associated with one domain.
-	 * @return
-	 */
-	public IDomainAieon getDomain();
 	
 	/**
 	 * Get the application database
@@ -99,7 +92,7 @@ public interface IContextAieon extends IConcept
 	public abstract String getApplicationVersion();
 
 	/**
-	 * Get the application domain
+	 * Get the application domain. By default this is the bundle id.
 	 *
 	 * @return String
 	 */

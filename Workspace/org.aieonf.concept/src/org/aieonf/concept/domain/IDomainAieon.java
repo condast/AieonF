@@ -9,6 +9,7 @@ public interface IDomainAieon extends IDescriptor
 	public enum Attributes{
 		SHORT_NAME,
 		DOMAIN,
+		PERSPECTIVE,
 		ACTIVE,
 		SORT,
 		PARENT;
@@ -37,7 +38,12 @@ public interface IDomainAieon extends IDescriptor
 	 * Get the short name for this domain
 	 */
 	public String getShortName();
-	
+
+	/**
+	 * Get the perspective to which to observe this domain
+	 */
+	public String getPerspective();
+
 	/**
 	 * returns true if the domain is hidden from view
 	 * @return

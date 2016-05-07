@@ -25,6 +25,7 @@ import org.aieonf.model.IModelNode;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.xml.IModelParser;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -33,6 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implements IModelParser{
 
 	public static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
+	public static final String S_ERR_NO_CHILDREN   = " The node cannot contain children. ";
 	public static final String S_ERR_NO_DESCRIPTOR_FOUND = "No descriptor found for: ";
 	public static final String S_WRN_DESCRIPTOR_NOT_FOUND = "The descriptor was not found. Defaulting to standard concept: ";
 	
@@ -78,20 +80,20 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	
 	private Stack<ModelAttributes> stack;
 	
-	private Collection<IModelCreator<T,IModelLeaf<T>>> creators;	
+	private Collection<IXMLModelBuilder<T,IModelLeaf<T>>> creators;	
 	private Collection<IModelBuilderListener> listeners;
 
 	private XMLApplication application;
 	private XMLModel xmlModel;
 	
 	//Allows transformation of the strings to the correct properties
-	private IModelCreator<T,IModelLeaf<T>> creator;
+	private IXMLModelBuilder<T,IModelLeaf<T>> creator;
 
 	private Logger logger = Logger.getLogger( XMLModelParser.class.getName() );
 
 	public XMLModelParser() {
 		this.stack = new Stack<ModelAttributes>();
-		this.creators = new ArrayList<IModelCreator<T,IModelLeaf<T>>>();
+		this.creators = new ArrayList<IXMLModelBuilder<T,IModelLeaf<T>>>();
 		listeners = new ArrayList<IModelBuilderListener>();
 	}
 
@@ -112,7 +114,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * Add a model parser
 	 * @param parser
 	 */
-	public void addDescriptorCreator( IModelCreator<T,IModelLeaf<T>> creator ){
+	public void addDescriptorCreator( IXMLModelBuilder<T,IModelLeaf<T>> creator ){
 		this.creators.add( creator );
 	}
 
@@ -120,7 +122,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * Add a model parser
 	 * @param parser
 	 */
-	public void removeDescriptorCreator( IModelCreator<T,IModelLeaf<T>> creator ){
+	public void removeDescriptorCreator( IXMLModelBuilder<T,IModelLeaf<T>> creator ){
 		this.creators.remove( creators );
 	}
 
@@ -190,12 +192,9 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 				index = this.stack.lastElement();
 				if( !index.equals( ModelAttributes.MODEL ))
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
-				if(!( current instanceof IModelNode ))
+				if(!( current instanceof IModelLeaf ))
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
-				//	this.current = new Model<IDescriptor>( this.current.getDescriptor() );
-				//	this.completeModel( (ModelLeaf<IDescriptor>) this.current, attributes);
 					this.parent = this.current;
-				//}
 				break;
 			default:
 				break; //do nothing
@@ -212,6 +211,10 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 				if( model == null  )
 					logger.warning( S_WRN_DESCRIPTOR_NOT_FOUND + qName );
 				
+				if(!( this.current instanceof IModelNode ))
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + this.current.toString() + 
+							" index: " + index + S_ERR_NO_CHILDREN );
+					
 				IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) this.current;
 				this.current =  (IModelLeaf<IDescriptor>) model;
 				xmlModel.fill( this.current );
@@ -253,12 +256,13 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 			break;
 		case DESCRIPTOR:
 			this.notifyDescriptorCreated( this.current.getDescriptor());
+			this.creator.endProperty();
 			if( this.creator != null )
 				this.creator.clear();
 			this.creator = null;
 			break;
 		case PROPERTIES:
-			this.creator.endProperty(ma);
+			this.creator.endProperty();
 			break;
 		default:
 			break;
@@ -271,8 +275,8 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * @param attributes
 	 * @return
 	 */
-	protected final IModelCreator<T,IModelLeaf<T>> getModelCreator( String name, Attributes attributes ){
-		for( IModelCreator<T,IModelLeaf<T>> creator: this.creators ){
+	protected final IXMLModelBuilder<T,IModelLeaf<T>> getModelCreator( String name, Attributes attributes ){
+		for( IXMLModelBuilder<T,IModelLeaf<T>> creator: this.creators ){
 			if( creator.canCreate( name, attributes))
 				return creator;
 		}
@@ -280,7 +284,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	}
 	
 	private void notifyDescriptorCreated( IDescriptor descriptor ){
-		for( IModelCreator<T,IModelLeaf<T>> creator: this.creators ){
+		for( IXMLModelBuilder<T,IModelLeaf<T>> creator: this.creators ){
 			creator.notifyDescriptorCreated( new ModelCreatorEvent(this, descriptor));
 		}
 	}
@@ -290,7 +294,15 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		String value = new String(ch, start, length);
 		if( Utils.isNull( value  ))
 			return;
-		creator.setValue( value);
+		try{
+			logger.fine("Setting value for key: " + creator.getKey() );
+			IDescriptor descriptor = current.getDescriptor();
+			descriptor.set( creator.getKey(), value);
+		}
+		catch( Exception ex ){
+			logger.severe( printError( this.current, "Exception thrown for [" + value + "]"));
+			throw new SAXException( ex );
+		}
 	}
 
 	@Override
@@ -327,6 +339,21 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		Logger.getLogger( this.getClass().getName()).info(msg);
 	}
 
+	/**
+	 * Print errors in the given model
+	 * @param model
+	 * @param message
+	 * @return
+	 */
+	private String printError( IModelLeaf<IDescriptor> model, String message ){
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("ERROR: ");
+		buffer.append( message );
+		buffer.append("\n");
+		buffer.append( StoreModel.printModel(model, false));
+		return buffer.toString();
+	}
+	
 	/**
 	 * Convert the attributes to a string map
 	 * @param attributes
@@ -416,7 +443,6 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 
 		public enum Fields{
 			ID,
-			DOMAIN,
 			NAME,
 			VERSION;
 			
@@ -441,10 +467,6 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 			return properties.get( Fields.ID.name().toLowerCase());
 		}
 
-		public String getDomain(){
-			return properties.get( Fields.DOMAIN.name().toLowerCase());
-		}
-
 		public String getName(){
 			return properties.get( Fields.NAME.name().toLowerCase());
 		}
@@ -458,7 +480,6 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		 * @param context
 		 */
 		public void extendContext( ContextAieon context ){
-			context.setApplicationDomain( this.getDomain() );
 			context.setApplicationName( this.getName() );
 			context.setApplicationVersion( this.getVersion() );
 			String id = this.getID();

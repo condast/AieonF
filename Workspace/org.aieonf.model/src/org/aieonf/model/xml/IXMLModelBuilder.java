@@ -7,7 +7,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.xml.sax.Attributes;
 
-public interface IModelCreator<T extends IDescriptor, U extends IModelLeaf<T>> {
+public interface IXMLModelBuilder<T extends IDescriptor, U extends IModelLeaf<T>> {
 
 	/**
 	 * The keys of attributes with special meaning
@@ -88,10 +88,9 @@ public interface IModelCreator<T extends IDescriptor, U extends IModelLeaf<T>> {
 	public boolean setValue( String value );
 
 	/**
-	 * End filling in the property
-	 * @param key
+	 * When the property is parsed, this method is called to clean up the code
 	 */
-	public void endProperty( Enum<?> key);
+	public void endProperty();
 	
 	/**
 	 * Notification that a descriptor was created
@@ -99,4 +98,9 @@ public interface IModelCreator<T extends IDescriptor, U extends IModelLeaf<T>> {
 	 */
 	public void notifyDescriptorCreated( ModelCreatorEvent event );
 
+	/**
+	 * Get the key that currently is being processed
+	 * @return
+	 */
+	public String getKey();
 }

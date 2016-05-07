@@ -83,8 +83,9 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	 */
 	public LoaderAieon( IDescriptor descriptor )
 	{
-		this();
-		super.setSource( descriptor.get( IConcept.Attributes.SOURCE ));
+		super( descriptor );
+		this.set( ILoaderAieon.Attributes.INTERNAL, Boolean.TRUE.toString() );
+		this.set( ILoaderAieon.Attributes.CREATABLE, Boolean.FALSE.toString() );
 	}
 
 	/**

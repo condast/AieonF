@@ -44,3 +44,4 @@ Bundle-ClassPath: lib/jna-4.0.0.jar,
  lib/orientdb-core-2.1.16.jar,
  lib/orientdb-graphdb-2.1.16.jar,
  lib/pipes-2.6.0.jar
+Require-Bundle: org.aieonf.tinkerpop;bundle-version="1.0.0"

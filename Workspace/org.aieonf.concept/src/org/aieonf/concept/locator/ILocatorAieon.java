@@ -14,6 +14,7 @@ public interface ILocatorAieon extends IDescriptor
   {
     LOCATOR,
     LOCATION,
+    LOCATION_TYPE,
     IDENTIFIER,
     URI;
     
