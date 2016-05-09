@@ -3,13 +3,13 @@ package org.aieonf.orientdb.tree;
 import java.net.URI;
 
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModel;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.function.AbstractFunction;
 import org.aieonf.orientdb.OrientGraphContextAieon;
-import org.condast.aieonf.osgi.utils.ProjectFolderUtils;
 
 public class TreeModelFunction<T extends ILoaderAieon> extends AbstractFunction<T, IGraphModel<T,IModelLeaf<IDescriptor>>> {
 

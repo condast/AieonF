@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
-import org.condast.aieonf.osgi.library.IWebResourceProvider;
+import org.aieonf.commons.net.IWebResourceProvider;
 
 public class ActiveLinkData implements IWebResourceProvider
 {
