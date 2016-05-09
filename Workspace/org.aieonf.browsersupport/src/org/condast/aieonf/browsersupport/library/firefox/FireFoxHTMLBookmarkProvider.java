@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Stack;
 
-import org.condast.aieonf.utils.base64.Base64Utils;
+import org.aieonf.commons.base64.Base64Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;

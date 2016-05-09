@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import org.aieonf.collections.CollectionException;
 import org.aieonf.collections.persistence.AbstractFilePersistence;
+import org.aieonf.commons.base64.Base64;
+import org.aieonf.commons.base64.Base64Utils;
 import org.aieonf.commons.io.IOUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
@@ -14,8 +16,6 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.ManifestAieon;
-import org.condast.aieonf.utils.base64.Base64;
-import org.condast.aieonf.utils.base64.Base64Utils;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.library.FileModel;
 
