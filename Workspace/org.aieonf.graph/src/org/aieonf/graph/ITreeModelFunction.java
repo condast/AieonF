@@ -4,5 +4,5 @@ import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
 
-public interface ITreeModelFunction<T extends ILoaderAieon> extends IFunctionProvider<T, IGraphModel<T,IModelLeaf<T>>>{
+public interface ITreeModelFunction<T extends ILoaderAieon> extends IFunctionProvider<T, IGraphModel<IModelLeaf<T>>>{
 }

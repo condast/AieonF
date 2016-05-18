@@ -19,7 +19,6 @@ import org.aieonf.concept.datauri.DataURI;
 import org.aieonf.concept.datauri.IDataURI;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
@@ -29,7 +28,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 
-public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>>
+public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "FirefoxHtmlBookmarks";
 	
@@ -38,7 +37,7 @@ public class FireFoxHTMLBookmarkProvider<T extends ILoaderAieon> extends Abstrac
 	private FireFoxReference currentURL;
 	private Stack<IModelNode<IDescriptor>> stack;
 
-	public FireFoxHTMLBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
+	public FireFoxHTMLBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
 	{
 		super( S_IDENTIFER, context, model );
 	}

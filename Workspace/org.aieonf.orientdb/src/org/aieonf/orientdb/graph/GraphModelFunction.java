@@ -3,18 +3,23 @@ package org.aieonf.orientdb.graph;
 import java.net.URI;
 
 import org.aieonf.commons.graph.IVertex;
+import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModel;
-import org.aieonf.graph.IGraphModelFunction;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.function.AbstractFunction;
+import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.orientdb.OrientGraphContextAieon;
+import org.aieonf.template.ITemplateLeaf;
 
-public class GraphModelFunction<T extends ILoaderAieon> extends AbstractFunction<T, IGraphModel<T,IVertex<T>>> implements IGraphModelFunction<T> {
+public class GraphModelFunction<T extends IDescriptor> extends AbstractFunctionProvider<T, IGraphModel<IVertex<T>>>{
 
-	public GraphModelFunction() {
+	private ITemplateLeaf<IContextAieon> template;
+	
+	public GraphModelFunction( ITemplateLeaf<IContextAieon> template) {
 		super( IGraphModel.S_GRAPH_MODEL_PROVIDER_ID, new OrientGraphContextAieon());
+		this.template = template;
 	}
 	
 	@Override
@@ -24,13 +29,13 @@ public class GraphModelFunction<T extends ILoaderAieon> extends AbstractFunction
 	}
 
 	@Override
-	protected IGraphModel<T,IVertex<T>> onCreateFunction(IModelLeaf<T> leaf) {
-		IModelLeaf<ILoaderAieon> model = getDefaultModel( leaf );
-		ILoaderAieon baseLoader = model.getDescriptor();
-		URI uri = ProjectFolderUtils.getDefaultUserDatabase( baseLoader );
+	protected IGraphModel<IVertex<T>> onCreateFunction(IModelLeaf<T> leaf) {
+		IModelLeaf<IDescriptor> model = getDefaultModel( leaf );
+		ILoaderAieon baseLoader = (ILoaderAieon) model.getDescriptor();
+		URI uri = ProjectFolderUtils.getDefaultUserDatabase( baseLoader, template.getDescriptor().getContext() );
 		baseLoader.setURI( uri );
 
-		IGraphModel<T,IVertex<T>> gdb = new GraphModel<T>( baseLoader );
+		IGraphModel<IVertex<T>> gdb = new GraphModel<T>( baseLoader, template );
 		return gdb;
 	}
 }

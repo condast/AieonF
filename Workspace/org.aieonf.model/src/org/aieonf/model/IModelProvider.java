@@ -3,12 +3,11 @@ package org.aieonf.model;
 import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 
-public interface IModelProvider<T extends IDescriptor, U extends Object> {
+public interface IModelProvider<U extends Object> {
 
 	public static final String S_MODEL_PROVIDER_ID = "org.aieonf.model.provider";
 
@@ -43,13 +42,6 @@ public interface IModelProvider<T extends IDescriptor, U extends Object> {
 	public Collection<U> get( IDescriptor descriptor ) throws ParseException;
 
 	public Collection<U> search( IModelFilter<IDescriptor> filter ) throws ParseException;
-	
-	/**
-	 * Create a transaction for the given object in this provider
-	 * @param data
-	 * @return
-	 */
-	public ITransaction<U, IModelProvider<T, U>> createTransaction();
 	
 	/**
 	 * Deactivate the function

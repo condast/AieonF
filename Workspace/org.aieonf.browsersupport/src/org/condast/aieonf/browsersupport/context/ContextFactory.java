@@ -59,13 +59,14 @@ public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<ID
 	}
 
 	@Override
-	public IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> getModelProvider() {
+	public IModelProvider<IModelLeaf<IDescriptor>> getModelProvider() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> getDatabase() {
+	public IModelProvider<IModelLeaf<IDescriptor>> getDatabase() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

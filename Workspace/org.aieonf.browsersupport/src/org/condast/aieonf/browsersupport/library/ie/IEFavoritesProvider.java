@@ -19,7 +19,6 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.library.URLAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
@@ -31,7 +30,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
  * This class overrides the default concept database in order to
  * exploit a unique key within the scope of this package
  */
-public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IDescriptor, IModelLeaf<IDescriptor>>
+public class IEFavoritesProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "InternetExplorerFavourites";
 
@@ -41,7 +40,7 @@ public class IEFavoritesProvider<T extends ILoaderAieon> extends AbstractModelPr
 	
 	private Logger logger;
 
-	public IEFavoritesProvider( IContextAieon context, IModelLeaf<T> model )
+	public IEFavoritesProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
 	{
 		super( S_IDENTIFER, context, model );
 		logger = Logger.getLogger( this.getClass().getName() );

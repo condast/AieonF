@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModel;
@@ -23,14 +24,16 @@ import org.aieonf.template.builder.TemplateModelBuilderEvent;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
-public class TreeModel<T extends ILoaderAieon> extends AbstractOrientGraphModel<T, IModelLeaf<IDescriptor>> implements IGraphModel<T, IModelLeaf<IDescriptor>> {
+public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T, IModelLeaf<IDescriptor>> implements IGraphModel<IModelLeaf<IDescriptor>> {
 	
-	public TreeModel( ILoaderAieon loader ) {
+	private ITemplateLeaf<IContextAieon> template;
+	
+	public TreeModel( ILoaderAieon loader, ITemplateLeaf<IContextAieon> template ) {
 		super( loader );
+		this.template = template;
 	}
 	
-	@Override
-	public IModelLeaf<IDescriptor> create(ITemplateLeaf<T> template) {
+	public IModelLeaf<IDescriptor> create() {
 		Vertex root = super.getGraph().getVerticesOfClass( S_ROOT).iterator().next();
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.VERSION ), 1 );

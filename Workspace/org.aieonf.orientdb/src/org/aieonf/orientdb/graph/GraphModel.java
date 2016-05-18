@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModel;
@@ -22,17 +23,18 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<T,IVertex<T>> implements IGraphModel<T, IVertex<T>> {
+public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<T,IVertex<T>> implements IGraphModel<IVertex<T>> {
 	
 	private OrientGraphFactory factory;
 	private OrientGraph graph;
+	private ITemplateLeaf<IContextAieon> template;
 	
-	public GraphModel( ILoaderAieon loader ) {
+	public GraphModel( ILoaderAieon loader, ITemplateLeaf<IContextAieon> template ) {
 		super( loader );
+		this.template = template;
 	}
 
-	@Override
-	public IVertex<T> create(ITemplateLeaf<T> template) {
+	public IVertex<T> create() {
 		Vertex root = graph.getVerticesOfClass( S_ROOT).iterator().next();
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.VERSION ), 1 );

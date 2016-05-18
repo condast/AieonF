@@ -7,13 +7,11 @@ import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.model.IModelFunction;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
-import org.aieonf.model.function.AbstractFunction;
+import org.aieonf.model.function.AbstractFunctionProvider;
 
-public class IEFavoritesFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>>> implements IModelFunction<ILoaderAieon, IModelLeaf<IDescriptor>> 
+public class IEFavoritesFunction extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>>
 {
 	//Default identifier
 	private static final String DEFAULT_IDENTIFIER =
@@ -41,20 +39,20 @@ public class IEFavoritesFunction extends AbstractFunction<ILoaderAieon, IModelPr
 	}
 
 	@Override
-	public boolean canProvide(IModelLeaf<ILoaderAieon> leaf) {
+	public boolean canProvide(IModelLeaf<IDescriptor> leaf) {
 		return super.canProvide(S_FUNCTION_PROVIDER_ID, leaf);
 	}
 	
 	@Override
-	protected IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
-		ILoaderAieon baseLoader = getDefaultLoader(leaf);
+	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<IDescriptor> leaf) {
+		IDescriptor baseLoader = getDefaultLoader(leaf);
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
-		IModelLeaf<ILoaderAieon> model = getModelForLoader(baseLoader, leaf);
+		//TODO IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
 		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
 
-		if( Utils.isNull( model.getIdentifier() ))
-			model.setIdentifier( DEFAULT_IDENTIFIER );
-		IModelProvider<ILoaderAieon, IModelLeaf<IDescriptor>> provider = new IEFavoritesProvider<ILoaderAieon>( super.getAieon(), model );
+		if( Utils.isNull( leaf.getIdentifier() ))
+			leaf.setIdentifier( DEFAULT_IDENTIFIER );
+		IModelProvider<IModelLeaf<IDescriptor>> provider = new IEFavoritesProvider( super.getAieon(), leaf );
 		return provider;
 	}
 

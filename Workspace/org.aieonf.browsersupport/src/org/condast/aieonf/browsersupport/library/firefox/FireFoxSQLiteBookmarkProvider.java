@@ -22,7 +22,6 @@ import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
@@ -31,14 +30,14 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
-public class FireFoxSQLiteBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T, IDescriptor, IModelLeaf<IDescriptor>>
+public class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "FirefoxSQLBookmarks";
 
 	private Connection connection;
 
 
-	public FireFoxSQLiteBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
+	public FireFoxSQLiteBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
 	{
 		super( S_IDENTIFER, context, model );
 	}

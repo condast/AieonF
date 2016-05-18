@@ -1,11 +1,10 @@
 package org.aieonf.template;
 
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelProvider;
 
-public interface IWriteModelProvider<T extends IDescriptor, U extends Object> extends IModelProvider<T, U>{
+public interface IWriteModelProvider<U extends Object> extends IModelProvider<U>{
 
-	public U create( ITemplateLeaf<T> template );
+	public U create();
 
 	public boolean add( U root );
 

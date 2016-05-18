@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.commons.transaction.AbstractTransaction;
-import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -15,7 +13,6 @@ import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
@@ -23,7 +20,7 @@ import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 
-public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends IDescriptor,V extends IDescribable<U>> implements IModelProvider<T,V> {
+public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDescribable<U>> implements IModelProvider<V> {
 
 	public static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
@@ -32,18 +29,16 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 
 	private Collection<V> models;
 
-	private IModelLeaf<T> model;
 	private ManifestAieon manifest;
 	
 	private IContextAieon context;
 	private String identifier;
 
-	protected AbstractModelProvider( String identifier, IContextAieon context, IModelLeaf<T> model ) {
+	protected AbstractModelProvider( String identifier, IContextAieon context, IModelLeaf<U> model ) {
 		listeners = new ArrayList<IModelBuilderListener>();
 		this.identifier = identifier;
 		this.context = context;
 		manifest = this.setup( model);
-		this.model = model;
 		models = new ArrayList<V>();
 	}
 
@@ -78,7 +73,7 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 	 */
 	protected abstract void onSetup( ManifestAieon manifest );
 
-	protected ManifestAieon setup(IModelLeaf<T> model) {
+	protected ManifestAieon setup(IModelLeaf<U> model) {
 		ManifestAieon manifest = new ManifestAieon( model.getDescriptor() );
 		try {
 			manifest.fill(model.getDescriptor());
@@ -131,25 +126,6 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 		return models;
 	}
 
-	
-	@Override
-	public ITransaction<V, IModelProvider<T, V>> createTransaction() {
-		return new AbstractTransaction<V, IModelProvider<T, V>>( this ){
-
-			@Override
-			protected boolean onCreate(IModelProvider<T, V> provider) {
-				provider.open();
-				return provider.isOpen();
-			}
-
-			@Override
-			public void close() {
-				super.getProvider().close();
-				super.close();
-			}
-		};
-	}
-
 	@Override
 	public String printDatabase() {
 		// TODO Auto-generated method stub
@@ -169,7 +145,6 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 	protected void fill( IConcept concept ) throws ConceptException{
 		try {
 			IDFactory( concept );
-			T manifest = model.getDescriptor();
 			concept.setProvider( manifest.getIdentifier() );
 			concept.setProviderName( manifest.getProviderName() );
 			concept.set( IConcept.Attributes.SOURCE.name(), manifest.getIdentifier() );
@@ -191,7 +166,6 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 		if( !Descriptor.isNull( concept.getID()))
 			return;
 		try{
-			T manifest = model.getDescriptor();
 			BodyFactory.sign( manifest, concept );
 			String id = IDFactory( concept, models );
 			concept.set( IDescriptor.Attributes.ID.name(), id);
@@ -212,7 +186,7 @@ public abstract class AbstractModelProvider<T extends ILoaderAieon, U extends ID
 	public String IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors )
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append( model.getDescriptor().getSource() + ":" );
+		buffer.append( manifest.getSource() + ":" );
 
 		long newId = descriptor.hashCode();
 		boolean containsId = false;

@@ -3,6 +3,8 @@ package org.aieonf.commons.encryption;
 //J2SE imports
 import java.io.*;
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,9 +46,10 @@ public class Encryption implements IEncryption
    * Create a default encryption using Rijndael (AES)
    * @param key String
    * @throws NoSuchPaddingException, NoSuchAlgorithmException
+ * @throws InvalidKeySpecException 
   */
   public Encryption( String key ) 
-  	throws NoSuchPaddingException, NoSuchAlgorithmException
+  	throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException
   {
   	this( Algorithms.AES, key );
   }
@@ -56,16 +59,22 @@ public class Encryption implements IEncryption
    * @param algorithm String
    * @param key String
    * @throws NoSuchPaddingException, NoSuchAlgorithmException
+ * @throws InvalidKeySpecException 
   */
   public Encryption( Algorithms algorithm, String key ) 
-  	throws NoSuchPaddingException, NoSuchAlgorithmException
+  	throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException
   {
     if( algorithm == null )
     	throw new NullPointerException( S_ERR_NO_ALGORITHM );
     this.algorithm = algorithm;
     if(( !algorithm.equals( Algorithms.NONE )) && ( key == null ))
     	throw new NullPointerException( S_ERR_NO_KEY );
-    this.skeySpec = new SecretKeySpec( key.getBytes(), this.algorithm.name() );
+    
+    SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+    KeySpec spec = new PBEKeySpec( key.toCharArray(), this.algorithm.name().getBytes(), 65536, 128);
+    SecretKey tmp = factory.generateSecret(spec);
+    
+    this.skeySpec = new SecretKeySpec( tmp.getEncoded(), this.algorithm.name() );
     if( !this.algorithm.equals( IEncryption.Algorithms.NONE ))
       this.cipher = Cipher.getInstance( this.algorithm.name() );
   }

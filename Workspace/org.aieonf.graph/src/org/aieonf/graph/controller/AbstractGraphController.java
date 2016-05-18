@@ -14,17 +14,17 @@ import org.aieonf.template.controller.AbstractModelController;
 
 public abstract class AbstractGraphController<T extends IContextAieon, U extends IDescriptor> extends AbstractModelController<T,U>
 {
-	private IGraphModel<T, IVertex<U>> provider;
+	private IGraphModel<IVertex<U>> provider;
 	
 	protected AbstractGraphController( IModelContextFactory<T> factory ) {
 		super( factory );
 	}
 	
-	protected IGraphModel<T, IVertex<U>> getProvider() {
+	protected IGraphModel<IVertex<U>> getProvider() {
 		return provider;
 	}
 
-	protected void setProvider(IGraphModel<T, IVertex<U>> provider) {
+	protected void setProvider(IGraphModel<IVertex<U>> provider) {
 		this.provider = provider;
 	}
 
@@ -103,7 +103,6 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 			};
 			provider.addListener(listener);
 			provider.open();
-			provider.create( super.getTemplate() );
 			provider.removeListener(listener);
 		}
 		catch (Exception e) {

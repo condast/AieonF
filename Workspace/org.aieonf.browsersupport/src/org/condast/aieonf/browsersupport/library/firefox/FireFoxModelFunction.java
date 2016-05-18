@@ -9,12 +9,11 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.model.IModelFunction;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
-import org.aieonf.model.function.AbstractFunction;
+import org.aieonf.model.function.AbstractFunctionProvider;
 
-public class FireFoxModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>>> implements IModelFunction<ILoaderAieon, IModelLeaf<IDescriptor>>
+public class FireFoxModelFunction extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>>
 {
 	//Default location
 	private static final String DEFAULT_FIREFOX_ROOT =
@@ -45,7 +44,7 @@ public class FireFoxModelFunction extends AbstractFunction<ILoaderAieon, IModelP
 	}
 
 	@Override
-	public boolean canProvide(IModelLeaf<ILoaderAieon> leaf) {
+	public boolean canProvide(IModelLeaf<IDescriptor> leaf) {
 		return super.canProvide(S_FUNCTION_PROVIDER_ID, leaf);
 	}
 
@@ -62,20 +61,20 @@ public class FireFoxModelFunction extends AbstractFunction<ILoaderAieon, IModelP
 	}
 
 	@Override
-	protected IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
+	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<IDescriptor> leaf) {
 		ILoaderAieon baseLoader = getDefaultLoader(leaf);
 		baseLoader.setDescription( DEFAULT_FIREFOX_PROVIDER_NAME );
-		IModelLeaf<ILoaderAieon> model = getModelForLoader(baseLoader, leaf);
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
 		if( Utils.isNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_FIREFOX_IDENTIFIER );
 		URI uri = AbstractFileConnector.getDefaultSource( DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
 		baseLoader.set( IConcept.Attributes.SOURCE, uri.getPath());
 
-		IModelProvider<ILoaderAieon, IModelLeaf<IDescriptor>> provider;
+		IModelProvider<IModelLeaf<IDescriptor>> provider;
 		if( version == FireFoxVersion.firefox3 )
-			provider = new FireFoxSQLiteBookmarkProvider<ILoaderAieon>( super.getAieon(), model );
+			provider = new FireFoxSQLiteBookmarkProvider( super.getAieon(), model );
 		else
-			provider = new FireFoxHTMLBookmarkProvider<ILoaderAieon>( super.getAieon(), model );
+			provider = new FireFoxHTMLBookmarkProvider( super.getAieon(), model );
 		return provider;
 	}
 }

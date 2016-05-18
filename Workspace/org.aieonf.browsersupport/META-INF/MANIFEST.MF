@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.aieonf.browsersupport
 Bundle-Version: 1.0.0.v20140820
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Service-Component: OSGI-INF/attendees.xml
+Service-Component: OSGI-INF/provider.xml
 Import-Package: org.aieonf.collections,
  org.aieonf.collections.connector,
  org.aieonf.collections.parser,
@@ -29,6 +29,7 @@ Import-Package: org.aieonf.collections,
  org.aieonf.concept.locator,
  org.aieonf.concept.wrapper,
  org.aieonf.model,
+ org.aieonf.model.builder,
  org.aieonf.model.filter,
  org.aieonf.model.function,
  org.aieonf.model.library,
@@ -36,8 +37,7 @@ Import-Package: org.aieonf.collections,
  org.aieonf.template,
  org.aieonf.template.builder,
  org.aieonf.template.context,
- org.aieonf.template.provider,
- org.eclipselabs.osgi.ds.broker.service
+ org.aieonf.template.provider
 Bundle-ClassPath: lib/htmlparser.jar,
  .,
  lib/sqlite-jdbc-3.7.2.jar,

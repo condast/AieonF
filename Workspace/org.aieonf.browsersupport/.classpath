@@ -5,7 +5,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.3.5-20140808.063113-2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="org/condast/aieonf/browsersupport/service/ModelFunctionProvider.java|org/condast/aieonf/browsersupport/service/ActiveLinkProvider.java" kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/htmlparser.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>

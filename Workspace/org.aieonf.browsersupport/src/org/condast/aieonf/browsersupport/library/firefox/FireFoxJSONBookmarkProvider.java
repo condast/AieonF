@@ -13,16 +13,15 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 
-public class FireFoxJSONBookmarkProvider<T extends ILoaderAieon> extends AbstractModelProvider<T,IConcept, IModelLeaf<IConcept>>
+public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IConcept, IModelLeaf<IConcept>>
 {
 	public static final String S_IDENTIFER = "FirefoxJsonBookmarks";
 
-	public FireFoxJSONBookmarkProvider( IContextAieon context, IModelLeaf<T> model )
+	public FireFoxJSONBookmarkProvider( IContextAieon context, IModelLeaf<IConcept> model )
 	{
 		super( S_IDENTIFER, context, model );
 	}

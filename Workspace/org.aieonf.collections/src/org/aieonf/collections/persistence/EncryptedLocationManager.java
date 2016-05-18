@@ -2,6 +2,7 @@ package org.aieonf.collections.persistence;
 
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.NoSuchPaddingException;
 
@@ -25,7 +26,7 @@ public class EncryptedLocationManager extends LocationManager
 	//The loader contains encryption info
 	private ILoaderAieon loader;
 	
-	public EncryptedLocationManager( ILoaderAieon loader ) throws NoSuchPaddingException, NoSuchAlgorithmException
+	public EncryptedLocationManager( ILoaderAieon loader ) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException
 	{
 		super( loader );
 		this.loader = loader;

@@ -8,12 +8,11 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.model.IModelFunction;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
-import org.aieonf.model.function.AbstractFunction;
+import org.aieonf.model.function.AbstractFunctionProvider;
 
-public class ChromiumModelFunction extends AbstractFunction<ILoaderAieon, IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>>> implements IModelFunction<ILoaderAieon, IModelLeaf<IDescriptor>> {
+public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>> {
 
 	//Default identifier
 	public static final String DEFAULT_IDENTIFIER =
@@ -30,28 +29,28 @@ public class ChromiumModelFunction extends AbstractFunction<ILoaderAieon, IModel
 
 	public static final String DEFAULT_BOOKMARKS_FILE ="Bookmarks";
 
-	public ChromiumModelFunction( IContextAieon context ) {
+	public ChromiumModelFunctionProvider( IContextAieon context ) {
 		super( S_FUNCTION_PROVIDER_ID, context );
 	}
 
 	@Override
-	public boolean canProvide(IModelLeaf<ILoaderAieon> leaf) {
+	public boolean canProvide(IModelLeaf<IDescriptor> leaf) {
 		if( DEFAULT_CHROMIUM_IDENTIFIER.equals( leaf.getIdentifier() ))
 			return true;
 		return super.canProvide(S_FUNCTION_PROVIDER_ID, leaf);
 	}
 
 	@Override
-	protected IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<ILoaderAieon> leaf) {
+	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<IDescriptor> leaf) {
 		ILoaderAieon baseLoader = getDefaultLoader(leaf);
 		URI uri = ProjectFolderUtils.appendToUserDir(DEFAULT_CHROMIUM_ROOT + "//" + DEFAULT_BOOKMARKS_FILE, false );
 		baseLoader.set( IConcept.Attributes.SOURCE, uri.toString() );
 		baseLoader.setURI( uri );
 		baseLoader.setDescription( DEFAULT_CHROMIUM_PROVIDER_NAME );
-		IModelLeaf<ILoaderAieon> model = getModelForLoader(baseLoader, leaf);
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
 		if( Utils.isNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
-		IModelProvider<ILoaderAieon,IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider<ILoaderAieon>( super.getAieon(), model );
+		IModelProvider<IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( super.getAieon(), model );
 		return gdb;
 	}
 }

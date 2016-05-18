@@ -15,16 +15,16 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
 
-public abstract class AbstractFunction<T extends IDescriptor, U extends Object> implements IFunctionProvider<T, U> {
+public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends Object> implements IFunctionProvider<T, U> {
 
 	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
 
-	private static final String S_DEFAULT_ENVRYPTION_KEY = "aieonf.encryptin";
+	private static final String S_DEFAULT_ENVRYPTION_KEY = "aieonf.encryption";
 
 	private String identifier;
 	private IContextAieon aieon;
 	
-	protected AbstractFunction( String identifier, IContextAieon aieon ) {
+	protected AbstractFunctionProvider( String identifier, IContextAieon aieon ) {
 		this.identifier = identifier;
 		this.aieon = aieon;
 	}
@@ -84,7 +84,7 @@ public abstract class AbstractFunction<T extends IDescriptor, U extends Object> 
 	 * @param leaf
 	 * @return
 	 */
-	protected static IModelLeaf<ILoaderAieon> getDefaultModel( IModelLeaf<?> leaf){
+	protected static IModelLeaf<IDescriptor> getDefaultModel( IModelLeaf<?> leaf){
 		ILoaderAieon loader = getDefaultLoader( leaf );
 		return getModelForLoader(loader, leaf);
 	}
@@ -95,9 +95,9 @@ public abstract class AbstractFunction<T extends IDescriptor, U extends Object> 
 	 * @param leaf
 	 * @return
 	 */
-	protected static IModelLeaf<ILoaderAieon> getModelForLoader( ILoaderAieon loader, IModelLeaf<?> leaf){
+	protected static IModelLeaf<IDescriptor> getModelForLoader( ILoaderAieon loader, IModelLeaf<?> leaf){
 		Descriptor.overwrite( loader, leaf.getDescriptor() );
-		IModelLeaf<ILoaderAieon> model = new ModelLeaf<ILoaderAieon>( loader );
+		IModelLeaf<IDescriptor> model = new ModelLeaf<IDescriptor>( loader );
 		if( !Utils.isNull( leaf.getIdentifier()))
 			model.setIdentifier( leaf.getIdentifier() );
 		if( !Utils.isNull( leaf.getID()))

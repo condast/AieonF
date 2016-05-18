@@ -5,22 +5,21 @@ import java.util.Collection;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 
-public class CombinedProvider<T extends IDescriptor, U extends Object> implements IModelProvider<T, U> 
+public class CombinedProvider<U extends Object> implements IModelProvider<U> 
 {
 	public final static String S_IDENTIFIER = "Combined";
 	
-	private Collection<IModelProvider<T, U>> providers;
+	private Collection<IModelProvider<U>> providers;
 	
 	public CombinedProvider()
 	{
-		providers = new ArrayList<IModelProvider<T, U>>();
+		providers = new ArrayList<IModelProvider<U>>();
 	}
 
 	@Override
@@ -28,17 +27,17 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 		return S_IDENTIFIER;
 	}
 
-	public void addProvider( IModelProvider<T, U> provider ){
+	public void addProvider( IModelProvider<U> provider ){
 		this.providers.add( provider );
 	}
 
-	public void removeProvider( IModelProvider<T, U> provider ){
+	public void removeProvider( IModelProvider<U> provider ){
 		this.providers.remove( provider );
 	}
 
 	public String[] getIdentifiers(){
 		Collection<String> collection = new ArrayList<String>();
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			collection.add( provider.getIdentifier());
 		}	
 		return collection.toArray( new String[ collection.size()]);
@@ -49,10 +48,10 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 	 * @param identifier
 	 * @return
 	 */
-	public IModelProvider<T,U> getModelProvider( String identifier ){
+	public IModelProvider<U> getModelProvider( String identifier ){
 		if( Utils.isNull( identifier ))
 			return null;
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			if( identifier.equals( provider.getIdentifier() ))
 				return provider;
 		}		
@@ -61,14 +60,14 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 	
 	@Override
 	public void open() {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			provider.open();
 		}
 	}
 
 	@Override
 	public boolean isOpen() {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			if( provider.isOpen())
 				return true;
 		}
@@ -78,38 +77,28 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 
 	@Override
 	public void close() {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			provider.close();
 		}
-	}
-	
-	@Override
-	public ITransaction<U,IModelProvider<T, U>> createTransaction() {
-		for( IModelProvider<T, U> provider: this.providers ){
-			ITransaction<U,IModelProvider<T, U>> transaction = provider.createTransaction();
-			if( transaction != null )
-				return transaction;
-		}
-		return null;
 	}
 
 	@Override
 	public void addListener(IModelBuilderListener listener) {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			provider.addListener(listener);
 		}
 	}
 
 	@Override
 	public void removeListener(IModelBuilderListener listener) {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			provider.removeListener(listener);
 		}
 	}
 
 	@Override
 	public boolean contains(IModelLeaf<? extends IDescriptor> leaf) {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			if( provider.contains(leaf))
 				return true;
 		}
@@ -120,7 +109,7 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 	public Collection<U> get(IDescriptor descriptor)
 			throws ParseException {
 		Collection<U> results = new ArrayList<U>();
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			Collection<U> temp = provider.get(descriptor);
 			if(( temp != null ) && ( !temp.isEmpty() ))
 				results.addAll( (Collection<? extends U>) temp );
@@ -132,7 +121,7 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 	public Collection<U> search(
 			IModelFilter<IDescriptor> filter) throws ParseException {
 		Collection<U> results = new ArrayList<U>();
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			try{
 				if( !provider.isOpen())
 					continue;
@@ -150,7 +139,7 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 	@Override
 	public String printDatabase() {
 		StringBuffer buffer = new StringBuffer();
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			buffer.append( provider.printDatabase() + "\n\n" );
 		}
 		return buffer.toString();
@@ -158,14 +147,14 @@ public class CombinedProvider<T extends IDescriptor, U extends Object> implement
 
 	@Override
 	public void deactivate() {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			provider.deactivate();
 		}
 	}
 
 	@Override
 	public void sync() {
-		for( IModelProvider<T, U> provider: this.providers ){
+		for( IModelProvider<U> provider: this.providers ){
 			provider.sync();
 		}
 	}

@@ -2,6 +2,7 @@ package org.aieonf.concept.security;
 
 //J2SE imports
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.*;
 
@@ -28,9 +29,10 @@ public class AieonFEncryption extends Encryption implements IEncryption
    * @param loader
    * @throws NoSuchPaddingException
    * @throws NoSuchAlgorithmException
+ * @throws InvalidKeySpecException 
    */
   public AieonFEncryption( IEncryptionAieon aieon ) 
-  	throws NoSuchPaddingException, NoSuchAlgorithmException
+  	throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException
   {
   	super( aieon.getEncryptionAlgorithm(), aieon.getEncryptionKey() );	
   }

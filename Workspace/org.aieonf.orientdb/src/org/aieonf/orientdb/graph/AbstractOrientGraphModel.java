@@ -25,7 +25,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends Object> implements IModelProvider<T,U> {
+public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends Object> implements IModelProvider<U> {
 	
 	public static final String S_IDENTIFIER = "GraphModel";
 	
@@ -132,7 +132,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		}
 	}
 
-	public ITransaction<U,IModelProvider<T,U>> createTransaction() {
+	public ITransaction<U,IModelProvider<U>> createTransaction() {
 		Transaction transaction = new Transaction( this );
 		transaction.create();
 		return transaction;
@@ -235,9 +235,9 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		
 	}
 
-	protected class Transaction extends AbstractTransaction<U, IModelProvider<T,U>>{
+	protected class Transaction extends AbstractTransaction<U, IModelProvider<U>>{
 
-		protected Transaction( IModelProvider<T,U> provider) {
+		protected Transaction( IModelProvider<U> provider) {
 			super( provider );
 		}
 
@@ -249,7 +249,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		}
 
 		@Override
-		protected boolean onCreate(IModelProvider<T, U> provider) {
+		protected boolean onCreate(IModelProvider<U> provider) {
 			super.getProvider().open();
 			return super.getProvider().isOpen();
 		}
