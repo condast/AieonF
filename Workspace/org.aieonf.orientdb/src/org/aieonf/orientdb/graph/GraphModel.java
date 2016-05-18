@@ -34,6 +34,7 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 		this.template = template;
 	}
 
+	@Override
 	public IVertex<T> create() {
 		Vertex root = graph.getVerticesOfClass( S_ROOT).iterator().next();
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );

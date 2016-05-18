@@ -6,9 +6,7 @@ package org.aieonf.model;
  *
  */
 
-import org.aieonf.concept.domain.*;
-import org.aieonf.concept.wrapper.*;
-import org.aieonf.concept.locator.*;
+
 
 @SuppressWarnings("unused")
 public interface IHiddenPackages {

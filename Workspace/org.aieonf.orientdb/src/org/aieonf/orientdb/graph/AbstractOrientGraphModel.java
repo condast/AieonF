@@ -54,6 +54,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		this.setup();
 	}
 
+	@Override
 	public String getIdentifier(){
 		return S_IDENTIFIER;
 	}
@@ -66,10 +67,12 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		return root;
 	}
 
+	@Override
 	public void addListener( IModelBuilderListener listener ){
 		this.listeners.add( listener );
 	}
 
+	@Override
 	public void removeListener( IModelBuilderListener listener ){
 		this.listeners.remove( listener );
 	}
@@ -99,6 +102,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		
 	}
 
+	@Override
 	public void open(){
 		try{
 			this.graph = factory.getTx();
@@ -115,10 +119,12 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		}
 	}
 
+	@Override
 	public boolean isOpen(){
 		return !this.graph.isClosed();
 	}
 
+	@Override
 	public void sync(){
 		try{
 			graph.commit();
@@ -139,6 +145,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	}
 
 
+	@Override
 	public void close(){
 		this.sync();
 		if( graph != null )
@@ -148,6 +155,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	/**
 	 * Print the given database
 	 */
+	@Override
 	public String printDatabase(){
 		Iterator<Vertex> iterator = graph.getVertices().iterator();
 		StringBuffer buffer = new StringBuffer();

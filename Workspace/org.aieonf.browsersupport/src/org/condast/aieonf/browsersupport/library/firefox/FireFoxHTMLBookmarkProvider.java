@@ -120,7 +120,7 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDescript
 			this.currentURL = urlEon;
 
 		if(( this.currentURL != null ) && ( split[ 0 ].startsWith( "Txt" ) == true )){
-			cat = ( IModelNode<IDescriptor> )this.stack.lastElement();
+			cat = this.stack.lastElement();
 			urlEon = this.currentURL;
 
 			String[] split1 = split[ 1 ].trim().split( "[:]" );

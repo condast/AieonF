@@ -51,6 +51,7 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDescriptor, IMod
 		persistence = new IEPersistence( manifest );
 	}
 
+	@Override
 	public void open()
 	{
 		root = new File( super.getManifest().getSource() );

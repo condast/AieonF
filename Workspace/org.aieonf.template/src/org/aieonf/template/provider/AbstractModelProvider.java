@@ -42,6 +42,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		models = new ArrayList<V>();
 	}
 
+	@Override
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -55,10 +56,12 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		return models;
 	}
 
+	@Override
 	public void addListener( IModelBuilderListener listener ){
 		this.listeners.add( listener );
 	}
 
+	@Override
 	public void removeListener( IModelBuilderListener listener ){
 		this.listeners.remove( listener );
 	}
@@ -86,10 +89,12 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		return manifest;	
 	}
 
+	@Override
 	public void open(){
 		this.open = true;
 	}
 
+	@Override
 	public boolean isOpen() {
 		return open;
 	}
@@ -97,8 +102,10 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 	/**
 	 * Sync the actual model with the database
 	 */
+	@Override
 	public void sync(){}
 
+	@Override
 	public void close(){
 		this.open = false;
 	}

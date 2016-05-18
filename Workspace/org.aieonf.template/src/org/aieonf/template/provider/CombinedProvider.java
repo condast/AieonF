@@ -112,7 +112,7 @@ public class CombinedProvider<U extends Object> implements IModelProvider<U>
 		for( IModelProvider<U> provider: this.providers ){
 			Collection<U> temp = provider.get(descriptor);
 			if(( temp != null ) && ( !temp.isEmpty() ))
-				results.addAll( (Collection<? extends U>) temp );
+				results.addAll( temp );
 		}
 		return results;
 	}
@@ -127,7 +127,7 @@ public class CombinedProvider<U extends Object> implements IModelProvider<U>
 					continue;
 				Collection<U> temp = provider.search( filter );
 				if(( temp != null ) && ( !temp.isEmpty() ))
-					results.addAll( (Collection<? extends U>) temp );
+					results.addAll( temp );
 			}
 			catch( ParseException e ){
 				e.printStackTrace();

@@ -33,6 +33,7 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 		this.template = template;
 	}
 	
+	@Override
 	public IModelLeaf<IDescriptor> create() {
 		Vertex root = super.getGraph().getVerticesOfClass( S_ROOT).iterator().next();
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );
