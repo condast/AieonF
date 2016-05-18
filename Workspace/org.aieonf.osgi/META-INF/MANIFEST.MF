@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AieonF Osgi Bridge
+Bundle-SymbolicName: org.aieonf.osgi
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.aieonf.osgi.Activator
+Bundle-Vendor: Condast
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.aieonf.concept.domain,
+ org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Export-Package: org.aieonf.osgi.search,
+ org.aieonf.osgi.selection,
+ org.aieonf.osgi.service,
+ org.aieonf.osgi.swt
