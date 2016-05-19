@@ -36,7 +36,7 @@ import org.aieonf.concept.security.AieonFEncryption;
  * @author Kees Pieters
  * @version 1.0
  */
-public abstract class AbstractChangeableCollection<T extends IDescribable<?>> implements IAccessible
+abstract class AbstractChangeableCollection<T extends IDescribable<?>> implements IAccessible
 {
 	//Prevents incorrect entries to be logged more than once
 	private List<String> incorrectEntries;
