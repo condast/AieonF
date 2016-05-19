@@ -1,33 +1,18 @@
 package org.aieonf.osgi.sketch.service;
 
-import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.osgi.selection.ISelectionBean;
-import org.aieonf.osgi.service.IAieonFService;
+import org.aieonf.osgi.service.AbstractAieonFServiceProvider;
 import org.aieonf.osgi.swt.IViewFactory;
 import org.eclipse.swt.widgets.Composite;
 
-public class AieonFServiceProvider implements IAieonFService<Composite>{
+public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composite>{
 
-	private IDomainAieon domain;
+	private static AieonFServiceProvider provider = new AieonFServiceProvider();
 	
-	public AieonFServiceProvider() {
+	private AieonFServiceProvider() {
 	}
 
-	public void activate(){ /* NOTHING*/ };
-	public void deactivate(){ /* NOTHING*/ }
-
-	@Override
-	public ISelectionBean[] getSelectionBeans() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void setActiveDomain(IDomainAieon domain) {
-		this.domain = domain;
-	}
-
-	public void unsetActiveDomain(IDomainAieon domain) {
-		this.domain = null;
+	public static AieonFServiceProvider getInstance(){
+		return provider;
 	}
 
 	@Override
