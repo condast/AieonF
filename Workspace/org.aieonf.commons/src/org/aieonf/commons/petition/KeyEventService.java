@@ -21,7 +21,7 @@ public class KeyEventService<T,U>
 		this.listeners.remove(listener);
 	}
 	
-	protected void notifyKeyEventChanged( KeyEvent<T,U> event ){
+	private void notifyKeyEventChanged( KeyEvent<T,U> event ){
 		for( 	IKeyEventListener<T,U> listener: listeners ){
 			listener.notifyKeyEventReceived(event);
 		}

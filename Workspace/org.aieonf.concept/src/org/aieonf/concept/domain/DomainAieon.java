@@ -35,6 +35,7 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	public DomainAieon( String domain, String shortName )
 	{
 	  super( new Concept( domain ),IDomainAieon.Attributes.DOMAIN.toString());
+	  super.set(IDomainAieon.Attributes.DOMAIN.toString(), shortName );
 	  super.set(IDomainAieon.Attributes.SHORT_NAME.toString(), shortName );
 	  super.getDescriptor().set( IDescriptor.Attributes.CLASS, this.getClass().getName() );
 	}
