@@ -7,9 +7,9 @@ import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.IModelProvider;
 
 public class CombinedProvider<U extends Object> implements IModelProvider<U> 
 {

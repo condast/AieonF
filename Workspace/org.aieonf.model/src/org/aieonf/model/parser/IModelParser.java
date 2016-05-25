@@ -1,19 +1,15 @@
 package org.aieonf.model.parser;
 
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelException;
 
-/**
- * Is called when a model parser parses a node
- * @author keesp
- *
- */
-public interface IModelParser
-{
+public interface IModelParser<T extends IDescriptor> {
+
 	/**
-	 * Parse the given node
-	 * @param node
-	 * @throws ModelException
+	 * Parse the given model	
+	 * @param model
+	 * @return true if all went well.
 	 */
-	public void parse( IModelLeaf<?> node ) throws ModelException;
+	public boolean parseModel( IModelLeaf<T> model ) throws ModelException;
 }

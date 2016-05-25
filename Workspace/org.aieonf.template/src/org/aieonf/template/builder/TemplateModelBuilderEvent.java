@@ -13,6 +13,10 @@ public class TemplateModelBuilderEvent extends ModelBuilderEvent {
 		super(source, model);
 		this.template = template;
 	}
+	public TemplateModelBuilderEvent(Object source, ITemplateLeaf<?> template, IModelLeaf<?>[] model) {
+		super(source, model);
+		this.template = template;
+	}
 
 	public ITemplateLeaf<?> getTemplate() {
 		return template;

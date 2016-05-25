@@ -34,13 +34,16 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 		this.template = template;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IVertex<T> create() {
 		Vertex root = graph.getVerticesOfClass( S_ROOT).iterator().next();
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.VERSION ), 1 );
 		IVertex<T> parent = new VertexImpl<T>( root ); 
-		this.notifyListeners( new TemplateModelBuilderEvent(this, template, new OrientDBNode<IDescriptor>( graph, root )));
+		IModelLeaf<? extends IDescriptor>[] models = new IModelLeaf[1];
+		models[0] = new OrientDBNode<IDescriptor>( graph, root );
+		this.notifyListeners( new TemplateModelBuilderEvent(this, template, models));
 		create( root, template );
 		return parent;
 	}

@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.model.ModelException;
-import org.aieonf.model.IPersistModel.Persistence;
+import org.aieonf.model.persistence.IPersistModel.Persistence;
 import org.aieonf.template.factory.ITemplateFactory;
 
 public abstract class AbstractPersistTemplateFactory<T extends ITemplate> implements ITemplateFactory

@@ -1,6 +1,6 @@
 package org.aieonf.template;
 
-import org.aieonf.model.IModelProvider;
+import org.aieonf.model.provider.IModelProvider;
 
 public interface IWriteModelProvider<U extends Object> extends IModelProvider<U>{
 

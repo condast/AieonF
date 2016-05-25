@@ -10,8 +10,8 @@ import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
 import org.aieonf.model.function.AbstractFunctionProvider;
+import org.aieonf.model.provider.IModelProvider;
 
 public class FireFoxModelFunction extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>>
 {

@@ -3,13 +3,15 @@ package org.aieonf.orientdb.service;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.graph.IGraphModel;
-import org.aieonf.model.IModelFunctionProvider;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
+import org.aieonf.model.provider.IModelDelegate;
+import org.aieonf.model.provider.IModelFunctionProvider;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.orientdb.graph.GraphModelFunction;
 import org.aieonf.orientdb.tree.TreeModelFunction;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.TemplateNodeWrapper;
+import org.aieonf.template.provider.AsynchronousProviderDelegate;
 
 public class ServiceComponent implements IModelFunctionProvider<IDescriptor,Object>
 {
@@ -31,18 +33,23 @@ public class ServiceComponent implements IModelFunctionProvider<IDescriptor,Obje
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public IModelProvider<Object> getFunction(IModelLeaf<IDescriptor> leaf) {
+	public IModelDelegate<Object> getFunction(IModelLeaf<IDescriptor> leaf) {
 		ITemplateLeaf<IContextAieon> template = new TemplateNodeWrapper<IContextAieon>( leaf );
+		IModelProvider<Object> provider = null;
 		if(IGraphModel.S_GRAPH_MODEL_PROVIDER_ID.equals( leaf.getID())){
-			return (IModelProvider<Object>) new GraphModelFunction<IDescriptor>( template );
+			provider = (IModelProvider<Object>) new GraphModelFunction<IDescriptor>( template ); 
 		}
 		if(IModelProvider.S_MODEL_PROVIDER_ID.equals( leaf.getID())){
-			return (IModelProvider<Object>) new TreeModelFunction<IDescriptor>( template );
+			provider = (IModelProvider<Object>) new TreeModelFunction<IDescriptor>( template );
 		}
 		if( TreeModelFunction.S_DATABASE_ID.equals( leaf.getID())){
-			return (IModelProvider<Object>) new TreeModelFunction<IDescriptor>( template );
+			provider = (IModelProvider<Object>) new TreeModelFunction<IDescriptor>( template );
 		}
-		return null;
+		if( provider == null )
+			return null;
+		AsynchronousProviderDelegate<Object> delegate = new AsynchronousProviderDelegate<Object>();
+		delegate.addProvider(provider);
+		return delegate;
 	}
 
 	/*

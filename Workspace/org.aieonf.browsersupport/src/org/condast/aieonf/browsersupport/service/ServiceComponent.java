@@ -2,9 +2,10 @@ package org.condast.aieonf.browsersupport.service;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.model.IModelFunctionProvider;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
+import org.aieonf.model.provider.IModelDelegate;
+import org.aieonf.model.provider.IModelFunctionProvider;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.template.ITemplateLeaf;
 import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
@@ -42,7 +43,7 @@ public class ServiceComponent implements IModelFunctionProvider<IDescriptor,IMod
 	}
 
 	@Override
-	public IModelProvider<IModelLeaf<IDescriptor>> getFunction(IModelLeaf<IDescriptor> leaf) {
+	public IModelDelegate<IModelLeaf<IDescriptor>> getFunction(IModelLeaf<IDescriptor> leaf) {
 		if( !canProvide(leaf))
 			return null;
 		return function.getFunction(leaf);

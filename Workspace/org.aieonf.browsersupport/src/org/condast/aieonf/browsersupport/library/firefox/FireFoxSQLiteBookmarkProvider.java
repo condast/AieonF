@@ -30,14 +30,14 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
-public class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>>
+class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>>
 {
-	public static final String S_IDENTIFER = "FirefoxSQLBookmarks";
+	private static final String S_IDENTIFER = "FirefoxSQLBookmarks";
 
 	private Connection connection;
 
 
-	public FireFoxSQLiteBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
+	FireFoxSQLiteBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
 	{
 		super( S_IDENTIFER, context, model );
 	}
@@ -237,7 +237,7 @@ public class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescri
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IDescriptor> getHistory( IModelFilter<IDescriptor> filter ) throws ConceptException{
+	private IModelLeaf<IDescriptor> getHistory( IModelFilter<IDescriptor> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places, moz_inputhistory WHERE moz_places.id = moz_inputhistory.place_id";
 		return this.getConceptsFromQuery("Input History", query_inputhistory, filter );
 	}
@@ -259,7 +259,7 @@ public class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescri
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IDescriptor> getConceptsFromQuery( String title, String query, IModelFilter<IDescriptor> filter ) throws ConceptException{
+	private IModelLeaf<IDescriptor> getConceptsFromQuery( String title, String query, IModelFilter<IDescriptor> filter ) throws ConceptException{
 		IModelNode<IDescriptor> model = null;
 		try
 		{

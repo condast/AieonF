@@ -2,6 +2,6 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.aieonf.orientdb">
    <implementation class="org.aieonf.orientdb.service.ServiceComponent"/>
    <service>
-      <provide interface="org.aieonf.model.IModelFunction"/>
+      <provide interface="org.aieonf.model.provider.IModelFunctionProvider"/>
    </service>
 </scr:component>

@@ -33,17 +33,17 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implements IModelParser{
 
-	public static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
-	public static final String S_ERR_NO_CHILDREN   = " The node cannot contain children. ";
-	public static final String S_ERR_NO_DESCRIPTOR_FOUND = "No descriptor found for: ";
-	public static final String S_WRN_DESCRIPTOR_NOT_FOUND = "The descriptor was not found. Defaulting to standard concept: ";
+	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
+	private static final String S_ERR_NO_CHILDREN   = " The node cannot contain children. ";
+	private static final String S_ERR_NO_DESCRIPTOR_FOUND = "No descriptor found for: ";
+	private static final String S_WRN_DESCRIPTOR_NOT_FOUND = "The descriptor was not found. Defaulting to standard concept: ";
 	
 	/**
 	 * The keys of attributes with special meaning
 	 * @author Kees
 	 *
 	 */
-	public enum ModelAttributes{
+	private enum ModelAttributes{
 		APPLICATION,
 		MODEL,
 		CONTEXT,

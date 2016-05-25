@@ -1,11 +1,12 @@
-package org.aieonf.model;
+package org.aieonf.model.persistence;
 
 import java.io.InputStream;
 
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelException;
 
-public interface IPersistModelFactory< T extends IModelLeaf<? extends IDescriptor>>
+public interface IPersistModel< T extends IModelLeaf<U>, U extends IDescriptor>
 {
 	/**
 	 * The supported persistence properties.
@@ -42,7 +43,7 @@ public interface IPersistModelFactory< T extends IModelLeaf<? extends IDescripto
 	 */
 	public boolean modelExists();
 
-	/**
+		/**
 	 * Create a model if it doesn't exist
 	 * @throws ModelException
 	 */

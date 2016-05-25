@@ -1,9 +1,10 @@
-package org.aieonf.model;
+package org.aieonf.model.provider;
 
 import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 
@@ -17,9 +18,9 @@ public interface IModelProvider<U extends Object> {
 	 */
 	public String getIdentifier();
 	
-	public void addListener( IModelBuilderListener listener );
+	public void addListener( IModelBuilderListener<U> listener );
 
-	public void removeListener( IModelBuilderListener listener );
+	public void removeListener( IModelBuilderListener<U> listener );
 
 	public void open();
 	

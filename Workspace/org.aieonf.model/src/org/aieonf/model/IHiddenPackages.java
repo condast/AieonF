@@ -5,7 +5,10 @@ package org.aieonf.model;
  * @author Kees
  *
  */
-
+import org.aieonf.concept.wrapper.*;
+import org.aieonf.concept.locator.*;
+import org.aieonf.concept.domain.*;
+import org.aieonf.commons.transaction.*;
 
 
 @SuppressWarnings("unused")

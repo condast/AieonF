@@ -13,7 +13,7 @@ import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
+import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.template.builder.DefaultModelBuilder;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
@@ -59,14 +59,8 @@ public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<ID
 	}
 
 	@Override
-	public IModelProvider<IModelLeaf<IDescriptor>> getModelProvider() {
+	protected void onBuildEvent(ModelBuilderEvent event) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IModelProvider<IModelLeaf<IDescriptor>> getDatabase() {
-		// TODO Auto-generated method stub
-		return null;
+		
 	}
 }

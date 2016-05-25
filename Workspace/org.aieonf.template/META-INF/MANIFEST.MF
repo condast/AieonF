@@ -44,5 +44,7 @@ Import-Package: org.aieonf.commons,
  org.aieonf.model.builder,
  org.aieonf.model.constraints,
  org.aieonf.model.filter,
+ org.aieonf.model.persistence,
+ org.aieonf.model.provider,
  org.aieonf.model.search,
  org.aieonf.model.xml

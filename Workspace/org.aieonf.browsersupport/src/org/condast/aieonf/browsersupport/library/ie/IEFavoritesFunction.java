@@ -8,8 +8,8 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
 import org.aieonf.model.function.AbstractFunctionProvider;
+import org.aieonf.model.provider.IModelProvider;
 
 public class IEFavoritesFunction extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>>
 {

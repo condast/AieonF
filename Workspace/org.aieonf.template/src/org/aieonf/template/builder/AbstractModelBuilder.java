@@ -71,7 +71,9 @@ public abstract class AbstractModelBuilder<T extends IDescriptor> implements IMo
 	@SuppressWarnings("unchecked")
 	protected void createModel( ITemplateLeaf<? extends IDescriptor> template, IModelLeaf<? extends IDescriptor> model ){
 		model.setIdentifier( template.getIdentifier() );
-		this.notifyListeners( new TemplateModelBuilderEvent( this, template, model ));
+		IModelLeaf<? extends IDescriptor>[] models = new IModelLeaf[1];
+		models[0] = model;
+		this.notifyListeners( new TemplateModelBuilderEvent( this, template, models ));
 		if( template.isLeaf())
 			return;
 		ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) template;

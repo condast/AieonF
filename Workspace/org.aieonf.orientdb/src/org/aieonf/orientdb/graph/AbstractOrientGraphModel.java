@@ -15,9 +15,9 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.provider.IModelProvider;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Parameter;

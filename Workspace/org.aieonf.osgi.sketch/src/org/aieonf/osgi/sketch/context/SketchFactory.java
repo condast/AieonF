@@ -2,7 +2,7 @@ package org.aieonf.osgi.sketch.context;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
+import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.template.builder.DefaultModelBuilder;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
@@ -28,22 +28,10 @@ public class SketchFactory extends AbstractProviderContextFactory<IModelLeaf<IDe
 	public static SketchFactory getInstance(){
 		return factory;
 	}
-	
-	/**
-	 * @return the database
-	 */
-	@Override
-	public IModelProvider<IModelLeaf<IDescriptor>> getDatabase()
-	{
-		return this.getProvider( IModelProvider.S_MODEL_PROVIDER_ID  );
-	}
 
-	/**
-	 * @return the model provider
-	 */
 	@Override
-	public IModelProvider<IModelLeaf<IDescriptor>> getModelProvider()
-	{
-		return getProvider( IModelProvider.S_MODEL_PROVIDER_ID );
+	protected void onBuildEvent(ModelBuilderEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -7,21 +7,47 @@
  *******************************************************************************/
 package org.aieonf.model.builder;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 
-import org.aieonf.model.IModelLeaf;
-
-public class ModelBuilderEvent extends EventObject {
+public class ModelBuilderEvent<M extends Object> extends EventObject {
 	private static final long serialVersionUID = -1266257260044093122L;
 
-	private IModelLeaf<?> model;
+	private Collection<M> models;
 	
-	public ModelBuilderEvent(Object source, IModelLeaf<?> container) {
-		super(source);
-		this.model = container;
+	private boolean completed; 
+
+	/**
+	 * Default: Represents a general failure
+	 * @param source
+	 */
+	public ModelBuilderEvent(Object source ) {
+		this( source, null, false );
 	}
 
-	public IModelLeaf<?> getModel() {
-		return model;
+	public ModelBuilderEvent(Object source, M model ) {
+		super( source );
+		models = new ArrayList<M>();
+		models.add(  model );
+		this.completed = true;
+	}
+
+	public ModelBuilderEvent(Object source, Collection<M> models ) {
+		this( source, models, (models != null ));
+	}
+	
+	public ModelBuilderEvent(Object source, Collection<M> models, boolean completed ) {
+		super(source);
+		this.models = models;
+		this.completed = completed;
+	}
+
+	public Collection<M> getModel() {
+		return models;
+	}
+
+	public synchronized boolean isCompleted() {
+		return completed;
 	}
 }

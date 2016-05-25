@@ -8,8 +8,8 @@ import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModel;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
 import org.aieonf.model.function.AbstractFunctionProvider;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.orientdb.OrientGraphContextAieon;
 import org.aieonf.template.ITemplateLeaf;
 

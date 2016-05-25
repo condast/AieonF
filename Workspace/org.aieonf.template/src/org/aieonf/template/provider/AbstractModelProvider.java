@@ -14,17 +14,17 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.IModelProvider;
 
 public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDescribable<U>> implements IModelProvider<V> {
 
-	public static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
+	private static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
-	private Collection<IModelBuilderListener> listeners;
+	private Collection<IModelBuilderListener<V>> listeners;
 	private boolean open;
 
 	private Collection<V> models;
@@ -35,7 +35,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 	private String identifier;
 
 	protected AbstractModelProvider( String identifier, IContextAieon context, IModelLeaf<U> model ) {
-		listeners = new ArrayList<IModelBuilderListener>();
+		listeners = new ArrayList<IModelBuilderListener<V>>();
 		this.identifier = identifier;
 		this.context = context;
 		manifest = this.setup( model);
@@ -57,17 +57,17 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 	}
 
 	@Override
-	public void addListener( IModelBuilderListener listener ){
+	public void addListener( IModelBuilderListener<V> listener ){
 		this.listeners.add( listener );
 	}
 
 	@Override
-	public void removeListener( IModelBuilderListener listener ){
+	public void removeListener( IModelBuilderListener<V> listener ){
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent event ){
-		for( IModelBuilderListener listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<V> event ){
+		for( IModelBuilderListener<V> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -76,7 +76,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 	 */
 	protected abstract void onSetup( ManifestAieon manifest );
 
-	protected ManifestAieon setup(IModelLeaf<U> model) {
+	private ManifestAieon setup(IModelLeaf<U> model) {
 		ManifestAieon manifest = new ManifestAieon( model.getDescriptor() );
 		try {
 			manifest.fill(model.getDescriptor());

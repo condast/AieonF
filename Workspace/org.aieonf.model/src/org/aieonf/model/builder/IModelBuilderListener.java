@@ -7,8 +7,7 @@
  *******************************************************************************/
 package org.aieonf.model.builder;
 
-
-public interface IModelBuilderListener {
+public interface IModelBuilderListener<M extends Object> {
 	
-	public void notifyChange( ModelBuilderEvent event );
+	public void notifyChange( ModelBuilderEvent<M> event );
 }
