@@ -130,6 +130,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		if( !open )
 			throw new ParseException( S_ERR_PROVIDER_NOT_OPEN );
 		models = onSearch( filter);
+		notifyListeners( new ModelBuilderEvent<>(this, models ));
 		return models;
 	}
 

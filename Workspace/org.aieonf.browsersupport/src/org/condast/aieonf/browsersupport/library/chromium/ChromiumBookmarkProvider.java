@@ -36,15 +36,13 @@ import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 
-public class ChromiumBookmarkProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>> 
+class ChromiumBookmarkProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>> 
 {
-	public static final String S_CHROMIUM = "Chromiun";
-	public static final String S_ROOTS = "roots";
-	public static final String S_BOOKMARK_BAR = "bookmark_bar";
-	public static final String S_CHILDREN = "children";
+	private static final String S_CHROMIUM = "Chromiun";
+	private static final String S_ROOTS = "roots";
 
 
-	public ChromiumBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
+	ChromiumBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
 	{
 		super( S_CHROMIUM, context, model );
 	}

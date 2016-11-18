@@ -15,12 +15,7 @@ public interface IModelDelegate<U extends Object> {
 	public void open();
 	
 	public boolean isOpen();
-	
-	/**
-	 * Sync the actual model with the database
-	 */
-	public void sync();
-	
+		
 	public void close();
 
 	/**

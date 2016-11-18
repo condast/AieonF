@@ -6,9 +6,8 @@ import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.filter.IModelFilter;
 
-public interface IModelProvider<U extends Object> {
+public interface IModelProvider<U extends Object> extends ISearchProvider<U>{
 
 	public static final String S_MODEL_PROVIDER_ID = "org.aieonf.model.provider";
 
@@ -40,9 +39,13 @@ public interface IModelProvider<U extends Object> {
 	 */
 	public boolean contains( IModelLeaf<? extends IDescriptor> leaf );
 
+	/**
+	 * Get the models conforming to the given descriptor. Use the model builder
+	 * listener to obtain them
+	 * @param descriptor
+	 * @throws ParseException
+	 */
 	public Collection<U> get( IDescriptor descriptor ) throws ParseException;
-
-	public Collection<U> search( IModelFilter<IDescriptor> filter ) throws ParseException;
 	
 	/**
 	 * Deactivate the function

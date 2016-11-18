@@ -96,13 +96,17 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 
 	public void get(IDescriptor descriptor) throws ParseException {
 		for( IModelDelegate<T> delegate: delegates ){
+			delegate.open();
 			delegate.get(descriptor);
+			delegate.close();
 		}
 	}
 
 	public void search(IModelFilter<IDescriptor> filter) throws ParseException {
 		for( IModelDelegate<T> delegate: delegates ){
+			delegate.open();
 			delegate.search( filter );
+			delegate.close();
 		}
 	}
 

@@ -77,8 +77,10 @@ public class AsynchronousProviderDelegate<U extends Object> extends ModelProvide
 		public void run(){
 			try {
 				provider.open();
-				Collection<U> models = provider.search( filter );
-				notifyEventChange( new ModelBuilderEvent<U>( provider, models ));
+				if( provider.isOpen() ){
+					Collection<U> models = provider.search( filter );
+					notifyEventChange( new ModelBuilderEvent<U>( provider, models ));
+				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 				notifyEventChange( new ModelBuilderEvent<U>( provider ));

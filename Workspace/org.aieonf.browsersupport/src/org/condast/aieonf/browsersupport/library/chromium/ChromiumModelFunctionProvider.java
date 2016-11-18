@@ -14,9 +14,7 @@ import org.aieonf.model.provider.IModelProvider;
 
 public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>> {
 
-	//Default identifier
-	public static final String DEFAULT_IDENTIFIER =
-			"com.google.chromium.browser.bookmarks";
+	
 
 	//Default location
 	private static final String DEFAULT_CHROMIUM_ROOT =
@@ -27,7 +25,7 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IDes
 
 	private static final String DEFAULT_CHROMIUM_PROVIDER_NAME ="Chrome";
 
-	public static final String DEFAULT_BOOKMARKS_FILE ="Bookmarks";
+	private static final String DEFAULT_BOOKMARKS_FILE ="Bookmarks";
 
 	public ChromiumModelFunctionProvider( IContextAieon context ) {
 		super( S_FUNCTION_PROVIDER_ID, context );

@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IConcept;
@@ -26,7 +29,9 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
 import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.ISearchProvider;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
@@ -35,6 +40,8 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	private static final String S_IDENTIFER = "FirefoxSQLBookmarks";
 
 	private Connection connection;
+	private static final ExecutorService threadpool = 
+			Executors.newFixedThreadPool(3);
 
 
 	FireFoxSQLiteBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
@@ -69,25 +76,39 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	@Override
 	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor> filter ) throws ParseException {
 		{
-			super.getModels().clear();
-			Map<Integer, FireFoxReference>resources;
-			Map<Integer, PlacesAieon> places;
-			try {
-				places = this.getPlaces();
-				resources = this.getResources();
-				
-				super.getModels().addAll( this.getBookmarks( places, resources, filter ));
-				IModelLeaf<IDescriptor> result = this.getHistory(filter);
-				if( result != null )
-					super.getModels().add( result );
-				//super.getModels().add( this.getHistoryVisits());
-				//super.getModels().add( this.getPopularSites() );
-			}
-			catch (Exception e) {
-				throw new ParseException( e );
-			}
+		    threadpool.submit( getBookmarksFuture(this, filter));
 			return super.getModels();
 		}
+	}
+
+	protected Callable<Collection<IModelLeaf<IDescriptor>>> getBookmarksFuture( final Object source, final IModelFilter<IDescriptor> filter){
+		Callable<Collection<IModelLeaf<IDescriptor>>> task = new Callable<Collection<IModelLeaf<IDescriptor>>>(){
+
+			@Override
+			public Collection<IModelLeaf<IDescriptor>> call() throws Exception {
+				getModels().clear();
+				Map<Integer, FireFoxReference>resources;
+				Map<Integer, PlacesAieon> places;
+				try {
+					places = getPlaces();
+					resources = getResources();
+					
+					getModels().addAll( getBookmarks( places, resources, filter ));
+					IModelLeaf<IDescriptor> result = getHistory(filter);
+					if( result != null )
+						getModels().add( result );
+					//super.getModels().add( this.getHistoryVisits());
+					//super.getModels().add( this.getPopularSites() );
+					notifyListeners( new ModelBuilderEvent<>(source, getModels()));
+				}
+				catch (Exception e) {
+					throw new ParseException( e );
+				}
+				return getModels();
+			}
+		
+		};
+		return task;
 	}
 
 	/**
@@ -157,14 +178,14 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 			throw new ConceptException(e );
 		}
 	}
-
+	
 	/**
 	 * Get the 
 	 * @param file
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected Collection<IModelNode<IDescriptor>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources, IModelFilter<IDescriptor> filter ) throws ConceptException{
+	private Collection<IModelNode<IDescriptor>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources, IModelFilter<IDescriptor> filter ) throws ConceptException{
 		String query_bookmarks = "SELECT * FROM moz_bookmarks";
 
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
@@ -203,8 +224,9 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 			FireFoxReference faviconAieon;
 			for( IModelLeaf<IDescriptor> result: results ){
 				aieon = ( BookmarkAieon )result.getDescriptor();
+				
+				//skip categories
 				String fk = aieon.getFK();
-
 				if( Descriptor.isNull(fk))
 					continue;
 
@@ -340,7 +362,6 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 		Map<Integer, String> places = new TreeMap<Integer, String>();
 		Class.forName("org.sqlite.JDBC");
 
-		Connection connection = null;
 		try
 		{
 			// create a database connection
@@ -353,12 +374,8 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 				places.put( rs.getInt( "id" ), rs.getString("url" ));
 			}
 		}
-		catch(SQLException e)
-		{
-			System.err.println(e.getMessage());
-		}
-		finally
-		{
+		catch(SQLException e){
+			e.printStackTrace();
 		}
 		return places;
 	}
@@ -367,7 +384,6 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 		// load the sqlite-JDBC driver using the current class loader
 		Class.forName("org.sqlite.JDBC");
 
-		Connection connection = null;
 		try
 		{
 			// create a database connection
@@ -382,29 +398,14 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 				System.out.println("id = " + rs.getInt("id"));
 			}
 		}
-		catch(SQLException e)
-		{
+		catch(SQLException e){
 			// if the error message is "out of memory", 
 			// it probably means no database file is found
-			System.err.println(e.getMessage());
-		}
-		finally
-		{
-			try
-			{
-				if(connection != null)
-					connection.close();
-			}
-			catch(SQLException e)
-			{
-				// connection close failed.
-				System.err.println(e);
-			}
+			e.printStackTrace();
 		}
 	}
 
-	@Override
-	public void close()
+	protected void close( Connection connection )
 	{
 		super.close();
 		try
@@ -416,6 +417,11 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void close(){
+		close( connection );
 	}
 
 	private static class PlacesAieon extends Concept implements IDataResource
@@ -508,5 +514,21 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 				return Integer.parseInt( str );
 			return -1;
 		}
+	}
+	
+	private class SearchTask implements Callable<Collection<IModelLeaf<IDescriptor>>>{
+
+		private ISearchProvider<IModelLeaf<IDescriptor>> provider; 
+		
+		public SearchTask( ISearchProvider<IModelLeaf<IDescriptor>> provider ) {
+			this.provider = provider;
+		}
+
+		@Override
+		public Collection<IModelLeaf<IDescriptor>> call() throws Exception {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 }

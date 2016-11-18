@@ -141,11 +141,4 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 			provider.deactivate();
 		}
 	}
-
-	@Override
-	public void sync() {
-		for( IModelProvider<U> provider: this.providers ){
-			provider.sync();
-		}
-	}
 }
