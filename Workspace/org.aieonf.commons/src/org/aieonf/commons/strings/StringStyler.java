@@ -132,6 +132,18 @@ public class StringStyler
 	}
 
 	/**
+	 * Create a string that follows the code convention for a 
+	 * (JAVA) method
+	 * @param strng
+	 * @return
+	 */
+	public static String toMethodString( String strng ){
+		strng = prettyString(strng);
+		strng = strng.substring(0, 1).toLowerCase() + strng.substring(1);
+		return strng;
+	}
+	
+	/**
 	 * Create a pretty string from the given one
 	 * @param strng
 	 * @return

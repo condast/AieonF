@@ -3,10 +3,13 @@ package org.condast.aieonf.browsersupport.library.ie;
 import java.io.File;
 import java.net.URI;
 
+import org.aieonf.collections.connector.AbstractFileConnector;
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.loader.ILoaderAieon;
+import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
@@ -14,7 +17,7 @@ import org.aieonf.model.provider.IModelProvider;
 public class IEFavoritesFunction extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>>
 {
 	//Default identifier
-	private static final String DEFAULT_IDENTIFIER =
+	private static final String DEFAULT_IE_IDENTIFIER =
 			"com.microsoft.explorer.favorites";
 	
 	private static final String DEFAULT_IE_ROOT = "\\Favorites";
@@ -45,14 +48,14 @@ public class IEFavoritesFunction extends AbstractFunctionProvider<IDescriptor, I
 	
 	@Override
 	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<IDescriptor> leaf) {
-		IDescriptor baseLoader = getDefaultLoader(leaf);
+		ILoaderAieon baseLoader = getDefaultLoader(leaf);
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
-		//TODO IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
+		if( Utils.isNull( model.getIdentifier() ))
+			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
 		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
 
-		if( Utils.isNull( leaf.getIdentifier() ))
-			leaf.setIdentifier( DEFAULT_IDENTIFIER );
-		IModelProvider<IModelLeaf<IDescriptor>> provider = new IEFavoritesProvider( super.getAieon(), leaf );
+		IModelProvider<IModelLeaf<IDescriptor>> provider = new IEFavoritesProvider( super.getAieon(), model );
 		return provider;
 	}
 

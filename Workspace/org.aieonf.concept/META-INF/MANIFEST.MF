@@ -21,6 +21,7 @@ Export-Package: org.aieonf.concept,
  org.aieonf.concept.persist,
  org.aieonf.concept.processor,
  org.aieonf.concept.security,
+ org.aieonf.concept.sign,
  org.aieonf.concept.util,
  org.aieonf.concept.wrapper,
  org.aieonf.concept.xml

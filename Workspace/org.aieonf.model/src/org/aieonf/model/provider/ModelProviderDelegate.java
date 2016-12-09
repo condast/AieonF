@@ -31,10 +31,12 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 	}
 
 	public void addProvider( IModelProvider<U> provider ){
+		provider.addListener(listener);
 		this.providers.add( provider );
 	}
 
 	public void removeProvider( IModelProvider<U> provider ){
+		provider.removeListener(listener);
 		this.providers.remove( provider );
 	}
 
@@ -77,11 +79,12 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 		this.listeners.remove( listener );
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void contains(IModelLeaf<? extends IDescriptor> leaf) {
 		for( IModelProvider<U> provider: this.providers ){
 			if( provider.contains(leaf)){
-				listener.notifyChange( new ModelBuilderEvent( provider, leaf ));
+				listener.notifyChange( new ModelBuilderEvent<U>( provider, (U) leaf ));
 			}
 		}
 		listener.notifyChange( new ModelBuilderEvent<U>( this ));
@@ -98,17 +101,10 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 	}
 	
 	@Override
-	public void get(IDescriptor descriptor)
+	public synchronized void get(IDescriptor descriptor)
 			throws ParseException {
 		for( IModelProvider<U> provider: this.providers ){
-			provider.addListener(listener);
-		}
-
-		for( IModelProvider<U> provider: this.providers ){
 			this.onGet(provider, descriptor);
-		}
-		for( IModelProvider<U> provider: this.providers ){
-			provider.removeListener(listener);
 		}
 	}
 
@@ -122,16 +118,9 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 		}
 	}
 	@Override
-	public void search( IModelFilter<IDescriptor> filter) throws ParseException {
-		for( IModelProvider<U> provider: this.providers ){
-			provider.addListener(listener);
-		}
-
+	public synchronized void search( IModelFilter<IDescriptor> filter) throws ParseException {
 		for( IModelProvider<U> provider: this.providers ){
 			this.onSearch(provider, filter);
-		}
-		for( IModelProvider<U> provider: this.providers ){
-			provider.removeListener(listener);
 		}
 	}
 	

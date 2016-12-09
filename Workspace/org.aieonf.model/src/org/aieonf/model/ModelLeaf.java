@@ -32,7 +32,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( T descriptor, Implies<T,IDescriptor> implies )
+	ModelLeaf( T descriptor, Implies<T,IDescriptor> implies )
 	{
 		this.descriptor = descriptor;
 		this.implies = implies;

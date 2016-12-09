@@ -8,11 +8,11 @@ import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.library.ManifestAieon;
+import org.aieonf.concept.sign.SignatureFactory;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
@@ -26,13 +26,16 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 
 	private Collection<IModelBuilderListener<V>> listeners;
 	private boolean open;
-
+	private boolean requestClose; //delay closing when searcgh is conducten in separate threads
+	private int pending;
+	
 	private Collection<V> models;
 
 	private ManifestAieon manifest;
 	
 	private IContextAieon context;
 	private String identifier;
+	private SignatureFactory signer = SignatureFactory.getInstance();
 
 	protected AbstractModelProvider( String identifier, IContextAieon context, IModelLeaf<U> model ) {
 		listeners = new ArrayList<IModelBuilderListener<V>>();
@@ -40,13 +43,13 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		this.context = context;
 		manifest = this.setup( model);
 		models = new ArrayList<V>();
+		this.pending = 0;
 	}
 
 	@Override
 	public String getIdentifier() {
 		return identifier;
 	}
-
 
 	protected ManifestAieon getManifest() {
 		return manifest;
@@ -80,17 +83,19 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		ManifestAieon manifest = new ManifestAieon( model.getDescriptor() );
 		try {
 			manifest.fill(model.getDescriptor());
-		} catch (ConceptException e) {
+			this.onSetup(manifest);
+			int hashcode = this.context.getSource().hashCode();
+			manifest.set( IDescriptor.Attributes.ID, String.valueOf( hashcode ));
+			signer.init(manifest);
+		} catch ( Exception e) {
 			e.printStackTrace();
 		}
-		this.onSetup(manifest);
-		int hashcode = this.context.getSource().hashCode();
-		manifest.set( IDescriptor.Attributes.ID, String.valueOf( hashcode ));
 		return manifest;	
 	}
 
 	@Override
 	public void open(){
+		this.requestClose = false;
 		this.open = true;
 	}
 
@@ -99,6 +104,26 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		return open;
 	}
 
+	protected boolean isRequestClose() {
+		return requestClose;
+	}
+
+	protected void setRequestClose(boolean requestClose) {
+		this.requestClose = requestClose;
+	}
+
+	protected void setBusy(){
+		this.pending++;
+	}
+	
+	protected boolean isPending(){
+		return ( pending > 0 );
+	}
+	
+	protected void release(){
+		this.pending--;
+	}
+	
 	/**
 	 * Sync the actual model with the database
 	 */
@@ -107,6 +132,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 
 	@Override
 	public void close(){
+		this.requestClose = true;
 		this.open = false;
 	}
 
@@ -156,7 +182,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 			concept.setProvider( manifest.getIdentifier() );
 			concept.setProviderName( manifest.getProviderName() );
 			concept.set( IConcept.Attributes.SOURCE.name(), manifest.getIdentifier() );
-			BodyFactory.sign( manifest, concept );
+			signer.sign( concept );
 		}
 		catch (IOException e) {
 			throw new ConceptException( e );
@@ -174,7 +200,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 		if( !Descriptor.isNull( concept.getID()))
 			return;
 		try{
-			BodyFactory.sign( manifest, concept );
+			signer.sign( concept );
 			String id = IDFactory( concept, models );
 			concept.set( IDescriptor.Attributes.ID.name(), id);
 		}

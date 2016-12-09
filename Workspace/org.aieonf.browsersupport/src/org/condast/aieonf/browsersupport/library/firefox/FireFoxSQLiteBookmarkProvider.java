@@ -76,7 +76,8 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	@Override
 	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor> filter ) throws ParseException {
 		{
-		    threadpool.submit( getBookmarksFuture(this, filter));
+			getModels().clear();
+			threadpool.submit( getBookmarksFuture(this, filter));
 			return super.getModels();
 		}
 	}
@@ -86,10 +87,10 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 
 			@Override
 			public Collection<IModelLeaf<IDescriptor>> call() throws Exception {
-				getModels().clear();
 				Map<Integer, FireFoxReference>resources;
 				Map<Integer, PlacesAieon> places;
 				try {
+					setBusy();
 					places = getPlaces();
 					resources = getResources();
 					
@@ -97,12 +98,18 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 					IModelLeaf<IDescriptor> result = getHistory(filter);
 					if( result != null )
 						getModels().add( result );
-					//super.getModels().add( this.getHistoryVisits());
-					//super.getModels().add( this.getPopularSites() );
+					getModels().add( getHistoryVisits( filter ));
+					getModels().add( getPopularSites( filter ) );
 					notifyListeners( new ModelBuilderEvent<>(source, getModels()));
 				}
 				catch (Exception e) {
+					e.printStackTrace();
 					throw new ParseException( e );
+				}
+				finally{
+					release();
+					if( isRequestClose() )
+						close( connection );
 				}
 				return getModels();
 			}
@@ -323,7 +330,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IDescriptor> getHistoryVisits() throws ConceptException{
+	protected IModelLeaf<IDescriptor> getHistoryVisits( IModelFilter<IDescriptor> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places WHERE moz_places.id = ( SELECT place_id FROM moz_historyvisits )";
 
 		IModelNode<IDescriptor> model;
@@ -407,6 +414,8 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 
 	protected void close( Connection connection )
 	{
+		if(isPending())
+			return;
 		super.close();
 		try
 		{
@@ -421,7 +430,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 
 	@Override
 	public void close(){
-		close( connection );
+		super.setRequestClose( true );
 	}
 
 	private static class PlacesAieon extends Concept implements IDataResource
