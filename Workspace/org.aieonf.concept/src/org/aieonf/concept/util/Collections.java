@@ -1,5 +1,6 @@
 package org.aieonf.concept.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.concept.IDescribable;
@@ -21,5 +22,4 @@ public class Collections
 	    return null;
 	  return results.iterator().next();
 	}
-
 }

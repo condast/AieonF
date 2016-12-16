@@ -30,6 +30,7 @@ import org.aieonf.model.IModelNode;
 import org.aieonf.model.Model;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.collections.ModelCollections;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.ISearchProvider;
 import org.aieonf.template.provider.AbstractModelProvider;
@@ -98,8 +99,12 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 					IModelLeaf<IDescriptor> result = getHistory(filter);
 					if( result != null )
 						getModels().add( result );
-					getModels().add( getHistoryVisits( filter ));
-					getModels().add( getPopularSites( filter ) );
+					result = getHistoryVisits( filter );
+					if( result != null )
+						getModels().add( result );
+					result = getPopularSites( filter );
+					if( result != null )
+						getModels().add( result );
 					notifyListeners( new ModelBuilderEvent<>(source, getModels()));
 				}
 				catch (Exception e) {
@@ -257,6 +262,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 		{
 			throw new ConceptException(e );
 		}
+		ModelCollections.cleanup( categories.values() );
 		return categories.values();
 	}
 
@@ -332,7 +338,6 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	 */
 	protected IModelLeaf<IDescriptor> getHistoryVisits( IModelFilter<IDescriptor> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places WHERE moz_places.id = ( SELECT place_id FROM moz_historyvisits )";
-
 		IModelNode<IDescriptor> model;
 		try
 		{
@@ -344,6 +349,8 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 			super.fill(category);
 			category.setProvider( super.getManifest().getIdentifier() );
 			model = new Model<IDescriptor>( category );
+			if( !filter.accept( model ))
+				return null;
 			while(rs.next())
 			{
 				try {
