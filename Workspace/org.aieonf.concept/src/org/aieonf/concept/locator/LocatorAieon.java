@@ -111,7 +111,7 @@ implements ILocatorAieon
 	public URI getURI()
 	{
 		String str = super.get( ILocatorAieon.Attributes.URI );
-		if( Utils.isNull(str))
+		if( Utils.assertNull(str))
 			return null;
 		return URI.create( str );
 	}

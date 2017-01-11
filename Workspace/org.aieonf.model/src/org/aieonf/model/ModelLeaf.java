@@ -167,7 +167,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	public int getDepth()
 	{
 		String str = super.get( IModelLeaf.Attributes.DEPTH);
-		if( Utils.isNull(str))
+		if( Utils.assertNull(str))
 			str = "0";
 		return Integer.parseInt( str );
 	}
@@ -263,7 +263,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@SuppressWarnings("unchecked")
 	public static IModelLeaf<IDescriptor> getModel( IModelLeaf<? extends IDescriptor> root, String id ){
-		if( Utils.isNull( id ))
+		if( Utils.assertNull( id ))
 			return null;
 		if( id.equals( root.getIdentifier() ))
 			return (IModelLeaf<IDescriptor>) root;

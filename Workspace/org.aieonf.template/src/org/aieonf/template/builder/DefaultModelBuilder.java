@@ -51,7 +51,7 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 		LOCALE;
 
 		public static boolean isValid( String name ){
-			if( Utils.isNull( name ))
+			if( Utils.assertNull( name ))
 				return false;
 			String str = StringStyler.styleToEnum( name );
 			for( Concepts concept: Concepts.values()){
@@ -109,7 +109,7 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 		switch( dc ){
 		case CONTEXT:
 			this.context = new ContextAieon();
-			if(!Utils.isNull( name_attr))
+			if(!Utils.assertNull( name_attr))
 				this.context.set( IContextAieon.Attributes.CONTEXT, name_attr);
 			descriptor = this.context;
 			break;
@@ -118,7 +118,7 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 			break;
 		case LOADER:
 			descriptor = new LoaderAieon( this.context );
-			if(!Utils.isNull( name_attr))
+			if(!Utils.assertNull( name_attr))
 				this.context.set( ILoaderAieon.Attributes.LOADER, name_attr);
 			break;
 		case CONCEPT:
@@ -126,7 +126,7 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 			break;			
 		case CATEGORY:
 			descriptor = new CategoryAieon();
-			if(!Utils.isNull( name_attr))
+			if(!Utils.assertNull( name_attr))
 				this.context.set( CategoryAieon.Attributes.CATEGORY, name_attr);
 			break;
 		case URL:
@@ -140,12 +140,12 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 			break;
 		case LOCALE:
 			descriptor = new LocaleAieon();
-			if(!Utils.isNull( name_attr))
+			if(!Utils.assertNull( name_attr))
 				this.context.set( LocaleAieon.Attributes.LOCALE, name_attr);
 			break;
 		default:
 			String clss_str = attributes.getValue( ITemplateProperty.Attributes.CLASS.toString());
-			if(!Utils.isNull(clss_str)){
+			if(!Utils.assertNull(clss_str)){
 				Class<?> cd;
 				try {
 					cd = super.getClazz().getClassLoader().loadClass( clss_str );
@@ -246,7 +246,7 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 	public static Map<ITemplateProperty.Attributes, String> convertAttributes( Attributes attributes ){
 		Map<ITemplateProperty.Attributes,String> attrs = new HashMap<ITemplateProperty.Attributes, String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.isNull( attributes.getLocalName(i))){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 				ITemplateProperty.Attributes attr = ITemplateProperty.Attributes.valueOf( str );
 				attrs.put( attr, attributes.getValue(i));
@@ -262,7 +262,7 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 	 */
 	public static void setLocale( LocaleAieon locale, Attributes attributes ){
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.isNull( attributes.getLocalName(i))){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 				LocaleAieon.Attributes key = LocaleAieon.Attributes.valueOf( str );
 				locale.set( key, attributes.getValue(i));

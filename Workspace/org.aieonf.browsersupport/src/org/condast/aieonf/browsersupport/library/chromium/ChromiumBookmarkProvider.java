@@ -94,7 +94,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDescriptor, IModel
 		//	models.add( leaf );
 
 		String type = node.path("type").textValue();
-		ChromiumAieon.Types ctype = ( Utils.isNull( type )? ChromiumAieon.Types.OTHER: ChromiumAieon.Types.valueOf( StringStyler.styleToEnum( type )));
+		ChromiumAieon.Types ctype = ( Utils.assertNull( type )? ChromiumAieon.Types.OTHER: ChromiumAieon.Types.valueOf( StringStyler.styleToEnum( type )));
 		IModelLeaf<IDescriptor> model = null;
 		ChromiumAieon aieon = new ChromiumAieon( ctype );
 		aieon.fill(node );
@@ -201,7 +201,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDescriptor, IModel
 		try{
 			BodyFactory.sign( super.getManifest(), concept );
 			String id = IDFactory( concept, super.getModels() );
-			id = (Utils.isNull( id_def))? id: id + id_def;
+			id = (Utils.assertNull( id_def))? id: id + id_def;
 			concept.set( IDescriptor.Attributes.ID, id);
 		}
 		catch( Exception ex ){

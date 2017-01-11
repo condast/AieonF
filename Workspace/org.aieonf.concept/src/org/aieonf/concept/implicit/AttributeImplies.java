@@ -26,11 +26,11 @@ public class AttributeImplies<T extends IDescriptor, U extends IDescriptor>
 	protected int compareOnAttribute(U obj) {
 		String reference = super.getReference().get( key );
 		String compare = obj.get( key );
-		if( Utils.isNull( reference ) && Utils.isNull( compare ))
+		if( Utils.assertNull( reference ) && Utils.assertNull( compare ))
 			return 0;
-		if( !Utils.isNull( reference ) && Utils.isNull( compare ))
+		if( !Utils.assertNull( reference ) && Utils.assertNull( compare ))
 			return 1;
-		if( Utils.isNull( reference ) && !Utils.isNull( compare ))
+		if( Utils.assertNull( reference ) && !Utils.assertNull( compare ))
 			return -1;		
 		return reference.compareTo( compare );
 	}

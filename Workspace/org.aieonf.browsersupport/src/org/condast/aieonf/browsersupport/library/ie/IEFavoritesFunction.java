@@ -51,7 +51,7 @@ public class IEFavoritesFunction extends AbstractFunctionProvider<IDescriptor, I
 		ILoaderAieon baseLoader = getDefaultLoader(leaf);
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
-		if( Utils.isNull( model.getIdentifier() ))
+		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
 		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
 

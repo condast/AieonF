@@ -49,7 +49,7 @@ public class CombinedProvider<U extends Object> implements IModelProvider<U>
 	 * @return
 	 */
 	public IModelProvider<U> getModelProvider( String identifier ){
-		if( Utils.isNull( identifier ))
+		if( Utils.assertNull( identifier ))
 			return null;
 		for( IModelProvider<U> provider: this.providers ){
 			if( identifier.equals( provider.getIdentifier() ))

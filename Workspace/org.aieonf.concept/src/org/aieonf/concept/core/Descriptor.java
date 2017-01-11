@@ -722,7 +722,7 @@ public class Descriptor implements IDescriptor
 			return element.toString();
 		IDescribable<?> desc = ( IDescribable<?> )element;
 		String retval = desc.getDescriptor().getDescription();
-		if( Utils.isNull( retval ))
+		if( Utils.assertNull( retval ))
 			retval = desc.getDescriptor().getName();
 		return retval;
 	}
@@ -790,7 +790,7 @@ public class Descriptor implements IDescriptor
 	 */
 	public static boolean getBoolean( IDescriptor descriptor, Enum<?> attribute, boolean defaultValue ){
 		String str = descriptor.get(attribute);
-		return Utils.isNull(str)?defaultValue: Boolean.valueOf(str );
+		return Utils.assertNull(str)?defaultValue: Boolean.valueOf(str );
 	}
 	
 	/**

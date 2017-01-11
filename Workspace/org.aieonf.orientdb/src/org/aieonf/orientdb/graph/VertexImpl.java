@@ -63,7 +63,7 @@ public class VertexImpl<T extends IDescriptor> implements IVertex<T> {
 		String key = IVertex.Attributes.DEGREE.toString();
 		String ds  = vertex.getProperty( key );
 		int degree = 0;
-		if( !Utils.isNull( ds ))
+		if( !Utils.assertNull( ds ))
 			degree = Integer.parseInt( ds );
 		vertex.setProperty( key, ++degree );
 		return degree;
@@ -74,7 +74,7 @@ public class VertexImpl<T extends IDescriptor> implements IVertex<T> {
 		String key = IVertex.Attributes.DEGREE.toString();
 		String ds  = vertex.getProperty( key );
 		int degree = 0;
-		if( !Utils.isNull( ds ))
+		if( !Utils.assertNull( ds ))
 			degree = Integer.parseInt( ds );
 		vertex.setProperty( key, --degree );
 	}

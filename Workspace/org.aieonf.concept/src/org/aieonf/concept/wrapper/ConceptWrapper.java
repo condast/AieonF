@@ -68,7 +68,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	public final Scope getScope()
 	{
 		String str = super.getDescriptor().get( IConcept.Attributes.SCOPE );
-		if( Utils.isNull(str))
+		if( Utils.assertNull(str))
 			return Scope.APPLICATION;
 		return Scope.valueOf(  StringStyler.styleToEnum( str ));
 	}

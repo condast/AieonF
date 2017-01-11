@@ -63,7 +63,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		 */
 		public static boolean isModelAttribute( String attr ){
 			String str = StringStyler.styleToEnum( attr );
-			if( Utils.isNull(str))
+			if( Utils.assertNull(str))
 				return false;
 			for( ModelAttributes ma: ModelAttributes.values() ){
 				if( str.equals( ma.name()))
@@ -292,7 +292,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String value = new String(ch, start, length);
-		if( Utils.isNull( value  ))
+		if( Utils.assertNull( value  ))
 			return;
 		try{
 			logger.fine("Setting value for key: " + creator.getKey() );
@@ -361,7 +361,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 */
 	public static void fillAttributes( IModelLeaf<IDescriptor> leaf, Attributes attributes ){
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.isNull( attributes.getLocalName(i))){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 				IModelLeaf.Attributes attr = IModelLeaf.Attributes.valueOf( str );
 				leaf.set( attr, attributes.getValue(i));
@@ -387,7 +387,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	public static Map<String, String> convertAttributes( Attributes attributes ){
 		Map<String,String> attrs = new HashMap<String,String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.isNull( attributes.getLocalName(i))){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
 				attrs.put( attributes.getLocalName( i ), attributes.getValue(i));
 			}
 		}
@@ -406,7 +406,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		public void fill( Attributes attributes ){
 			properties = XMLUtils.convertAttributesToProperties(attributes);
 			String name = getName();
-			if(!Utils.isNull( name ))
+			if(!Utils.assertNull( name ))
 				properties.put( IModelLeaf.Attributes.IDENTIFIER.name().toLowerCase(), getName());
 		}
 		
@@ -483,7 +483,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 			context.setApplicationName( this.getName() );
 			context.setApplicationVersion( this.getVersion() );
 			String id = this.getID();
-			if( !Utils.isNull(id))
+			if( !Utils.assertNull(id))
 				context.setApplicationID(id);
 		}
 	}

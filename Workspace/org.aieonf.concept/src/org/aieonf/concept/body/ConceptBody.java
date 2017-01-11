@@ -51,7 +51,7 @@ public class ConceptBody<T extends IDescriptor>
 		Class<?> conceptClass = null;
 		try{
 			String className = descriptor.getClassName();
-			if( Utils.isNull( className ))
+			if( Utils.assertNull( className ))
 				throw new NullPointerException( S_ERR_NO_CLASS_NAME );
 			conceptClass = Class.forName( className );
 			T newConcept = ( T )conceptClass.newInstance();

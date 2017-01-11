@@ -38,7 +38,7 @@ public class OrientDBNode<T extends IDescriptor> extends ModelLeaf<T> implements
 	@Override
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child) {
 		Vertex last = null;
-		if( Utils.isNull( child.getIdentifier()))
+		if( Utils.assertNull( child.getIdentifier()))
 			throw new NullPointerException( S_ERR_NULL_IDENTIFITER + child );
 		for (Vertex v : graph.getVertices()) {
 		    IDescriptor descriptor = new VertexDescriptor( v );

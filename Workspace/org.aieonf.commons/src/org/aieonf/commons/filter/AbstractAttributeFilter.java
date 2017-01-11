@@ -203,7 +203,7 @@ public abstract class AbstractAttributeFilter<T,U extends Object> extends Abstra
 
 		case WILDCARD:
 			String str = this.getValueAsString( this.refKey );
-			if( Utils.isNull(str))
+			if( Utils.assertNull(str))
 				return false;
 			WildcardFilter filter = new WildcardFilter( this.refVal );
 			return filter.accept( str );

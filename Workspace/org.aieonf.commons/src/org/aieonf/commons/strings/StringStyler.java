@@ -150,7 +150,7 @@ public class StringStyler
 	 */
 	public static String xmlStyleString( String strng ){
 		String str = styleToEnum(strng);
-		if( Utils.isNull( str ))
+		if( Utils.assertNull( str ))
 			return null;
 		return str.replace("_", "-").toLowerCase();
 	}

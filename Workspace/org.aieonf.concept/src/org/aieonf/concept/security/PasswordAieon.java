@@ -333,10 +333,10 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 				return false;
 		IDescriptor descriptor = (IDescriptor) obj;
 		String userName = PasswordAieon.getUserName( descriptor);
-		if( Utils.isNull( userName ) || ( !userName.equals( this.getUserName() )))
+		if( Utils.assertNull( userName ) || ( !userName.equals( this.getUserName() )))
 			return false;
 		String password = PasswordAieon.getPassword( descriptor );
-		return (!Utils.isNull( password ) && ( password.equals( this.getPassword() )));
+		return (!Utils.assertNull( password ) && ( password.equals( this.getPassword() )));
 	}
 
 	/**

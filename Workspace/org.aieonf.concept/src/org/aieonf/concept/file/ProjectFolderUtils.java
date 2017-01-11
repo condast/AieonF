@@ -118,7 +118,7 @@ public class ProjectFolderUtils {
 	{
 		String folder = loader.getSource();
 		String name = loader.getIdentifier();
-		String ext = ( Utils.isNull( extension ))? S_DEFAULT_EXTENSION: extension;
+		String ext = ( Utils.assertNull( extension ))? S_DEFAULT_EXTENSION: extension;
 		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator + 
 				S_SAIGHT + File.separator +
 				folder + File.separator +  StringStyler.prettyString( name ) + "." + ext );

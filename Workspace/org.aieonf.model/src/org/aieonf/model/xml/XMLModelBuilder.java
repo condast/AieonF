@@ -203,7 +203,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	}
 
 	public static String getLocation( String defaultLocation ){
-		if( !Utils.isNull( defaultLocation ))
+		if( !Utils.assertNull( defaultLocation ))
 			return defaultLocation;
 		return defaultLocation;
 	}

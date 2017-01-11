@@ -79,7 +79,7 @@ public class ConceptBase implements IConceptBase
 			throw new IllegalArgumentException( "Invalid key " + key + " contains <space> character" );
 		}
 
-		if( Utils.isNull( value ))
+		if( Utils.assertNull( value ))
 			properties.remove(key);
 		else
 			properties.put( key, value );

@@ -115,7 +115,7 @@ public class ValidationEvent<T,U extends Object> extends EventObject
 	public String getExtendedMessage()
 	{
 		String val = this.getValue().toString();
-		if( Utils.isNull(val ))
+		if( Utils.assertNull(val ))
 			val = "null";
 		return msg + ": (" + this.getKey() + ", " + val + ")";
 	}

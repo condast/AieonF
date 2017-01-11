@@ -156,7 +156,7 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 		if( vertex == null ){
 			vertex = convert( super.getGraph(), leaf.getDescriptor(), leaf.getIdentifier() );
 		}
-	    String identifier = ( Utils.isNull( leaf.getIdentifier()) ?  S_IS_CHILD: leaf.getIdentifier() );
+	    String identifier = ( Utils.assertNull( leaf.getIdentifier()) ?  S_IS_CHILD: leaf.getIdentifier() );
 		super.getGraph().addEdge( null, parent, vertex, identifier );
 		boolean retval = true;
 	    if( !( leaf instanceof IModelNode) || leaf.isLeaf())
@@ -172,7 +172,7 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 	public boolean delete(IModelLeaf<IDescriptor> model) {
 		try{
 			String grph_id = model.getDescriptor().get( VertexDescriptor.GRAPH_ID );
-			if( Utils.isNull(grph_id))
+			if( Utils.assertNull(grph_id))
 				return false;
 			Edge remove = null;
 			Iterator<Edge> iterator = super.getRoot().getEdges( com.tinkerpop.blueprints.Direction.BOTH, new String[0]).iterator();

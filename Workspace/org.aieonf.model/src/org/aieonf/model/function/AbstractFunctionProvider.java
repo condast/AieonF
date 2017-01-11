@@ -98,9 +98,9 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 	protected static IModelLeaf<IDescriptor> getModelForLoader( ILoaderAieon loader, IModelLeaf<?> leaf){
 		Descriptor.overwrite( loader, leaf.getDescriptor() );
 		IModelLeaf<IDescriptor> model = new ModelLeaf<IDescriptor>( loader );
-		if( !Utils.isNull( leaf.getIdentifier()))
+		if( !Utils.assertNull( leaf.getIdentifier()))
 			model.setIdentifier( leaf.getIdentifier() );
-		if( !Utils.isNull( leaf.getID()))
+		if( !Utils.assertNull( leaf.getID()))
 			model.setIdentifier( leaf.getID() );
 		return model;
 	}

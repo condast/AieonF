@@ -46,7 +46,7 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IDes
 		baseLoader.setURI( uri );
 		baseLoader.setDescription( DEFAULT_CHROMIUM_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
-		if( Utils.isNull( model.getIdentifier() ))
+		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
 		IModelProvider<IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( super.getAieon(), model );
 		return gdb;

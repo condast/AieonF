@@ -89,7 +89,7 @@ public abstract class AbstractProviderContextFactory<T extends IDescribable<?>> 
 		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, this.creator );	
 		IDescriptor descriptor = template.getDescriptor();
 		String source = descriptor.get( IConcept.Attributes.SOURCE );
-		if( Utils.isNull( source ))
+		if( Utils.assertNull( source ))
 			descriptor.set( IConcept.Attributes.SOURCE, this.bundle_id + File.separator + S_MODEL );
 		return template;
 	}

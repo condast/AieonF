@@ -79,7 +79,7 @@ public class LogEntryAieon extends DateAieon
 	}
 	
 	public String getCategory(){
-		if( Utils.isNull( super.getDescription()))
+		if( Utils.assertNull( super.getDescription()))
 			return null;
 		return super.getDescription().split("[\\s]")[0];
 	}

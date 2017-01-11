@@ -17,7 +17,7 @@ public class XMLUtils {
 	public static Map<String, String> convertAttributes( Attributes attributes ){
 		Map<String,String> attrs = new HashMap<String,String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.isNull( attributes.getLocalName(i))){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
 				attrs.put( attributes.getLocalName( i ), attributes.getValue(i));
 			}
 		}
@@ -32,7 +32,7 @@ public class XMLUtils {
 	public static Map<String, String> convertToEnumAttributes( Attributes attributes ){
 		Map<String,String> attrs = new HashMap<String,String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.isNull( attributes.getLocalName(i))){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 				attrs.put( str, attributes.getValue(i));
 			}
@@ -48,7 +48,7 @@ public class XMLUtils {
 	public static Map<String, String> convertAttributesToProperties( Attributes attributes ){
 		Map<String, String> attrs = new HashMap<String, String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.isNull( attributes.getLocalName(i))){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
 				attrs.put( attributes.getLocalName( i ), attributes.getValue(i));
 			}
 		}
