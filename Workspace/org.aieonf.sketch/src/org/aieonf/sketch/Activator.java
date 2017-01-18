@@ -1,4 +1,4 @@
-package org.aieonf.osgi.sketch;
+package org.aieonf.sketch;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

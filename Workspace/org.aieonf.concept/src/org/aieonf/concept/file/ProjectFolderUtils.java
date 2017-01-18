@@ -30,6 +30,8 @@ public class ProjectFolderUtils {
 	public static final String S_DEFAULT_EXTENSION = "db";
 	public static final String S_SQLITE = "sqlite";
 
+	public static final String S_FILE = "file:";
+
 	/**
 	 * Return the default user directory. This is '%system-user%\<organisation>\'
 	 * @param aieon
@@ -81,6 +83,8 @@ public class ProjectFolderUtils {
 		String[] split = str.split("[/]");
 		StringBuffer buffer = new StringBuffer();
 		for( String line: split ){
+			if( Utils.assertNull( line ) ||  line.equals( S_FILE ))
+				continue;
 			if( line.equals( S_USER_HOME ))
 				buffer.append( System.getProperty( S_USER_HOME_PROPERTY ));
 			else if( line.equals( S_BUNDLE_ID ))

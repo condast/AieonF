@@ -1,4 +1,4 @@
-package org.aieonf.osgi.sketch;
+package org.aieonf.sketch;
 
 //import org.aieonf.osgi.selection.*;
 //import org.aieonf.concept.wrapper.*;

@@ -8,7 +8,6 @@
  */
 package org.aieonf.concept.core;
 
-//J2SE imports
 import java.util.*;
 
 import org.aieonf.commons.strings.StringStyler;
@@ -102,7 +101,6 @@ public class Concept extends Descriptor implements IConcept
 			throw new IllegalArgumentException( S_ERR_INVALID_NAME + ": " + name );
 		this.set( IDescriptor.Attributes.NAME, name );
 	}
-
 	
 	@Override
 	public String getSource() {
@@ -117,6 +115,11 @@ public class Concept extends Descriptor implements IConcept
 	protected void setSource( String source )
 	{
 		this.set( IConcept.Attributes.SOURCE, source );
+	}
+
+	@Override
+	public String getURIPath() {
+		return this.get( IConcept.Attributes.URI.name() );
 	}
 
 	/**

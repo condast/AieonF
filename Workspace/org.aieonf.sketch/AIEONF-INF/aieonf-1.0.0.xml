@@ -36,7 +36,7 @@
 				 <url id="descriptor">
 		 		   <version type="int" use="mandatory" create="auto">1</version>
 			 	   <description type="string" use="optional">{Description}</description>
-				   <url type="url" use="mandatory">{http://www.url.org}</url>
+				   <uri type="uri" use="mandatory">file://${user.home}/saight/sketch</uri>
                    <scope type="enum" use="mandatory">{Scope}</scope>
  		         </url>
  		       </model>

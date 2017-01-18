@@ -31,7 +31,8 @@ public interface IConcept extends IDescriptor
     HIDDEN,
     READ_ONLY,
     SCOPE, //public, private, member
-    SOURCE;
+    SOURCE,
+    URI;
 
 	@Override
 	public String toString() {
@@ -101,6 +102,12 @@ public interface IConcept extends IDescriptor
    */
   public String getSource();
 
+  /**
+   * Get the URI of this concept
+   * @return
+   */
+  public String getURIPath();
+  
   /**
    * Set the scope of the concept (default public)
    *

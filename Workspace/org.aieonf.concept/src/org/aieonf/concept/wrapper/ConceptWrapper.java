@@ -89,6 +89,17 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 		return super.getDescriptor().get( IConcept.Attributes.SOURCE );
 	}
 
+	
+	@Override
+	public String getURIPath() {
+		return super.getDescriptor().get( IConcept.Attributes.URI.name() );
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 	/**
 	 * Set the scope of the concept (default public)
 	 *
