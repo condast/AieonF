@@ -22,7 +22,7 @@ public class KeyEventService<T,U>
 	}
 	
 	private void notifyKeyEventChanged( KeyEvent<T,U> event ){
-		for( IKeyEventListener<T,U> listener: listeners ){
+		for( 	IKeyEventListener<T,U> listener: listeners ){
 			listener.notifyKeyEventReceived(event);
 		}
 	}
