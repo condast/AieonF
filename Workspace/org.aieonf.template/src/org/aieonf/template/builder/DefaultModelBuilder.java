@@ -1,5 +1,6 @@
 package org.aieonf.template.builder;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -70,13 +71,20 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 	private Logger logger  = Logger.getLogger( DefaultModelBuilder.class.getName() );
 	
 	private IContextAieon context;
+	private Class<?> clss;
 	
 	public DefaultModelBuilder( Class<?> clss ) {
 		this( clss, IModelBuilder.S_DEFAULT_LOCATION );
+		this.clss = clss;
 	}
 
 	public DefaultModelBuilder( Class<?> clss, String location ) {
 		super( clss, location );
+	}
+
+	public DefaultModelBuilder( Class<?> clss, URL url ) {
+		super( url );
+		this.clss = clss;
 	}
 
 	protected IContextAieon getContext(){
@@ -148,7 +156,7 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 			if(!Utils.assertNull(clss_str)){
 				Class<?> cd;
 				try {
-					cd = super.getClazz().getClassLoader().loadClass( clss_str );
+					cd = clss.getClassLoader().loadClass( clss_str );
 					descriptor = (IDescriptor) cd.newInstance();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 					e.printStackTrace();

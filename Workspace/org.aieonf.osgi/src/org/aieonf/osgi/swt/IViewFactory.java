@@ -2,6 +2,16 @@ package org.aieonf.osgi.swt;
 
 public interface IViewFactory<T,U extends Object>
 {
+	public enum Views{
+		ANY,
+		BAR,
+		BODY,
+		GET,
+		ADD,
+		EDIT,
+		OPTIONS;
+	}
+
 	/**
 	 * Add an identifier for this factory
 	 * @return
@@ -14,5 +24,5 @@ public interface IViewFactory<T,U extends Object>
 	 * @param style: the SWT style
 	 * @return
 	 */
-	public T createEntry( U parent, int style );
+	public T createEntry( Views view, U parent, int style );
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+    <extension
+         id="Sketch Bar"
+         name="Sketch Bar View Factory"
+         point="org.condast.saight.swt.viewFactory">
+      <viewFactory
+            denominator="sketchbar"
+            viewFactory="org.aieonf.sketch.factory.ViewFactory"
+            id="org.aieonf.sketch.viewFactory1"
+            name="Sketch Bar View Factory"
+            type="org.eclipse.swt.Composite">
+      </viewFactory>
+      <viewFactory
+            denominator="sketchbody"
+            viewFactory="org.aieonf.sketch.factory.ViewFactory"
+            id="org.aieonf.sketch.viewFactory2"
+            name="Sketch Body View"
+            type="org.eclipse.swt.Composite">
+      </viewFactory>
+   </extension>
+</plugin>

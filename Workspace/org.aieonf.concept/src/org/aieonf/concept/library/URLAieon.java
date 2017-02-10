@@ -35,7 +35,8 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	{
 		URL,
 		TYPE,
-		SERVER;
+		SERVER,
+		CREATABLE;
 
 		/* (non-Javadoc)
 		 * @see java.lang.Enum#toString()

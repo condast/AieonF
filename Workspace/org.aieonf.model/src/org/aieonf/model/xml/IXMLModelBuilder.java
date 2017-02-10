@@ -29,12 +29,6 @@ public interface IXMLModelBuilder<T extends IDescriptor, U extends IModelLeaf<T>
 	void clear();
 
 	/**
-	 * Get the location of the template
-	 * @return
-	 */
-	public String getLocation();
-
-	/**
 	 * Get the URL of the template
 	 * @return
 	 */

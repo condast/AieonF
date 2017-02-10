@@ -13,12 +13,14 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 	private boolean active;
 	private U model;
 	private String key;
-	private String resourceLocation;
-	private Class<?> clss;
+	private URL url;
 
 	protected AbstractModelBuilder( Class<?> clss, String resourceLocation) {
-		this.resourceLocation = resourceLocation;
-		this.clss = clss;
+		this( clss.getResource( resourceLocation ));
+	}
+
+	protected AbstractModelBuilder( URL url ) {
+		this.url = url;
 	}
 
 	/**
@@ -29,21 +31,12 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 		this.active = false;
 		this.key = null;
 	}
-
-	@Override
-	public String getLocation(){
-		return this.resourceLocation;
-	}
 	
 	@Override
 	public URL getURL() {
-		return this.clss.getResource( resourceLocation );
+		return url;
 	}
 	
-	public Class<?> getClazz() {
-		return clss;
-	}
-
 	@Override
 	public String getKey() {
 		if( key == null )

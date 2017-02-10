@@ -54,7 +54,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	private String modelId;
 	private IXMLModelBuilder<T, IModelLeaf<T>> builder;
 
-	private Collection<IModelBuilderListener> listeners;
+	private Collection<IModelBuilderListener<T>> listeners;
 		
 	private Logger logger = Logger.getLogger( XMLModelBuilder.class.getName() );
 	
@@ -70,7 +70,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		this.builder = builder;
 		this.completed = false;
 		this.failed = false;
-		this.listeners = new ArrayList<IModelBuilderListener>();
+		this.listeners = new ArrayList<IModelBuilderListener<T>>();
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +79,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#addListener(net.jp2p.container.builder.IModelBuilderListener)
 	 */
-	public void addListener( IModelBuilderListener listener ){
+	public void addListener( IModelBuilderListener<T> listener ){
 		this.listeners.add(listener);
 	}
 
@@ -89,7 +89,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#removeListener(net.jp2p.container.builder.IModelBuilderListener)
 	 */
-	public void removeListener( IModelBuilderListener listener ){
+	public void removeListener( IModelBuilderListener<T> listener ){
 		this.listeners.remove( listener);
 	}
 
@@ -129,7 +129,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		try {
 			in = url.openStream();
 		} catch (Exception e1) {
-			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.builder.getLocation() + "\n");
+			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.builder.getURL() + "\n");
 			e1.printStackTrace();
 			return null;
 		}
@@ -148,11 +148,11 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 			//saxParser.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA); 
 			//saxParser.setProperty(JAXP_SCHEMA_SOURCE, new File(JP2P_XSD_SCHEMA)); 
 			XMLModelParser<T> parser = new XMLModelParser<T>();
-			IModelBuilderListener listener = new IModelBuilderListener(){
+			IModelBuilderListener<T> listener = new IModelBuilderListener<T>(){
 
 				@Override
-				public void notifyChange(ModelBuilderEvent event) {
-					for( IModelBuilderListener listener: listeners )
+				public void notifyChange(ModelBuilderEvent<T> event) {
+					for( IModelBuilderListener<T> listener: listeners )
 						listener.notifyChange(event);
 				}	
 			};
