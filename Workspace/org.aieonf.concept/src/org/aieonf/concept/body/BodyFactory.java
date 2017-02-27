@@ -307,7 +307,7 @@ public class BodyFactory<T extends Object>
 	 * @param descriptor IDescriptor
 	 * @throws IOException
 	 */
-	public static int hashCode( IEncryption encryption, IDescriptor descriptor )
+	public synchronized static int hashCode( IEncryption encryption, IDescriptor descriptor )
 			throws IOException
 	{
 		ByteArrayOutputStream bStream = null;

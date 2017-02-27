@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/sqlite-jdbc-3.16.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.3.5-20140815.001810-3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.3.5-20140808.034233-2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.3.5-20140808.063113-2.jar"/>
@@ -7,6 +8,5 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry excluding="org/condast/aieonf/browsersupport/service/ModelFunctionProvider.java|org/condast/aieonf/browsersupport/service/ActiveLinkProvider.java" kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/htmlparser.jar"/>
-	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

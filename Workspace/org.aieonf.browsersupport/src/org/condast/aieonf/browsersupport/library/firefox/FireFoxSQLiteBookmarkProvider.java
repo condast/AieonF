@@ -32,7 +32,6 @@ import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.collections.ModelCollections;
 import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.model.provider.ISearchProvider;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
@@ -530,21 +529,5 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 				return Integer.parseInt( str );
 			return -1;
 		}
-	}
-	
-	private class SearchTask implements Callable<Collection<IModelLeaf<IDescriptor>>>{
-
-		private ISearchProvider<IModelLeaf<IDescriptor>> provider; 
-		
-		public SearchTask( ISearchProvider<IModelLeaf<IDescriptor>> provider ) {
-			this.provider = provider;
-		}
-
-		@Override
-		public Collection<IModelLeaf<IDescriptor>> call() throws Exception {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
 	}
 }

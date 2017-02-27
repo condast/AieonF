@@ -3,13 +3,11 @@ package org.condast.aieonf.browsersupport.library.ie;
 import java.io.File;
 import java.net.URI;
 
-import org.aieonf.collections.connector.AbstractFileConnector;
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;

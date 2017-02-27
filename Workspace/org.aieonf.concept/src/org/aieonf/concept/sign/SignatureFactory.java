@@ -73,7 +73,7 @@ public class SignatureFactory {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean sign( IDescriptor descriptor ) throws IOException{
+	public synchronized boolean sign( IDescriptor descriptor ) throws IOException{
 	    if( !this.ready )
 	    	return ready;
 		signature += BodyFactory.hashCode( encryptor, descriptor.getDescriptor() );

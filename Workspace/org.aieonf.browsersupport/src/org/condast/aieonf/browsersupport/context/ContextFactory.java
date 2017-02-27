@@ -59,7 +59,7 @@ public class ContextFactory extends AbstractProviderContextFactory<IModelLeaf<ID
 	}
 
 	@Override
-	protected void onBuildEvent(ModelBuilderEvent event) {
+	protected void onBuildEvent(ModelBuilderEvent<IModelLeaf<IDescriptor>> event) {
 		// TODO Auto-generated method stub
 		
 	}
