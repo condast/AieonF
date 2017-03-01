@@ -13,22 +13,6 @@ import org.aieonf.concept.IDescriptor;
  */
 public interface Implies<T extends IDescriptor, U extends IDescriptor> extends Comparable<U>{
 
-	/**
-	 * Get the rules when two descriptors are considered the same. By default, it is 'equals',
-	 * but for instance a category s the same when the 'category' attributes has the same name
-	 * @author Kees Pieters
-	 */
-	public enum Conditions
-	{
-		EQUAL,
-		ID,
-		ON_ATTRIBUTE;
-
-		@Override
-		public String toString() {
-			return StringStyler.prettyString( super.toString());
-		}
-	}
 
 	
 }

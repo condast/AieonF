@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.implicit.IImplicit.Conditions;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;

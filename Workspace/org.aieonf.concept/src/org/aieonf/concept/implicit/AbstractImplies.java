@@ -1,5 +1,6 @@
 package org.aieonf.concept.implicit;
 
+import org.aieonf.commons.implicit.IImplicit.Conditions;
 import org.aieonf.concept.IDescriptor;
 
 public abstract class AbstractImplies<T extends IDescriptor, U extends IDescriptor> implements Implies<T, U> {

@@ -1,6 +1,7 @@
 package org.aieonf.concept.implicit;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.implicit.IImplicit.Conditions;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 
