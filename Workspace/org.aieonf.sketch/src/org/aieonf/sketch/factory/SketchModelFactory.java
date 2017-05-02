@@ -35,6 +35,11 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IModelLea
 		return web.toURI().toURL();
 	}
 
+	public String getFilePath( String location ) throws MalformedURLException{
+		File file = new File( root, S_WEB + location );
+		return file.getAbsolutePath();
+	}
+
 	private static URL getAieonFURL( File root ) throws MalformedURLException{
 		File aieonf = new File( root, IModelBuilder.S_DEFAULT_LOCATION );
 		return aieonf.toURI().toURL();

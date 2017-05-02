@@ -6,34 +6,27 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.aieonf.sketch.Activator
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.aieonf.commons.transaction,
+Import-Package: org.aieonf.commons,
+ org.aieonf.commons.parser,
  org.aieonf.concept,
  org.aieonf.concept.context,
  org.aieonf.concept.domain,
  org.aieonf.concept.file,
- org.aieonf.concept.library,
- org.aieonf.concept.loader,
- org.aieonf.concept.locator,
  org.aieonf.concept.wrapper,
  org.aieonf.model,
  org.aieonf.model.builder,
  org.aieonf.model.provider,
  org.aieonf.model.xml,
- org.aieonf.osgi.selection,
  org.aieonf.osgi.service,
  org.aieonf.osgi.swt,
- org.aieonf.template,
  org.aieonf.template.builder,
  org.aieonf.template.context,
- org.condast.aieonf.osgi.function,
+ org.condast.js.commons.controller,
  org.eclipse.swt,
  org.eclipse.swt.browser,
- org.eclipse.swt.events,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets,
- org.eclipselabs.osgi.ds.broker.service,
  org.osgi.framework;version="1.3.0"
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/aieonf.xml,
  OSGI-INF/view.xml
-Require-Bundle: org.aieonf.commons
