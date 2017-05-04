@@ -114,6 +114,7 @@ public class SketchController extends AbstractJavascriptController {
 		AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.Wildcard, 
 				IDescriptor.Attributes.DESCRIPTION, wildcard );
 		HierarchicalModelAttributeFilter<IDescriptor> filter = new HierarchicalModelAttributeFilter<IDescriptor>( categoryFilter, urlFilter );
+		/*
 		switch( choice ){
 		case NAME:
 			filter.setHierarchyRule( HierarchyRules.ALLPARENTS );
@@ -122,6 +123,7 @@ public class SketchController extends AbstractJavascriptController {
 			filter.setHierarchyRule( HierarchyRules.ALLCHILDREN );
 			break;
 		}
+		*/
 		SketchModelFactory factory = selected.getFactory();
 		if( factory == null )
 			return;
