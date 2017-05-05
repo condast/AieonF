@@ -43,6 +43,7 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 	}
 
 	public void addProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IDescriptor>>> function ){
+		this.factory.addProvider(function);
 	}
 	
 	public void removeProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IDescriptor>>> function ){

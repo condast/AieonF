@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wizards>
+  <wizard title="Forum" css="resources/css/forum.css">
+    <titlebar></titlebar>
+    <buttonbar style="buttonBar"/>
+  	<pages previous-next="false">
+  		<page id="intro" title="Forum home page" on-finish="true">
+  			<composite class="org.eclipse.swt.browser.Browser" url="http://www.condast.com"></composite>
+  			<message>The Message is love</message>
+  		</page>
+  		<page id="search" title="Search Forum" on-cancel="true">
+ 			<composite class="org.saight.forum.composite.ForumBodyComposite"></composite>
+  			<message>The Message is love</message>
+  		</page>
+  		<page id="show" title="Show Forum" message="show-link-msg" type="head">
+ 			<composite class="org.saight.forum.composite.ShowEntriesComposite"></composite>
+  		</page>
+  		<page id="edit" title="Edit Forum" type="head">
+  			<composite class="org.saight.forum.composite.AddForumComposite"></composite>
+  			<buttons>
+  				<button type="PREVIOUS"></button>
+  				<button type="FINISH"></button>
+  			</buttons>
+  		</page>
+  	</pages>
+  </wizard>
+</wizards>

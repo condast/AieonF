@@ -5,6 +5,7 @@ import org.aieonf.osgi.swt.IViewFactory;
 import org.aieonf.sketch.factory.SelectedFactory;
 import org.aieonf.sketch.swt.SketchController;
 import org.aieonf.sketch.swt.SketchController.Pages;
+import org.aieonf.sketch.swt.SketchWizard;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 
@@ -13,8 +14,7 @@ public class ViewFactoryProvider implements IViewFactory<Composite, Composite>{
 	private SelectedFactory selected = SelectedFactory.getInstance();
 
 	private SketchController barController;
-	private SketchController bodyController;
-
+	private SketchWizard wizard;
 	
 	public ViewFactoryProvider() {
 		super();
@@ -44,9 +44,7 @@ public class ViewFactoryProvider implements IViewFactory<Composite, Composite>{
 			barController.setBrowser( Pages.BAR );
 			break;
 		case BODY:
-			browser = new Browser( parent, style );
-			bodyController = new SketchController( browser );
-			bodyController.setBrowser( Pages.BODY );
+			wizard = new SketchWizard( parent, style );
 			break;
 		default:
 			break;

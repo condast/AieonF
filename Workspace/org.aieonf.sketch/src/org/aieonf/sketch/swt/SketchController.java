@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.filter.WildcardFilter;
-import org.aieonf.commons.filter.HierarchicalFilter.HierarchyRules;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.filter.AttributeFilter;
@@ -28,7 +27,10 @@ public class SketchController extends AbstractJavascriptController {
 
 	public enum Pages{
 		BAR,
-		BODY;
+		INTRO,
+		SEARCH,
+		SHOW,
+		EDIT;
 
 		@Override
 		public String toString() {

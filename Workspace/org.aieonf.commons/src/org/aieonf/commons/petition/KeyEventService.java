@@ -12,6 +12,10 @@ public class KeyEventService<T,U>
 	{
 		this.listeners = new ArrayList<IKeyEventListener<T,U>>();
 	}
+	
+	public void clear(){
+		this.listeners.clear();
+	}
 
 	public void addListener( IKeyEventListener<T,U> listener ){
 		this.listeners.add(listener);
