@@ -41,7 +41,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	private Vertex root;
 	private String source;
 	
-	private Collection<IModelBuilderListener> listeners;
+	private Collection<IModelBuilderListener<U>> listeners;
 	
 	public AbstractOrientGraphModel( ILoaderAieon loader ) {
 		//IPasswordAieon password = new PasswordAieon( loader );
@@ -50,7 +50,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		source = ProjectFolderUtils.getDefaultUserDir(loader, true).toString();
 		source = source.replace( S_FILE, S_LOCAL);
 		factory = new OrientGraphFactory( source, user, pwd ).setupPool(1,10);
-		listeners = new ArrayList<IModelBuilderListener>();
+		listeners = new ArrayList<IModelBuilderListener<U>>();
 		this.setup();
 	}
 
@@ -68,17 +68,17 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	}
 
 	@Override
-	public void addListener( IModelBuilderListener listener ){
+	public void addListener( IModelBuilderListener<U> listener ){
 		this.listeners.add( listener );
 	}
 
 	@Override
-	public void removeListener( IModelBuilderListener listener ){
+	public void removeListener( IModelBuilderListener<U> listener ){
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent event ){
-		for( IModelBuilderListener listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<U> event ){
+		for( IModelBuilderListener<U> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 	

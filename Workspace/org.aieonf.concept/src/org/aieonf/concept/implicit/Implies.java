@@ -1,6 +1,5 @@
 package org.aieonf.concept.implicit;
 
-import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 
 /**

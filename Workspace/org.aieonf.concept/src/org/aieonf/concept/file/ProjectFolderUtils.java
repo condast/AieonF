@@ -24,6 +24,7 @@ public class ProjectFolderUtils {
 	public static final String S_USER_HOME_PROPERTY = "user.home";
 	public static final String S_JXTA_CACHE = "cache";
 	
+	public static final String S_SAIGHT_ROOT = "${saight.root}";
 	public static final String S_USER_HOME = "${user.home}";
 	public static final String S_BUNDLE_ID = "${bundle-id}";
 	
@@ -61,6 +62,16 @@ public class ProjectFolderUtils {
 	 * @param aieon
 	 * @return 
 	 */
+	public static URI getDefaultResource( String bundle_id, String resource )
+	{
+		return getParsedUserDir( resource, bundle_id);
+	}
+
+	/**
+	 * Return the default template directory. This is '%system-user%\.saight\Templates\'
+	 * @param aieon
+	 * @return 
+	 */
 	public static File getDefaultTemplateFolder( String bundle_id, String folder )
 	{
 		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator +
@@ -76,6 +87,7 @@ public class ProjectFolderUtils {
 	public static URI getParsedUserDir( String str, String bundle_id )
 	{
 		String parsed = str.replace( S_USER_HOME, "");
+		parsed = parsed.replace( S_SAIGHT_ROOT, "");
 		parsed = parsed.replace( S_BUNDLE_ID, "");
 		if( parsed.equals(str))
 			return URI.create( str );
@@ -87,6 +99,11 @@ public class ProjectFolderUtils {
 				continue;
 			if( line.equals( S_USER_HOME ))
 				buffer.append( System.getProperty( S_USER_HOME_PROPERTY ));
+			else if( line.equals( S_SAIGHT_ROOT )){
+				buffer.append( System.getProperty( S_USER_HOME_PROPERTY ));
+				buffer.append( File.separator );
+				buffer.append( S_SAIGHT );
+			}	
 			else if( line.equals( S_BUNDLE_ID ))
 				buffer.append( bundle_id );
 			else
