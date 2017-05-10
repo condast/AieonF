@@ -1,12 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: OrientDB Server
+Bundle-Name: OrientDB Server 2.16
 Bundle-SymbolicName: org.aieonf.orientdb
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/provider.xml
-Import-Package: com.tinkerpop.blueprints,
+Import-Package: com.orientechnologies.orient.server;version="2.2.19",
+ com.tinkerpop.blueprints,
+ com.tinkerpop.blueprints.impls.orient;version="2.2.19",
  org.aieonf.commons,
  org.aieonf.commons.filter,
  org.aieonf.commons.graph,
@@ -16,11 +18,9 @@ Import-Package: com.tinkerpop.blueprints,
  org.aieonf.concept.body,
  org.aieonf.concept.context,
  org.aieonf.concept.core,
- org.aieonf.concept.domain,
  org.aieonf.concept.file,
  org.aieonf.concept.loader,
  org.aieonf.concept.locator,
- org.aieonf.concept.security,
  org.aieonf.graph,
  org.aieonf.model,
  org.aieonf.model.builder,
@@ -38,11 +38,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/jna-4.0.0.jar,
  .,
  lib/jna-platform-4.0.0.jar,
- lib/concurrentlinkedhashmap-lru-1.4.1.jar,
- lib/orientdb-enterprise-2.1.16.jar,
- lib/orientdb-server-2.1.16.jar,
- lib/orientdb-client-2.1.16.jar,
- lib/orientdb-core-2.1.16.jar,
- lib/orientdb-graphdb-2.1.16.jar,
- lib/pipes-2.6.0.jar
-Require-Bundle: org.aieonf.tinkerpop;bundle-version="1.0.0"
+ lib/concurrentlinkedhashmap-lru-1.4.1.jar
