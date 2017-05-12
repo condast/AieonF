@@ -34,6 +34,28 @@ public class ProjectFolderUtils {
 	public static final String S_FILE = "file:";
 
 	/**
+	 * Return the default root file for the given bundle. This is '%system-user%\%bundle-id%\'
+	 * @param aieon
+	 * @return
+	 */
+	public static URI getDefaultRoot( String bundleId )
+	{
+		File file = getDefaultRootFolder(bundleId);
+		return file.toURI();
+	}
+
+	
+	/**
+	 * Return the default root file for the given bundle. This is '%system-user%\%bundle-id%\'
+	 * @param aieon
+	 * @return
+	*/
+	public static File getDefaultRootFolder( String bundleId )
+	{
+		return new File( S_SAIGHT + File.separator + bundleId + File.separator);
+	}
+
+	/**
 	 * Return the default user directory. This is '%system-user%\<organisation>\'
 	 * @param aieon
 	 * @return
@@ -64,7 +86,7 @@ public class ProjectFolderUtils {
 	 */
 	public static URI getDefaultResource( String bundle_id, String resource )
 	{
-		return getParsedUserDir( resource, bundle_id);
+		return getParsedAieonFDir( resource, bundle_id);
 	}
 
 	/**
@@ -84,7 +106,7 @@ public class ProjectFolderUtils {
 	 * @param aieon
 	 * @return
 	 */
-	public static URI getParsedUserDir( String str, String bundle_id )
+	public static URI getParsedAieonFDir( String str, String bundle_id )
 	{
 		String parsed = str.replace( S_USER_HOME, "");
 		parsed = parsed.replace( S_SAIGHT_ROOT, "");

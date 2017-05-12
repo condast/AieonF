@@ -58,7 +58,7 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 			IModelNode<? extends IDescriptor> category = (IModelNode<? extends IDescriptor>) template.getChildren().iterator().next();
 			IModelLeaf<? extends IDescriptor> child = category.getChildren().iterator().next();
 			IConcept loader = new ConceptWrapper( child.getDescriptor() );
-			URI uri = ProjectFolderUtils.getParsedUserDir( loader.getURIPath(), S_BUNDLE_ID );
+			URI uri = ProjectFolderUtils.getParsedAieonFDir( loader.getURIPath(), S_BUNDLE_ID );
 			File file = new File( uri.getPath() );
 			if( !file.exists() )
 				file.mkdirs();

@@ -6,7 +6,12 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/provider.xml
-Import-Package: com.orientechnologies.orient.server;version="2.2.19",
+Import-Package: com.orientechnologies.orient.core.db;version="2.2.19",
+ com.orientechnologies.orient.core.db.document;version="2.2.19",
+ com.orientechnologies.orient.core.record;version="2.2.19",
+ com.orientechnologies.orient.core.record.impl;version="2.2.19",
+ com.orientechnologies.orient.core.sql.query;version="2.2.19",
+ com.orientechnologies.orient.server;version="2.2.19",
  com.tinkerpop.blueprints,
  com.tinkerpop.blueprints.impls.orient;version="2.2.19",
  org.aieonf.commons,
