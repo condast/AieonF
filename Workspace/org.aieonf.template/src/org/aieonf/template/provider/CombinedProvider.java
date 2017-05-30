@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
@@ -59,16 +60,16 @@ public class CombinedProvider<U extends Object> implements IModelProvider<U>
 	}
 	
 	@Override
-	public void open() {
+	public void open( IDomainAieon domain) {
 		for( IModelProvider<U> provider: this.providers ){
-			provider.open();
+			provider.open( domain );
 		}
 	}
 
 	@Override
-	public boolean isOpen() {
+	public boolean isOpen( IDomainAieon domain) {
 		for( IModelProvider<U> provider: this.providers ){
-			if( provider.isOpen())
+			if( provider.isOpen( domain ))
 				return true;
 		}
 		return false;
@@ -76,24 +77,33 @@ public class CombinedProvider<U extends Object> implements IModelProvider<U>
 
 
 	@Override
-	public void close() {
+	public void close( IDomainAieon domain ) {
 		for( IModelProvider<U> provider: this.providers ){
-			provider.close();
+			provider.close( domain );
 		}
 	}
 
 	@Override
-	public void addListener(IModelBuilderListener listener) {
+	public void addListener(IModelBuilderListener<U> listener) {
 		for( IModelProvider<U> provider: this.providers ){
 			provider.addListener(listener);
 		}
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener listener) {
+	public void removeListener(IModelBuilderListener<U> listener) {
 		for( IModelProvider<U> provider: this.providers ){
 			provider.removeListener(listener);
 		}
+	}
+
+	@Override
+	public boolean hasFunction(String function) {
+		for( IModelProvider<U> provider: this.providers ){
+			if( provider.hasFunction(function))
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -123,7 +133,7 @@ public class CombinedProvider<U extends Object> implements IModelProvider<U>
 		Collection<U> results = new ArrayList<U>();
 		for( IModelProvider<U> provider: this.providers ){
 			try{
-				if( !provider.isOpen())
+				if( !provider.isOpen( null))
 					continue;
 				Collection<U> temp = provider.search( filter );
 				if(( temp != null ) && ( !temp.isEmpty() ))

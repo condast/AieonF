@@ -2,6 +2,7 @@ package org.condast.aieonf.browsersupport.service;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.provider.IModelDelegate;
 import org.aieonf.model.provider.IModelFunctionProvider;
@@ -35,6 +36,12 @@ public class ServiceComponent implements IModelFunctionProvider<IDescriptor,IMod
 	
 	public void deactivate(){
 		function = null;
+	}
+
+	//Every domain may use this function
+	@Override
+	public boolean supportsDomain(IDomainAieon domain) {
+		return ( domain != null );
 	}
 
 	@Override

@@ -56,6 +56,18 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 		return null;
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public IModelLeaf<? extends IDescriptor>[] getChildren(String name) {
+		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<IModelLeaf<? extends IDescriptor>>();
+		for( IModelLeaf<? extends IDescriptor> model: this.children ){
+			if( model.getDescriptor().getName().equals( name ))
+				results.add( model );
+		}
+		return results.toArray( new IModelLeaf[ results.size() ]);
+	}
+
 	/**
 	 * Returns true if the model has children
 	 * @return

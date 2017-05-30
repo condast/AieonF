@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import org.aieonf.collections.persistence.IFilePersistence;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.library.URLAieon;
@@ -52,18 +53,18 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDescriptor, IMod
 	}
 
 	@Override
-	public void open()
+	public void open( IDomainAieon domain)
 	{
 		root = new File( super.getManifest().getSource() );
 		if( root.isDirectory())
-			super.open();
+			super.open( domain );
 		persistence.open();
 	}
 	
 	@Override
-	public void close() {
+	public void close( IDomainAieon domain) {
 		persistence.close();
-		super.close();
+		super.close( domain );
 	}
 
 	@Override

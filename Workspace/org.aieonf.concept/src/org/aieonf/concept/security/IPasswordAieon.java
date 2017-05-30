@@ -3,7 +3,6 @@ package org.aieonf.concept.security;
 import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.core.ConceptException;
 
 public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 {
@@ -41,9 +40,8 @@ public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 	 * Set the user name
 	 *
 	 * @param userName String
-	 * @throws ConceptException
 	 */
-	public abstract void setUserName(String userName) throws ConceptException;
+	public abstract void setUserName(String userName);
 
 	/**
 	 * Get the password of the concept

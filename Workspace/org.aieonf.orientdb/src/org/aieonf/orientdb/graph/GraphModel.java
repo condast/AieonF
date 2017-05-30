@@ -34,6 +34,11 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 		this.template = template;
 	}
 
+	@Override
+	public boolean hasFunction(String function) {
+		return DefaultModels.GRAPH.toString().equals( function );
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public IVertex<T> create() {

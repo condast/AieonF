@@ -65,11 +65,11 @@ public class CacheController<T extends IDescriptor> implements Closeable{
 	}
 
 	public Collection<T> query( String query ){
-		List<ODocument> results = db.query(
-				new OSQLQuery<ODocument>( query )
-				);	
+		//List<ODocument> results = db.query(
+		//		new OSQLQuery<ODocument>( query ), null
+		//		);	
 		
-		return results
+		return null;///results;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class CacheController<T extends IDescriptor> implements Closeable{
 	 * @param descriptor
 	 */
 	public void updateDescriptor( T descriptor ){
-		db.qu
+		//db.qu
 		ODocument doc = new ODocument( descriptor.toString());
 		Iterator<String> iterator = descriptor.iterator();
 		while( iterator.hasNext() ){

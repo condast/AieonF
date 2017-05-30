@@ -11,6 +11,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.sign.SignatureFactory;
 import org.aieonf.model.IModelLeaf;
@@ -94,13 +95,13 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 	}
 
 	@Override
-	public void open(){
+	public void open( IDomainAieon domain){
 		this.requestClose = false;
 		this.open = true;
 	}
 
 	@Override
-	public boolean isOpen() {
+	public boolean isOpen( IDomainAieon domain) {
 		return open;
 	}
 
@@ -131,15 +132,19 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 	public void sync(){}
 
 	@Override
-	public void close(){
+	public void close( IDomainAieon domain ){
 		this.requestClose = true;
 		this.open = false;
 	}
 
-	
+	@Override
+	public boolean hasFunction(String function) {
+		return DefaultModels.PROVIDER.toString().equals( function );
+	}
+
+	//Default no contains.
 	@Override
 	public boolean contains(IModelLeaf<?> leaf) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -168,7 +173,7 @@ public abstract class AbstractModelProvider<U extends IDescriptor,V extends IDes
 	
 	@Override
 	public void deactivate() {
-		this.close();
+		this.close( null);
 	}
 
 	/**

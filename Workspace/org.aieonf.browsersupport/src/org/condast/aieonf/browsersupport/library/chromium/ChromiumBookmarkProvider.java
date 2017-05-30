@@ -24,6 +24,7 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
@@ -53,11 +54,11 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDescriptor, IModel
 
 	
 	@Override
-	public void open() {
+	public void open( IDomainAieon domain) {
 		URI uri = super.getManifest().getURI();
 		File file = new File( uri );
 		if( file.exists() )
-			super.open();
+			super.open( domain );
 	}
 
 	@Override

@@ -87,6 +87,22 @@ public class OrientDBNode<T extends IDescriptor> extends ModelLeaf<T> implements
 		return children;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public IModelLeaf<? extends IDescriptor>[] getChildren(String name) {
+		Iterable<Edge> iterable = vertex.getEdges( com.tinkerpop.blueprints.Direction.OUT );
+		Iterator<Edge> iterator = iterable.iterator();
+		Edge edge = null;
+		Collection<IModelLeaf<? extends IDescriptor>> children = new ArrayList<IModelLeaf<? extends IDescriptor>>();
+		while( iterator.hasNext() ){
+			edge = iterator.next();
+			Vertex vtx= edge.getVertex(com.tinkerpop.blueprints.Direction.IN );
+			IModelLeaf<IDescriptor> child = new OrientDBNode<IDescriptor>( graph, vtx ); 
+			children.add( child );
+		}
+		return children.toArray( new IModelLeaf[ children.size() ]);
+	}
+
 	@Override
 	public IModelLeaf<? extends IDescriptor> getChild(IDescriptor descriptor) {
 		Iterable<Edge> iterable = vertex.getEdges( com.tinkerpop.blueprints.Direction.OUT );

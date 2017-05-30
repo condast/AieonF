@@ -13,8 +13,11 @@ import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
+import org.aieonf.concept.security.IPasswordAieon;
+import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.provider.IModelProvider;
@@ -40,20 +43,34 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	private OrientGraph graph;
 	private Vertex root;
 	private String source;
+	private boolean connected;
+	private ILoaderAieon loader;
 	
 	private Collection<IModelBuilderListener<U>> listeners;
 	
 	public AbstractOrientGraphModel( ILoaderAieon loader ) {
-		//IPasswordAieon password = new PasswordAieon( loader );
-		String user = "admin";//password.getUserName();
-		String pwd = "admin";//password.getPassword();
-		source = ProjectFolderUtils.getDefaultUserDir(loader, true).toString();
-		source = source.replace( S_FILE, S_LOCAL);
-		factory = new OrientGraphFactory( source, user, pwd ).setupPool(1,10);
+		this.loader = loader;
 		listeners = new ArrayList<IModelBuilderListener<U>>();
-		this.setup();
+		this.connected = false;
 	}
 
+	/**
+	 * Connect to the database
+	 * @param loader
+	 */
+	protected void connect( ILoaderAieon loader ){
+		if( connected )
+			return;
+		IPasswordAieon password = new PasswordAieon( loader );
+		String user = password.getUserName();
+		String pwd = password.getPassword();
+		source = ProjectFolderUtils.getDefaultUserDir(loader, true).toString();
+		source = source.replace( S_FILE, S_LOCAL);
+		factory = new OrientGraphFactory( source, user, pwd );
+		this.connected = true;
+		this.setup();		
+	}
+	
 	@Override
 	public String getIdentifier(){
 		return S_IDENTIFIER;
@@ -84,10 +101,10 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	
 	protected void setup(){
 		try{
-			this.graph = factory.getTx();//If this doesn't work then changes are that the file location is invalid
 			Set<String> indices = graph.getIndexedKeys( Vertex.class );
 			if( !indices.contains( S_ROOT ))
 				graph.createKeyIndex( S_ROOT, Vertex.class, new Parameter<String, String>("type", "UNIQUE"));
+			this.graph = factory.getTx();//If this doesn't work then changes are that the file location are invalid
 			if( graph.countVertices() == 0 ){
 				graph.addVertex( S_CLASS + S_ROOT  );			
 			}
@@ -103,8 +120,11 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	}
 
 	@Override
-	public void open(){
+	public void open( IDomainAieon domain ){
 		try{
+			this.connect(loader);
+			if(!connected )
+				return;
 			this.graph = factory.getTx();
 			if( graph.countVertices() == 0 ){
 				root = graph.addVertex( S_CLASS + S_ROOT  );		
@@ -120,7 +140,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	}
 
 	@Override
-	public boolean isOpen(){
+	public boolean isOpen( IDomainAieon domain){
 		return !this.graph.isClosed();
 	}
 
@@ -146,10 +166,16 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 
 
 	@Override
-	public void close(){
+	public void close( IDomainAieon domain){
 		this.sync();
 		if( graph != null )
 			graph.shutdown();
+		factory.close();
+	}
+
+	@Override
+	public void deactivate() {
+		factory.close();
 	}
 
 	/**
@@ -251,15 +277,15 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 
 		@Override
 		public void close() {
-			super.getProvider().close();
-			if( !super.getProvider().isOpen())
+			super.getProvider().close( null );
+			if( !super.getProvider().isOpen( null ))
 				super.close();
 		}
 
 		@Override
 		protected boolean onCreate(IModelProvider<U> provider) {
-			super.getProvider().open();
-			return super.getProvider().isOpen();
+			super.getProvider().open( null);
+			return super.getProvider().isOpen( null);
 		}
 	}
 }

@@ -10,11 +10,10 @@ import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.wrapper.ConceptWrapper;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.template.builder.DefaultModelBuilder;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
-public class OrientDBFactory extends AbstractProviderContextFactory<IModelLeaf<IDescriptor>>{
+public class OrientDBFactory extends AbstractProviderContextFactory<IContextAieon>{
 
 	private static final String S_MODEL_ID = "org.aieonf.orientdb";
 	private static final String S_BUNDLE_ID = "org.aieonf.orientdb";
@@ -29,11 +28,6 @@ public class OrientDBFactory extends AbstractProviderContextFactory<IModelLeaf<I
 	
 	public static final OrientDBFactory getInstance(){
 		return factory;
-	}
-
-	@Override
-	protected void onBuildEvent(ModelBuilderEvent<IModelLeaf<IDescriptor>> event) {
-		System.out.println( event.isCompleted());	
 	}
 
 	public File getOrientDBRoot(){

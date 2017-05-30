@@ -9,9 +9,9 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.model.provider.ModelProviderDelegate;
+import org.aieonf.model.provider.ModelDelegate;
 
-public class AsynchronousProviderDelegate<U extends Object> extends ModelProviderDelegate<U> 
+public class AsynchronousProviderDelegate<U extends Object> extends ModelDelegate<U> 
 {
 	private ExecutorService service;
 	
@@ -76,8 +76,8 @@ public class AsynchronousProviderDelegate<U extends Object> extends ModelProvide
 		@Override
 		public void run(){
 			try {
-				provider.open();
-				if( provider.isOpen() ){
+				provider.open( null );
+				if( provider.isOpen( null ) ){
 					Collection<U> models = provider.search( filter );
 					notifyEventChange( new ModelBuilderEvent<U>( provider, models ));
 				}
@@ -86,7 +86,7 @@ public class AsynchronousProviderDelegate<U extends Object> extends ModelProvide
 				notifyEventChange( new ModelBuilderEvent<U>( provider ));
 			}
 			finally{
-				provider.close();
+				provider.close( null );
 			}
 		}
 	}

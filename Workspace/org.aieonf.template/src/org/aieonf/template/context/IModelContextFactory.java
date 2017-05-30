@@ -8,9 +8,9 @@ import org.aieonf.template.ITemplateLeaf;
 
 public interface IModelContextFactory<T extends IDescriptor> {
 
-	public abstract void addListener(IModelBuilderListener<IModelLeaf<?>> listener);
+	public abstract void addListener(IModelBuilderListener<IModelLeaf<T>> listener);
 
-	public abstract void removeListener(IModelBuilderListener<IModelLeaf<?>>  listener);
+	public abstract void removeListener(IModelBuilderListener<IModelLeaf<T>>  listener);
 
 	/**
 	 * Get the domain for this context

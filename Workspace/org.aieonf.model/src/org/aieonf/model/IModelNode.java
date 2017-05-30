@@ -33,6 +33,13 @@ public interface IModelNode<T extends IDescriptor> extends IModelLeaf<T>
 	public IModelLeaf<? extends IDescriptor> getChild( IDescriptor descriptor );
 
 	/**
+	 * Get the children with the given name
+	 * @param name
+	 * @return IModelNode<? extends IDescriptor>
+	*/
+	public IModelLeaf<? extends IDescriptor>[] getChildren( String name );
+
+	/**
 	 * Returns true if the model is a leaf ( has no children )
 	 * @return
 	*/

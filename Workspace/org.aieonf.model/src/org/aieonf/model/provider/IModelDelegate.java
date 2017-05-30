@@ -3,21 +3,25 @@ package org.aieonf.model.provider;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 
-public interface IModelDelegate<U extends Object> {
+/**
+ * A delegate is exactly the same as a provider, but the methods have no return values, to 
+ * indicate the values are returned asynchronously, ad will have to be retrieved by adding
+ * listeners  
+ * @author Kees
+ *
+ * @param <U>
+ */
+public interface IModelDelegate<U extends Object> extends IProvider<U>{
 	
-	public void addListener( IModelBuilderListener<U> listener );
-
-	public void removeListener( IModelBuilderListener<U> listener );
-
-	public void open();
+	/**
+	 * Get the model provider
+	 * @param leaf
+	 * @return
+	 */
+	public IModelProvider<U> getFunction( String function );
 	
-	public boolean isOpen();
-		
-	public void close();
-
 	/**
 	 * Delegates the 'contains' function 
 	 * @param descriptor
@@ -38,9 +42,4 @@ public interface IModelDelegate<U extends Object> {
 	 * @throws ParseException
 	 */
 	public void search( IModelFilter<IDescriptor> filter ) throws ParseException;
-	
-	/**
-	 * Deactivate the function
-	 */
-	public void deactivate();
 }

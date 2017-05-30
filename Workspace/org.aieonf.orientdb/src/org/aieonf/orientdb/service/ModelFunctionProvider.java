@@ -1,28 +1,30 @@
 package org.aieonf.orientdb.service;
 
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModel;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelProvider;
 import org.aieonf.model.builder.IFunctionProvider;
+import org.aieonf.model.function.AbstractFunctionProvider;
+import org.aieonf.model.provider.IModelDelegate;
+import org.aieonf.model.provider.IModelFunctionProvider;
 import org.aieonf.orientdb.graph.GraphModelFunction;
 import org.aieonf.orientdb.tree.TreeModelFunction;
 import org.eclipselabs.osgi.ds.broker.service.AbstractPalaver;
 import org.eclipselabs.osgi.ds.broker.service.AbstractProvider;
 
-public class ModelFunctionProvider extends AbstractProvider<String, Object, IFunctionProvider<ILoaderAieon, ?>> {
+public class ModelFunctionProvider extends AbstractFunctionProvider<IDescriptor, IModelDelegate<IModelLeaf<IDescriptor>>> implements IModelFunctionProvider<IDescriptor,IModelLeaf<IDescriptor>> {
 
 	private static ModelFunctionProvider provider = new ModelFunctionProvider();
 	
 	protected ModelFunctionProvider() {
 		super( new Palaver() );
 	}
-
 	
 	protected static ModelFunctionProvider getInstance() {
 		return provider;
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@Override

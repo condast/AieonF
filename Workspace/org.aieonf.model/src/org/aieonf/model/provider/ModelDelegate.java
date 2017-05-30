@@ -5,13 +5,14 @@ import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U> 
+public class ModelDelegate<U extends Object> implements IModelDelegate<U> 
 {
 	private Collection<IModelProvider<U>> providers;
 	private Collection<IModelBuilderListener<U>> listeners;
@@ -24,11 +25,19 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 		}
 	};
 	
-	public ModelProviderDelegate()
+	public ModelDelegate()
 	{
 		providers = new ArrayList<IModelProvider<U>>();
 		listeners = new ArrayList<IModelBuilderListener<U>>();
 	}
+
+	
+	@Override
+	public String getIdentifier() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	public void addProvider( IModelProvider<U> provider ){
 		provider.addListener(listener);
@@ -46,16 +55,16 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 	}
 
 	@Override
-	public void open() {
+	public void open( IDomainAieon domain ) {
 		for( IModelProvider<U> provider: this.providers ){
-			provider.open();
+			provider.open( domain );
 		}
 	}
 
 	@Override
-	public boolean isOpen() {
+	public boolean isOpen( IDomainAieon domain ) {
 		for( IModelProvider<U> provider: this.providers ){
-			if( provider.isOpen())
+			if( provider.isOpen( domain ))
 				return true;
 		}
 		return false;
@@ -63,9 +72,9 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 
 
 	@Override
-	public void close() {
+	public void close( IDomainAieon domain ) {
 		for( IModelProvider<U> provider: this.providers ){
-			provider.close();
+			provider.close( domain );
 		}
 	}
 
@@ -78,6 +87,25 @@ public class ModelProviderDelegate<U extends Object> implements IModelDelegate<U
 	public void removeListener(IModelBuilderListener<U> listener) {
 		this.listeners.remove( listener );
 	}
+
+	@Override
+	public boolean hasFunction(String function) {
+		for( IModelProvider<U> provider: this.providers ){
+			if( provider.hasFunction(function))
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public IModelProvider<U> getFunction(String function) {
+		for( IModelProvider<U> provider: this.providers ){
+			if( provider.hasFunction(function))
+				return provider;
+		}
+		return null;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	@Override

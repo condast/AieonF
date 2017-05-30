@@ -31,7 +31,7 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 	public void shutdown(){
 		for( IModelBuilderListener listener: super.getListeners() )
 			this.provider.removeListener(listener);
-		provider.close();
+		provider.close( null );
 	}
 
 	/**
@@ -48,7 +48,7 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 				}
 			};
 			provider.addListener(listener);
-			provider.open();
+			provider.open( null );
 			provider.add( this.convertFrom( super.getModel()));
 			provider.removeListener(listener);
 			return true;
@@ -57,7 +57,7 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 			e.printStackTrace();
 		}
 		finally{
-			provider.close();
+			provider.close( null);
 			provider.deactivate();
 		}
 		return false;
@@ -74,7 +74,7 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 				}
 			};
 			provider.addListener(listener);
-			provider.open();
+			provider.open( null);
 			Collection<IVertex<U>> vertices = provider.get( super.getModel().getDescriptor() );
 			for( IVertex<U> vertex: vertices )
 				provider.delete( vertex );
@@ -85,7 +85,7 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 			e.printStackTrace();
 		}
 		finally{
-			provider.close();
+			provider.close( null );
 			provider.deactivate();
 		}
 		return false;
@@ -102,14 +102,14 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 				}
 			};
 			provider.addListener(listener);
-			provider.open();
+			provider.open( null );
 			provider.removeListener(listener);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally{
-			provider.close();
+			provider.close( null );
 			provider.deactivate();
 		}
 	}

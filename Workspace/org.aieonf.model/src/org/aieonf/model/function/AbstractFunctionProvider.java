@@ -9,6 +9,7 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
@@ -33,9 +34,16 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 		return identifier;
 	}
 
-
 	protected IContextAieon getAieon() {
 		return aieon;
+	}
+
+	/**
+	 * By default, no domain is supported
+	 */
+	@Override
+	public boolean supportsDomain(IDomainAieon domain) {
+		return false;
 	}
 
 	@Override

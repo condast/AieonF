@@ -23,6 +23,7 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.model.IModelLeaf;
@@ -55,7 +56,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	}
 
 	@Override
-	public void open()
+	public void open( IDomainAieon domain)
 	{
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -66,7 +67,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 		File file = new File( super.getManifest().getSource() );
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath());
-			super.open();
+			super.open( domain);
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -422,7 +423,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	{
 		if(isPending())
 			return;
-		super.close();
+		super.close( null);
 		try
 		{
 			if(connection != null)
@@ -435,7 +436,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDescriptor, I
 	}
 
 	@Override
-	public void close(){
+	public void close( IDomainAieon domain){
 		super.setRequestClose( true );
 	}
 

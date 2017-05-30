@@ -1,5 +1,6 @@
 package org.aieonf.template;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -47,6 +48,17 @@ public class TemplateNode<T extends IDescriptor>
 				return child;
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IModelLeaf<? extends IDescriptor>[] getChildren(String name) {
+		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<IModelLeaf<? extends IDescriptor>>();
+		for( IModelLeaf<? extends IDescriptor> model: this.children ){
+			if( model.getIdentifier().equals( name ))
+				results.add( model );
+		}
+		return results.toArray( new IModelLeaf[ results.size() ]);
 	}
 
 	@Override

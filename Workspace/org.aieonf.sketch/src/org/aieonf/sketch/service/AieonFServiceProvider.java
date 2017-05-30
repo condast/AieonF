@@ -15,7 +15,6 @@ import org.aieonf.concept.wrapper.ConceptWrapper;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.builder.IFunctionProvider;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.provider.IModelDelegate;
 import org.aieonf.osgi.service.AbstractAieonFServiceProvider;
 import org.aieonf.osgi.swt.IViewFactory;
@@ -42,11 +41,11 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 		modelFactories = new ArrayList<SketchModelFactory>();
 	}
 
-	public void addProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IDescriptor>>> function ){
+	public void addProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IContextAieon>>> function ){
 		this.factory.addProvider(function);
 	}
 	
-	public void removeProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IDescriptor>>> function ){
+	public void removeProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IContextAieon>>> function ){
 		this.factory.removeProvider(function);
 	}
 
@@ -108,16 +107,11 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 	 * The factory contains all the necessary info to create the application
 	 * @author Kees Pieters
 	 */
-	private static class SketchFactory extends AbstractProviderContextFactory<IModelLeaf<IDescriptor>>{
+	private static class SketchFactory extends AbstractProviderContextFactory<IContextAieon>{
 		
 		
 		private SketchFactory() {
 			super( S_MODEL_ID, new DefaultModelBuilder( SketchFactory.class ));
-		}
-
-		@Override
-		protected void onBuildEvent(ModelBuilderEvent<IModelLeaf<IDescriptor>> event) {
-			System.out.println( event.isCompleted());	
 		}
 	}
 }
