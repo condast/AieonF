@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Orientdb Test Package
+Bundle-SymbolicName: test.aieonf.orientdb
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: test.aieonf.orientdb.Activator
+Bundle-Vendor: Condast
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.aieonf.commons.parser,
+ org.aieonf.concept,
+ org.aieonf.concept.context,
+ org.aieonf.concept.core,
+ org.aieonf.concept.domain,
+ org.aieonf.graph,
+ org.aieonf.model,
+ org.aieonf.model.builder,
+ org.aieonf.model.provider,
+ org.aieonf.model.xml,
+ org.aieonf.osgi.service,
+ org.aieonf.template.builder,
+ org.aieonf.template.context,
+ org.condast.commons.service,
+ org.condast.commons.test,
+ org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/provider.xml
