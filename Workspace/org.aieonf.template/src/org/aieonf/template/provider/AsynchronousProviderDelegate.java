@@ -6,12 +6,13 @@ import java.util.concurrent.Executors;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.provider.ModelDelegate;
 
-public class AsynchronousProviderDelegate<U extends Object> extends ModelDelegate<U> 
+public class AsynchronousProviderDelegate<U extends IDescriptor> extends ModelDelegate<IDomainAieon, U> 
 {
 	private ExecutorService service;
 	
@@ -19,32 +20,27 @@ public class AsynchronousProviderDelegate<U extends Object> extends ModelDelegat
 	{
 		service = Executors.newCachedThreadPool();
 	}	
-	
-
+		
 	@Override
-	public void onGet( IModelProvider<U> provider, IDescriptor descriptor){
+	protected void onGet(IModelProvider<IDomainAieon, U> provider, IDescriptor descriptor) {
 		Runnable runnable = new GetRunnable( provider, descriptor );
 		service.execute( runnable);
 	}
 
 	@Override
-	public void onSearch( IModelProvider<U> provider, IModelFilter<IDescriptor> filter){
+	protected void onSearch(IModelProvider<IDomainAieon, U> provider, IModelFilter<IDescriptor> filter) {
 		Runnable runnable = new SearchRunnable( provider, filter );
 		service.execute( runnable);
 	}
-	
-	@Override
-	public void deactivate() {
-		super.deactivate();
-		service.shutdown();
-	}
+
+
 
 	private class GetRunnable implements Runnable{
 
-		private IModelProvider<U> provider;
+		private IModelProvider<IDomainAieon,U> provider;
 		private IDescriptor descriptor;
 		
-		GetRunnable( IModelProvider<U> provider, IDescriptor descriptor ) {
+		GetRunnable( IModelProvider<IDomainAieon,U> provider, IDescriptor descriptor ) {
 			super();
 			this.provider = provider;
 			this.descriptor = descriptor;
@@ -64,10 +60,10 @@ public class AsynchronousProviderDelegate<U extends Object> extends ModelDelegat
 
 	private class SearchRunnable implements Runnable{
 
-		private IModelProvider<U> provider;
+		private IModelProvider<IDomainAieon, U> provider;
 		private IModelFilter<IDescriptor> filter;
 		
-		SearchRunnable( IModelProvider<U> provider, IModelFilter<IDescriptor> filter ) {
+		SearchRunnable( IModelProvider<IDomainAieon,U> provider, IModelFilter<IDescriptor> filter ) {
 			super();
 			this.provider = provider;
 			this.filter = filter;

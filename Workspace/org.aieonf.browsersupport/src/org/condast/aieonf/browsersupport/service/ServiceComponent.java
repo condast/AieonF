@@ -7,26 +7,24 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.provider.IModelDelegate;
 import org.aieonf.model.provider.IModelFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.osgi.service.AbstractServiceComponent;
 import org.aieonf.template.ITemplateLeaf;
 import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
 
-public class ServiceComponent implements IModelFunctionProvider<IDescriptor,IModelLeaf<IDescriptor>>
+public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IDescriptor>
 {
 
-	//private ActiveLinkProvider activeLinkProvider;
-	//private ModelFunctionProvider mf_provider;
-	private IModelFunctionProvider<IDescriptor,IModelLeaf<IDescriptor>> function;
+	private IModelFunctionProvider<IContextAieon, IDescriptor> function;
 	
 	public ServiceComponent()
 	{
-		super();
+		super( new ContextFactory());
 	}
 
 	public void activate(){
 		try{
-			ContextFactory factory = new ContextFactory();
-			ITemplateLeaf<IContextAieon> template = factory.createTemplate();
+			ITemplateLeaf<IContextAieon> template = super.getFactory().createTemplate();
 			function = new ModelFunctionProvider( template.getDescriptor() );
 		}
 		catch( Exception ex ){
@@ -44,16 +42,17 @@ public class ServiceComponent implements IModelFunctionProvider<IDescriptor,IMod
 		return ( domain != null );
 	}
 
+	
 	@Override
-	public boolean canProvide(IModelLeaf<IDescriptor> leaf) {
-		return ( function != null ) && ( IModelProvider.S_MODEL_PROVIDER_ID.equals( leaf.getID()));
+	public boolean canProvide(IContextAieon data) {
+		return ( function != null ) && ( IModelProvider.S_MODEL_PROVIDER_ID.equals( data ));
 	}
 
 	@Override
-	public IModelDelegate<IModelLeaf<IDescriptor>> getFunction(IModelLeaf<IDescriptor> leaf) {
-		if( !canProvide(leaf))
+	public IModelDelegate<IContextAieon, IDescriptor> getFunction(IContextAieon context) {
+		if( !canProvide(context))
 			return null;
-		return function.getFunction(leaf);
+		return function.getFunction( context );
 	}
 
 	protected void initialise() {

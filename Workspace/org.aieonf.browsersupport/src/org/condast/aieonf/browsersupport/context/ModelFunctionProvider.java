@@ -2,6 +2,7 @@ package org.condast.aieonf.browsersupport.context;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelDelegate;
@@ -12,7 +13,7 @@ import org.condast.aieonf.browsersupport.library.chromium.ChromiumModelFunctionP
 import org.condast.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.condast.aieonf.browsersupport.library.ie.IEFavoritesFunction;
 
-public class ModelFunctionProvider extends AbstractFunctionProvider<IDescriptor, IModelDelegate<IModelLeaf<IDescriptor>>> implements IModelFunctionProvider<IDescriptor,IModelLeaf<IDescriptor>>{
+public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, IModelDelegate<IContextAieon, IDescriptor>> implements IModelFunctionProvider<IContextAieon,IDescriptor>{
 
 	private ChromiumModelFunctionProvider cmf;
 	private FireFoxModelFunction ffmf;
@@ -24,18 +25,18 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IDescriptor,
 		ffmf = new FireFoxModelFunction( context );
 		ieff = new IEFavoritesFunction(context);
 	}
-
 	
 	@Override
-	public boolean canProvide(IModelLeaf<IDescriptor> leaf) {
-		if( !super.canProvide(S_FUNCTION_PROVIDER_ID, leaf))
+	public boolean canProvide( IContextAieon data ) {
+		if( !super.canProvide(S_FUNCTION_PROVIDER_ID, data))
 			return false;
-		return cmf.canProvide(leaf) || ffmf.canProvide(leaf) || ieff.canProvide(leaf);
+		return cmf.canProvide(data) || ffmf.canProvide(data) || ieff.canProvide(data);
 	}
 
+
 	@Override
-	protected IModelDelegate<IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<IDescriptor> leaf) {
-		ModelDelegate<IModelLeaf<IDescriptor>> delegate = new AsynchronousProviderDelegate<IModelLeaf<IDescriptor>>();
+	public IModelDelegate<IContextAieon, IDescriptor> getFunction(IContextAieon data) {
+		ModelDelegate<IDomainAieon, IDescriptor> delegate = new AsynchronousProviderDelegate<IDescriptor>();
 		if( cmf.canProvide(leaf))
 			delegate.addProvider( cmf.getFunction(leaf));
 		if( ffmf.canProvide(leaf))

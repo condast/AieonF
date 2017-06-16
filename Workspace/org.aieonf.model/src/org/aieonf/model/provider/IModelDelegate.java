@@ -2,7 +2,7 @@ package org.aieonf.model.provider;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 
 /**
@@ -13,28 +13,35 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <U>
  */
-public interface IModelDelegate<U extends Object> extends IProvider<U>{
-	
+public interface IModelDelegate<T extends IDescriptor, U extends IDescriptor>{
+
 	/**
-	 * Get the model provider
-	 * @param leaf
-	 * @return
+	 * Open the delegate
+	 * @param domain
 	 */
-	public IModelProvider<U> getFunction( String function );
+	public void open( T domain );
 	
+	public boolean isOpen( T domain );
+		
+	/**
+	 * clse it
+	 * @param domain
+	 */
+	public void close( T domain );
+
 	/**
 	 * Delegates the 'contains' function 
 	 * @param descriptor
 	 * @return
 	 */
-	public void contains( IModelLeaf<? extends IDescriptor> leaf );
+	public void contains( U descriptor );
 
 	/**
 	 * Delegates the get function
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public void get( IDescriptor descriptor ) throws ParseException;
+	public void get( U descriptor ) throws ParseException;
 
 	/**
 	 * Delegates the serach function
@@ -42,4 +49,16 @@ public interface IModelDelegate<U extends Object> extends IProvider<U>{
 	 * @throws ParseException
 	 */
 	public void search( IModelFilter<IDescriptor> filter ) throws ParseException;
+
+	/**
+	 * Add a change listener
+	 * @param listener
+	 */
+	void addListener(IModelBuilderListener<U> listener);
+
+	/**
+	 * Remove a listener
+	 * @param listener
+	 */
+	void removeListener(IModelBuilderListener<U> listener);
 }

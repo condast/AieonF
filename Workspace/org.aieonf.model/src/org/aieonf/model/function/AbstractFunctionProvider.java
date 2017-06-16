@@ -45,12 +45,12 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 	public boolean supportsDomain(IDomainAieon domain) {
 		return false;
 	}
-
+	
 	@Override
-	public U getFunction(IModelLeaf<T> leaf) {
-		if( !canProvide(leaf))
+	public U getFunction(T descriptor) {
+		if( !canProvide(descriptor))
 			return null;
-		return onCreateFunction(leaf );
+		return onCreateFunction(descriptor );
 	}
 
 	/**
@@ -59,7 +59,7 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 	 * @param leaf
 	 * @return
 	 */
-	protected static boolean canProvide( String identifier, IModelLeaf<?> leaf) {
+	protected static boolean canProvide( String identifier ) {
 		return S_FUNCTION_PROVIDER_ID.equals(identifier);
 	}
 
@@ -67,20 +67,20 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 	 * Create the access
 	 * @return
 	 */
-	protected abstract U onCreateFunction( IModelLeaf<T> leaf ); 
+	protected abstract U onCreateFunction( T descriptor); 
 
 	/**
 	 * Create a default loader for the given leaf
 	 * @param leaf
 	 * @return
 	 */
-	protected static ILoaderAieon getDefaultLoader( IModelLeaf<?> leaf){
+	protected static ILoaderAieon getDefaultLoader( IContextAieon context ){
 		LoaderAieon loader = new LoaderAieon();
 		loader.setAieonCreatorClass( ILoaderAieon.class );
 		loader.setIdentifier( loader.getScope().toString());
 		loader.setStoreInternal( true );
 		loader.setIdentifier( IModelLeaf.S_MODEL );
-		loader.set( IDescriptor.Attributes.NAME, leaf.getDescriptor().get( IConcept.Attributes.SOURCE ));
+		loader.set( IDescriptor.Attributes.NAME, context.get( IConcept.Attributes.SOURCE ));
 		loader.setVersion(1);
 		loader.setEncryptionAlgorithm( Algorithms.AES );
 		loader.setEncryptionKey( S_DEFAULT_ENVRYPTION_KEY );
@@ -92,24 +92,22 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 	 * @param leaf
 	 * @return
 	 */
-	protected static IModelLeaf<IDescriptor> getDefaultModel( IModelLeaf<?> leaf){
-		ILoaderAieon loader = getDefaultLoader( leaf );
-		return getModelForLoader(loader, leaf);
+	protected static IModelLeaf<IDescriptor> getDefaultModel( IContextAieon context ){
+		ILoaderAieon loader = getDefaultLoader( context );
+		return getModelForLoader(loader, context);
 	}
 
 	/**
 	 * Create a model for the given loader, extended with the given leaf
 	 * @param loader
-	 * @param leaf
+	 * @param context
 	 * @return
 	 */
-	protected static IModelLeaf<IDescriptor> getModelForLoader( ILoaderAieon loader, IModelLeaf<?> leaf){
-		Descriptor.overwrite( loader, leaf.getDescriptor() );
+	protected static IModelLeaf<IDescriptor> getModelForLoader( ILoaderAieon loader, IContextAieon context ){
+		Descriptor.overwrite( loader, context.getDescriptor() );
 		IModelLeaf<IDescriptor> model = new ModelLeaf<IDescriptor>( loader );
-		if( !Utils.assertNull( leaf.getIdentifier()))
-			model.setIdentifier( leaf.getIdentifier() );
-		if( !Utils.assertNull( leaf.getID()))
-			model.setIdentifier( leaf.getID() );
+		if( !Utils.assertNull( context.getID()))
+			model.setIdentifier( context.getID() );
 		return model;
 	}
 

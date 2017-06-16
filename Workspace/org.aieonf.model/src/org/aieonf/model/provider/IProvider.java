@@ -1,6 +1,5 @@
 package org.aieonf.model.provider;
 
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 
 /**
@@ -95,12 +94,6 @@ public interface IProvider<U extends Object> {
 	public void addListener( IModelBuilderListener<U> listener );
 
 	public void removeListener( IModelBuilderListener<U> listener );
-
-	public void open( IDomainAieon domain );
-	
-	public boolean isOpen( IDomainAieon domain );
-		
-	public void close( IDomainAieon domain );
 	
 	
 	/**

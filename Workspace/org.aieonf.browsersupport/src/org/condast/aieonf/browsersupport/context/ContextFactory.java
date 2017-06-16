@@ -54,4 +54,10 @@ public class ContextFactory extends AbstractProviderContextFactory<IContextAieon
 		logger.info( "Getting source " + loader.getSource() );	
 		return new ManifestAieon( loader );
 	}
+
+	@Override
+	public boolean hasFunction(String function) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

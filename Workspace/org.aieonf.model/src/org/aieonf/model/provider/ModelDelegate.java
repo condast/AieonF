@@ -6,64 +6,62 @@ import java.util.Collection;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ModelDelegate<U extends Object> implements IModelDelegate<U> 
+public class ModelDelegate<D extends IDomainAieon, T extends IDescriptor> implements IModelDelegate<D, T> 
 {
-	private Collection<IModelProvider<U>> providers;
-	private Collection<IModelBuilderListener<U>> listeners;
+	private Collection<IModelProvider<IDomainAieon, T>> providers;
+	private Collection<IModelBuilderListener<T>> listeners;
 	
-	private IModelBuilderListener<U> listener = new IModelBuilderListener<U>() {
+	private IModelBuilderListener<T> listener = new IModelBuilderListener<T>() {
 		
 		@Override
-		public void notifyChange(ModelBuilderEvent<U> event) {
-			notifyEventChange(event);;
+		public void notifyChange(ModelBuilderEvent<T> event) {
+			notifyEventChange(event);
 		}
 	};
 	
 	public ModelDelegate()
 	{
-		providers = new ArrayList<IModelProvider<U>>();
-		listeners = new ArrayList<IModelBuilderListener<U>>();
+		providers = new ArrayList<IModelProvider<IDomainAieon, T>>();
+		listeners = new ArrayList<IModelBuilderListener<T>>();
 	}
 
 	
-	@Override
-	public String getIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public void addProvider( IModelProvider<U> provider ){
-		provider.addListener(listener);
+	public void addProvider( IModelProvider<IDomainAieon, T> provider ){
 		this.providers.add( provider );
 	}
 
-	public void removeProvider( IModelProvider<U> provider ){
-		provider.removeListener(listener);
+	public void removeProvider( IModelProvider<IDomainAieon, T> provider ){
 		this.providers.remove( provider );
 	}
 
-	protected void notifyEventChange( ModelBuilderEvent<U> event ) {
-		for( IModelBuilderListener<U> mbl: listeners )
-			mbl.notifyChange( new ModelBuilderEvent<U>( this, event.getModel() ));
+	@Override
+	public void addListener(IModelBuilderListener<T> listener) {
+		this.listeners.add( listener );	
 	}
 
 	@Override
+	public void removeListener(IModelBuilderListener<T> listener) {
+		this.listeners.remove( listener );
+	}
+
+	protected void notifyEventChange( ModelBuilderEvent<T> event ) {
+		for( IModelBuilderListener<T> mbl: listeners )
+			mbl.notifyChange( new ModelBuilderEvent<T>( this, event.getModel() ));
+	}
+
 	public void open( IDomainAieon domain ) {
-		for( IModelProvider<U> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			provider.open( domain );
 		}
 	}
 
-	@Override
 	public boolean isOpen( IDomainAieon domain ) {
-		for( IModelProvider<U> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			if( provider.isOpen( domain ))
 				return true;
 		}
@@ -71,26 +69,61 @@ public class ModelDelegate<U extends Object> implements IModelDelegate<U>
 	}
 
 
-	@Override
 	public void close( IDomainAieon domain ) {
-		for( IModelProvider<U> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			provider.close( domain );
 		}
 	}
 
 	@Override
-	public void addListener(IModelBuilderListener<U> listener) {
-		this.listeners.add( listener );	
+	public void contains( T descriptor) {
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+			if( provider.contains( descriptor )){
+				listener.notifyChange( new ModelBuilderEvent<T>( provider, descriptor ));
+			}
+		}
+		listener.notifyChange( new ModelBuilderEvent<T>( this ));
 	}
 
+	protected void onGet( IModelProvider<IDomainAieon, T> provider, IDescriptor descriptor ){
+		try {
+			provider.get(descriptor);
+			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			listener.notifyChange( new ModelBuilderEvent<T>( provider ));
+		}
+	}
+	
 	@Override
-	public void removeListener(IModelBuilderListener<U> listener) {
-		this.listeners.remove( listener );
+	public synchronized void get(IDescriptor descriptor)
+			throws ParseException {
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+			this.onGet(provider, descriptor);
+		}
 	}
 
+	protected void onSearch( IModelProvider<IDomainAieon, T> provider, IModelFilter<IDescriptor> filter ){
+		try {
+			provider.search( filter );
+			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			listener.notifyChange( new ModelBuilderEvent<T>( provider ));
+		}
+	}
+	@Override
+	public synchronized void search( IModelFilter<IDescriptor> filter) throws ParseException {
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+			this.onSearch(provider, filter);
+		}
+	}
+	
+	/*	
+	
 	@Override
 	public boolean hasFunction(String function) {
-		for( IModelProvider<U> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			if( provider.hasFunction(function))
 				return true;
 		}
@@ -98,8 +131,8 @@ public class ModelDelegate<U extends Object> implements IModelDelegate<U>
 	}
 
 	@Override
-	public IModelProvider<U> getFunction(String function) {
-		for( IModelProvider<U> provider: this.providers ){
+	public IModelProvider<IDomainAieon, T> getFunction(String function) {
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			if( provider.hasFunction(function))
 				return provider;
 		}
@@ -107,55 +140,11 @@ public class ModelDelegate<U extends Object> implements IModelDelegate<U>
 	}
 
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void contains(IModelLeaf<? extends IDescriptor> leaf) {
-		for( IModelProvider<U> provider: this.providers ){
-			if( provider.contains(leaf)){
-				listener.notifyChange( new ModelBuilderEvent<U>( provider, (U) leaf ));
-			}
-		}
-		listener.notifyChange( new ModelBuilderEvent<U>( this ));
-	}
-
-	protected void onGet( IModelProvider<U> provider, IDescriptor descriptor ){
-		try {
-			provider.get(descriptor);
-			listener.notifyChange( new ModelBuilderEvent<U>( provider, null, true ));
-		} catch (ParseException e) {
-			e.printStackTrace();
-			listener.notifyChange( new ModelBuilderEvent<U>( provider ));
-		}
-	}
-	
-	@Override
-	public synchronized void get(IDescriptor descriptor)
-			throws ParseException {
-		for( IModelProvider<U> provider: this.providers ){
-			this.onGet(provider, descriptor);
-		}
-	}
-
-	protected void onSearch( IModelProvider<U> provider, IModelFilter<IDescriptor> filter ){
-		try {
-			provider.search( filter );
-			listener.notifyChange( new ModelBuilderEvent<U>( provider, null, true ));
-		} catch (ParseException e) {
-			e.printStackTrace();
-			listener.notifyChange( new ModelBuilderEvent<U>( provider ));
-		}
-	}
-	@Override
-	public synchronized void search( IModelFilter<IDescriptor> filter) throws ParseException {
-		for( IModelProvider<U> provider: this.providers ){
-			this.onSearch(provider, filter);
-		}
-	}
-	
 	@Override
 	public void deactivate() {
 		for( IModelProvider<U> provider: this.providers ){
 			provider.deactivate();
 		}
 	}
+	*/
 }

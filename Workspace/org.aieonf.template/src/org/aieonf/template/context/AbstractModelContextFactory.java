@@ -21,17 +21,17 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 
 	private ITemplateLeaf<T> template;
 
-	private Collection<IModelBuilderListener<IModelLeaf<T>>> listeners;
+	private Collection<IModelBuilderListener<T>> listeners;
 
 	protected AbstractModelContextFactory() {
-		listeners = new ArrayList<IModelBuilderListener<IModelLeaf<T>>>();
+		listeners = new ArrayList<IModelBuilderListener<T>>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IModelContextFactory#addListener(org.aieonf.model.builder.IModelBuilderListener)
 	 */
 	@Override
-	public void addListener( IModelBuilderListener<IModelLeaf<T>> listener ){
+	public void addListener( IModelBuilderListener<T> listener ){
 		this.listeners.add( listener );
 	}
 
@@ -39,12 +39,12 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 * @see org.aieonf.template.context.IModelContextFactory#removeListener(org.aieonf.model.builder.IModelBuilderListener)
 	 */
 	@Override
-	public void removeListener( IModelBuilderListener<IModelLeaf<T>>  listener ){
+	public void removeListener( IModelBuilderListener<T>  listener ){
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<IModelLeaf<T>>  event ){
-		for( IModelBuilderListener<IModelLeaf<T>>  listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<T>  event ){
+		for( IModelBuilderListener<T>  listener: this.listeners )
 			listener.notifyChange(event);
 	}
 

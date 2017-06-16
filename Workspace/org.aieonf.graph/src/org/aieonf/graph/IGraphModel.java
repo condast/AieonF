@@ -1,6 +1,6 @@
 package org.aieonf.graph;
 
-import org.aieonf.template.IWriteModelProvider;
+import org.aieonf.model.provider.IWriteModelProvider;
 
 public interface IGraphModel<U extends Object> extends IWriteModelProvider<U>{
 

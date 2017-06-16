@@ -7,8 +7,27 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 
-public interface IModelProvider<U extends Object> extends IProvider<U>{
+/**
+ * A model provider provides a function to get models.
+ * @author Kees
+ *
+ * @param <U>
+ */
+public interface IModelProvider<T extends IDescriptor, U extends IDescriptor> extends IProvider<IModelLeaf<U>>{
 
+	/**
+	 * Open the delegate
+	 * @param domain
+	 */
+	public void open( T domain );
+	
+	public boolean isOpen( T domain );
+		
+	/**
+	 * clse it
+	 * @param domain
+	 */
+	public void close( T domain );
 	
 	/**
 	 * Sync the actual model with the database
@@ -20,7 +39,7 @@ public interface IModelProvider<U extends Object> extends IProvider<U>{
 	 * @param descriptor
 	 * @return
 	 */
-	public boolean contains( IModelLeaf<? extends IDescriptor> leaf );
+	public boolean contains( U leaf );
 
 	/**
 	 * Get the models conforming to the given descriptor. Use the model builder
@@ -28,7 +47,7 @@ public interface IModelProvider<U extends Object> extends IProvider<U>{
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<U> get( IDescriptor descriptor ) throws ParseException;
+	public Collection<IModelLeaf<U>> get( IDescriptor descriptor ) throws ParseException;
 
 	/**
 	 * Get the models conforming to the given descriptor. Use the model builder
@@ -36,7 +55,7 @@ public interface IModelProvider<U extends Object> extends IProvider<U>{
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<U> search( IModelFilter<IDescriptor> filter ) throws ParseException;
+	public Collection<IModelLeaf<U>> search( IModelFilter<IDescriptor> filter ) throws ParseException;
 	
 	/**
 	 * Deactivate the function

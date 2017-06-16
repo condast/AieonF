@@ -4,6 +4,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
+import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelDelegate;
 import org.aieonf.model.provider.IModelFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
@@ -16,7 +17,7 @@ import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.TemplateNodeWrapper;
 import org.aieonf.template.provider.AsynchronousProviderDelegate;
 
-public class ServiceComponent extends AbstractServiceComponent implements IModelFunctionProvider<IDescriptor,IModelLeaf<IDescriptor>>
+public class ServiceComponent extends AbstractServiceComponent<IDescriptor>
 {
 	public ServiceComponent() {
 		super( OrientDBFactory.getInstance() );
@@ -29,7 +30,7 @@ public class ServiceComponent extends AbstractServiceComponent implements IModel
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public IModelDelegate<IModelLeaf<IDescriptor>> getFunction(IModelLeaf<IDescriptor> leaf) {
+	public IModelDatabase<IDescriptor> getFunction( IDescriptor leaf) {
 		ITemplateLeaf<IContextAieon> template = new TemplateNodeWrapper<IContextAieon>( leaf );
 		IModelProvider<IModelLeaf<IDescriptor>> provider = null;
 		if(!DefaultModels.isValid( leaf.getID() ))

@@ -1,10 +1,9 @@
 package org.aieonf.model.builder;
 
-import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.IModelLeaf;
 
-public interface IFunctionProvider<T extends IDescriptor, U extends Object> {
+public interface IFunctionProvider<T extends IDescribable<?>, U extends Object> {
 
 	/**
 	 * A function can be restricted to a certain domain. Returns true if the given domain
@@ -16,15 +15,15 @@ public interface IFunctionProvider<T extends IDescriptor, U extends Object> {
 	
 	/**
 	 * Returns true if a function can be provided for the given model
-	 * @param leaf
+	 * @param data
 	 * @return
 	 */
-	public boolean canProvide( IModelLeaf<T> leaf );
+	public boolean canProvide( T data );
 
 	/**
 	 * Get the function belonging to the given model leaf
-	 * @param leaf
+	 * @param data
 	 * @return
 	 */
-	public U getFunction( IModelLeaf<T> leaf );
+	public U getFunction( T data );
 }
