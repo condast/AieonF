@@ -2,7 +2,7 @@ package org.aieonf.commons.graph;
 
 import org.aieonf.commons.strings.StringStyler;
 
-public interface IVertex<T> {
+public interface IVertex<T extends Object>{
 
 	public static enum Attributes{
 		DEGREE;

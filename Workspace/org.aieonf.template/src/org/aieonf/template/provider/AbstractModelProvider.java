@@ -20,7 +20,7 @@ import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public abstract class AbstractModelProvider<U extends IContextAieon, V extends IDescriptor> implements IModelProvider<U, V> {
+public abstract class AbstractModelProvider<U extends IDescribable<IDescriptor>, V extends IDescriptor> implements IModelProvider<IContextAieon, V> {
 
 	private static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
@@ -33,11 +33,11 @@ public abstract class AbstractModelProvider<U extends IContextAieon, V extends I
 
 	private ManifestAieon manifest;
 	
-	private IContextAieon context;
+	private U context;
 	private String identifier;
 	private SignatureFactory signer = SignatureFactory.getInstance();
 
-	protected AbstractModelProvider( String identifier, U context, IModelLeaf<U> model ) {
+	protected AbstractModelProvider( String identifier, U context, IModelLeaf<V> model ) {
 		listeners = new ArrayList<IModelBuilderListener<IModelLeaf<V>>>();
 		this.identifier = identifier;
 		this.context = context;
@@ -81,12 +81,12 @@ public abstract class AbstractModelProvider<U extends IContextAieon, V extends I
 	 */
 	protected abstract void onSetup( ManifestAieon manifest );
 
-	private ManifestAieon setup(IModelLeaf<U> model) {
+	private ManifestAieon setup(IModelLeaf<V> model) {
 		ManifestAieon manifest = new ManifestAieon( model.getDescriptor() );
 		try {
 			manifest.fill(model.getDescriptor());
 			this.onSetup(manifest);
-			int hashcode = this.context.getSource().hashCode();
+			int hashcode = this.context.getDescriptor().hashCode();
 			manifest.set( IDescriptor.Attributes.ID, String.valueOf( hashcode ));
 			signer.init(manifest);
 		} catch ( Exception e) {
@@ -96,13 +96,13 @@ public abstract class AbstractModelProvider<U extends IContextAieon, V extends I
 	}
 
 	@Override
-	public void open( U domain){
+	public void open( IContextAieon domain){
 		this.requestClose = false;
 		this.open = true;
 	}
 
 	@Override
-	public boolean isOpen( U domain) {
+	public boolean isOpen( IContextAieon domain) {
 		return open;
 	}
 
@@ -133,7 +133,7 @@ public abstract class AbstractModelProvider<U extends IContextAieon, V extends I
 	public void sync(){}
 
 	@Override
-	public void close(U domain ){
+	public void close( IContextAieon domain ){
 		this.requestClose = true;
 		this.open = false;
 	}

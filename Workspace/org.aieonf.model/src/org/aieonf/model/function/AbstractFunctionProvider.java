@@ -6,6 +6,7 @@ import java.net.URI;
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.encryption.IEncryption.Algorithms;
 import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.Descriptor;
@@ -16,7 +17,7 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
 
-public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends Object> implements IFunctionProvider<T, U> {
+public abstract class AbstractFunctionProvider<D extends IDescribable<? extends IDescriptor>, U extends Object> implements IFunctionProvider<D, U> {
 
 	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
 
@@ -47,7 +48,7 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 	}
 	
 	@Override
-	public U getFunction(T descriptor) {
+	public U getFunction(D descriptor) {
 		if( !canProvide(descriptor))
 			return null;
 		return onCreateFunction(descriptor );
@@ -67,7 +68,7 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 	 * Create the access
 	 * @return
 	 */
-	protected abstract U onCreateFunction( T descriptor); 
+	protected abstract U onCreateFunction( D describable); 
 
 	/**
 	 * Create a default loader for the given leaf
@@ -162,5 +163,4 @@ public abstract class AbstractFunctionProvider<T extends IDescriptor, U extends 
 		}
 		return null;
 	}
-
 }

@@ -1,8 +1,7 @@
 package org.aieonf.graph.controller;
 
-import java.util.Collection;
-
 import org.aieonf.commons.graph.IVertex;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.graph.IGraphModel;
@@ -12,26 +11,24 @@ import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.template.context.IModelContextFactory;
 import org.aieonf.template.controller.AbstractModelController;
 
-public abstract class AbstractGraphController<T extends IContextAieon, U extends IDescriptor> extends AbstractModelController<T,U>
+public abstract class AbstractGraphController<D extends IDescribable<IContextAieon>, U extends IDescriptor> 
+extends AbstractModelController<IContextAieon,U>
 {
-	private IGraphModel<IVertex<U>> provider;
+	private IGraphModel<D, U> provider;
 	
-	protected AbstractGraphController( IModelContextFactory<T> factory ) {
+	protected AbstractGraphController( IModelContextFactory<IContextAieon> factory ) {
 		super( factory );
 	}
 	
-	protected IGraphModel<IVertex<U>> getProvider() {
+	protected IGraphModel<D, U> getProvider() {
 		return provider;
 	}
 
-	protected void setProvider(IGraphModel<IVertex<U>> provider) {
+	protected void setProvider(IGraphModel<D, U> provider) {
 		this.provider = provider;
 	}
 
 	public void shutdown(){
-		for( IModelBuilderListener listener: super.getListeners() )
-			this.provider.removeListener(listener);
-		provider.close( null );
 	}
 
 	/**
@@ -47,18 +44,12 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 					notifyModelChanged(event);					
 				}
 			};
-			provider.addListener(listener);
-			provider.open( null );
-			provider.add( this.convertFrom( super.getModel()));
-			provider.removeListener(listener);
 			return true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally{
-			provider.close( null);
-			provider.deactivate();
 		}
 		return false;
 	}
@@ -73,20 +64,15 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 					notifyModelChanged(event);			
 				}
 			};
-			provider.addListener(listener);
-			provider.open( null);
-			Collection<IVertex<U>> vertices = provider.get( super.getModel().getDescriptor() );
-			for( IVertex<U> vertex: vertices )
-				provider.delete( vertex );
-			provider.removeListener(listener);
+			//Collection<IVertex<U>> vertices = provider.get( super.getModel().getDescriptor() );
+			//for( IVertex<U> vertex: vertices )
+			//	provider.delete( vertex );
 			return true;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally{
-			provider.close( null );
-			provider.deactivate();
 		}
 		return false;
 	}
@@ -101,16 +87,11 @@ public abstract class AbstractGraphController<T extends IContextAieon, U extends
 					notifyModelChanged(event);					
 				}
 			};
-			provider.addListener(listener);
-			provider.open( null );
-			provider.removeListener(listener);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 		finally{
-			provider.close( null );
-			provider.deactivate();
 		}
 	}
 

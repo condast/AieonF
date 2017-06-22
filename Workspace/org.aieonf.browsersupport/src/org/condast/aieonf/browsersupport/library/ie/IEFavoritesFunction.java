@@ -12,7 +12,7 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
-public class IEFavoritesFunction extends AbstractFunctionProvider<IDescriptor, IModelProvider<IModelLeaf<IDescriptor>>>
+public class IEFavoritesFunction extends AbstractFunctionProvider<IContextAieon, IModelProvider<IContextAieon, IDescriptor>>
 {
 	//Default identifier
 	private static final String DEFAULT_IE_IDENTIFIER =
@@ -40,20 +40,20 @@ public class IEFavoritesFunction extends AbstractFunctionProvider<IDescriptor, I
 	}
 
 	@Override
-	public boolean canProvide(IModelLeaf<IDescriptor> leaf) {
-		return super.canProvide(S_FUNCTION_PROVIDER_ID, leaf);
+	public boolean canProvide(IContextAieon leaf) {
+		return super.canProvide(S_FUNCTION_PROVIDER_ID);
 	}
 	
 	@Override
-	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction(IModelLeaf<IDescriptor> leaf) {
+	protected IModelProvider<IContextAieon, IDescriptor> onCreateFunction( IContextAieon leaf) {
 		ILoaderAieon baseLoader = getDefaultLoader(leaf);
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
-		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf );
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
 		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
 
-		IModelProvider<IModelLeaf<IDescriptor>> provider = new IEFavoritesProvider( super.getAieon(), model );
+		IModelProvider<IContextAieon, IDescriptor> provider = new IEFavoritesProvider( leaf, model );
 		return provider;
 	}
 

@@ -6,11 +6,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilder;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.sketch.Activator;
 import org.aieonf.template.builder.DefaultModelBuilder;
 import org.aieonf.template.context.AbstractProviderContextFactory;
@@ -44,6 +41,12 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IContextA
 	private static URL getAieonFURL( File root ) throws MalformedURLException{
 		File aieonf = new File( root, IModelBuilder.S_DEFAULT_LOCATION );
 		return aieonf.toURI().toURL();
+	}
+
+	@Override
+	public boolean hasFunction(String function) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

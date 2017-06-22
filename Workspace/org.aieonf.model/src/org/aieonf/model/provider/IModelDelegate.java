@@ -1,6 +1,7 @@
 package org.aieonf.model.provider;
 
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
@@ -13,21 +14,21 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <U>
  */
-public interface IModelDelegate<T extends IDescriptor, U extends IDescriptor>{
+public interface IModelDelegate<D extends IDescribable<? extends IDescriptor>, U extends IDescriptor>{
 
 	/**
 	 * Open the delegate
 	 * @param domain
 	 */
-	public void open( T domain );
+	public void open( D domain );
 	
-	public boolean isOpen( T domain );
+	public boolean isOpen( D domain );
 		
 	/**
 	 * clse it
 	 * @param domain
 	 */
-	public void close( T domain );
+	public void close( D domain );
 
 	/**
 	 * Delegates the 'contains' function 

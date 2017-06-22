@@ -28,7 +28,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 
-public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDescriptor, IModelLeaf<IDescriptor>>
+public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextAieon, IDescriptor>
 {
 	public static final String S_IDENTIFER = "FirefoxHtmlBookmarks";
 	
@@ -218,12 +218,6 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDescript
 		super.fill( urlEon );
 		super.getModels().add( new ModelLeaf<IDescriptor>( urlEon ));
 		return urlEon;
-	}
-
-	@Override
-	public boolean contains(IModelLeaf<? extends IDescriptor> leaf) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override

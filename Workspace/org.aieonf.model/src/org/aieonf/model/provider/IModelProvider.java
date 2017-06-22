@@ -3,6 +3,7 @@ package org.aieonf.model.provider;
 import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
@@ -11,23 +12,23 @@ import org.aieonf.model.filter.IModelFilter;
  * A model provider provides a function to get models.
  * @author Kees
  *
- * @param <U>
+ * @param <T>
  */
-public interface IModelProvider<T extends IDescriptor, U extends IDescriptor> extends IProvider<IModelLeaf<U>>{
+public interface IModelProvider<D extends IDescribable<? extends IDescriptor>, T extends IDescriptor> extends IProvider<IModelLeaf<T>>{
 
 	/**
 	 * Open the delegate
 	 * @param domain
 	 */
-	public void open( T domain );
+	public void open( D domain );
 	
-	public boolean isOpen( T domain );
+	public boolean isOpen( D domain );
 		
 	/**
 	 * clse it
 	 * @param domain
 	 */
-	public void close( T domain );
+	public void close( D domain );
 	
 	/**
 	 * Sync the actual model with the database
@@ -39,23 +40,23 @@ public interface IModelProvider<T extends IDescriptor, U extends IDescriptor> ex
 	 * @param descriptor
 	 * @return
 	 */
-	public boolean contains( U leaf );
+	public boolean contains( T leaf );
 
 	/**
-	 * Get the models conforming to the given descriptor. Use the model builder
+	 * Get the models conforming to the given descriptor. Tse the model builder
 	 * listener to obtain them
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<IModelLeaf<U>> get( IDescriptor descriptor ) throws ParseException;
+	public Collection<IModelLeaf<T>> get( IDescriptor descriptor ) throws ParseException;
 
 	/**
-	 * Get the models conforming to the given descriptor. Use the model builder
+	 * Get the models conforming to the given descriptor. Tse the model builder
 	 * listener to obtain them
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<IModelLeaf<U>> search( IModelFilter<IDescriptor> filter ) throws ParseException;
+	public Collection<IModelLeaf<T>> search( IModelFilter<IDescriptor> filter ) throws ParseException;
 	
 	/**
 	 * Deactivate the function

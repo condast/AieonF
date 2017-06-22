@@ -52,7 +52,18 @@ public abstract class AbstractProviderContextFactory<T extends IDescriptor> exte
 		return bundle_id;
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see org.aieonf.template.context.IProviderContextFactory#hasFunction(java.lang.String)
+	 */
+	@Override
+	public boolean hasFunction( String function ){
+		for( IModelDelegate<IContextAieon, T>  delegate: delegates ){
+			if( delegate.hasFunction(function))
+				return true;
+		}
+		return false;
+	}
+
 	/**
 	 * Return a function that supports the given function
 	 * @param function
@@ -67,20 +78,6 @@ public abstract class AbstractProviderContextFactory<T extends IDescriptor> exte
 		return null;
 	}
 */
-	
-	/* (non-Javadoc)
-	 * @see org.aieonf.template.context.IProviderContextFactory#hasFunction(java.lang.String)
-	 */
-	/*
-	@Override
-	public boolean hasFunction( String function ){
-		for( IModelDelegate<IContextAieon, T>  delegate: delegates ){
-			if( delegate.hasFunction(function))
-				return true;
-		}
-		return false;
-	}
-	*/
 	
 	@SuppressWarnings("unchecked")
 	@Override

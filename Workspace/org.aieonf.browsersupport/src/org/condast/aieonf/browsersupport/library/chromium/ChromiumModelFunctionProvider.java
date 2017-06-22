@@ -12,9 +12,8 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, IModelProvider<IContextAieon, IDescriptor>> {
-
-	
+public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IContextAieon,  
+IModelProvider<IContextAieon, IDescriptor>> {
 
 	//Default location
 	private static final String DEFAULT_CHROMIUM_ROOT =
@@ -48,7 +47,7 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<ICon
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
-		IModelProvider<IContextAieon, IDescriptor> gdb = new ChromiumBookmarkProvider( super.getAieon(), model );
+		IModelProvider<IContextAieon, IDescriptor> gdb = new ChromiumBookmarkProvider( leaf, model );
 		return gdb;
 	}
 }

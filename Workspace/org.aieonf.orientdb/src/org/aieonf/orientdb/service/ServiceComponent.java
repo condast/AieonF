@@ -17,22 +17,24 @@ import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.TemplateNodeWrapper;
 import org.aieonf.template.provider.AsynchronousProviderDelegate;
 
-public class ServiceComponent extends AbstractServiceComponent<IDescriptor>
+public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IDescriptor>
 {
 	public ServiceComponent() {
 		super( OrientDBFactory.getInstance() );
 	}
 
+	
 	@Override
-	public boolean canProvide(IModelLeaf<IDescriptor> leaf) {
+	public boolean canProvide(IContextAieon leaf) {
 		return DefaultModels.isValid( leaf.getID() );
 	}
 
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public IModelDatabase<IDescriptor> getFunction( IDescriptor leaf) {
+	public IModelDatabase<IContextAieon, IDescriptor> getFunction( IContextAieon leaf) {
 		ITemplateLeaf<IContextAieon> template = new TemplateNodeWrapper<IContextAieon>( leaf );
-		IModelProvider<IModelLeaf<IDescriptor>> provider = null;
+		IModelProvider<IContextAieon, IDescriptor> provider = null;
 		if(!DefaultModels.isValid( leaf.getID() ))
 			return null;
 		IFunctionProvider function = null; 
@@ -44,8 +46,8 @@ public class ServiceComponent extends AbstractServiceComponent<IDescriptor>
 			function = new TreeModelFunction<IDescriptor>( template ); 
 			break;
 		}
-		provider = (IModelProvider<IModelLeaf<IDescriptor>>) function.getFunction(leaf);
-		AsynchronousProviderDelegate<IModelLeaf<IDescriptor>> delegate = new AsynchronousProviderDelegate<IModelLeaf<IDescriptor>>();
+		provider = (IModelProvider<IContextAieon, IDescriptor>) function.getFunction(leaf);
+		AsynchronousProviderDelegate<IContextAieon, IDescriptor> delegate = new AsynchronousProviderDelegate<IContextAieon, IDescriptor>();
 		delegate.addProvider(provider);
 		return delegate;
 	}

@@ -17,13 +17,13 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 
-public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IConcept, IModelLeaf<IConcept>>
+public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IContextAieon, IConcept>
 {
 	public static final String S_IDENTIFER = "FirefoxJsonBookmarks";
 
-	public FireFoxJSONBookmarkProvider( IContextAieon context, IModelLeaf<IConcept> model )
+	public FireFoxJSONBookmarkProvider( IContextAieon template, IModelLeaf<IConcept> model )
 	{
-		super( S_IDENTIFER, context, model );
+		super( S_IDENTIFER, template, model );
 	}
 
 	@Override

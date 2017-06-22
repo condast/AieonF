@@ -24,7 +24,6 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
@@ -43,7 +42,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDes
 	private static final String S_ROOTS = "roots";
 
 
-	ChromiumBookmarkProvider( IContextAieon context, IModelLeaf<IContextAieon> model )
+	ChromiumBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
 	{
 		super( S_CHROMIUM, context, model );
 	}
@@ -54,7 +53,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDes
 
 	
 	@Override
-	public void open( IDomainAieon domain) {
+	public void open( IContextAieon domain) {
 		URI uri = super.getManifest().getURI();
 		File file = new File( uri );
 		if( file.exists() )
@@ -367,12 +366,6 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDes
 			super.remove( IDescriptor.Attributes.NAME );
 			super.fill();
 		}
-	}
-
-	@Override
-	public boolean contains(IModelLeaf<? extends IDescriptor> leaf) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override

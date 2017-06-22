@@ -3,9 +3,7 @@ package org.condast.aieonf.browsersupport.service;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.provider.IModelDelegate;
-import org.aieonf.model.provider.IModelFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.osgi.service.AbstractServiceComponent;
 import org.aieonf.template.ITemplateLeaf;
@@ -15,7 +13,7 @@ import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
 public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IDescriptor>
 {
 
-	private IModelFunctionProvider<IContextAieon, IDescriptor> function;
+	private ModelFunctionProvider function;
 	
 	public ServiceComponent()
 	{

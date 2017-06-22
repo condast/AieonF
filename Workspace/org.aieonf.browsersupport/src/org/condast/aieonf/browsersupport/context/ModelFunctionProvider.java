@@ -2,18 +2,15 @@ package org.condast.aieonf.browsersupport.context;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelDelegate;
-import org.aieonf.model.provider.IModelFunctionProvider;
 import org.aieonf.model.provider.ModelDelegate;
 import org.aieonf.template.provider.AsynchronousProviderDelegate;
 import org.condast.aieonf.browsersupport.library.chromium.ChromiumModelFunctionProvider;
 import org.condast.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.condast.aieonf.browsersupport.library.ie.IEFavoritesFunction;
 
-public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, IModelDelegate<IContextAieon, IDescriptor>> implements IModelFunctionProvider<IContextAieon,IDescriptor>{
+public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, IModelDelegate<IContextAieon, IDescriptor>>{
 
 	private ChromiumModelFunctionProvider cmf;
 	private FireFoxModelFunction ffmf;
@@ -25,24 +22,32 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieo
 		ffmf = new FireFoxModelFunction( context );
 		ieff = new IEFavoritesFunction(context);
 	}
+
 	
 	@Override
-	public boolean canProvide( IContextAieon data ) {
-		if( !super.canProvide(S_FUNCTION_PROVIDER_ID, data))
+	public boolean canProvide(IContextAieon data) {
+		if( !super.canProvide(S_FUNCTION_PROVIDER_ID ))
 			return false;
 		return cmf.canProvide(data) || ffmf.canProvide(data) || ieff.canProvide(data);
 	}
 
 
 	@Override
-	public IModelDelegate<IContextAieon, IDescriptor> getFunction(IContextAieon data) {
-		ModelDelegate<IDomainAieon, IDescriptor> delegate = new AsynchronousProviderDelegate<IDescriptor>();
-		if( cmf.canProvide(leaf))
-			delegate.addProvider( cmf.getFunction(leaf));
-		if( ffmf.canProvide(leaf))
-			delegate.addProvider( ffmf.getFunction(leaf));
-		if( ieff.canProvide(leaf))
-			delegate.addProvider( ieff.getFunction(leaf));
+	public IModelDelegate<IContextAieon, IDescriptor> getFunction( IContextAieon data) {
+		ModelDelegate<IContextAieon, IDescriptor> delegate = new AsynchronousProviderDelegate<IContextAieon, IDescriptor>();
+		if( cmf.canProvide(super.getAieon()))
+			delegate.addProvider( cmf.getFunction(data));
+		if( ffmf.canProvide(data))
+			delegate.addProvider( ffmf.getFunction(data));
+		if( ieff.canProvide(data))
+			delegate.addProvider( ieff.getFunction(data));
 		return delegate;
+	}
+
+
+	@Override
+	protected IModelDelegate<IContextAieon, IDescriptor> onCreateFunction(IContextAieon describable) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

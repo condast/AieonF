@@ -71,7 +71,7 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 	}
 
 	@Override
-	public boolean contains(IModelLeaf<?> leaf) {
+	public boolean contains(U leaf) {
 		for (Vertex v : graph.getVertices()) {
 		    IVertex<T> vtx = new VertexImpl<T>( v );
 		    if( vtx.get().equals( leaf.getDescriptor() ))
