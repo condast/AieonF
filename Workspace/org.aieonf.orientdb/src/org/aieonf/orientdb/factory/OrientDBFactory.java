@@ -13,7 +13,7 @@ import org.aieonf.model.IModelNode;
 import org.aieonf.template.builder.DefaultModelBuilder;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
-public class OrientDBFactory extends AbstractProviderContextFactory<IContextAieon>{
+public class OrientDBFactory extends AbstractProviderContextFactory<IContextAieon, IDescriptor>{
 
 	private static final String S_MODEL_ID = "org.aieonf.orientdb";
 	private static final String S_BUNDLE_ID = "org.aieonf.orientdb";

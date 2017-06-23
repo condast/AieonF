@@ -2,15 +2,15 @@ package org.condast.aieonf.browsersupport.context;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
-import org.aieonf.model.provider.IModelDelegate;
-import org.aieonf.model.provider.ModelDelegate;
-import org.aieonf.template.provider.AsynchronousProviderDelegate;
+import org.aieonf.model.provider.IModelProvider;
 import org.condast.aieonf.browsersupport.library.chromium.ChromiumModelFunctionProvider;
 import org.condast.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.condast.aieonf.browsersupport.library.ie.IEFavoritesFunction;
 
-public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, IModelDelegate<IContextAieon, IDescriptor>>{
+public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, 
+	IModelProvider<IContextAieon, IModelLeaf<IDescriptor>>>{
 
 	private ChromiumModelFunctionProvider cmf;
 	private FireFoxModelFunction ffmf;
@@ -33,20 +33,20 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieo
 
 
 	@Override
-	public IModelDelegate<IContextAieon, IDescriptor> getFunction( IContextAieon data) {
-		ModelDelegate<IContextAieon, IDescriptor> delegate = new AsynchronousProviderDelegate<IContextAieon, IDescriptor>();
+	public IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> getFunction( IContextAieon data) {
+		IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> provider = null;
 		if( cmf.canProvide(super.getAieon()))
-			delegate.addProvider( cmf.getFunction(data));
+			provider = cmf.getFunction(data);
 		if( ffmf.canProvide(data))
-			delegate.addProvider( ffmf.getFunction(data));
+			provider = ffmf.getFunction(data);
 		if( ieff.canProvide(data))
-			delegate.addProvider( ieff.getFunction(data));
-		return delegate;
+			provider = ieff.getFunction(data);
+		return provider;
 	}
 
 
 	@Override
-	protected IModelDelegate<IContextAieon, IDescriptor> onCreateFunction(IContextAieon describable) {
+	protected IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> onCreateFunction(IContextAieon describable) {
 		// TODO Auto-generated method stub
 		return null;
 	}

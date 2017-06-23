@@ -8,11 +8,12 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.graph.core.IAieonFVertex;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
-public class VertexImpl<T extends IDescriptor> implements IVertex<T> {
+public class VertexImpl implements IAieonFVertex<IDescriptor> {
 
 	private Vertex vertex;
 	private IDescriptor descriptor;
@@ -34,7 +35,7 @@ public class VertexImpl<T extends IDescriptor> implements IVertex<T> {
 	}
 
 	@Override
-	public void put(T obj) {
+	public void put(IDescriptor obj) {
 		Iterator<String> iterator = obj.iterator();
 		vertex.setProperty( "Name", obj.getName() );
 		while( iterator.hasNext() ){
@@ -44,10 +45,9 @@ public class VertexImpl<T extends IDescriptor> implements IVertex<T> {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public T get() {
-		return (T) descriptor;
+	public IDescriptor get() {
+		return descriptor;
 	}
 
 	@Override
@@ -136,6 +136,17 @@ public class VertexImpl<T extends IDescriptor> implements IVertex<T> {
 			super(new VertexConceptBase( vertex ));
 		}
 		
+	}
+
+	@Override
+	public IDescriptor getDescriptor() {
+		return this.descriptor;
+	}
+
+	@Override
+	public boolean hasChanged() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

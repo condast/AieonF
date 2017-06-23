@@ -1,31 +1,32 @@
 package org.aieonf.osgi.service;
 
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
-import org.aieonf.model.provider.IModelDelegate;
 import org.aieonf.model.provider.IModelFunctionProvider;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.context.IProviderContextFactory;
 
-public abstract class AbstractServiceComponent<T extends IContextAieon, U extends IDescriptor> implements IModelFunctionProvider<T, U>
+public abstract class AbstractServiceComponent<C extends IContextAieon, U extends IDescribable<IDescriptor>> implements IModelFunctionProvider<C, U>
 {
 
-	private IProviderContextFactory<T> factory;
+	private IProviderContextFactory<C,U> factory;
 	
-	protected  AbstractServiceComponent( IProviderContextFactory<T> factory ){
+	protected  AbstractServiceComponent( IProviderContextFactory<C,U> factory ){
 		this.factory = factory;
 	}
 
-	protected IProviderContextFactory<T> getFactory() {
+	protected IProviderContextFactory<C,U> getFactory() {
 		return factory;
 	}
 
 	@SuppressWarnings("unused")
 	public void activate(){
 		try{
-			ITemplateLeaf<IContextAieon> template = factory.createTemplate();
+			ITemplateLeaf<C> template = factory.createTemplate();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -33,12 +34,13 @@ public abstract class AbstractServiceComponent<T extends IContextAieon, U extend
 	}
 	
 	public void deactivate(){
+		factory = null;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IProviderContextFactory#addProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
-	public void addProvider( IFunctionProvider<IDescriptor, IModelDelegate<IContextAieon, T>> function ){
+	public void addProvider( IFunctionProvider<C, IModelProvider<C, U>> function ){
 		factory.addProvider(function);
 	}
 	
@@ -46,7 +48,7 @@ public abstract class AbstractServiceComponent<T extends IContextAieon, U extend
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IProviderContextFactory#addProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
-	public void removeProvider( IFunctionProvider<IDescriptor,IModelDelegate<IContextAieon, T>> function ){
+	public void removeProvider( IFunctionProvider<C,IModelProvider<C, U>> function ){
 		factory.removeProvider(function);
 	}
 

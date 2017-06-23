@@ -20,14 +20,14 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
-public class OrientDBNode<T extends IDescriptor> extends ModelLeaf<T> implements IModelNode<T> {
+public class OrientDBNode extends ModelLeaf<IDescriptor> implements IModelNode<IDescriptor> {
 
 	private static final String S_ERR_NULL_IDENTIFITER = "The identifier of this model may not be null: ";
 	private Graph graph;
 	private Vertex vertex;
 	
 	public OrientDBNode( Graph graph, Vertex vertex ) {
-		super( new VertexImpl<T>( vertex, new VertexImpl.VertexConcept( vertex ) ).get() );
+		super( new VertexImpl( vertex, new VertexImpl.VertexConcept( vertex ) ).get() );
 		super.setIdentifier( super.getDescriptor().get( IModelLeaf.Attributes.IDENTIFIER ));
 		this.graph = graph;
 		this.vertex = vertex;
@@ -61,7 +61,7 @@ public class OrientDBNode<T extends IDescriptor> extends ModelLeaf<T> implements
 		Edge edge = null;
 		while( iterator.hasNext() ){
 			edge = iterator.next();
-			IVertex<IDescriptor> vtx= new VertexImpl<IDescriptor>( edge.getVertex(com.tinkerpop.blueprints.Direction.OUT ));
+			IVertex<IDescriptor> vtx= new VertexImpl( edge.getVertex(com.tinkerpop.blueprints.Direction.OUT ));
 			if( vtx.equals( child.getDescriptor() ))
 				break;
 		}
@@ -81,7 +81,7 @@ public class OrientDBNode<T extends IDescriptor> extends ModelLeaf<T> implements
 		while( iterator.hasNext() ){
 			edge = iterator.next();
 			Vertex vtx= edge.getVertex(com.tinkerpop.blueprints.Direction.IN );
-			IModelLeaf<IDescriptor> child = new OrientDBNode<IDescriptor>( graph, vtx ); 
+			IModelLeaf<IDescriptor> child = new OrientDBNode( graph, vtx ); 
 			children.add( child );
 		}
 		return children;
@@ -97,7 +97,7 @@ public class OrientDBNode<T extends IDescriptor> extends ModelLeaf<T> implements
 		while( iterator.hasNext() ){
 			edge = iterator.next();
 			Vertex vtx= edge.getVertex(com.tinkerpop.blueprints.Direction.IN );
-			IModelLeaf<IDescriptor> child = new OrientDBNode<IDescriptor>( graph, vtx ); 
+			IModelLeaf<IDescriptor> child = new OrientDBNode( graph, vtx ); 
 			children.add( child );
 		}
 		return children.toArray( new IModelLeaf[ children.size() ]);
@@ -111,9 +111,9 @@ public class OrientDBNode<T extends IDescriptor> extends ModelLeaf<T> implements
 		while( iterator.hasNext() ){
 			edge = iterator.next();
 			Vertex vtx= edge.getVertex(com.tinkerpop.blueprints.Direction.OUT );
-			IVertex<IDescriptor> vertex = new VertexImpl<IDescriptor>( vtx, new VertexImpl.VertexConcept( vtx ));
+			IVertex<IDescriptor> vertex = new VertexImpl( vtx, new VertexImpl.VertexConcept( vtx ));
 			if( vertex.get().equals( descriptor ))
-				return new OrientDBNode<IDescriptor>( graph, vtx ); 
+				return new OrientDBNode( graph, vtx ); 
 		}
 		return null;
 	}

@@ -9,11 +9,13 @@ import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.graph.IGraphModel;
+import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
+import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
@@ -23,7 +25,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<T,IVertex<T>> implements IGraphModel<IVertex<T>> {
+public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> {
 	
 	private OrientGraphFactory factory;
 	private OrientGraph graph;
@@ -39,16 +41,14 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 		return DefaultModels.GRAPH.toString().equals( function );
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public IVertex<T> create() {
+	public IDescriptor create() {
 		Vertex root = graph.getVerticesOfClass( S_ROOT).iterator().next();
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.VERSION ), 1 );
-		IVertex<T> parent = new VertexImpl<T>( root ); 
-		IModelLeaf<? extends IDescriptor>[] models = new IModelLeaf[1];
-		models[0] = new OrientDBNode<IDescriptor>( graph, root );
-		this.notifyListeners( new TemplateModelBuilderEvent(this, template, models));
+		IDescriptor parent = (IDescriptor) new VertexImpl( root ); 
+		IModelLeaf<IDescriptor> model =  new OrientDBNode( graph, root );
+		TemplateModelBuilderEvent<IContextAieon, IModelLeaf<IDescriptor>> event = new TemplateModelBuilderEvent<IContextAieon, IModelLeaf<IDescriptor>>( this, template, model );
+		super.notifyListeners( event );
 		create( root, template );
 		return parent;
 	}
@@ -57,12 +57,12 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 	protected void create( Vertex vertex, ITemplateLeaf<? extends IDescriptor> leaf ) {
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
 		Vertex child = graph.addVertex( null );
-		IVertex<T> vtx = new VertexImpl<T>( child );
+		IVertex<IDescriptor> vtx = new VertexImpl( child );
 		IDescriptor descriptor = vtx.get();
 		descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
 		descriptor.set( IModelLeaf.Attributes.IDENTIFIER, leaf.getIdentifier() );
 		graph.addEdge(null, vertex, child, leaf.getIdentifier());
-		this.notifyListeners( new TemplateModelBuilderEvent(this, leaf, new OrientDBNode<IDescriptor>( graph, child )));
+		this.notifyListeners( new TemplateModelBuilderEvent(this, leaf, new OrientDBNode( graph, child )));
 		if( !leaf.isLeaf()){
 			ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) leaf;
 			for( IModelLeaf<? extends IDescriptor> next: node.getChildren() )
@@ -71,9 +71,9 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 	}
 
 	@Override
-	public boolean contains(U leaf) {
+	public boolean contains(IModelLeaf<IDescriptor> leaf) {
 		for (Vertex v : graph.getVertices()) {
-		    IVertex<T> vtx = new VertexImpl<T>( v );
+		    IVertex<IDescriptor> vtx = new VertexImpl( v );
 		    if( vtx.get().equals( leaf.getDescriptor() ))
 		    	return true;
 		}		
@@ -81,59 +81,55 @@ public class GraphModel<T extends IDescriptor> extends AbstractOrientGraphModel<
 	}
 
 	@Override
-	public Collection<IVertex<T>> get(IDescriptor descriptor) {
-		Collection<IVertex<T>> results = new ArrayList<IVertex<T>>();
+	public Collection<IModelLeaf<IDescriptor>> get(IDescriptor descriptor) {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		for (Vertex v : graph.getVertices()) {
-		    IVertex<T> vtx = new VertexImpl<T>( v, new VertexImpl.VertexConcept( v ));
+		    IVertex<IDescriptor> vtx = new VertexImpl( v, new VertexImpl.VertexConcept( v ));
 		    if( vtx.get().equals( descriptor ))
-		    	results.add( vtx );
+		    	results.add( new ModelLeaf<IDescriptor>( vtx.get() ));
 		}		
 		return results;
 	}
 
 	@Override
-	public Collection<IVertex<T>> search(IModelFilter<IDescriptor> filter) {
-		Collection<IVertex<T>> results = new ArrayList<IVertex<T>>();
+	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IDescriptor> filter) {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		Iterable<Vertex> iter = graph.getVertices();
 		if( iter.iterator() == null )
 			return results;
 		Iterator<Vertex> iterator = iter.iterator();
 		while( iterator.hasNext() ){
 			Vertex child = iterator.next();
-			IVertex<T> vtx = new VertexImpl<T>( child, new VertexImpl.VertexConcept( child ));
+			IVertex<IDescriptor> vtx = new VertexImpl( child, new VertexImpl.VertexConcept( child ));
 			if( filter.accept( vtx.get() ))
-				results.add( vtx );
+				results.add( new ModelLeaf<IDescriptor>( vtx.get() ));
 		}
 		return results;
 	}
 
-	@Override
-	public boolean add(IVertex<T> root) {
-		try{
-			IModelNode<T> model = new OrientDBNode<T>( this.graph, (Vertex) root );
-			return ( model != null );
-		}
-		catch( Exception e ){
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	@Override
-	public boolean delete(IVertex<T> root) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean update(IVertex<T> root) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
 	@Override
 	public void deactivate() {
 		if( factory != null )
 			factory.close();
+	}
+
+	@Override
+	public boolean supportsDomain(IDomainAieon domain) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canProvide(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction(String key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

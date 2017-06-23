@@ -11,7 +11,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.graph.IGraphModel;
+import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
@@ -24,7 +24,7 @@ import org.aieonf.template.builder.TemplateModelBuilderEvent;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
-public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T, IModelLeaf<T>> implements IGraphModel<IModelLeaf<T>> {
+public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T, IModelLeaf<T>> implements IGraphModelProvider<IModelLeaf<T>> {
 	
 	private ITemplateLeaf<IContextAieon> template;
 	

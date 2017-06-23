@@ -3,17 +3,15 @@ package org.condast.aieonf.browsersupport.service;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.provider.IModelDelegate;
+import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.osgi.service.AbstractServiceComponent;
 import org.aieonf.template.ITemplateLeaf;
 import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
 
-public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IDescriptor>
+public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IModelLeaf<IDescriptor>>
 {
-
-	private ModelFunctionProvider function;
 	
 	public ServiceComponent()
 	{
@@ -23,17 +21,13 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 	public void activate(){
 		try{
 			ITemplateLeaf<IContextAieon> template = super.getFactory().createTemplate();
-			function = new ModelFunctionProvider( template.getDescriptor() );
+			super.addProvider( new ModelFunctionProvider( template.getDescriptor() ));
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 		}
 	}
 	
-	public void deactivate(){
-		function = null;
-	}
-
 	//Every domain may use this function
 	@Override
 	public boolean supportsDomain(IDomainAieon domain) {
@@ -42,15 +36,15 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 
 	
 	@Override
-	public boolean canProvide(IContextAieon data) {
-		return ( function != null ) && ( IModelProvider.S_MODEL_PROVIDER_ID.equals( data ));
+	public boolean canProvide( String functionName ) {
+		return ( super.getFactory().hasFunction( functionName ));
 	}
 
 	@Override
-	public IModelDelegate<IContextAieon, IDescriptor> getFunction(IContextAieon context) {
-		if( !canProvide(context))
+	public IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> getFunction( String functionName) {
+		if( !canProvide(functionName))
 			return null;
-		return function.getFunction( context );
+		return getFactory().getFunction( functionName );
 	}
 
 	protected void initialise() {

@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 
 /**
@@ -14,7 +13,7 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <T>
  */
-public interface IModelProvider<D extends IDescribable<? extends IDescriptor>, T extends IDescriptor> extends IProvider<IModelLeaf<T>>{
+public interface IModelProvider<D extends IDescribable<? extends IDescriptor>, T extends IDescribable<? extends IDescriptor>> extends IProvider<T>{
 
 	/**
 	 * Open the delegate
@@ -48,7 +47,7 @@ public interface IModelProvider<D extends IDescribable<? extends IDescriptor>, T
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<IModelLeaf<T>> get( IDescriptor descriptor ) throws ParseException;
+	public Collection<T> get( IDescriptor descriptor ) throws ParseException;
 
 	/**
 	 * Get the models conforming to the given descriptor. Tse the model builder
@@ -56,7 +55,7 @@ public interface IModelProvider<D extends IDescribable<? extends IDescriptor>, T
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<IModelLeaf<T>> search( IModelFilter<IDescriptor> filter ) throws ParseException;
+	public Collection<T> search( IModelFilter<IDescriptor> filter ) throws ParseException;
 	
 	/**
 	 * Deactivate the function

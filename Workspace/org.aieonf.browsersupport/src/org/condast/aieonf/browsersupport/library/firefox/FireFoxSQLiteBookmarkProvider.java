@@ -35,7 +35,7 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
-class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon, IDescriptor>
+class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
 {
 	private static final String S_IDENTIFER = "FirefoxSQLBookmarks";
 
@@ -46,7 +46,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 
 	FireFoxSQLiteBookmarkProvider( IContextAieon template, IModelLeaf<IDescriptor> model )
 	{
-		super( S_IDENTIFER, template, model );
+		super( S_IDENTIFER, template );
 	}
 
 	@Override

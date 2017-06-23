@@ -7,10 +7,12 @@ Bundle-Vendor: AieonF
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.aieonf.graph,
  org.aieonf.graph.context,
- org.aieonf.graph.controller
+ org.aieonf.graph.controller,
+ org.aieonf.graph.core
 Import-Package: org.aieonf.commons.graph,
  org.aieonf.concept,
  org.aieonf.concept.context,
+ org.aieonf.concept.domain,
  org.aieonf.concept.loader,
  org.aieonf.model,
  org.aieonf.model.builder,

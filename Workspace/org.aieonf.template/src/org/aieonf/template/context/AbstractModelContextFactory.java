@@ -83,7 +83,7 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected final ITemplateLeaf<IContextAieon> createDefaultTemplate( String identifier, IXMLModelBuilder creator ) {
+	protected final ITemplateLeaf<T> createDefaultTemplate( String identifier, IXMLModelBuilder creator ) {
 		IModelBuilderListener listener = new IModelBuilderListener(){
 
 			@Override
@@ -91,9 +91,9 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 				notifyListeners( event );
 			}	
 		};
-		XMLModelBuilder<IContextAieon> builder = new XMLModelBuilder<IContextAieon>( identifier, creator );
+		XMLModelBuilder<T> builder = new XMLModelBuilder<T>( identifier, creator );
 		builder.addListener(listener);
-		ITemplateLeaf<IContextAieon> root = (ITemplateLeaf<IContextAieon>) builder.build();
+		ITemplateLeaf<T> root = (ITemplateLeaf<T>) builder.build();
 		builder.removeListener(listener);
 		root.getDescriptor().set( IConcept.Attributes.SOURCE, identifier );
 		return root;	
@@ -104,25 +104,25 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 * @param identifier
 	 * @return
 	 */
-	protected ITemplateLeaf<IDescriptor> getTemplate( String identifier ){
+	protected ITemplateLeaf<T> getTemplate( String identifier ){
 		return getTemplate( this.template, identifier );
 	}
 
 	@SuppressWarnings("unchecked")
-	protected ITemplateLeaf<IDescriptor> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
+	protected ITemplateLeaf<T> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
 		if( Utils.assertNull( identifier ))
 			return null;
 		if( identifier.equals( leaf.getID())){
 			if( Utils.assertNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE ) )){
 				leaf.getDescriptor().set( IConcept.Attributes.SOURCE, template.getID() );
 			}
-			return (ITemplateLeaf<IDescriptor>) leaf;
+			return (ITemplateLeaf<T>) leaf;
 		}
 		if( leaf.isLeaf())
 			return null;
 		ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) leaf;
 		for( IModelLeaf<? extends IDescriptor> child: node.getChildren() ){
-			ITemplateLeaf<IDescriptor> result = getTemplate( (ITemplateLeaf<? extends IDescriptor>) child, identifier );
+			ITemplateLeaf<T> result = getTemplate( (ITemplateLeaf<? extends IDescriptor>) child, identifier );
 			if( result != null )
 				return result;
 		}

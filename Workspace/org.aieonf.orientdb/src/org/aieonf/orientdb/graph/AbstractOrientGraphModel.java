@@ -10,14 +10,15 @@ import org.aieonf.commons.graph.IVertex;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.concept.security.PasswordAieon;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.provider.IModelProvider;
@@ -28,7 +29,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends IDescriptor> implements IModelProvider<T,U> {
+public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<D,U> {
 	
 	public static final String S_IDENTIFIER = "GraphModel";
 	
@@ -46,11 +47,11 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	private boolean connected;
 	private ILoaderAieon loader;
 	
-	private Collection<IModelBuilderListener<IModelLeaf<U>>> listeners;
+	private Collection<IModelBuilderListener<U>> listeners;
 	
 	public AbstractOrientGraphModel( ILoaderAieon loader ) {
 		this.loader = loader;
-		listeners = new ArrayList<IModelBuilderListener<IModelLeaf<U>>>();
+		listeners = new ArrayList<IModelBuilderListener<U>>();
 		this.connected = false;
 	}
 
@@ -86,17 +87,17 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 
 
 	@Override
-	public void addListener(IModelBuilderListener<IModelLeaf<U>> listener) {
+	public void addListener(IModelBuilderListener<U> listener) {
 		this.listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<IModelLeaf<U>> listener) {
+	public void removeListener(IModelBuilderListener<U> listener) {
 		this.listeners.remove(listener);
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<IModelLeaf<U>> event ){
-		for( IModelBuilderListener<IModelLeaf<U>> listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<U> event ){
+		for( IModelBuilderListener<U> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 	
@@ -121,7 +122,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	}
 
 	@Override
-	public void open( T domain ){
+	public void open( D domain ){
 		try{
 			this.connect(loader);
 			if(!connected )
@@ -141,7 +142,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	}
 
 	@Override
-	public boolean isOpen( T domain){
+	public boolean isOpen( D domain){
 		return !this.graph.isClosed();
 	}
 
@@ -159,14 +160,14 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		}
 	}
 
-	public ITransaction<U,IModelProvider<T, U>> createTransaction() {
+	public ITransaction<U,IModelProvider<D, U>> createTransaction() {
 		Transaction transaction = new Transaction( this );
 		transaction.create();
 		return transaction;
 	}
 
 	@Override
-	public void close( T domain){
+	public void close( D domain){
 		this.sync();
 		if( graph != null )
 			graph.shutdown();
@@ -218,7 +219,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 	 * @return
 	 */
 	protected static IDescriptor createDescriptor( OrientGraph graph, Vertex vertex ){
-		IVertex<IDescriptor> vtx = new VertexImpl<IDescriptor>( vertex );
+		IVertex<IDescriptor> vtx = new VertexImpl( vertex );
 		IDescriptor descriptor = vtx.get();
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
 		BodyFactory.IDFactory( descriptor );
@@ -269,9 +270,9 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		
 	}
 
-	protected class Transaction extends AbstractTransaction<U, IModelProvider<T, U>>{
+	protected class Transaction extends AbstractTransaction<U, IModelProvider<D, U>>{
 
-		protected Transaction( IModelProvider<T, U> provider) {
+		protected Transaction( IModelProvider<D, U> provider) {
 			super( provider );
 		}
 
@@ -282,7 +283,7 @@ public abstract class AbstractOrientGraphModel<T extends IDescriptor, U extends 
 		}
 
 		@Override
-		protected boolean onCreate(IModelProvider<T, U> provider) {
+		protected boolean onCreate(IModelProvider<D, U> provider) {
 			super.getProvider().open( null);
 			return super.getProvider().isOpen( null);
 		}

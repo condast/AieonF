@@ -14,18 +14,18 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
-public class EdgeImpl<T extends IDescriptor, U extends IDescriptor> implements IEdge<T,U> {
+public class EdgeImpl<T extends IDescriptor> implements IEdge<T,IDescriptor> {
 
 	private Edge edge;
-	private IVertex<T> first;
-	private IVertex<T> last;
+	private IVertex<IDescriptor> first;
+	private IVertex<IDescriptor> last;
 	
 	
 	public EdgeImpl( Edge edge ) {
 		super();
 		this.edge = edge;
-		this.first = new VertexImpl<T>( edge.getVertex( Direction.IN ));
-		this.last = new VertexImpl<T>( edge.getVertex( Direction.OUT ));
+		this.first = new VertexImpl( edge.getVertex( Direction.IN ));
+		this.last = new VertexImpl( edge.getVertex( Direction.OUT ));
 	}
 
 
@@ -35,7 +35,7 @@ public class EdgeImpl<T extends IDescriptor, U extends IDescriptor> implements I
 	}
 
 	@Override
-	public void put(IVertex<T> v, IVertex<T> w, U obj) {
+	public void put(IVertex<IDescriptor> v, IVertex<IDescriptor> w, T obj) {
 
 		this.first = v;
 		this.last = w;

@@ -5,7 +5,6 @@ import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.provider.IModelDatabase;
-import org.aieonf.model.provider.IModelDelegate;
 import org.aieonf.model.provider.IModelFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.provider.IProvider.DefaultModels;
@@ -25,20 +24,20 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 
 	
 	@Override
-	public boolean canProvide(IContextAieon leaf) {
-		return DefaultModels.isValid( leaf.getID() );
+	public boolean canProvide( String function) {
+		return DefaultModels.isValid( function );
 	}
 
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public IModelDatabase<IContextAieon, IDescriptor> getFunction( IContextAieon leaf) {
+	public IModelDatabase<IContextAieon, IDescriptor> getFunction( String functionName ) {
 		ITemplateLeaf<IContextAieon> template = new TemplateNodeWrapper<IContextAieon>( leaf );
 		IModelProvider<IContextAieon, IDescriptor> provider = null;
-		if(!DefaultModels.isValid( leaf.getID() ))
+		if(!DefaultModels.isValid( functionName ))
 			return null;
 		IFunctionProvider function = null; 
-		switch( DefaultModels.getModel( leaf.getID() )){
+		switch( DefaultModels.getModel( functionName )){
 		case GRAPH:
 			function = (IFunctionProvider) new GraphModelFunction<IDescriptor>( template ).getFunction(leaf); 
 			break;

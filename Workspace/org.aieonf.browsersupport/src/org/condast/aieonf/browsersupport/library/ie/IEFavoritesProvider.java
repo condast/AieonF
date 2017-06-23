@@ -30,7 +30,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
  * This class overrides the default concept database in order to
  * exploit a unique key within the scope of this package
  */
-public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, IDescriptor>
+public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "InternetExplorerFavourites";
 
@@ -40,9 +40,9 @@ public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, ID
 	
 	private Logger logger;
 
-	public IEFavoritesProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
+	public IEFavoritesProvider( IContextAieon context )
 	{
-		super( S_IDENTIFER, context, model );
+		super( S_IDENTIFER, context );
 		logger = Logger.getLogger( this.getClass().getName() );
 	}
 

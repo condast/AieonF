@@ -12,7 +12,7 @@ package org.aieonf.commons.graph;
 /**
  This class implements the vertex object
 */
-public class Vertex<T> implements Comparable<Vertex<T>>, IVertex<T>
+public class Vertex<T> implements Comparable<IVertex<T>>, IVertex<T>
 {
 
 	/**
@@ -111,7 +111,7 @@ public class Vertex<T> implements Comparable<Vertex<T>>, IVertex<T>
 	}
 
 	@Override
-	public int compareTo( Vertex<T> o) {
+	public int compareTo( IVertex<T> o) {
 		return ( this.hashCode() - o.hashCode() );
 	}
 }

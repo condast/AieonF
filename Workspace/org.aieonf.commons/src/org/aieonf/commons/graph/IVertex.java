@@ -47,5 +47,4 @@ public interface IVertex<T extends Object>{
 	public abstract int addDegree();
 
 	public abstract void removeDegree();
-
 }

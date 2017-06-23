@@ -28,7 +28,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 
-public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextAieon, IDescriptor>
+public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "FirefoxHtmlBookmarks";
 	
@@ -37,9 +37,9 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextA
 	private FireFoxReference currentURL;
 	private Stack<IModelNode<IDescriptor>> stack;
 
-	public FireFoxHTMLBookmarkProvider( IContextAieon context, IModelLeaf<IDescriptor> model )
+	public FireFoxHTMLBookmarkProvider( IContextAieon context )
 	{
-		super( S_IDENTIFER, context, model );
+		super( S_IDENTIFER, context );
 	}
 
 	@Override

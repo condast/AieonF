@@ -17,7 +17,7 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
 
-public abstract class AbstractFunctionProvider<D extends IDescribable<? extends IDescriptor>, U extends Object> implements IFunctionProvider<D, U> {
+public abstract class AbstractFunctionProvider<D extends IDescribable<IDescriptor>, U extends Object> implements IFunctionProvider<String, U> {
 
 	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
 
@@ -46,13 +46,6 @@ public abstract class AbstractFunctionProvider<D extends IDescribable<? extends 
 	public boolean supportsDomain(IDomainAieon domain) {
 		return false;
 	}
-	
-	@Override
-	public U getFunction(D descriptor) {
-		if( !canProvide(descriptor))
-			return null;
-		return onCreateFunction(descriptor );
-	}
 
 	/**
 	 * Returns true if the leaf's identifier conforms to the given one
@@ -60,15 +53,22 @@ public abstract class AbstractFunctionProvider<D extends IDescribable<? extends 
 	 * @param leaf
 	 * @return
 	 */
-	protected static boolean canProvide( String identifier ) {
+	public boolean canProvide( String identifier ) {
 		return S_FUNCTION_PROVIDER_ID.equals(identifier);
+	}
+
+	@Override
+	public U getFunction(String descriptor) {
+		if( !canProvide(descriptor))
+			return null;
+		return onCreateFunction(descriptor );
 	}
 
 	/**
 	 * Create the access
 	 * @return
 	 */
-	protected abstract U onCreateFunction( D describable); 
+	protected abstract U onCreateFunction( String describable); 
 
 	/**
 	 * Create a default loader for the given leaf

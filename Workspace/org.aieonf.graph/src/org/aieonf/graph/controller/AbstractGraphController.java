@@ -4,7 +4,7 @@ import org.aieonf.commons.graph.IVertex;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.graph.IGraphModel;
+import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
@@ -14,17 +14,17 @@ import org.aieonf.template.controller.AbstractModelController;
 public abstract class AbstractGraphController<D extends IDescribable<IContextAieon>, U extends IDescriptor> 
 extends AbstractModelController<IContextAieon,U>
 {
-	private IGraphModel<D, U> provider;
+	private IGraphModelProvider<D, U> provider;
 	
 	protected AbstractGraphController( IModelContextFactory<IContextAieon> factory ) {
 		super( factory );
 	}
 	
-	protected IGraphModel<D, U> getProvider() {
+	protected IGraphModelProvider<D, U> getProvider() {
 		return provider;
 	}
 
-	protected void setProvider(IGraphModel<D, U> provider) {
+	protected void setProvider(IGraphModelProvider<D, U> provider) {
 		this.provider = provider;
 	}
 
