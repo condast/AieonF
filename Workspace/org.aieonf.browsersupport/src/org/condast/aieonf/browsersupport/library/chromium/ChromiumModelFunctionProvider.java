@@ -12,8 +12,8 @@ import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IContextAieon,  
-IModelProvider<IContextAieon, IModelLeaf<IDescriptor>>> {
+public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, String, 
+IModelProvider<String, IModelLeaf<IDescriptor>>> {
 
 	//Default location
 	private static final String DEFAULT_CHROMIUM_ROOT =
@@ -31,23 +31,24 @@ IModelProvider<IContextAieon, IModelLeaf<IDescriptor>>> {
 	}
 
 	@Override
-	public boolean canProvide( IContextAieon leaf) {
-		if( DEFAULT_CHROMIUM_IDENTIFIER.equals( leaf ))
+	public boolean canProvide( String functionName) {
+		if( DEFAULT_CHROMIUM_IDENTIFIER.equals( functionName ))
 			return true;
 		return super.canProvide(S_FUNCTION_PROVIDER_ID );
 	}
 
+	
 	@Override
-	protected IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> onCreateFunction( IContextAieon leaf) {
-		ILoaderAieon baseLoader = getDefaultLoader(leaf);
+	protected IModelProvider<String, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
+		ILoaderAieon baseLoader = getDefaultLoader( super.getAieon());
 		URI uri = ProjectFolderUtils.appendToUserDir(DEFAULT_CHROMIUM_ROOT + "//" + DEFAULT_BOOKMARKS_FILE, false );
 		baseLoader.set( IConcept.Attributes.SOURCE, uri.toString() );
 		baseLoader.setURI( uri );
 		baseLoader.setDescription( DEFAULT_CHROMIUM_PROVIDER_NAME );
-		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, leaf);
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, super.getAieon());
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
-		IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( leaf );
+		IModelProvider<String, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( super.getAieon() );
 		return gdb;
 	}
 }

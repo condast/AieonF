@@ -10,12 +10,13 @@ import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.wrapper.ConceptWrapper;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.builder.IFunctionProvider;
-import org.aieonf.model.provider.IModelDelegate;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.osgi.service.AbstractAieonFServiceProvider;
 import org.aieonf.osgi.swt.IViewFactory;
 import org.aieonf.sketch.factory.SelectedFactory;
@@ -41,11 +42,11 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 		modelFactories = new ArrayList<SketchModelFactory>();
 	}
 
-	public void addProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IContextAieon>>> function ){
+	public void addProvider( IFunctionProvider<IDomainAieon,IModelProvider<IDomainAieon, IDescriptor>> function ){
 		this.factory.addProvider(function);
 	}
 	
-	public void removeProvider( IFunctionProvider<IDescriptor,IModelDelegate<IModelLeaf<IContextAieon>>> function ){
+	public void removeProvider( IFunctionProvider<IDomainAieon,IModelProvider<IDomainAieon, IDescriptor>> function ){
 		this.factory.removeProvider(function);
 	}
 
@@ -107,7 +108,7 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 	 * The factory contains all the necessary info to create the application
 	 * @author Kees Pieters
 	 */
-	private static class SketchFactory extends AbstractProviderContextFactory<IContextAieon>{
+	private static class SketchFactory extends AbstractProviderContextFactory<IContextAieon, IDescriptor>{
 		
 		
 		private SketchFactory() {

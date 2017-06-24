@@ -6,27 +6,32 @@ import java.net.URI;
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.encryption.IEncryption.Algorithms;
 import org.aieonf.concept.IConcept;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
 
-public abstract class AbstractFunctionProvider<D extends IDescribable<IDescriptor>, U extends Object> implements IFunctionProvider<String, U> {
+/**
+ * A function provider always provides functions for a certain domain. 
+ * @author Kees
+ *
+ * @param <D>
+ * @param <U>
+ */
+public abstract class AbstractFunctionProvider<C extends IContextAieon, D extends Object, U extends Object> implements IFunctionProvider<D, U> {
 
 	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
 
 	private static final String S_DEFAULT_ENVRYPTION_KEY = "aieonf.encryption";
 
 	private String identifier;
-	private IContextAieon aieon;
+	private C aieon;
 	
-	protected AbstractFunctionProvider( String identifier, IContextAieon aieon ) {
+	protected AbstractFunctionProvider( String identifier, C aieon ) {
 		this.identifier = identifier;
 		this.aieon = aieon;
 	}
@@ -35,7 +40,7 @@ public abstract class AbstractFunctionProvider<D extends IDescribable<IDescripto
 		return identifier;
 	}
 
-	protected IContextAieon getAieon() {
+	protected C getAieon() {
 		return aieon;
 	}
 
@@ -43,8 +48,8 @@ public abstract class AbstractFunctionProvider<D extends IDescribable<IDescripto
 	 * By default, no domain is supported
 	 */
 	@Override
-	public boolean supportsDomain(IDomainAieon domain) {
-		return false;
+	public boolean supportsDomain( D domain) {
+		return this.aieon.equals( domain);
 	}
 
 	/**
@@ -53,12 +58,12 @@ public abstract class AbstractFunctionProvider<D extends IDescribable<IDescripto
 	 * @param leaf
 	 * @return
 	 */
-	public boolean canProvide( String identifier ) {
+	public boolean canProvide( D identifier ) {
 		return S_FUNCTION_PROVIDER_ID.equals(identifier);
 	}
 
 	@Override
-	public U getFunction(String descriptor) {
+	public U getFunction(D descriptor) {
 		if( !canProvide(descriptor))
 			return null;
 		return onCreateFunction(descriptor );
@@ -68,7 +73,7 @@ public abstract class AbstractFunctionProvider<D extends IDescribable<IDescripto
 	 * Create the access
 	 * @return
 	 */
-	protected abstract U onCreateFunction( String describable); 
+	protected abstract U onCreateFunction( D describable); 
 
 	/**
 	 * Create a default loader for the given leaf

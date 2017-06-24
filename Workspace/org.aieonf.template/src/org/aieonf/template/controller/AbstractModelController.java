@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.builder.IModelBuilderListener;
@@ -13,23 +14,23 @@ import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.builder.IModelBuilder;
 import org.aieonf.template.context.IModelContextFactory;
 
-public abstract class AbstractModelController<T extends IContextAieon, U extends IDescriptor> implements IModelController<U> {
+public abstract class AbstractModelController<C extends IContextAieon, D extends IDomainAieon, U extends IDescriptor> implements IModelController<U> {
 
 	private boolean initialised;
 	private IModelLeaf<U> model;
-	private ITemplateLeaf<T> template;
+	private ITemplateLeaf<C> template;
 	private boolean open;
 	
-	private IModelContextFactory<T> factory;	
+	private IModelContextFactory<C,D> factory;	
 
-	private Collection<IModelBuilderListener> listeners;
+	private Collection<IModelBuilderListener<U>> listeners;
 	
-	protected AbstractModelController( IModelContextFactory<T> factory ) {
+	protected AbstractModelController( IModelContextFactory<C,D> factory ) {
 		super();
 		this.open = false;
 		this.factory = factory;
 		this.initialised = false;
-		listeners = new ArrayList<IModelBuilderListener>();
+		listeners = new ArrayList<IModelBuilderListener<U>>();
 	}
 	
 	@Override
@@ -44,12 +45,12 @@ public abstract class AbstractModelController<T extends IContextAieon, U extends
 
 
 	@Override
-	public void addBuilderListener( IModelBuilderListener listener ){
+	public void addBuilderListener( IModelBuilderListener<U> listener ){
 		this.listeners.add( listener );
 	}
 
 	@Override
-	public void removeBuilderListener( IModelBuilderListener listener ){
+	public void removeBuilderListener( IModelBuilderListener<U> listener ){
 		this.listeners.remove( listener );
 	}
 
@@ -57,20 +58,20 @@ public abstract class AbstractModelController<T extends IContextAieon, U extends
 	 * Notfiy the listeners of changes
 	 * @param event
 	 */
-	protected void notifyModelChanged(ModelBuilderEvent event) {
-		for( IModelBuilderListener listener: getListeners() )
+	protected void notifyModelChanged(ModelBuilderEvent<U> event) {
+		for( IModelBuilderListener<U> listener: getListeners() )
 			listener.notifyChange(event);					
 	}
 
-	protected Collection<IModelBuilderListener> getListeners() {
+	protected Collection<IModelBuilderListener<U>> getListeners() {
 		return listeners;
 	}
 
-	protected IModelContextFactory<T> getFactory() {
+	protected IModelContextFactory<C,D> getFactory() {
 		return factory;
 	}
 
-	public ITemplateLeaf<T> getTemplate() {
+	public ITemplateLeaf<C> getTemplate() {
 		return factory.getTemplate();
 	}
 
@@ -109,11 +110,11 @@ public abstract class AbstractModelController<T extends IContextAieon, U extends
 	@Override
 	public IModelLeaf<U> createModel(){
 		IModelBuilder<U> builder = this.getModelBuilder();
-		IModelBuilderListener listener = new IModelBuilderListener(){
+		IModelBuilderListener<U> listener = new IModelBuilderListener<U>(){
 
 			@Override
-			public void notifyChange(ModelBuilderEvent event) {
-				for( IModelBuilderListener listener: listeners)
+			public void notifyChange(ModelBuilderEvent<U> event) {
+				for( IModelBuilderListener<U> listener: listeners)
 					listener.notifyChange(event);
 			}
 			

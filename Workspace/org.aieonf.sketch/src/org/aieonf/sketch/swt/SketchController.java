@@ -12,6 +12,7 @@ import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.sketch.factory.SelectedFactory;
 import org.aieonf.sketch.factory.SketchModelFactory;
 import org.aieonf.sketch.preferences.SketchPreferences;
@@ -129,7 +130,7 @@ public class SketchController extends AbstractJavascriptController {
 		SketchModelFactory factory = selected.getFactory();
 		if( factory == null )
 			return;
-		factory.search(filter);
+		factory.getFunction( IModelProvider.S_MODEL_PROVIDER_ID).search(filter);
 		SketchPreferences preferences = SketchPreferences.getInstance();
 		preferences.setGetDate();
 	}

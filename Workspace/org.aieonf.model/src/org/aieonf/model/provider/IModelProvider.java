@@ -13,7 +13,7 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <T>
  */
-public interface IModelProvider<D extends IDescribable<? extends IDescriptor>, T extends IDescribable<? extends IDescriptor>> extends IProvider<T>{
+public interface IModelProvider<D extends Object, T extends IDescribable<? extends IDescriptor>> extends IProvider<T>{
 
 	/**
 	 * Open the delegate

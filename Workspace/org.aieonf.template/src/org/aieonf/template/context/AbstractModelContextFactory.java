@@ -17,21 +17,21 @@ import org.aieonf.model.xml.XMLModelBuilder;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
 
-public abstract class AbstractModelContextFactory<T extends IContextAieon> implements IModelContextFactory<T> {
+public abstract class AbstractModelContextFactory<C extends IContextAieon> implements IModelContextFactory<C,IDomainAieon> {
 
-	private ITemplateLeaf<T> template;
+	private ITemplateLeaf<C> template;
 
-	private Collection<IModelBuilderListener<T>> listeners;
+	private Collection<IModelBuilderListener<C>> listeners;
 
 	protected AbstractModelContextFactory() {
-		listeners = new ArrayList<IModelBuilderListener<T>>();
+		listeners = new ArrayList<IModelBuilderListener<C>>();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IModelContextFactory#addListener(org.aieonf.model.builder.IModelBuilderListener)
 	 */
 	@Override
-	public void addListener( IModelBuilderListener<T> listener ){
+	public void addListener( IModelBuilderListener<C> listener ){
 		this.listeners.add( listener );
 	}
 
@@ -39,12 +39,12 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 * @see org.aieonf.template.context.IModelContextFactory#removeListener(org.aieonf.model.builder.IModelBuilderListener)
 	 */
 	@Override
-	public void removeListener( IModelBuilderListener<T>  listener ){
+	public void removeListener( IModelBuilderListener<C>  listener ){
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<T>  event ){
-		for( IModelBuilderListener<T>  listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<C>  event ){
+		for( IModelBuilderListener<C>  listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -52,14 +52,14 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 * Create the model
 	 * @return
 	 */
-	protected abstract ITemplateLeaf<T> onCreateTemplate();
+	protected abstract ITemplateLeaf<C> onCreateTemplate();
 
 	/**
 	 * Create the model
 	 * @return
 	 */
 	@Override
-	public ITemplateLeaf<T> createTemplate(){
+	public ITemplateLeaf<C> createTemplate(){
 		this.template = onCreateTemplate();
 		return template;
 	}
@@ -68,7 +68,7 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 * @see org.aieonf.template.context.IModelContextFactory#getModel()
 	 */
 	@Override
-	public ITemplateLeaf<T> getTemplate() {
+	public ITemplateLeaf<C> getTemplate() {
 		return template;
 	}
 
@@ -77,13 +77,13 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 */
 	@Override
 	public IDomainAieon getDomain(){
-		ModelSearch<T> search = new ModelSearch<T>( this.template );
+		ModelSearch<C> search = new ModelSearch<C>( this.template );
 		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
 		return domain;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected final ITemplateLeaf<T> createDefaultTemplate( String identifier, IXMLModelBuilder creator ) {
+	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelBuilder creator ) {
 		IModelBuilderListener listener = new IModelBuilderListener(){
 
 			@Override
@@ -91,9 +91,9 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 				notifyListeners( event );
 			}	
 		};
-		XMLModelBuilder<T> builder = new XMLModelBuilder<T>( identifier, creator );
+		XMLModelBuilder<C> builder = new XMLModelBuilder<C>( identifier, creator );
 		builder.addListener(listener);
-		ITemplateLeaf<T> root = (ITemplateLeaf<T>) builder.build();
+		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.build();
 		builder.removeListener(listener);
 		root.getDescriptor().set( IConcept.Attributes.SOURCE, identifier );
 		return root;	
@@ -104,25 +104,25 @@ public abstract class AbstractModelContextFactory<T extends IContextAieon> imple
 	 * @param identifier
 	 * @return
 	 */
-	protected ITemplateLeaf<T> getTemplate( String identifier ){
+	protected ITemplateLeaf<C> getTemplate( String identifier ){
 		return getTemplate( this.template, identifier );
 	}
 
 	@SuppressWarnings("unchecked")
-	protected ITemplateLeaf<T> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
+	protected ITemplateLeaf<C> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
 		if( Utils.assertNull( identifier ))
 			return null;
 		if( identifier.equals( leaf.getID())){
 			if( Utils.assertNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE ) )){
 				leaf.getDescriptor().set( IConcept.Attributes.SOURCE, template.getID() );
 			}
-			return (ITemplateLeaf<T>) leaf;
+			return (ITemplateLeaf<C>) leaf;
 		}
 		if( leaf.isLeaf())
 			return null;
 		ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) leaf;
 		for( IModelLeaf<? extends IDescriptor> child: node.getChildren() ){
-			ITemplateLeaf<T> result = getTemplate( (ITemplateLeaf<? extends IDescriptor>) child, identifier );
+			ITemplateLeaf<C> result = getTemplate( (ITemplateLeaf<? extends IDescriptor>) child, identifier );
 			if( result != null )
 				return result;
 		}

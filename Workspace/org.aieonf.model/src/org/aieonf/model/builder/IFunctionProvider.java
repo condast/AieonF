@@ -1,8 +1,6 @@
 package org.aieonf.model.builder;
 
-import org.aieonf.concept.domain.IDomainAieon;
-
-public interface IFunctionProvider<T extends Object, U extends Object> {
+public interface IFunctionProvider<D extends Object, U extends Object> {
 
 	/**
 	 * A function can be restricted to a certain domain. Returns true if the given domain
@@ -10,19 +8,19 @@ public interface IFunctionProvider<T extends Object, U extends Object> {
 	 * @param domain
 	 * @return
 	 */
-	public boolean supportsDomain( IDomainAieon domain );
+	public boolean supportsDomain( D domain );
 	
 	/**
 	 * Returns true if a function can be provided for the given model
 	 * @param data
 	 * @return
 	 */
-	public boolean canProvide( T key );
+	public boolean canProvide( D key );
 
 	/**
 	 * Get the function belonging to the given model leaf
 	 * @param data
 	 * @return
 	 */
-	public U getFunction( T key );
+	public U getFunction( D key );
 }

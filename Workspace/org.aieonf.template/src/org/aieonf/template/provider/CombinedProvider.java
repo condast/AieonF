@@ -7,12 +7,11 @@ import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U extends IDescriptor> implements IModelProvider<D,U> 
+public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<D,U> 
 {
 	public final static String S_IDENTIFIER = "Combined";
 	
@@ -85,14 +84,14 @@ public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U e
 
 	
 	@Override
-	public void addListener(IModelBuilderListener<IModelLeaf<U>> listener) {
+	public void addListener(IModelBuilderListener<U> listener) {
 		for( IModelProvider<D,U> provider: this.providers ){
 			provider.addListener(listener);
 		}
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<IModelLeaf<U>> listener) {
+	public void removeListener(IModelBuilderListener<U> listener) {
 		for( IModelProvider<D,U> provider: this.providers ){
 			provider.removeListener(listener);
 		}
@@ -118,11 +117,11 @@ public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U e
 	}
 
 	@Override
-	public Collection<IModelLeaf<U>> get(IDescriptor descriptor)
+	public Collection<U> get(IDescriptor descriptor)
 			throws ParseException {
-		Collection<IModelLeaf<U>> results = new ArrayList<IModelLeaf<U>>();
+		Collection<U> results = new ArrayList<U>();
 		for( IModelProvider<D,U> provider: this.providers ){
-			Collection<IModelLeaf<U>> temp = provider.get(descriptor);
+			Collection<U> temp = provider.get(descriptor);
 			if(( temp != null ) && ( !temp.isEmpty() ))
 				results.addAll( temp );
 		}
@@ -130,14 +129,14 @@ public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U e
 	}
 
 	@Override
-	public Collection<IModelLeaf<U>> search(
+	public Collection<U> search(
 			IModelFilter<IDescriptor> filter) throws ParseException {
-		Collection<IModelLeaf<U>> results = new ArrayList<IModelLeaf<U>>();
+		Collection<U> results = new ArrayList<U>();
 		for( IModelProvider<D,U> provider: this.providers ){
 			try{
 				if( !provider.isOpen( null))
 					continue;
-				Collection<IModelLeaf<U>> temp = provider.search( filter );
+				Collection<U> temp = provider.search( filter );
 				if(( temp != null ) && ( !temp.isEmpty() ))
 					results.addAll( temp );
 			}

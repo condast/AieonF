@@ -9,9 +9,9 @@ import org.aieonf.model.builder.IModelBuilderListener;
  * model, which is either created, or obtained from a descriptor
  * @author Kees
  *
- * @param <T>
+ * @param <U>
  */
-public interface IModelController<T extends IDescriptor> {
+public interface IModelController<U extends IDescriptor> {
 
 	/**
 	 * Initialise the controller
@@ -38,13 +38,13 @@ public interface IModelController<T extends IDescriptor> {
 	 * add a model builder listener for additional tasks during the build
 	 * @param listener
 	 */
-	public void addBuilderListener( IModelBuilderListener listener );
+	public void addBuilderListener( IModelBuilderListener<U> listener );
 
 	/**
 	 * remove the listener
 	 * @param listener
 	 */
-	public void removeBuilderListener( IModelBuilderListener listener );
+	public void removeBuilderListener( IModelBuilderListener<U> listener );
 
 	/**
 	 * Returns true if the controller is initialised
@@ -56,18 +56,18 @@ public interface IModelController<T extends IDescriptor> {
 	 * Create a model
 	 * @return
 	 */
-	public IModelLeaf<T> createModel();
+	public IModelLeaf<U> createModel();
 
 	/**
 	 * Get a model which contains the given descriptor
 	 * @return
 	 */
-	public IModelLeaf<T> getModel();
+	public IModelLeaf<U> getModel();
 	
 	/**
 	 *Set the model
 	 */
-	public void setModel( IModelLeaf<T> model );
+	public void setModel( IModelLeaf<U> model );
 
 	/**
 	 * Get a submodel which contains the given descriptor

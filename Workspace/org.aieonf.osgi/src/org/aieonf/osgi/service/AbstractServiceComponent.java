@@ -10,16 +10,16 @@ import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.context.IProviderContextFactory;
 
-public abstract class AbstractServiceComponent<C extends IContextAieon, U extends IDescribable<IDescriptor>> implements IModelFunctionProvider<C, U>
+public abstract class AbstractServiceComponent<C extends IContextAieon, D extends IDomainAieon, U extends IDescribable<IDescriptor>> implements IModelFunctionProvider<D, U>
 {
 
-	private IProviderContextFactory<C,U> factory;
+	private IProviderContextFactory<C,D,U> factory;
 	
-	protected  AbstractServiceComponent( IProviderContextFactory<C,U> factory ){
+	protected  AbstractServiceComponent( IProviderContextFactory<C,D,U> factory ){
 		this.factory = factory;
 	}
 
-	protected IProviderContextFactory<C,U> getFactory() {
+	protected IProviderContextFactory<C,D,U> getFactory() {
 		return factory;
 	}
 
@@ -40,7 +40,7 @@ public abstract class AbstractServiceComponent<C extends IContextAieon, U extend
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IProviderContextFactory#addProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
-	public void addProvider( IFunctionProvider<C, IModelProvider<C, U>> function ){
+	public void addProvider( IFunctionProvider<D, IModelProvider<D, U>> function ){
 		factory.addProvider(function);
 	}
 	
@@ -48,13 +48,20 @@ public abstract class AbstractServiceComponent<C extends IContextAieon, U extend
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IProviderContextFactory#addProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
-	public void removeProvider( IFunctionProvider<C,IModelProvider<C, U>> function ){
+	public void removeProvider( IFunctionProvider<D,IModelProvider<D, U>> function ){
 		factory.removeProvider(function);
 	}
-
+	
 	//Every domain may use this function
 	@Override
-	public boolean supportsDomain(IDomainAieon domain) {
+	public boolean supportsDomain( String domain) {
 		return ( domain != null );
 	}
+
+	
+	@Override
+	public boolean canProvide( String functionName ) {
+		return ( factory.hasFunction( functionName ));
+	}
+
 }

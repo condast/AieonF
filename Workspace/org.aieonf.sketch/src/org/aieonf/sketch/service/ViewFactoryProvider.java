@@ -18,7 +18,6 @@ public class ViewFactoryProvider implements IViewFactory<Composite, Composite>{
 	
 	public ViewFactoryProvider() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public void activate(){ /* NOTHING */}

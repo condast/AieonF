@@ -38,6 +38,6 @@ public class GraphModelFunction<T extends IDescriptor> extends AbstractFunctionP
 		URI uri = ProjectFolderUtils.getDefaultUserDatabase( baseLoader, template.getDescriptor().getContext() );
 		baseLoader.setURI( uri );
 
-		return new GraphModel<T>( baseLoader, template );
+		return new GraphModel( baseLoader, template );
 	}
 }

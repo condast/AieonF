@@ -12,12 +12,13 @@ import java.util.Collection;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 
-public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
+public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "FirefoxJsonBookmarks";
 

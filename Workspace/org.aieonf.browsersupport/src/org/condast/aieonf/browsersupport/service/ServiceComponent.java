@@ -4,13 +4,14 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.osgi.service.AbstractServiceComponent;
 import org.aieonf.template.ITemplateLeaf;
 import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
 
-public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IModelLeaf<IDescriptor>>
+public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>
 {
 	
 	public ServiceComponent()
@@ -21,27 +22,18 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IM
 	public void activate(){
 		try{
 			ITemplateLeaf<IContextAieon> template = super.getFactory().createTemplate();
-			super.addProvider( new ModelFunctionProvider( template.getDescriptor() ));
+			IFunctionProvider<IDomainAieon, IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> provider =  
+					new ModelFunctionProvider( template.getDescriptor() );
+			super.addProvider( provider);
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 		}
 	}
-	
-	//Every domain may use this function
-	@Override
-	public boolean supportsDomain(IDomainAieon domain) {
-		return ( domain != null );
-	}
 
 	
 	@Override
-	public boolean canProvide( String functionName ) {
-		return ( super.getFactory().hasFunction( functionName ));
-	}
-
-	@Override
-	public IModelProvider<IContextAieon, IModelLeaf<IDescriptor>> getFunction( String functionName) {
+	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction(String functionName ) {
 		if( !canProvide(functionName))
 			return null;
 		return getFactory().getFunction( functionName );

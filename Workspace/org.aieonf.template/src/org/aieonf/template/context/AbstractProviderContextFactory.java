@@ -9,11 +9,8 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.concept.security.IPasswordAieon;
-import org.aieonf.concept.security.PasswordAieon;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
+import org.aieonf.concept.domain.DomainAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.xml.IXMLModelBuilder;
@@ -24,7 +21,8 @@ import org.aieonf.template.context.AbstractModelContextFactory;
  * The simple context factory creates a default context and model
  * @author Kees Pieters
  */
-public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable<IDescriptor>> extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, U>
+public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable<? extends IDescriptor>> 
+extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDomainAieon, U>
 {
 	public static final String S_DATABASE_ID = "org.aieonf.database";
 
@@ -32,7 +30,7 @@ public abstract class AbstractProviderContextFactory<C extends IContextAieon, U 
 	private String bundle_id;
 	private String provider_id;
 	
-	private Collection<IModelProvider<C, U>> functions;
+	private Collection<IModelProvider<IDomainAieon, U>> functions;
 	
 	private IXMLModelBuilder<IDescriptor,ITemplateLeaf<IDescriptor>> creator;
 	
@@ -45,7 +43,7 @@ public abstract class AbstractProviderContextFactory<C extends IContextAieon, U 
 			IXMLModelBuilder<IDescriptor,ITemplateLeaf<IDescriptor>> creator ) {
 		this.bundle_id = bundle_id;
 		this.provider_id = provider_id;
-		functions = new ArrayList<IModelProvider<C, U>>();
+		functions = new ArrayList<IModelProvider<IDomainAieon, U>>();
 		this.creator = creator;
 	}
 
@@ -58,7 +56,7 @@ public abstract class AbstractProviderContextFactory<C extends IContextAieon, U 
 	 */
 	@Override
 	public boolean hasFunction( String function ){
-		for( IModelProvider<C, U>  delegate: functions ){
+		for( IModelProvider<IDomainAieon, U>  delegate: functions ){
 			if( delegate.hasFunction(function))
 				return true;
 		}
@@ -66,8 +64,8 @@ public abstract class AbstractProviderContextFactory<C extends IContextAieon, U 
 	}
 	
 	@Override
-	public IModelProvider<C, U> getFunction( String functionName ) {
-		for( IModelProvider<C, U> function: functions ){
+	public IModelProvider<IDomainAieon,U> getFunction( String functionName ) {
+		for( IModelProvider<IDomainAieon, U> function: functions ){
 			if( function.hasFunction( functionName ))
 					return function;
 		}
@@ -90,18 +88,11 @@ public abstract class AbstractProviderContextFactory<C extends IContextAieon, U 
 	}
 */
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public void addProvider(IFunctionProvider<C, IModelProvider<C, U>> function) {
-		if( super.getTemplate() == null )
-			createTemplate();
-		IModelNode<C> leaf = (IModelNode<C>) super.getTemplate( provider_id );
-		IModelLeaf<IDescriptor> child = (IModelLeaf<IDescriptor>) leaf.getChildren( ILoaderAieon.Attributes.LOADER.toString() )[0];
-		IPasswordAieon pwd = new PasswordAieon( child.getDescriptor());
-		pwd.setUserName("keesp");
-		pwd.setPassword("test");
-		if( function.canProvide( leaf.getDescriptor() )){
-			IModelProvider<C, U> delegate = function.getFunction( leaf.getDescriptor() );
+	public void addProvider(IFunctionProvider<IDomainAieon, IModelProvider<IDomainAieon, U>> function) {
+		IDomainAieon domain = new DomainAieon( provider_id );
+		if( function.canProvide( domain )){
+			IModelProvider<IDomainAieon, U> delegate = function.getFunction( domain );
 			this.functions.add( delegate );
 		}
 	}
@@ -111,10 +102,10 @@ public abstract class AbstractProviderContextFactory<C extends IContextAieon, U 
 	 * @see org.aieonf.template.context.IProviderContextFactory#removeProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
 	@Override
-	public void removeProvider( IFunctionProvider<C,IModelProvider<C, U>> function ){
-		IModelLeaf<C> leaf = super.getTemplate( provider_id );
-		if( function.canProvide(super.getTemplate( provider_id ).getDescriptor())){
-			IModelProvider<C, U> delegate = function.getFunction( leaf.getDescriptor() );
+	public void removeProvider( IFunctionProvider<IDomainAieon,IModelProvider<IDomainAieon, U>> function ){
+		IDomainAieon domain = new DomainAieon( provider_id );
+		if( function.canProvide( domain )){
+			IModelProvider<IDomainAieon, U> delegate = function.getFunction( domain );
 			this.functions.remove( delegate );
 		}
 	}

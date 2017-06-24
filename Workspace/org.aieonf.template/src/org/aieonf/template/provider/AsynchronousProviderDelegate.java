@@ -4,14 +4,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.provider.ModelDelegate;
 
-public class AsynchronousProviderDelegate<D extends IDescribable<? extends IDescriptor>, U extends IDescriptor> extends ModelDelegate<D, U> 
+public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDescriptor> extends ModelDelegate<D, U> 
 {
 	private ExecutorService service;
 	

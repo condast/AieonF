@@ -35,7 +35,7 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
-class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
+class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon, String, IModelLeaf<IDescriptor>>
 {
 	private static final String S_IDENTIFER = "FirefoxSQLBookmarks";
 
@@ -55,7 +55,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	}
 
 	@Override
-	public void open( IContextAieon domain)
+	public void open( String domain)
 	{
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -435,7 +435,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	}
 
 	@Override
-	public void close( IContextAieon domain){
+	public void close( String domain){
 		super.setRequestClose( true );
 	}
 
