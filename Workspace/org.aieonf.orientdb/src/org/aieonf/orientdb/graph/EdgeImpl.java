@@ -14,7 +14,7 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
-public class EdgeImpl<T extends IDescriptor> implements IEdge<T,IDescriptor> {
+public class EdgeImpl implements IEdge<IDescriptor,IDescriptor> {
 
 	private Edge edge;
 	private IVertex<IDescriptor> first;
@@ -34,9 +34,9 @@ public class EdgeImpl<T extends IDescriptor> implements IEdge<T,IDescriptor> {
 		return edge.getId();
 	}
 
+	
 	@Override
-	public void put(IVertex<IDescriptor> v, IVertex<IDescriptor> w, T obj) {
-
+	public void put(IVertex<IDescriptor> v, IVertex<IDescriptor> w, IDescriptor obj) {
 		this.first = v;
 		this.last = w;
 		this.replace(obj);
@@ -45,19 +45,19 @@ public class EdgeImpl<T extends IDescriptor> implements IEdge<T,IDescriptor> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public U get() {
+	public IDescriptor get() {
 		Iterator<String> iterator = edge.getPropertyKeys().iterator();
 		IDescriptor descriptor = new Concept();
 		while( iterator.hasNext() ){
 			String key = iterator.next();
 			descriptor.set( key, (String) edge.getProperty( key ));
 		}
-		return (U) descriptor;
+		return descriptor;
 	}
 
 
 	@Override
-	public void replace(U obj) {
+	public void replace(IDescriptor obj) {
 		this.remove();
 		Iterator<String> iterator = obj.iterator();
 		while( iterator.hasNext() ){
@@ -75,8 +75,8 @@ public class EdgeImpl<T extends IDescriptor> implements IEdge<T,IDescriptor> {
 
 
 	@Override
-	public Collection<IVertex<T>> endVertices() {
-		Collection<IVertex<T>> vertices = new ArrayList<IVertex<T>>();
+	public Collection<IVertex<IDescriptor>> endVertices() {
+		Collection<IVertex<IDescriptor>> vertices = new ArrayList<IVertex<IDescriptor>>();
 		vertices.add( this.first );
 		vertices.add( this.last );
 		return vertices;
@@ -84,25 +84,25 @@ public class EdgeImpl<T extends IDescriptor> implements IEdge<T,IDescriptor> {
 
 
 	@Override
-	public boolean containsVertex(IVertex<T> vertex) {
+	public boolean containsVertex(IVertex<IDescriptor> vertex) {
 		return ( this.first.equals( vertex )) || ( this.last.equals( vertex ));
 	}
 
 
 	@Override
-	public IVertex<T> first() {
+	public IVertex<IDescriptor> first() {
 		return this.first;
 	}
 
 
 	@Override
-	public IVertex<T> last() {
+	public IVertex<IDescriptor> last() {
 		return this.last;
 	}
 
 
 	@Override
-	public IVertex<T> opposite(IVertex<T> vertex) {
+	public IVertex<IDescriptor> opposite(IVertex<IDescriptor> vertex) {
 		if( this.first.equals( vertex ))
 			return this.last;
 		if( this.last.equals( vertex ))

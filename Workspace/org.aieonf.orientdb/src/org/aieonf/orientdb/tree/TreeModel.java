@@ -10,11 +10,13 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
 import org.aieonf.template.ITemplateLeaf;
@@ -24,7 +26,7 @@ import org.aieonf.template.builder.TemplateModelBuilderEvent;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
-public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T, IModelLeaf<T>> implements IGraphModelProvider<IModelLeaf<T>> {
+public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> {
 	
 	private ITemplateLeaf<IContextAieon> template;
 	
@@ -40,13 +42,12 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 		return !DefaultModels.GRAPH.equals( DefaultModels.getModel(function ));
 	}
 
-	@Override
-	public IModelLeaf<T> create() {
+	public IModelLeaf<IDescriptor> create() {
 		Vertex root = super.getGraph().getVerticesOfClass( S_ROOT).iterator().next();
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.VERSION ), 1 );
-		IModelLeaf<T> parent = new OrientDBNode<T>( super.getGraph(), root ); 
-		this.notifyListeners( new TemplateModelBuilderEvent(this, template, new OrientDBNode<IDescriptor>( super.getGraph(), root )));
+		IModelLeaf<IDescriptor> parent = new OrientDBNode( super.getGraph(), root ); 
+		this.notifyListeners( new TemplateModelBuilderEvent(this, template, new OrientDBNode( super.getGraph(), root )));
 		create( root, template );
 		return parent;
 	}
@@ -55,12 +56,12 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 	protected void create( Vertex vertex, ITemplateLeaf<? extends IDescriptor> leaf ) {
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
 		Vertex child = super.getGraph().addVertex( null );
-		IModelLeaf<IDescriptor> node = new OrientDBNode<IDescriptor>( super.getGraph(), child );
+		IModelLeaf<IDescriptor> node = new OrientDBNode( super.getGraph(), child );
 		IDescriptor descriptor = node.getDescriptor();
 		descriptor.set( ConceptBase.getAttributeKey( IDescriptor.Attributes.CREATE_DATE ), date );
 		descriptor.set( IModelLeaf.Attributes.IDENTIFIER, leaf.getIdentifier() );
 		super.getGraph().addEdge(null, vertex, child, leaf.getIdentifier());
-		this.notifyListeners( new TemplateModelBuilderEvent(this, leaf, new OrientDBNode<IDescriptor>( super.getGraph(), child )));
+		this.notifyListeners( new TemplateModelBuilderEvent(this, leaf, new OrientDBNode( super.getGraph(), child )));
 		if( !leaf.isLeaf()){
 			ITemplateNode<IDescriptor> nd = (ITemplateNode<IDescriptor>) leaf;
 			for( IModelLeaf<? extends IDescriptor> next: nd.getChildren() )
@@ -74,9 +75,9 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 	 * @return
 	 */
 	@Override
-	public boolean contains( IModelLeaf<? extends IDescriptor> leaf ){
+	public boolean contains( IModelLeaf<IDescriptor> leaf ){
 		for (Vertex v : super.getGraph().getVertices()) {
-		    IModelLeaf<IDescriptor> node = new OrientDBNode<IDescriptor>( super.getGraph(), v );
+		    IModelLeaf<IDescriptor> node = new OrientDBNode( super.getGraph(), v );
 		    if( leaf.getDescriptor().equals( node.getDescriptor() ))
 		    	return true;
 		}		
@@ -84,10 +85,10 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> get(IDescriptor descriptor) {
-		Collection<IModelLeaf<T>> results = new ArrayList<IModelLeaf<T>>();
+	public Collection<IModelLeaf<IDescriptor>> get(IDescriptor descriptor) {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		for (Vertex v : super.getGraph().getVertices()) {
-		    IModelLeaf<T> leaf = new OrientDBNode<T>( super.getGraph(), v );
+		    IModelLeaf<IDescriptor> leaf = new OrientDBNode( super.getGraph(), v );
 		    if( leaf.getDescriptor().equals( descriptor ))
 		    	results.add( leaf );
 		}		
@@ -95,15 +96,15 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> search(IModelFilter<IDescriptor> filter) {
-		Collection<IModelLeaf<T>> results = new ArrayList<IModelLeaf<T>>();
+	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IDescriptor> filter) {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		Iterable<Vertex> iter = super.getGraph().getVertices();
 		if( iter.iterator() == null )
 			return results;
 		Iterator<Vertex> iterator = iter.iterator();
 		while( iterator.hasNext() ){
 			Vertex child = iterator.next();
-			IModelLeaf<T> leaf = new OrientDBNode<T>( super.getGraph(), child );
+			IModelLeaf<IDescriptor> leaf = new OrientDBNode( super.getGraph(), child );
 			if( filter.accept( leaf ))
 				results.add( leaf );
 		}
@@ -123,10 +124,9 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	@Override
-	public boolean add(IModelLeaf<T> root) {
+	public boolean add(IModelLeaf<IDescriptor> root) {
 		try{
 			Iterator<Vertex> iterator = super.getRoot().getVertices( com.tinkerpop.blueprints.Direction.BOTH, new String[0]).iterator();
 			while( iterator.hasNext() ){
@@ -176,8 +176,7 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 	    return retval;
 	}
 
-	@Override
-	public boolean delete(IModelLeaf<T> model) {
+	public boolean delete(IModelLeaf<IDescriptor> model) {
 		try{
 			String grph_id = model.getDescriptor().get( VertexDescriptor.GRAPH_ID );
 			if( Utils.assertNull(grph_id))
@@ -206,8 +205,7 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 		}
 	}
 
-	@Override
-	public boolean update(IModelLeaf<T> root) {
+	public boolean update(IModelLeaf<IDescriptor> root) {
 		try{
 			Iterator<Vertex> iterator = super.getRoot().getVertices( com.tinkerpop.blueprints.Direction.BOTH, new String[0]).iterator();
 			Vertex update = null;
@@ -245,5 +243,23 @@ public class TreeModel<T extends IDescriptor> extends AbstractOrientGraphModel<T
 			String key = iterator.next();
 			System.out.println( StringStyler.toPackageString( key )  + ": "+ vertex.getProperty( key ) );
 		}
+	}
+
+	@Override
+	public boolean supportsDomain(String domain) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canProvide(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction(String key) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

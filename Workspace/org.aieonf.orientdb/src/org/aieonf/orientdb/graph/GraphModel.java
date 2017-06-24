@@ -62,7 +62,8 @@ public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLea
 		descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
 		descriptor.set( IModelLeaf.Attributes.IDENTIFIER, leaf.getIdentifier() );
 		graph.addEdge(null, vertex, child, leaf.getIdentifier());
-		this.notifyListeners( new TemplateModelBuilderEvent(this, leaf, new OrientDBNode( graph, child )));
+		this.notifyListeners( new TemplateModelBuilderEvent<IContextAieon, 
+				IModelLeaf<IDescriptor>>(this, (ITemplateLeaf<IContextAieon>) leaf, new OrientDBNode( graph, child )));
 		if( !leaf.isLeaf()){
 			ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) leaf;
 			for( IModelLeaf<? extends IDescriptor> next: node.getChildren() )
@@ -115,8 +116,9 @@ public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLea
 			factory.close();
 	}
 
+
 	@Override
-	public boolean supportsDomain(IDomainAieon domain) {
+	public boolean supportsDomain(String domain) {
 		// TODO Auto-generated method stub
 		return false;
 	}

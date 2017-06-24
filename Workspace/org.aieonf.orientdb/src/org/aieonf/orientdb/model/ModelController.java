@@ -13,6 +13,7 @@ import org.aieonf.model.IModelNode;
 import org.aieonf.orientdb.cache.CacheController;
 import org.aieonf.orientdb.cache.ODescriptor;
 
+import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -98,7 +99,7 @@ public class ModelController implements Closeable{
 	public Collection<IDescriptor> getDescriptors( String id ){
 		List<IDescriptor> results = new ArrayList<IDescriptor>();
 		for( Vertex vertex: graph.getVerticesOfClass( id ))
-			results.add( new ODescriptor( vertex ));		
+			results.add( new ODescriptor( (ODocument) vertex ));		
 		return results;
 	}
 
