@@ -29,7 +29,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<D,U> {
+public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<U> {
 	
 	public static final String S_IDENTIFIER = "GraphModel";
 	
@@ -122,7 +122,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	}
 
 	@Override
-	public void open( D domain ){
+	public void open(){
 		try{
 			this.connect(loader);
 			if(!connected )
@@ -142,7 +142,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	}
 
 	@Override
-	public boolean isOpen( D domain){
+	public boolean isOpen(){
 		return !this.graph.isClosed();
 	}
 
@@ -160,14 +160,14 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 		}
 	}
 
-	public ITransaction<U,IModelProvider<D, U>> createTransaction() {
+	public ITransaction<U,IModelProvider<U>> createTransaction() {
 		Transaction transaction = new Transaction( this );
 		transaction.create();
 		return transaction;
 	}
 
 	@Override
-	public void close( D domain){
+	public void close(){
 		this.sync();
 		if( graph != null )
 			graph.shutdown();
@@ -270,22 +270,22 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 		
 	}
 
-	protected class Transaction extends AbstractTransaction<U, IModelProvider<D, U>>{
+	protected class Transaction extends AbstractTransaction<U, IModelProvider<U>>{
 
-		protected Transaction( IModelProvider<D, U> provider) {
+		protected Transaction( IModelProvider<U> provider) {
 			super( provider );
 		}
 
 		public void close() {
-			super.getProvider().close( null );
-			if( !super.getProvider().isOpen( null ))
+			super.getProvider().close();
+			if( !super.getProvider().isOpen())
 				super.close();
 		}
 
 		@Override
-		protected boolean onCreate(IModelProvider<D, U> provider) {
-			super.getProvider().open( null);
-			return super.getProvider().isOpen( null);
+		protected boolean onCreate(IModelProvider<U> provider) {
+			super.getProvider().open();
+			return super.getProvider().isOpen();
 		}
 	}
 }

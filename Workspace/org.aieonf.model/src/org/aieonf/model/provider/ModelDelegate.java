@@ -5,15 +5,14 @@ import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ModelDelegate<D extends IDomainAieon, T extends IDescriptor> implements IModelDelegate<D, T> 
+public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T> 
 {
-	private Collection<IModelProvider<D, T>> providers;
+	private Collection<IModelProvider<T>> providers;
 	private Collection<IModelBuilderListener<T>> listeners;
 	
 	private IModelBuilderListener<T> listener = new IModelBuilderListener<T>() {
@@ -26,16 +25,16 @@ public class ModelDelegate<D extends IDomainAieon, T extends IDescriptor> implem
 	
 	public ModelDelegate()
 	{
-		providers = new ArrayList<IModelProvider<D, T>>();
+		providers = new ArrayList<IModelProvider<T>>();
 		listeners = new ArrayList<IModelBuilderListener<T>>();
 	}
 
 	
-	public void addProvider( IModelProvider<D, T> provider ){
+	public void addProvider( IModelProvider<T> provider ){
 		this.providers.add( provider );
 	}
 
-	public void removeProvider( IModelProvider<D, T> provider ){
+	public void removeProvider( IModelProvider<T> provider ){
 		this.providers.remove( provider );
 	}
 
@@ -54,30 +53,30 @@ public class ModelDelegate<D extends IDomainAieon, T extends IDescriptor> implem
 			mbl.notifyChange( new ModelBuilderEvent<T>( this, event.getModel() ));
 	}
 
-	public void open( D domain ) {
-		for( IModelProvider<D, T> provider: this.providers ){
-			provider.open( domain );
+	public void open() {
+		for( IModelProvider<T> provider: this.providers ){
+			provider.open();
 		}
 	}
 
-	public boolean isOpen( D domain ) {
-		for( IModelProvider<D, T> provider: this.providers ){
-			if( provider.isOpen( domain ))
+	public boolean isOpen() {
+		for( IModelProvider<T> provider: this.providers ){
+			if( provider.isOpen())
 				return true;
 		}
 		return false;
 	}
 
-
-	public void close( D domain ) {
-		for( IModelProvider<D, T> provider: this.providers ){
-			provider.close( domain );
+	@Override
+	public void close( ) {
+		for( IModelProvider<T> provider: this.providers ){
+			provider.close();
 		}
 	}
 
 	@Override
 	public void contains( T descriptor) {
-		for( IModelProvider<D, T> provider: this.providers ){
+		for( IModelProvider<T> provider: this.providers ){
 			if( provider.contains( descriptor )){
 				listener.notifyChange( new ModelBuilderEvent<T>( provider, descriptor ));
 			}
@@ -85,7 +84,7 @@ public class ModelDelegate<D extends IDomainAieon, T extends IDescriptor> implem
 		listener.notifyChange( new ModelBuilderEvent<T>( this ));
 	}
 
-	protected void onGet( IModelProvider<D, T> provider, IDescriptor descriptor ){
+	protected void onGet( IModelProvider<T> provider, IDescriptor descriptor ){
 		try {
 			provider.get(descriptor);
 			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
@@ -98,12 +97,12 @@ public class ModelDelegate<D extends IDomainAieon, T extends IDescriptor> implem
 	@Override
 	public synchronized void get(IDescriptor descriptor)
 			throws ParseException {
-		for( IModelProvider<D, T> provider: this.providers ){
+		for( IModelProvider<T> provider: this.providers ){
 			this.onGet(provider, descriptor);
 		}
 	}
 
-	protected void onSearch( IModelProvider<D, T> provider, IModelFilter<IDescriptor> filter ){
+	protected void onSearch( IModelProvider<T> provider, IModelFilter<IDescriptor> filter ){
 		try {
 			provider.search( filter );
 			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
@@ -114,7 +113,7 @@ public class ModelDelegate<D extends IDomainAieon, T extends IDescriptor> implem
 	}
 	@Override
 	public synchronized void search( IModelFilter<IDescriptor> filter) throws ParseException {
-		for( IModelProvider<D, T> provider: this.providers ){
+		for( IModelProvider<T> provider: this.providers ){
 			this.onSearch(provider, filter);
 		}
 	}

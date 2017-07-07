@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
@@ -17,8 +16,8 @@ import org.condast.aieonf.browsersupport.library.chromium.ChromiumModelFunctionP
 import org.condast.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.condast.aieonf.browsersupport.library.ie.IEFavoritesFunction;
 
-public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, IDomainAieon, 
-	IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>{
+public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, String, 
+	IModelProvider<IModelLeaf<IDescriptor>>>{
 	
 	private ModelProvider provider;
 	
@@ -28,21 +27,21 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieo
 	}
 
 	@Override
-	public boolean canProvide( IDomainAieon domain) {
-		return provider.hasFunction( S_FUNCTION_PROVIDER_ID);
+	public boolean canProvide( String domain) {
+		return provider.hasFunction( domain );
 	}
 
 	@Override
-	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction( IDomainAieon domain) {
+	public IModelProvider<IModelLeaf<IDescriptor>> getFunction( String domain) {
 		return provider;
 	}
 
 	@Override
-	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction(IDomainAieon describable) {
+	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction( String describable) {
 		return null;
 	}
 	
-	private class ModelProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>{
+	private class ModelProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>{
 
 		private ChromiumModelFunctionProvider cmf;
 		private FireFoxModelFunction ffmf;

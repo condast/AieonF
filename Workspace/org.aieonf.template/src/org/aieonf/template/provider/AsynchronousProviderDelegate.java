@@ -11,7 +11,7 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.provider.ModelDelegate;
 
-public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDescriptor> extends ModelDelegate<D, U> 
+public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDescriptor> extends ModelDelegate<U> 
 {
 	private ExecutorService service;
 	
@@ -19,15 +19,16 @@ public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDes
 	{
 		service = Executors.newCachedThreadPool();
 	}	
-		
+	
+	
 	@Override
-	protected void onGet(IModelProvider<D, U> provider, IDescriptor descriptor) {
+	protected void onGet(IModelProvider<U> provider, IDescriptor descriptor) {
 		Runnable runnable = new GetRunnable( provider, descriptor );
 		service.execute( runnable);
 	}
 
 	@Override
-	protected void onSearch(IModelProvider<D, U> provider, IModelFilter<IDescriptor> filter) {
+	protected void onSearch(IModelProvider<U> provider, IModelFilter<IDescriptor> filter) {
 		Runnable runnable = new SearchRunnable( provider, filter );
 		service.execute( runnable);
 	}
@@ -36,10 +37,10 @@ public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDes
 
 	private class GetRunnable implements Runnable{
 
-		private IModelProvider<D,U> provider;
+		private IModelProvider<U> provider;
 		private IDescriptor descriptor;
 		
-		GetRunnable( IModelProvider<D,U> provider, IDescriptor descriptor ) {
+		GetRunnable( IModelProvider<U> provider, IDescriptor descriptor ) {
 			super();
 			this.provider = provider;
 			this.descriptor = descriptor;
@@ -59,10 +60,10 @@ public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDes
 
 	private class SearchRunnable implements Runnable{
 
-		private IModelProvider<D, U> provider;
+		private IModelProvider<U> provider;
 		private IModelFilter<IDescriptor> filter;
 		
-		SearchRunnable( IModelProvider<D,U> provider, IModelFilter<IDescriptor> filter ) {
+		SearchRunnable( IModelProvider<U> provider, IModelFilter<IDescriptor> filter ) {
 			super();
 			this.provider = provider;
 			this.filter = filter;
@@ -71,8 +72,8 @@ public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDes
 		@Override
 		public void run(){
 			try {
-				provider.open( null );
-				if( provider.isOpen( null ) ){
+				provider.open();
+				if( provider.isOpen() ){
 					provider.search( filter );
 					notifyEventChange( new ModelBuilderEvent<U>( provider ));
 				}
@@ -81,7 +82,7 @@ public class AsynchronousProviderDelegate<D extends IDomainAieon, U extends IDes
 				notifyEventChange( new ModelBuilderEvent<U>( provider ));
 			}
 			finally{
-				provider.close( null );
+				provider.close();
 			}
 		}
 	}

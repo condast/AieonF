@@ -15,7 +15,7 @@ import org.aieonf.model.provider.IProvider.DefaultModels;
 import org.aieonf.orientdb.OrientGraphContextAieon;
 import org.aieonf.template.ITemplateLeaf;
 
-public class TreeModelFunction extends AbstractFunctionProvider<IContextAieon, IDomainAieon, IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> {
+public class TreeModelFunction extends AbstractFunctionProvider<IContextAieon, String, IModelProvider<IModelLeaf<IDescriptor>>> {
 
 	public static final String S_DATABASE_ID = "org.aieonf.database";
 
@@ -27,8 +27,7 @@ public class TreeModelFunction extends AbstractFunctionProvider<IContextAieon, I
 	}
 	
 	@Override
-	public boolean canProvide(IDomainAieon aieon ) {
-		String id = aieon.getDomain();
+	public boolean canProvide(String id ) {
 		return DefaultModels.PROVIDER.toString().equals(id) || 
 				DefaultModels.DATABASE.toString().equals( id ) ||
 				DefaultModels.TREE.toString().equals(id);
@@ -36,13 +35,11 @@ public class TreeModelFunction extends AbstractFunctionProvider<IContextAieon, I
 
 	
 	@Override
-	protected IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction(IDomainAieon domain ) {
+	protected IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String id ) {
 		IModelLeaf<IDescriptor> model = getDefaultModel( super.getAieon() );
 		ILoaderAieon baseLoader = (ILoaderAieon) model.getDescriptor();
 		URI uri = ProjectFolderUtils.getDefaultUserDatabase( baseLoader );
 		baseLoader.setURI( uri );
-
-		IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> gdb = new TreeModel( baseLoader, template );
-		return gdb;
+		return new TreeModel( baseLoader, template );
 	}
 }

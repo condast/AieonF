@@ -13,7 +13,6 @@ import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.template.builder.DefaultModelBuilder;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 /**
@@ -37,7 +36,7 @@ public class ContextFactory extends AbstractProviderContextFactory<IContextAieon
 	 */
 	public ContextFactory()
 	{
-		super( S_BUNDLE_ID, new DefaultModelBuilder( ContextFactory.class ) );
+		super( S_BUNDLE_ID, ContextFactory.class );
 	}
 	
 	/**
@@ -56,12 +55,4 @@ public class ContextFactory extends AbstractProviderContextFactory<IContextAieon
 		logger.info( "Getting source " + loader.getSource() );	
 		return new ManifestAieon( loader );
 	}
-
-	@Override
-	public boolean hasFunction(String function) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	
 }

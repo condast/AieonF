@@ -10,16 +10,16 @@ import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.context.IProviderContextFactory;
 
-public abstract class AbstractServiceComponent<C extends IContextAieon, D extends IDomainAieon, U extends IDescribable<IDescriptor>> implements IModelFunctionProvider<D, U>
+public abstract class AbstractServiceComponent<C extends IContextAieon, D extends IDomainAieon, T extends Object, U extends IDescribable<IDescriptor>> implements IModelFunctionProvider<T, U>
 {
 
-	private IProviderContextFactory<C,D,U> factory;
+	private IProviderContextFactory<C,D,T,U> factory;
 	
-	protected  AbstractServiceComponent( IProviderContextFactory<C,D,U> factory ){
+	protected  AbstractServiceComponent( IProviderContextFactory<C,D,T,U> factory ){
 		this.factory = factory;
 	}
 
-	protected IProviderContextFactory<C,D,U> getFactory() {
+	protected IProviderContextFactory<C,D,T,U> getFactory() {
 		return factory;
 	}
 
@@ -40,7 +40,7 @@ public abstract class AbstractServiceComponent<C extends IContextAieon, D extend
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IProviderContextFactory#addProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
-	public void addProvider( IFunctionProvider<D, IModelProvider<D, U>> function ){
+	public void addProvider( IFunctionProvider<T, IModelProvider<U>> function ){
 		factory.addProvider(function);
 	}
 	
@@ -48,20 +48,27 @@ public abstract class AbstractServiceComponent<C extends IContextAieon, D extend
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IProviderContextFactory#addProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
-	public void removeProvider( IFunctionProvider<D,IModelProvider<D, U>> function ){
+	public void removeProvider( IFunctionProvider<T,IModelProvider<U>> function ){
 		factory.removeProvider(function);
 	}
+
 	
-	//Every domain may use this function
 	@Override
-	public boolean supportsDomain( String domain) {
+	public boolean supportsDomain(IDomainAieon domain) {
 		return ( domain != null );
 	}
 
-	
 	@Override
-	public boolean canProvide( String functionName ) {
-		return ( factory.hasFunction( functionName ));
+	public boolean canProvide(T key) {
+		return factory.hasFunction(key);
 	}
 
+	@Override
+	public IModelProvider<U> getFunction(T key) {
+		if( !supportsDomain( factory.getDomain()))
+			return null;
+		return factory.getFunction(key);
+	}
+	
+	
 }

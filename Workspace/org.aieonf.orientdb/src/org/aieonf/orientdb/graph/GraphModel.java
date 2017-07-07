@@ -15,7 +15,6 @@ import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
@@ -114,24 +113,5 @@ public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLea
 	public void deactivate() {
 		if( factory != null )
 			factory.close();
-	}
-
-
-	@Override
-	public boolean supportsDomain(String domain) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean canProvide(String key) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction(String key) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

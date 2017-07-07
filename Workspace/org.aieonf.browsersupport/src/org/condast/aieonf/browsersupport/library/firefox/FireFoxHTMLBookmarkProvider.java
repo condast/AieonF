@@ -28,7 +28,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 
-public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextAieon, String, IModelLeaf<IDescriptor>>
+public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "FirefoxHtmlBookmarks";
 	

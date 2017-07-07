@@ -21,6 +21,7 @@ Import-Package: org.aieonf.commons.parser,
  org.aieonf.template.context,
  org.condast.commons.service,
  org.condast.commons.test,
+ org.condast.commons.thread,
  org.osgi.framework;version="1.3.0"
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/provider.xml
+Service-Component: OSGI-INF/models.xml

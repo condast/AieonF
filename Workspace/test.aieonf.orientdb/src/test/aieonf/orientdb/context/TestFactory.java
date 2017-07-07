@@ -1,8 +1,8 @@
 package test.aieonf.orientdb.context;
 
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.template.builder.DefaultModelBuilder;
+import org.aieonf.model.IModelLeaf;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 /**
@@ -11,14 +11,15 @@ import org.aieonf.template.context.AbstractProviderContextFactory;
  * info to create the application
  * @author Kees Pieters
  */
-public class TestFactory extends AbstractProviderContextFactory<IContextAieon>{
+public class TestFactory extends AbstractProviderContextFactory<IContextAieon, IModelLeaf<IDescriptor>>{
 	
-	private static final String S_MODEL_ID = "org.test.orientdb";
+	private static final String S_BUNDLE_ID = "org.test.orientdb";
 
 	private static TestFactory factory = new TestFactory();
 	
 	private TestFactory() {
-		super( S_MODEL_ID, IModelProvider.S_MODEL_PROVIDER_ID, new DefaultModelBuilder( TestFactory.class ) );
+		super( S_BUNDLE_ID, TestFactory.class );
+		super.createTemplate();
 	}
 
 	public static TestFactory getInstance(){

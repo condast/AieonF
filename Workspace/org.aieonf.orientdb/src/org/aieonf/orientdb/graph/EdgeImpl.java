@@ -43,7 +43,6 @@ public class EdgeImpl implements IEdge<IDescriptor,IDescriptor> {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public IDescriptor get() {
 		Iterator<String> iterator = edge.getPropertyKeys().iterator();

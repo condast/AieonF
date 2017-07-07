@@ -16,24 +16,24 @@ import org.aieonf.model.provider.IModelProvider;
  * @param <D>
  * @param <C>
  */
-public interface IProviderContextFactory<C extends IContextAieon, D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> extends IModelContextFactory<C,D> {
+public interface IProviderContextFactory<C extends IContextAieon, D extends IDomainAieon, T extends Object, U extends IDescribable<? extends IDescriptor>> extends IModelContextFactory<C,D> {
 
-	public void addProvider(IFunctionProvider<D, IModelProvider<D, U>> function);
+	public void addProvider(IFunctionProvider<T, IModelProvider<U>> function);
 
-	public void removeProvider(IFunctionProvider<D, IModelProvider<D, U>> function);
+	public void removeProvider(IFunctionProvider<T, IModelProvider<U>> function);
 
 	/**
 	 * Returns true if the factory returns the given function
 	 * @param function
 	 * @return
 	 */
-	public boolean hasFunction(String function);
+	public boolean hasFunction(T function);
 	
 	/**
 	 * Get the desired function for the given data object
 	 * @param data
 	 * @return
 	 */
-	public IModelProvider<D, U> getFunction( String function );
+	public IModelProvider<U> getFunction( T function );
 
 }

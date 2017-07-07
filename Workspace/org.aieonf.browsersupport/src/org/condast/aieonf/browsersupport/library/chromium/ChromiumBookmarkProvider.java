@@ -36,7 +36,7 @@ import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 
-class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, String, IModelLeaf<IDescriptor>>
+class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
 {
 	private static final String S_CHROMIUM = "Chromiun";
 	private static final String S_ROOTS = "roots";
@@ -53,11 +53,11 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, Stri
 
 	
 	@Override
-	public void open( String domain) {
+	public void open() {
 		URI uri = super.getManifest().getURI();
 		File file = new File( uri );
 		if( file.exists() )
-			super.open( domain );
+			super.open();
 	}
 
 	@Override

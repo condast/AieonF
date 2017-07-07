@@ -9,6 +9,7 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.IModelLeaf;
@@ -19,10 +20,10 @@ import org.aieonf.model.builder.IFunctionProvider;
  * A function provider always provides functions for a certain domain. 
  * @author Kees
  *
- * @param <D>
+ * @param <T>
  * @param <U>
  */
-public abstract class AbstractFunctionProvider<C extends IContextAieon, D extends Object, U extends Object> implements IFunctionProvider<D, U> {
+public abstract class AbstractFunctionProvider<C extends IContextAieon, T extends Object, U extends Object> implements IFunctionProvider<T, U> {
 
 	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
 
@@ -48,8 +49,8 @@ public abstract class AbstractFunctionProvider<C extends IContextAieon, D extend
 	 * By default, no domain is supported
 	 */
 	@Override
-	public boolean supportsDomain( D domain) {
-		return this.aieon.equals( domain);
+	public boolean supportsDomain( IDomainAieon domain) {
+		return true;
 	}
 
 	/**
@@ -58,12 +59,12 @@ public abstract class AbstractFunctionProvider<C extends IContextAieon, D extend
 	 * @param leaf
 	 * @return
 	 */
-	public boolean canProvide( D identifier ) {
+	public boolean canProvide( T identifier ) {
 		return S_FUNCTION_PROVIDER_ID.equals(identifier);
 	}
 
 	@Override
-	public U getFunction(D descriptor) {
+	public U getFunction(T descriptor) {
 		if( !canProvide(descriptor))
 			return null;
 		return onCreateFunction(descriptor );
@@ -73,7 +74,7 @@ public abstract class AbstractFunctionProvider<C extends IContextAieon, D extend
 	 * Create the access
 	 * @return
 	 */
-	protected abstract U onCreateFunction( D describable); 
+	protected abstract U onCreateFunction( T describable); 
 
 	/**
 	 * Create a default loader for the given leaf

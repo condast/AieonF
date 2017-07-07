@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<application version="0" name="saight" domain="org.condast.saight" id="6B2F71AFDFCD4947815FA4CDE5C5F392E4CD9463A3F74ACD954CCB0E49E0ED9F04">
+<application version="0" name="saight" domain="test.aieonf.orientdb" id="6B2F71AFDFCD4947815FA4CDE5C5F392E4CD9463A3F74ACD954CCB0E49E0ED9F04">
   <model id="org.test.orientdb" name="Links">
-    <context name="Links">
+    <context name="OrientDB Test">
 		<version type="int">1</version>
         <source>test.aieonf.orientdb</source>
 		<read-only>true</read-only>

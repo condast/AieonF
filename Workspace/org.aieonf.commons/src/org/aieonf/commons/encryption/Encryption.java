@@ -67,7 +67,9 @@ public class Encryption implements IEncryption
     if( algorithm == null )
     	throw new NullPointerException( S_ERR_NO_ALGORITHM );
     this.algorithm = algorithm;
-    if(( !algorithm.equals( Algorithms.NONE )) && ( key == null ))
+    if( algorithm.equals( Algorithms.NONE ))
+    	return;
+    if( key == null )
     	throw new NullPointerException( S_ERR_NO_KEY );
     
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");

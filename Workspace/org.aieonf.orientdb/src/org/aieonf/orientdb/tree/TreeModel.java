@@ -16,7 +16,6 @@ import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
 import org.aieonf.template.ITemplateLeaf;
@@ -125,7 +124,6 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean add(IModelLeaf<IDescriptor> root) {
 		try{
 			Iterator<Vertex> iterator = super.getRoot().getVertices( com.tinkerpop.blueprints.Direction.BOTH, new String[0]).iterator();
@@ -243,23 +241,5 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 			String key = iterator.next();
 			System.out.println( StringStyler.toPackageString( key )  + ": "+ vertex.getProperty( key ) );
 		}
-	}
-
-	@Override
-	public boolean supportsDomain(String domain) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean canProvide(String key) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction(String key) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

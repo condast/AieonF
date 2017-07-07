@@ -1,11 +1,9 @@
 package test.aieonf.orientdb.suite;
 
-import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.provider.IModelDelegate;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.model.provider.IProvider.DefaultModels;
 import org.condast.commons.test.AbstractTestSuite;
 
 import test.aieonf.orientdb.context.TestFactory;
@@ -14,17 +12,16 @@ public class TestSuite extends AbstractTestSuite {
 
 	private static TestSuite suite = new TestSuite();
 	
-	private static IModelDelegate<IModelLeaf<IContextAieon>> function;
+	private static IModelProvider<IModelLeaf<IDescriptor>> provider;
 	
 	public static TestSuite getInstance(){
 		return suite;
 	}
 	
-	public static void runTests( IModelDelegate<IModelLeaf<IContextAieon>> func ){
-		function = func;
+	public void runTests( IModelProvider<IModelLeaf<IDescriptor>> func ){
+		provider = func;
 		suite.performTests();
 	}
-	
 	
 	@Override
 	protected void testSuite() throws Exception {
@@ -38,14 +35,13 @@ public class TestSuite extends AbstractTestSuite {
 	}
 
 	private final void testOpenDatabase() throws Exception{
-		IModelProvider<IModelLeaf<IContextAieon>> provider = function.getFunction( DefaultModels.DATABASE.toString());
 		TestFactory factory = TestFactory.getInstance();
 		IDomainAieon domain = factory.getDomain();
 		try{
-			provider.open( domain );
+			provider.open();
 		}
 		finally{
-			provider.close(domain);
+			provider.close();
 			provider.deactivate();
 		}
 		//GraphModelTreeModel tm = model;

@@ -3,21 +3,21 @@ package org.aieonf.model.provider;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 
-public interface IModelDatabase<D extends IDescriptor, T extends IDescribable<? extends IDescriptor>> extends IModelProvider<D, T>{
+public interface IModelDatabase<K extends Object, V extends IDescribable<? extends IDescriptor>> extends IModelProvider<V>{
 	
 	/**
 	 * Add a model
 	 * @param descriptor
 	 * @return
 	 */
-	public void add( T leaf );
+	public void add( V leaf );
 
 	/**
 	 * Remove a model 
 	 * @param descriptor
 	 * @return
 	 */
-	public void remove( T leaf );
+	public void remove( V leaf );
 
 
 	/**
@@ -25,5 +25,5 @@ public interface IModelDatabase<D extends IDescriptor, T extends IDescribable<? 
 	 * @param descriptor
 	 * @return
 	 */
-	public void update( T leaf );
+	public void update( V leaf );
 }

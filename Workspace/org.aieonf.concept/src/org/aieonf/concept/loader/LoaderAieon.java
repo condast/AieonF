@@ -143,7 +143,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	{
 		String algorithm = this.get( IEncryption.Attributes.ALGORITHM );
 		if( algorithm == null )
-			return IEncryption.Algorithms.ARCFOUR;
+			return IEncryption.Algorithms.NONE;
 		return IEncryption.Algorithms.valueOf( StringStyler.styleToEnum( algorithm ));
 	}
 

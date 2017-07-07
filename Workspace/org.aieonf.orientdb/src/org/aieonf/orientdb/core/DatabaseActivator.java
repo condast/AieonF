@@ -25,13 +25,13 @@ public class DatabaseActivator {
 	
 	private ExecutorService service;
 	private OServer server;
+	private OrientDBFactory factory;
 	
 	private Runnable runnable = new Runnable(){
 
 		@Override
 		public void run() {
 			try {
-				OrientDBFactory factory = OrientDBFactory.getInstance();
 				server = OServerMain.create();
 				server.startup( factory.getConfigFile() );
 				server.activate();
@@ -47,8 +47,9 @@ public class DatabaseActivator {
 	}
 
 	public void startup( BundleContext context ){
+		factory = OrientDBFactory.getInstance();
 		Properties props = System.getProperties();
-		props.setProperty( S_ORIENTDB_HOME, OrientDBFactory.getInstance().getOrientDBRoot().getAbsolutePath());
+		props.setProperty( S_ORIENTDB_HOME, factory.getOrientDBRoot().getAbsolutePath());
 		props.setProperty( S_ORIENTDB_ROOT_PASSWORD, "BLANK" );//auto generate a root password (launch config)
 		//props.setProperty("-XX:MaxDirectMemorySize", "4008m");
 		

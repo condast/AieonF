@@ -18,16 +18,16 @@ import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>, D extends Object, U extends IDescribable<IDescriptor>> implements IModelProvider<D, U> {
+public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>, V extends IDescribable<IDescriptor>> implements IModelProvider<V> {
 
 	private static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
-	private Collection<IModelBuilderListener<U>> listeners;
+	private Collection<IModelBuilderListener<V>> listeners;
 	private boolean open;
 	private boolean requestClose; //delay closing when search is conducted in separate threads
 	private int pending;
 	
-	private Collection<U> models;
+	private Collection<V> models;
 
 	private ManifestAieon manifest;
 	
@@ -36,11 +36,11 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	private SignatureFactory signer = SignatureFactory.getInstance();
 
 	protected AbstractModelProvider( String identifier, T template ) {
-		listeners = new ArrayList<IModelBuilderListener<U>>();
+		listeners = new ArrayList<IModelBuilderListener<V>>();
 		this.identifier = identifier;
 		this.template = template;
 		manifest = this.setup( template);
-		models = new ArrayList<U>();
+		models = new ArrayList<V>();
 		this.pending = 0;
 	}
 
@@ -53,24 +53,24 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 		return manifest;
 	}
 
-	protected Collection<U> getModels() {
+	protected Collection<V> getModels() {
 		return models;
 	}
 
 	
 
 	@Override
-	public void addListener(IModelBuilderListener<U> listener) {
+	public void addListener(IModelBuilderListener<V> listener) {
 		this.listeners.add( listener );
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<U> listener) {
+	public void removeListener(IModelBuilderListener<V> listener) {
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<U> event ){
-		for( IModelBuilderListener<U> listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<V> event ){
+		for( IModelBuilderListener<V> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -94,13 +94,13 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	}
 
 	@Override
-	public void open( D domain){
+	public void open(){
 		this.requestClose = false;
 		this.open = true;
 	}
 
 	@Override
-	public boolean isOpen( D domain) {
+	public boolean isOpen() {
 		return open;
 	}
 
@@ -131,7 +131,7 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	public void sync(){}
 
 	@Override
-	public void close( D domain ){
+	public void close(){
 		this.requestClose = true;
 		this.open = false;
 	}
@@ -143,24 +143,24 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 
 	//Default no contains.
 	@Override
-	public boolean contains( U leaf) {
+	public boolean contains( V leaf) {
 		return false;
 	}
 
 	@Override
-	public Collection<U> get(IDescriptor descriptor) throws ParseException {
+	public Collection<V> get(IDescriptor descriptor) throws ParseException {
 		IModelFilter<IDescriptor> flt = new HierarchicalModelDescriptorFilter<IDescriptor>( descriptor );
 		return this.search(flt);
 	}
 
-	protected abstract Collection<U> onSearch(IModelFilter<IDescriptor> filter) throws ParseException;
+	protected abstract Collection<V> onSearch(IModelFilter<IDescriptor> filter) throws ParseException;
 
 	@Override
-	public Collection<U> search(IModelFilter<IDescriptor> filter) throws ParseException {
+	public Collection<V> search(IModelFilter<IDescriptor> filter) throws ParseException {
 		if( !open )
 			throw new ParseException( S_ERR_PROVIDER_NOT_OPEN );
 		models = onSearch( filter);
-		notifyListeners( new ModelBuilderEvent<U>(this, models ));
+		notifyListeners( new ModelBuilderEvent<V>(this, models ));
 		return models;
 	}
 
@@ -172,7 +172,7 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	
 	@Override
 	public void deactivate() {
-		this.close( null);
+		this.close();
 	}
 
 	/**

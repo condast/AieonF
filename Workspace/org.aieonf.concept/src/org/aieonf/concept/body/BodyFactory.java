@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.aieonf.commons.encryption.IEncryption;
+import org.aieonf.commons.encryption.IEncryption.Algorithms;
 import org.aieonf.commons.hex.HexConvertor;
 import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IConcept;
@@ -288,8 +289,10 @@ public class BodyFactory<T extends Object>
 	public static int hashCode( ILoaderAieon loader, IDescriptor descriptor )
 			throws IOException
 	{
+		
 		try{
 			IEncryption encryption = new AieonFEncryption( loader );
+			//if( encryption.get)
 			return hashCode( encryption, descriptor );
 		}
 		catch( Exception ex ){
@@ -310,6 +313,9 @@ public class BodyFactory<T extends Object>
 	public synchronized static int hashCode( IEncryption encryption, IDescriptor descriptor )
 			throws IOException
 	{
+		if( Algorithms.NONE.equals( encryption.getAlgorithm()))
+			return descriptor.toString().hashCode();
+		
 		ByteArrayOutputStream bStream = null;
 		OutputStream eStream = null;
 		try{

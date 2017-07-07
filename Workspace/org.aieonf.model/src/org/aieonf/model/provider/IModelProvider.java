@@ -13,21 +13,21 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <T>
  */
-public interface IModelProvider<D extends Object, T extends IDescribable<? extends IDescriptor>> extends IProvider<T>{
+public interface IModelProvider<T extends IDescribable<? extends IDescriptor>> extends IProvider<T>{
 
 	/**
 	 * Open the delegate
 	 * @param domain
 	 */
-	public void open( D domain );
+	public void open();
 	
-	public boolean isOpen( D domain );
+	public boolean isOpen();
 		
 	/**
 	 * clse it
 	 * @param domain
 	 */
-	public void close( D domain );
+	public void close();
 	
 	/**
 	 * Sync the actual model with the database
