@@ -7,13 +7,14 @@ import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
 public class IEFavoritesFunction extends AbstractFunctionProvider<IContextAieon, String, 
-IModelProvider<IModelLeaf<IDescriptor>>>
+IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 {
 	//Default identifier
 	private static final String DEFAULT_IE_IDENTIFIER =
@@ -40,9 +41,8 @@ IModelProvider<IModelLeaf<IDescriptor>>>
 		return null;
 	}
 
-	
 	@Override
-	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction( String aieon ) {
+	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String aieon ) {
 		ILoaderAieon baseLoader = getDefaultLoader(super.getAieon());
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, super.getAieon() );
@@ -52,5 +52,4 @@ IModelProvider<IModelLeaf<IDescriptor>>>
 
 		return  new IEFavoritesProvider( super.getAieon());
 	}
-
 }

@@ -12,13 +12,13 @@ public class TestSuite extends AbstractTestSuite {
 
 	private static TestSuite suite = new TestSuite();
 	
-	private static IModelProvider<IModelLeaf<IDescriptor>> provider;
+	private static IModelProvider<IDomainAieon,IModelLeaf<IDescriptor>> provider;
 	
 	public static TestSuite getInstance(){
 		return suite;
 	}
 	
-	public void runTests( IModelProvider<IModelLeaf<IDescriptor>> func ){
+	public void runTests( IModelProvider<IDomainAieon,IModelLeaf<IDescriptor>> func ){
 		provider = func;
 		suite.performTests();
 	}
@@ -36,9 +36,8 @@ public class TestSuite extends AbstractTestSuite {
 
 	private final void testOpenDatabase() throws Exception{
 		TestFactory factory = TestFactory.getInstance();
-		IDomainAieon domain = factory.getDomain();
 		try{
-			provider.open();
+			provider.open( factory.getDomain());
 		}
 		finally{
 			provider.close();

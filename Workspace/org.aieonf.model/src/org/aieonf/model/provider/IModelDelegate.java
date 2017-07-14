@@ -3,6 +3,7 @@ package org.aieonf.model.provider;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 
@@ -20,7 +21,7 @@ public interface IModelDelegate<U extends IDescribable<? extends IDescriptor>>{
 	 * Open the delegate
 	 * @param domain
 	 */
-	public void open();
+	public void open(IDomainAieon domain );
 	
 	public boolean isOpen();
 		

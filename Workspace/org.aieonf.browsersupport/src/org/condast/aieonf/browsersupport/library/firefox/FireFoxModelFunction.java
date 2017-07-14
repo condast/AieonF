@@ -8,13 +8,14 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
 public class FireFoxModelFunction extends AbstractFunctionProvider<IContextAieon, String, 
-	IModelProvider<IModelLeaf<IDescriptor>>>
+	IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 {
 	//Default location
 	private static final String DEFAULT_FIREFOX_ROOT =
@@ -58,7 +59,7 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<IContextAieon
 
 	
 	@Override
-	protected IModelProvider<IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
+	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
 		ILoaderAieon baseLoader = getDefaultLoader( super.getAieon());
 		baseLoader.setDescription( DEFAULT_FIREFOX_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, super.getAieon() );
@@ -67,7 +68,7 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<IContextAieon
 		URI uri = AbstractFileConnector.getDefaultSource( DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
 		baseLoader.set( IConcept.Attributes.SOURCE, uri.getPath());
 
-		IModelProvider<IModelLeaf<IDescriptor>> provider;
+		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> provider;
 		if( version == FireFoxVersion.firefox3 )
 			provider = new FireFoxSQLiteBookmarkProvider( super.getAieon(), model );
 		else

@@ -23,6 +23,7 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.model.IModelLeaf;
@@ -35,7 +36,7 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
 
-class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
+class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>
 {
 	private static final String S_IDENTIFER = "FirefoxSQLBookmarks";
 
@@ -55,7 +56,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	}
 
 	@Override
-	public void open()
+	public boolean onOpen( IDomainAieon domain )
 	{
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -66,11 +67,12 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 		File file = new File( super.getManifest().getSource() );
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath());
-			super.open();
+			return ( connection != null );
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	@Override

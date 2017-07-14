@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import org.aieonf.collections.persistence.IFilePersistence;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.library.URLAieon;
@@ -30,7 +31,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
  * This class overrides the default concept database in order to
  * exploit a unique key within the scope of this package
  */
-public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
+public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "InternetExplorerFavourites";
 
@@ -52,12 +53,13 @@ public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, IM
 	}
 
 	@Override
-	public void open()
+	public boolean onOpen( IDomainAieon domain)
 	{
 		root = new File( super.getManifest().getSource() );
-		if( root.isDirectory())
-			super.open();
-		persistence.open();
+		boolean retval = root.isDirectory();
+		if( retval )
+			persistence.open();
+		return retval;
 	}
 	
 	@Override

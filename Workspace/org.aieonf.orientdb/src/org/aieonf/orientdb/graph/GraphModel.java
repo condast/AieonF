@@ -10,11 +10,10 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
@@ -24,14 +23,14 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> {
+public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>> {
 	
 	private OrientGraphFactory factory;
 	private OrientGraph graph;
 	private ITemplateLeaf<IContextAieon> template;
 	
-	public GraphModel( ILoaderAieon loader, ITemplateLeaf<IContextAieon> template ) {
-		super( loader );
+	public GraphModel( ITemplateLeaf<IContextAieon> template ) {
+		super();
 		this.template = template;
 	}
 
@@ -78,6 +77,26 @@ public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLea
 		    	return true;
 		}		
 		return false;
+	}
+
+	@Override
+	public boolean add(IModelLeaf<IDescriptor> leaf) {
+		return false;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void remove(IModelLeaf<IDescriptor> leaf) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean update(IModelLeaf<IDescriptor> leaf) {
+		return false;
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

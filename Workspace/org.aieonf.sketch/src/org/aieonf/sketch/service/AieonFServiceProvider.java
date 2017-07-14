@@ -10,6 +10,7 @@ import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.wrapper.ConceptWrapper;
 import org.aieonf.model.IModelLeaf;
@@ -41,11 +42,11 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 		modelFactories = new ArrayList<SketchModelFactory>();
 	}
 
-	public void addProvider( IFunctionProvider<String,IModelProvider<IDescriptor>> function ){
+	public void addProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, IDescriptor>> function ){
 		this.factory.addProvider(function);
 	}
 	
-	public void removeProvider( IFunctionProvider<String,IModelProvider<IDescriptor>> function ){
+	public void removeProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, IDescriptor>> function ){
 		this.factory.removeProvider(function);
 	}
 

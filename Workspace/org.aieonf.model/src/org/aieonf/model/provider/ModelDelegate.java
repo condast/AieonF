@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
@@ -12,7 +13,7 @@ import org.aieonf.model.provider.IModelProvider;
 
 public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T> 
 {
-	private Collection<IModelProvider<T>> providers;
+	private Collection<IModelProvider<IDomainAieon, T>> providers;
 	private Collection<IModelBuilderListener<T>> listeners;
 	
 	private IModelBuilderListener<T> listener = new IModelBuilderListener<T>() {
@@ -25,16 +26,16 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 	
 	public ModelDelegate()
 	{
-		providers = new ArrayList<IModelProvider<T>>();
+		providers = new ArrayList<IModelProvider<IDomainAieon,T>>();
 		listeners = new ArrayList<IModelBuilderListener<T>>();
 	}
 
 	
-	public void addProvider( IModelProvider<T> provider ){
+	public void addProvider( IModelProvider<IDomainAieon, T> provider ){
 		this.providers.add( provider );
 	}
 
-	public void removeProvider( IModelProvider<T> provider ){
+	public void removeProvider( IModelProvider<IDomainAieon, T> provider ){
 		this.providers.remove( provider );
 	}
 
@@ -53,14 +54,14 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 			mbl.notifyChange( new ModelBuilderEvent<T>( this, event.getModel() ));
 	}
 
-	public void open() {
-		for( IModelProvider<T> provider: this.providers ){
-			provider.open();
+	public void open( IDomainAieon domain) {
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+			provider.open( domain );
 		}
 	}
 
 	public boolean isOpen() {
-		for( IModelProvider<T> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			if( provider.isOpen())
 				return true;
 		}
@@ -69,14 +70,14 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 
 	@Override
 	public void close( ) {
-		for( IModelProvider<T> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			provider.close();
 		}
 	}
 
 	@Override
 	public void contains( T descriptor) {
-		for( IModelProvider<T> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			if( provider.contains( descriptor )){
 				listener.notifyChange( new ModelBuilderEvent<T>( provider, descriptor ));
 			}
@@ -84,7 +85,7 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 		listener.notifyChange( new ModelBuilderEvent<T>( this ));
 	}
 
-	protected void onGet( IModelProvider<T> provider, IDescriptor descriptor ){
+	protected void onGet( IModelProvider<IDomainAieon, T> provider, IDescriptor descriptor ){
 		try {
 			provider.get(descriptor);
 			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
@@ -97,12 +98,12 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 	@Override
 	public synchronized void get(IDescriptor descriptor)
 			throws ParseException {
-		for( IModelProvider<T> provider: this.providers ){
+		for( IModelProvider<IDomainAieon,T> provider: this.providers ){
 			this.onGet(provider, descriptor);
 		}
 	}
 
-	protected void onSearch( IModelProvider<T> provider, IModelFilter<IDescriptor> filter ){
+	protected void onSearch( IModelProvider<IDomainAieon,T> provider, IModelFilter<IDescriptor> filter ){
 		try {
 			provider.search( filter );
 			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
@@ -113,7 +114,7 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 	}
 	@Override
 	public synchronized void search( IModelFilter<IDescriptor> filter) throws ParseException {
-		for( IModelProvider<T> provider: this.providers ){
+		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			this.onSearch(provider, filter);
 		}
 	}

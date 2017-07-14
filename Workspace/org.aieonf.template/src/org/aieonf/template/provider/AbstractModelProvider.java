@@ -18,7 +18,7 @@ import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>, V extends IDescribable<IDescriptor>> implements IModelProvider<V> {
+public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>, K extends Object, V extends IDescribable<IDescriptor>> implements IModelProvider<K, V> {
 
 	private static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
@@ -93,10 +93,17 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 		return manifest;	
 	}
 
+	/**
+	 * Provide a mechanism to access the function
+	 * @param key
+	 * @return
+	 */
+	protected abstract boolean onOpen( K key );
+	
 	@Override
-	public void open(){
-		this.requestClose = false;
-		this.open = true;
+	public void open( K key ){
+		this.open = this.onOpen(key);
+		this.requestClose = !this.open;
 	}
 
 	@Override

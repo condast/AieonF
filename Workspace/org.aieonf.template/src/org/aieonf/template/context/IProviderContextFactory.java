@@ -18,9 +18,9 @@ import org.aieonf.model.provider.IModelProvider;
  */
 public interface IProviderContextFactory<C extends IContextAieon, D extends IDomainAieon, T extends Object, U extends IDescribable<? extends IDescriptor>> extends IModelContextFactory<C,D> {
 
-	public void addProvider(IFunctionProvider<T, IModelProvider<U>> function);
+	public void addProvider(IFunctionProvider<T, IModelProvider<D, U>> function);
 
-	public void removeProvider(IFunctionProvider<T, IModelProvider<U>> function);
+	public void removeProvider(IFunctionProvider<T, IModelProvider<D, U>> function);
 
 	/**
 	 * Returns true if the factory returns the given function
@@ -34,6 +34,6 @@ public interface IProviderContextFactory<C extends IContextAieon, D extends IDom
 	 * @param data
 	 * @return
 	 */
-	public IModelProvider<U> getFunction( T function );
+	public IModelProvider<D, U> getFunction( T function );
 
 }

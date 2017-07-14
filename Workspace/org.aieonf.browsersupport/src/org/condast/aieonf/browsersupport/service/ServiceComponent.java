@@ -22,12 +22,27 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 	public void activate(){
 		try{
 			ITemplateLeaf<IContextAieon> template = super.getFactory().createTemplate();
-			IFunctionProvider<String, IModelProvider<IModelLeaf<IDescriptor>>> provider =  
+			IFunctionProvider<String, IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> provider =  
 					new ModelFunctionProvider( template.getDescriptor() );
-			super.addProvider( provider);
+			ContextFactory factory = (ContextFactory) super.getFactory();
+			factory.addProvider( provider);
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 		}
 	}
+
+	@Override
+	public boolean canProvide(String key) {
+		ContextFactory factory = (ContextFactory) super.getFactory();
+		return factory.hasFunction( key);
+	}
+
+	@Override
+	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction(String key) {
+		ContextFactory factory = (ContextFactory) super.getFactory();
+		return factory.getFunction(key);
+	}
+	
+	
 }

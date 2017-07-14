@@ -13,13 +13,13 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <T>
  */
-public interface IModelProvider<T extends IDescribable<? extends IDescriptor>> extends IProvider<T>{
+public interface IModelProvider<K extends Object, T extends IDescribable<? extends IDescriptor>> extends IProvider<T>{
 
 	/**
 	 * Open the delegate
 	 * @param domain
 	 */
-	public void open();
+	public void open( K key );
 	
 	public boolean isOpen();
 		

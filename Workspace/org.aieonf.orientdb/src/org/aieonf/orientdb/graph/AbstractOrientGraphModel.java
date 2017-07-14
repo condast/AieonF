@@ -10,6 +10,7 @@ import org.aieonf.commons.graph.IVertex;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
+import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
@@ -17,6 +18,7 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
+import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
@@ -29,8 +31,9 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<U> {
+public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<D, U> {
 	
+	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
 	public static final String S_IDENTIFIER = "GraphModel";
 	
 	private static final String S_LOCAL = "plocal:";
@@ -45,12 +48,10 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	private Vertex root;
 	private String source;
 	private boolean connected;
-	private ILoaderAieon loader;
 	
 	private Collection<IModelBuilderListener<U>> listeners;
 	
-	public AbstractOrientGraphModel( ILoaderAieon loader ) {
-		this.loader = loader;
+	protected AbstractOrientGraphModel() {
 		listeners = new ArrayList<IModelBuilderListener<U>>();
 		this.connected = false;
 	}
@@ -59,17 +60,19 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	 * Connect to the database
 	 * @param loader
 	 */
-	protected void connect( ILoaderAieon loader ){
+	protected void connect( IDomainAieon domain ){
 		if( connected )
 			return;
-		IPasswordAieon password = new PasswordAieon( loader );
+		IPasswordAieon password = new PasswordAieon( domain );
 		String user = password.getUserName();
 		String pwd = password.getPassword();
-		source = ProjectFolderUtils.getDefaultUserDir(loader, true).toString();
+		ILoaderAieon loader = new LoaderAieon( password );
+		loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
+		loader.setIdentifier( domain.getDomain() );
+		source = ProjectFolderUtils.getDefaultUserDir( loader, true).toString();
 		source = source.replace( S_FILE, S_LOCAL);
 		factory = new OrientGraphFactory( source, user, pwd );
 		this.connected = true;
-		this.setup();		
 	}
 	
 	@Override
@@ -122,9 +125,9 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	}
 
 	@Override
-	public void open(){
+	public void open( IDomainAieon domain){
 		try{
-			this.connect(loader);
+			this.connect(domain);
 			if(!connected )
 				return;
 			this.graph = factory.getTx();
@@ -133,6 +136,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 			}else{
 				root = graph.getVerticesOfClass( S_ROOT ).iterator().next();
 			}
+			setup();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -160,7 +164,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 		}
 	}
 
-	public ITransaction<U,IModelProvider<U>> createTransaction() {
+	public ITransaction<U,IModelProvider<D, U>> createTransaction() {
 		Transaction transaction = new Transaction( this );
 		transaction.create();
 		return transaction;
@@ -270,9 +274,9 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 		
 	}
 
-	protected class Transaction extends AbstractTransaction<U, IModelProvider<U>>{
+	protected class Transaction extends AbstractTransaction<U, IModelProvider<D, U>>{
 
-		protected Transaction( IModelProvider<U> provider) {
+		protected Transaction( IModelProvider<D,U> provider) {
 			super( provider );
 		}
 
@@ -283,8 +287,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 		}
 
 		@Override
-		protected boolean onCreate(IModelProvider<U> provider) {
-			super.getProvider().open();
+		protected boolean onCreate(IModelProvider<D, U> provider) {
 			return super.getProvider().isOpen();
 		}
 	}

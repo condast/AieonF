@@ -11,11 +11,10 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
 import org.aieonf.template.ITemplateLeaf;
@@ -25,12 +24,12 @@ import org.aieonf.template.builder.TemplateModelBuilderEvent;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
-public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IGraphModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> {
+public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>> {
 	
 	private ITemplateLeaf<IContextAieon> template;
 	
-	public TreeModel( ILoaderAieon loader, ITemplateLeaf<IContextAieon> template ) {
-		super( loader );
+	public TreeModel( ITemplateLeaf<IContextAieon> template ) {
+		super();
 		this.template = template;
 	}
 
@@ -81,6 +80,11 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 		    	return true;
 		}		
 		return false;
+	}
+	@Override
+	public void remove(IModelLeaf<IDescriptor> leaf) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

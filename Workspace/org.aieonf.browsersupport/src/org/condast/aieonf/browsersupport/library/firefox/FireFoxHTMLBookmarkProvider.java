@@ -17,6 +17,7 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.datauri.DataURI;
 import org.aieonf.concept.datauri.IDataURI;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.model.IModelLeaf;
@@ -28,7 +29,7 @@ import org.aieonf.template.provider.AbstractModelProvider;
 import org.htmlparser.lexer.Lexer;
 import org.htmlparser.lexer.Page;
 
-public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextAieon, IModelLeaf<IDescriptor>>
+public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "FirefoxHtmlBookmarks";
 	
@@ -224,5 +225,10 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextA
 	public String printDatabase() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected boolean onOpen(IDomainAieon key) {
+		return true;
 	}
 }
