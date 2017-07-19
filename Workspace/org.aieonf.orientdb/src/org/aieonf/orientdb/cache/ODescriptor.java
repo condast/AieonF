@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.IDescriptorViewer;
 import org.aieonf.concept.core.ConceptException;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
@@ -194,11 +193,4 @@ public class ODescriptor implements IDescriptor{
 	public int size() {
 		return document.fields();
 	}
-
-	@Override
-	public IDescriptorViewer getViewer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

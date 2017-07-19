@@ -257,11 +257,4 @@ public interface IDescriptor extends IDescribable<IDescriptor>, Serializable, Cl
 	 * @return int
 	 */
 	public int size();
-
-	/**
-	 * Get the viewer for this descriptor
-	 * @return
-	 */
-	public IDescriptorViewer getViewer();
-
 }
