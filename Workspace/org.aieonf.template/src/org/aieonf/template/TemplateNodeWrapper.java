@@ -3,8 +3,8 @@ package org.aieonf.template;
 import java.util.Collection;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelLeaf;
 
 public class TemplateNodeWrapper<T extends IDescriptor> extends TemplateNode<T> implements
 ITemplateNode<T>

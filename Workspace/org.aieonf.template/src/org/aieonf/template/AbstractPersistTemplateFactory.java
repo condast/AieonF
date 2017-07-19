@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.aieonf.commons.persistence.IPersistence;
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.ModelException;
 import org.aieonf.model.persistence.IPersistModel.Persistence;
 import org.aieonf.template.factory.ITemplateFactory;
 

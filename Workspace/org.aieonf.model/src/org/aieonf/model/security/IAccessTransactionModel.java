@@ -2,7 +2,7 @@ package org.aieonf.model.security;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.security.IBaseAccessTransaction;
-import org.aieonf.model.IModelNode;
+import org.aieonf.model.core.IModelNode;
 
 public interface IAccessTransactionModel<T extends IDescriptor> extends IBaseAccessTransaction
 {

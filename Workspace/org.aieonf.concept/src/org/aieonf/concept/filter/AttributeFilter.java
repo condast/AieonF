@@ -200,55 +200,55 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
    * @param obj
    * @return
    * @throws FilterException
-  */
+   */
   @Override
-	protected boolean acceptEnabled( Object obj ) throws FilterException
+  protected boolean acceptEnabled( T obj ) throws FilterException
   {
-    if( obj == null )
-      return false;
-    
-    if(!( obj instanceof IDescribable ))
-    	return false;    
-    IDescribable<?> desc = ( IDescribable<?> )obj;
-    String value = desc.getDescriptor().get( this.refKey );
-    boolean contains = ( value != null );
-    logger.log( Level.FINE, "The descriptor " + obj.toString() + " contains " + this.refKey + ": " + contains  + " " + value);
-    switch( Rules.valueOf( super.getRule() )){
-    	case Contains:
-    		return contains;
-    
-    	case ContainsNot:
-    		return !contains;
+	  if( obj == null )
+		  return false;
 
-      //return true if the attribute is present and equal, or it is not present
-      //and the reference is null
-    	case Equals:
-    		if( contains )
-    			return( value.equals( this.refVal ));
-    		else
-    			return( this.refVal == null );
-    	
+	  if(!( obj instanceof IDescribable ))
+		  return false;    
+	  IDescribable<?> desc = ( IDescribable<?> )obj;
+	  String value = desc.getDescriptor().get( this.refKey );
+	  boolean contains = ( value != null );
+	  logger.log( Level.FINE, "The descriptor " + obj.toString() + " contains " + this.refKey + ": " + contains  + " " + value);
+	  switch( Rules.valueOf( super.getRule() )){
+	  case Contains:
+		  return contains;
 
-      //return true if the attribute is present and not equal, or it is not present
-      //and the reference is null
-    	case EqualsNot:
-    		logger.log( Level.FINE, "Accepting " + this.getRule() );
-    		logger.log( Level.FINE, "The descriptor contains " + this.refKey + ": " + contains  + " " + value);
-    		if( contains ){
-    			logger.log( Level.FINE, "Accepting " + this.refVal );
-    			return( value.equals( this.refVal ) == false );
-    		}
-    		else
-    			return( this.refVal != null );
+	  case ContainsNot:
+		  return !contains;
 
-    	default:
-    		//return true if the attribute accepts the wildcard
-        //and the reference is null
-        if( desc.getDescriptor().get( this.refKey ) == null )
-          return false;
-        WildcardFilter filter = new WildcardFilter( this.refVal );
-        return filter.accept( value );
-      }
+		  //return true if the attribute is present and equal, or it is not present
+		  //and the reference is null
+	  case Equals:
+		  if( contains )
+			  return( value.equals( this.refVal ));
+		  else
+			  return( this.refVal == null );
+
+
+		  //return true if the attribute is present and not equal, or it is not present
+		  //and the reference is null
+	  case EqualsNot:
+		  logger.log( Level.FINE, "Accepting " + this.getRule() );
+		  logger.log( Level.FINE, "The descriptor contains " + this.refKey + ": " + contains  + " " + value);
+		  if( contains ){
+			  logger.log( Level.FINE, "Accepting " + this.refVal );
+			  return( value.equals( this.refVal ) == false );
+		  }
+		  else
+			  return( this.refVal != null );
+
+	  default:
+		  //return true if the attribute accepts the wildcard
+		  //and the reference is null
+		  if( desc.getDescriptor().get( this.refKey ) == null )
+			  return false;
+		  WildcardFilter filter = new WildcardFilter( this.refVal );
+		  return filter.accept( value );
+	  }
   }
 
   /**
@@ -256,13 +256,13 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
    *
    * @param rule String
    * @return boolean
-  */
+   */
   public static boolean checkRule( String ruleName )
   {
-  	Rules[] rules = Rules.values();
-  	for( Rules rule: rules )
-  		if( ruleName.equals( rule.name() ))
-  			return true;
-  	return false;
+	  Rules[] rules = Rules.values();
+	  for( Rules rule: rules )
+		  if( ruleName.equals( rule.name() ))
+			  return true;
+	  return false;
   }
 }

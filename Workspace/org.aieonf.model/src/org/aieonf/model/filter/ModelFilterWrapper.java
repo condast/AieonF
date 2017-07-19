@@ -6,7 +6,7 @@ import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 
 public class ModelFilterWrapper<T extends IDescriptor> implements
 		IModelFilter<T> {
@@ -69,7 +69,7 @@ public class ModelFilterWrapper<T extends IDescriptor> implements
 	}
 
 	@Override
-	public boolean accept(Object obj) throws FilterException {
+	public boolean accept(IModelLeaf<T> obj) throws FilterException {
 		if( !acceptDepth(minDepth, maxDepth, obj ))
 			return false;
 		return filter.accept( obj );

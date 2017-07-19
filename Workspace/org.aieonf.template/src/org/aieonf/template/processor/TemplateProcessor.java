@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.ModelException;
 import org.aieonf.model.constraints.IAspect;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelException;
 import org.aieonf.template.ITemplate;
 import org.aieonf.template.ITemplateAieon;
 import org.aieonf.template.ITemplateNode;

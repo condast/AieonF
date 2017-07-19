@@ -282,6 +282,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
    * @throws CollectionException
    */
   //@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	protected void search( File file, Collection<T>results, IFilter<T> filter, boolean descriptorOnly )
   {
     InputStream entryStream;
@@ -300,7 +301,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
     try{
       ILocationManager<? extends IDescribable<?>> lm = new LocationManager( super.getLoader() );
       descriptor = lm.getDescribable( file.getAbsolutePath() );
-      accept = filter.accept( descriptor );
+      accept = filter.accept( (T) descriptor );
       if(( descriptorOnly ) && ( !accept ))
      		return;
 

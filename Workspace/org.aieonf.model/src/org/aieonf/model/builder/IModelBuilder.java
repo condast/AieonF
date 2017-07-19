@@ -1,7 +1,7 @@
 package org.aieonf.model.builder;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 
 public interface IModelBuilder<T extends IDescriptor> {
 

@@ -5,7 +5,7 @@ import java.net.URL;
 
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.xml.sax.Attributes;
 
 public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IModelLeaf<T>> implements IXMLModelBuilder<T,U> {

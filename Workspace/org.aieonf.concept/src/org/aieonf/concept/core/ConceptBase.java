@@ -247,7 +247,8 @@ public class ConceptBase implements IConceptBase
 	 */
 	public static String getAttributeKey( Enum<?> key )
 	{
-		return key.getClass().getCanonicalName()  + "." + key.toString();
+		String str = key.getClass().getCanonicalName()  + "." + key.toString(); 
+		return str;
 	}
 
 	/**

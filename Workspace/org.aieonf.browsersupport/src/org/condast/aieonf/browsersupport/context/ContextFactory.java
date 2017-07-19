@@ -12,7 +12,7 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 /**

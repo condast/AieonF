@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.ModelException;
 import org.aieonf.template.ITemplateAieon;
 import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.TemplateNode;

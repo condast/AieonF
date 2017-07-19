@@ -16,7 +16,7 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.library.FileModel;
 
 public class IEPersistence extends AbstractFilePersistence

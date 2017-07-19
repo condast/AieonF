@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.aieonf.commons.graph.IModel;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.orientdb.cache.CacheController;
 import org.aieonf.orientdb.cache.ODescriptor;
 

@@ -10,7 +10,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.CategoryAieon;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.sketch.factory.SelectedFactory;

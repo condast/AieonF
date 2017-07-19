@@ -1,8 +1,8 @@
 package org.aieonf.template.controller;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IModelBuilderListener;
+import org.aieonf.model.core.IModelLeaf;
 
 /**
  * The controller takes care of all the CRUD operations on a model. A controller can work with one

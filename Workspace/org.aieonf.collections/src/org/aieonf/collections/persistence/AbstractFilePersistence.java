@@ -16,7 +16,7 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.security.AieonFEncryption;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.library.FileModel;
 
 public abstract class AbstractFilePersistence extends

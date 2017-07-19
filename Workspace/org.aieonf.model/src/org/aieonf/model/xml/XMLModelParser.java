@@ -20,10 +20,10 @@ import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.xml.IModelParser;
 
 import org.xml.sax.Attributes;

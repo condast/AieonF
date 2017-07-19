@@ -16,8 +16,8 @@ import org.aieonf.concept.body.ConceptBody;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.persist.ILocatedPersistence;
 import org.aieonf.concept.xml.ConceptParser;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.Model;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.Model;
 import org.w3c.dom.Document;
 
 public class ModelPersistence extends AbstractPersistence<IModelLeaf<IConcept>> implements ILocatedPersistence<IModelLeaf<IConcept>>

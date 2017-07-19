@@ -11,8 +11,8 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.orientdb.core.OrientDBNode;
@@ -21,8 +21,11 @@ import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.builder.TemplateModelBuilderEvent;
 
+import com.orientechnologies.common.util.OCallable;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>> {
 	
@@ -53,7 +56,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 	@SuppressWarnings({ "unchecked" })
 	protected void create( Vertex vertex, ITemplateLeaf<? extends IDescriptor> leaf ) {
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
-		Vertex child = super.getGraph().addVertex( null );
+		Vertex child = super.getGraph().addVertex( leaf.getID());
 		IModelLeaf<IDescriptor> node = new OrientDBNode( super.getGraph(), child );
 		IDescriptor descriptor = node.getDescriptor();
 		descriptor.set( ConceptBase.getAttributeKey( IDescriptor.Attributes.CREATE_DATE ), date );
@@ -83,8 +86,11 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 	}
 	@Override
 	public void remove(IModelLeaf<IDescriptor> leaf) {
-		// TODO Auto-generated method stub
-		
+		for (Vertex v : super.getGraph().getVertices()) {
+		    IModelLeaf<IDescriptor> result = new OrientDBNode( super.getGraph(), v );
+		    if( result.getDescriptor().equals( leaf.getDescriptor() ))
+		    	getGraph().removeVertex(v);
+		}		
 	}
 
 	@Override
@@ -116,7 +122,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 
 	@SuppressWarnings("unchecked")
 	protected boolean accept( IModelFilter<IDescriptor> filter, IModelLeaf<IDescriptor> leaf ){
-		if( !filter.accept( leaf.getDescriptor() ))
+		if( !filter.accept( leaf ))
 			return false;
 		if( leaf.isLeaf() )
 			return true;
@@ -128,18 +134,11 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 		return false;
 	}
 
-	public boolean add(IModelLeaf<IDescriptor> root) {
+	public boolean add(IModelLeaf<IDescriptor> leaf) {
 		try{
-			Iterator<Vertex> iterator = super.getRoot().getVertices( com.tinkerpop.blueprints.Direction.BOTH, new String[0]).iterator();
-			while( iterator.hasNext() ){
-				Vertex vtx = iterator.next();
-				IDescriptor descriptor = new VertexDescriptor( vtx );
-				if( descriptor.equals( root.getDescriptor() ))
-					return false;
-			}
-			Vertex base = super.getGraph().addVertex(null);
+			Vertex base = super.getGraph().addVertex(leaf.getID());
 			super.createDescriptor( super.getGraph(), base);
-			return add( (IModelLeaf<IDescriptor>) root, base );
+			return add( (IModelLeaf<IDescriptor>) leaf, base );
 		}
 		catch( Exception e ){
 			e.printStackTrace();
@@ -153,29 +152,38 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 
 	@SuppressWarnings("unchecked")
 	protected boolean add(IModelLeaf<IDescriptor> leaf, Vertex parent ) {
-		Vertex vertex = null;
-		Iterator<Vertex> iterator = super.getGraph().getVertices().iterator();
-		while( iterator.hasNext() ){
-		    Vertex vtx = iterator.next();
-			IDescriptor descriptor = new VertexDescriptor( vtx );
-			if( leaf.implies(descriptor) != 0 )
-				continue;
-			vertex = vtx;
-			break;
-		}
-		if( vertex == null ){
-			vertex = convert( super.getGraph(), leaf.getDescriptor(), leaf.getIdentifier() );
-		}
-	    String identifier = ( Utils.assertNull( leaf.getIdentifier()) ?  S_IS_CHILD: leaf.getIdentifier() );
-		super.getGraph().addEdge( null, parent, vertex, identifier );
-		boolean retval = true;
-	    if( !( leaf instanceof IModelNode) || leaf.isLeaf())
-	    	return true;
-		IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) leaf;
-	    for (IModelLeaf<?> child: node.getChildren()) {
-			retval &= add( (IModelLeaf<IDescriptor>) child, vertex );
-		}
-	    return retval;
+		super.getGraph().executeOutsideTx( new OCallable<Object, OrientBaseGraph>(){
+
+			@Override
+			public Object call(OrientBaseGraph arg0) {
+				Vertex vertex = null;
+				Iterator<Vertex> iterator = arg0.getVertices().iterator();
+				while( iterator.hasNext() ){
+				    Vertex vtx = iterator.next();
+					IDescriptor descriptor = new VertexDescriptor( vtx );
+					if( leaf.implies(descriptor) != 0 )
+						continue;
+					vertex = vtx;
+					break;
+				}
+				if( vertex == null ){
+					vertex = convert( (OrientGraph) arg0, leaf.getDescriptor(), leaf.getIdentifier() );
+				}
+			    String identifier = ( Utils.assertNull( leaf.getIdentifier()) ?  S_IS_CHILD: leaf.getIdentifier() );
+				String edgeId = parent.getId() + ", " + vertex.getId();
+			    arg0.addEdge( edgeId, parent, vertex, identifier );
+				boolean retval = true;
+			    if( !( leaf instanceof IModelNode) || leaf.isLeaf())
+			    	return true;
+				IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) leaf;
+			    for (IModelLeaf<?> child: node.getChildren()) {
+					retval &= add( (IModelLeaf<IDescriptor>) child, vertex );
+				}
+				return retval;
+			}
+	    	
+	    });
+	    return true;
 	}
 
 	public boolean delete(IModelLeaf<IDescriptor> model) {

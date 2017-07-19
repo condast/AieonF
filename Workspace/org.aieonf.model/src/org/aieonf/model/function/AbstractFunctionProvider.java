@@ -12,9 +12,9 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelLeaf;
 
 /**
  * A function provider always provides functions for a certain domain. 

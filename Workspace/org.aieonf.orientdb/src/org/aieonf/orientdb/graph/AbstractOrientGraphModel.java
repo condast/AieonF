@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.aieonf.commons.graph.IVertex;
 import org.aieonf.commons.strings.StringStyler;
@@ -19,19 +18,28 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
-import org.aieonf.concept.security.IPasswordAieon;
-import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
 
+import com.orientechnologies.orient.core.metadata.security.ORole;
+import com.orientechnologies.orient.core.metadata.security.OSecurity;
+import com.orientechnologies.orient.core.metadata.security.OUser;
 import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
-public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<D, U> {
+/**
+ * Handles the Orient Databae
+ * @See :https://orientdb.com/docs/2.2/Graph-Database-Tinkerpop.html
+ * @author Kees
+ *
+ * @param <D>
+ * @param <U>
+ */
+public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends IDescribable<? extends IDescriptor>> implements IModelDatabase<D, U> {
 	
 	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
 	public static final String S_IDENTIFIER = "GraphModel";
@@ -39,7 +47,6 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	private static final String S_LOCAL = "plocal:";
 	private static final String S_FILE = "file:";
 	protected static final String S_ROOT = "Root";
-	private static final String S_CLASS = "class:";
 
 	protected static final String S_IS_CHILD = "isChild";
 
@@ -58,20 +65,25 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 
 	/**
 	 * Connect to the database
+	 * 
 	 * @param loader
 	 */
 	protected void connect( IDomainAieon domain ){
 		if( connected )
 			return;
-		IPasswordAieon password = new PasswordAieon( domain );
-		String user = password.getUserName();
-		String pwd = password.getPassword();
-		ILoaderAieon loader = new LoaderAieon( password );
+		String user = domain.getUserName();
+		String pwd = domain.getPassword();
+		ILoaderAieon loader = new LoaderAieon( domain);
 		loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
 		loader.setIdentifier( domain.getDomain() );
 		source = ProjectFolderUtils.getDefaultUserDir( loader, true).toString();
 		source = source.replace( S_FILE, S_LOCAL);
-		factory = new OrientGraphFactory( source, user, pwd );
+		factory = new OrientGraphFactory( source, user, pwd ).setupPool(1, 10);
+		factory.setAutoStartTx(false);
+		OSecurity security = factory.getDatabase().getMetadata().getSecurity();
+		OUser ouser = security.getUser( user );
+		if(ouser == null )
+			security.createUser( user, pwd, ORole.ADMIN );
 		this.connected = true;
 	}
 	
@@ -104,26 +116,6 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 			listener.notifyChange(event);
 	}
 	
-	protected void setup(){
-		try{
-			Set<String> indices = graph.getIndexedKeys( Vertex.class );
-			if( !indices.contains( S_ROOT ))
-				graph.createKeyIndex( S_ROOT, Vertex.class, new Parameter<String, String>("type", "UNIQUE"));
-			this.graph = factory.getTx();//If this doesn't work then changes are that the file location are invalid
-			if( graph.countVertices() == 0 ){
-				graph.addVertex( S_CLASS + S_ROOT  );			
-			}
-			graph.commit();
-			graph.shutdown();
-		}
-		catch( Exception ex ){
-			ex.printStackTrace();
-			if( graph != null )
-				graph.rollback();
-		}
-		
-	}
-
 	@Override
 	public void open( IDomainAieon domain){
 		try{
@@ -131,12 +123,6 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 			if(!connected )
 				return;
 			this.graph = factory.getTx();
-			if( graph.countVertices() == 0 ){
-				root = graph.addVertex( S_CLASS + S_ROOT  );		
-			}else{
-				root = graph.getVerticesOfClass( S_ROOT ).iterator().next();
-			}
-			setup();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -175,7 +161,6 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 		this.sync();
 		if( graph != null )
 			graph.shutdown();
-		factory.close();
 	}
 
 	@Override
@@ -212,8 +197,8 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	 * @param graph
 	 * @return
 	 */
-	protected static IDescriptor createDescriptor( OrientGraph graph ){
-		return createDescriptor( graph, graph.addVertex( null ));		
+	protected static IDescriptor createDescriptor( OrientGraph graph, String id ){
+		return createDescriptor( graph, graph.addVertex( id ));		
 	}
 
 	/**
@@ -239,7 +224,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	 * @return
 	 */
 	public static Vertex convert( OrientGraph graph, IDescriptor descriptor, String meaning ){
-		Vertex vtx = graph.addVertex(null); // 1st OPERATION: IMPLICITLY BEGIN A TRANSACTION
+		Vertex vtx = graph.addVertex( descriptor.getID()); // 1st OPERATION: IMPLICITLY BEGIN A TRANSACTION
 		Iterator<String> iterator = descriptor.iterator();
 		while( iterator.hasNext() ){
 			String key = iterator.next();

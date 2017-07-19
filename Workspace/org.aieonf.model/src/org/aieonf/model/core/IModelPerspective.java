@@ -1,4 +1,4 @@
-package org.aieonf.model;
+package org.aieonf.model.core;
 
 import org.aieonf.concept.IDescriptor;
 

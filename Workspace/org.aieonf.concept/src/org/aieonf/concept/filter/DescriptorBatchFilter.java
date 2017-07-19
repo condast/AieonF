@@ -23,7 +23,7 @@ public class DescriptorBatchFilter<T extends IDescribable<?>> extends BatchFilte
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean accept(Object obj) throws FilterException
+	public boolean accept(T obj) throws FilterException
 	{
 		if( !( obj instanceof IDescribable ))
 			return false;

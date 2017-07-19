@@ -24,9 +24,9 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.persist.ConceptPersistException;
 import org.aieonf.concept.xml.ConceptParser;
 import org.aieonf.concept.xml.StoreConcept;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
-import org.aieonf.model.Model;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.Model;
 
 /**
  *
@@ -93,7 +93,7 @@ public class StoreModel<T extends IDescriptor>
 		if(!( model instanceof IModelNode ))
 			return doc;
 		IModelNode<? extends IDescriptor> md = 
-				( IModelNode<? extends IDescriptor> )model;
+				(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
 		if( md.hasChildren() == false )
 			return doc;
 
@@ -195,7 +195,7 @@ public class StoreModel<T extends IDescriptor>
 		if(!( model instanceof IModelNode ))
 			return;
 		IModelNode<? extends IDescriptor> md = 
-				( IModelNode<? extends IDescriptor> )model;
+				(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
 		for( IModelLeaf<? extends IDescriptor> child: md.getChildren() )
 			printModel( buffer, child, depth + 1);
 	}  
@@ -218,7 +218,7 @@ public class StoreModel<T extends IDescriptor>
 			return;
 
 		IModelNode<? extends IDescriptor> md = 
-				( IModelNode<? extends IDescriptor> )model;
+				(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
 		for( IModelLeaf<? extends IDescriptor> child: md.getChildren() ){
 			printExtendedModel( buffer, child, depth + 1);
 		}

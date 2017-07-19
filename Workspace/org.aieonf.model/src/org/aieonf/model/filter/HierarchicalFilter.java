@@ -7,7 +7,7 @@ import org.aieonf.commons.filter.AbstractFilter;
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.strings.StringStyler;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 
 public class HierarchicalFilter<T extends IModelLeaf<?>> extends AbstractFilter<T>
 {
@@ -42,7 +42,7 @@ public class HierarchicalFilter<T extends IModelLeaf<?>> extends AbstractFilter<
 	}
 
 	@Override
-	protected boolean acceptEnabled(Object obj) throws FilterException {
+	protected boolean acceptEnabled(T obj) throws FilterException {
 		return filter.accept(obj);
 	}
 

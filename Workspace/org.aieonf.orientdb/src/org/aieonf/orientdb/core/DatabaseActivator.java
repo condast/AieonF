@@ -46,7 +46,7 @@ public class DatabaseActivator {
 		super();
 	}
 
-	public void startup( BundleContext context ){
+	public void startup( ){
 		factory = OrientDBFactory.getInstance();
 		Properties props = System.getProperties();
 		props.setProperty( S_ORIENTDB_HOME, factory.getOrientDBRoot().getAbsolutePath());

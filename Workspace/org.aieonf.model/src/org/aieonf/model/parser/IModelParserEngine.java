@@ -1,7 +1,7 @@
 package org.aieonf.model.parser;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.ModelException;
 
 public interface IModelParserEngine<T extends IDescriptor, U extends Object>
 {
