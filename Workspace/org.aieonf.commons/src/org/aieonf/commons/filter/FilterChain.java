@@ -152,18 +152,17 @@ public class FilterChain<T> extends AbstractFilter<T>
    * @throws FilterException
    */
   @Override
-	@SuppressWarnings("unchecked")
-	protected boolean acceptEnabled( Object obj ) throws FilterException
+  protected boolean acceptEnabled(T obj ) throws FilterException
   {
-  	Collection<T> list = new ArrayList<T>();
-    try{
-  	  list.add(( T )obj );
-    }
-    catch( ClassCastException ex ){
-    	return false;
-    }
-    Collection<T> result = this.doFilter( list );
-    return (( result != null ) && ( result.size() > 0 ));
+	  Collection<T> list = new ArrayList<T>();
+	  try{
+		  list.add(( T )obj );
+	  }
+	  catch( ClassCastException ex ){
+		  return false;
+	  }
+	  Collection<T> result = this.doFilter( list );
+	  return (( result != null ) && ( result.size() > 0 ));
   }
 
   /**

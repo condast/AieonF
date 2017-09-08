@@ -347,7 +347,8 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	 */
 	public static String getUserName( IDescriptor concept )
 	{
-		return( concept.get( ConceptBase.getAttributeKey( IPasswordAieon.Attributes.USER_NAME )));
+		String key = ConceptBase.getAttributeKey( IPasswordAieon.Attributes.USER_NAME );
+		return( concept.get( key ));
 	}
 
 	/**

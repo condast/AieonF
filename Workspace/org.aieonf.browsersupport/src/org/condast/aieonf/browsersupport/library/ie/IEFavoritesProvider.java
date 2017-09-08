@@ -22,7 +22,7 @@ import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.library.URLAieon;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.library.FileModel;
 import org.aieonf.template.provider.AbstractModelProvider;

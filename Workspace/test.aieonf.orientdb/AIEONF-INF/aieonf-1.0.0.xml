@@ -16,8 +16,10 @@
 	  <children>
 		  <model>
 		  	<domain>
-		       <domain type="string" use="mandatory" create="template">org.aieonf.saight.domain.Links</domain>
-		       <short-name type="string" use="mandatory" create="template">Links</short-name>
+		       <domain type="string" use="mandatory" create="template">org.aieonf.orientdb.test</domain>
+		       <short-name type="string" use="mandatory" create="template">Test Orient DB</short-name>
+               <user-name>keesp</user-name>
+               <password>test</password>
 		    </domain>
 		  </model>
           <model id="org.aieonf.database">

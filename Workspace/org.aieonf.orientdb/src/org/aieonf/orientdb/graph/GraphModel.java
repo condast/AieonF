@@ -10,8 +10,9 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.Model;
+import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.orientdb.core.OrientDBNode;
@@ -54,7 +55,7 @@ public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLea
 	@SuppressWarnings({ "unchecked" })
 	protected void create( Vertex vertex, ITemplateLeaf<? extends IDescriptor> leaf ) {
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
-		Vertex child = graph.addVertex( null );
+		Vertex child = graph.addVertex( leaf.getDescriptor().getID() );
 		IVertex<IDescriptor> vtx = new VertexImpl( child );
 		IDescriptor descriptor = vtx.get();
 		descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
@@ -120,7 +121,7 @@ public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLea
 		while( iterator.hasNext() ){
 			Vertex child = iterator.next();
 			IVertex<IDescriptor> vtx = new VertexImpl( child, new VertexImpl.VertexConcept( child ));
-			if( filter.accept( vtx.get() ))
+			if( filter.accept( new Model<IDescriptor>( vtx.get() )))
 				results.add( new ModelLeaf<IDescriptor>( vtx.get() ));
 		}
 		return results;

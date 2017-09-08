@@ -47,7 +47,7 @@ public class NotFilter<T extends Object> implements IFilter<T>
 	}
 
 	@Override
-	public boolean accept(Object obj) throws FilterException
+	public boolean accept( T obj) throws FilterException
 	{
 		return !this.filter.accept(obj);
 	}

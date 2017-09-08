@@ -414,10 +414,4 @@ public class DescriptorWrapper implements IDescriptor
 	protected void setExtendedKey( String extended ){
 		Descriptor.setExtendedKey( this, extended );
 	}
-
-	@Override
-	public IDescriptorViewer getViewer()
-	{
-		return this.descriptor.getViewer();
-	}
 }

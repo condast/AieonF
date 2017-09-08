@@ -48,6 +48,17 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 		return this.get( IDomainAieon.Attributes.SHORT_NAME.toString() );
 	}
 	
+	
+	@Override
+	public String getUserName() {
+		return this.get( IDomainAieon.Attributes.USER_NAME.toString() );
+	}
+
+	@Override
+	public String getPassword() {
+		return this.get( IDomainAieon.Attributes.PASSWORD.toString() );
+	}
+
 	/**
 	 * Get the domain name
 	 * @return

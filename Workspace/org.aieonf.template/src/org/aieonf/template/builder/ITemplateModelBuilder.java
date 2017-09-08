@@ -5,7 +5,7 @@ import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.template.ITemplate;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.databinding.TemplateConceptValidator;

@@ -2,7 +2,7 @@ package org.aieonf.template.factory;
 
 import java.io.InputStream;
 
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.ModelException;
 import org.aieonf.template.ITemplate;
 
 public interface ITemplateFactory

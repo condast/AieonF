@@ -1,4 +1,4 @@
-package org.aieonf.model;
+package org.aieonf.model.core;
 
 import java.util.*;
 
@@ -137,7 +137,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 		if(!( model instanceof IModelNode ))
 			return;
 		IModelNode<? extends IDescriptor> md = 
-			( IModelNode<? extends IDescriptor> )model;
+			(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
 		for( IModelLeaf<? extends IDescriptor> child: md.getChildren() ){
 			try {
 				child.setDepth( model.getDepth() + 1 );
@@ -198,7 +198,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 			return true;
 
 		IModelNode<? extends IDescriptor> md = 
-			( IModelNode<? extends IDescriptor> )model;
+			(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
 		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren();		
 		for( IModelLeaf<? extends IDescriptor> child: children )
 			if( contains( store, child, descr ))
@@ -220,7 +220,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	protected static void getDescriptors( IModelLeaf<?> model, Collection<IDescriptor> descriptors ){
 		descriptors.add( model.getDescriptor() );		
 		IModelNode<? extends IDescriptor> md = 
-			( IModelNode<? extends IDescriptor> )model;
+			(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
 		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren();		
 		for( IModelLeaf<? extends IDescriptor> child: children )
 		  getDescriptors( child, descriptors);

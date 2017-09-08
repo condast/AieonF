@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.template.property.ITemplateProperty;
 import org.aieonf.template.property.TemplateProperty;
 

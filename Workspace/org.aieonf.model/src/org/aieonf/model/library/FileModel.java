@@ -20,7 +20,7 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.library.CategoryAieon;
-import org.aieonf.model.Model;
+import org.aieonf.model.core.Model;
 /**
  * Create a concept, using a properties file
  */

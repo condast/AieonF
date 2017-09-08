@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.template.property.ITemplateProperty;
 
 /**

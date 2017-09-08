@@ -213,7 +213,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	 * @return
 	 * @throws FilterException
 	 */
-	protected abstract boolean acceptEnabled( Object obj ) throws FilterException;
+	protected abstract boolean acceptEnabled(T obj ) throws FilterException;
 
 	/**
 	 * This empty method can be overridden to prepare a filter prior to a doFilter operation
@@ -228,7 +228,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	 * @throws FilterException
 	 */
 	@Override
-	public synchronized final boolean accept( Object obj ) throws FilterException
+	public synchronized final boolean accept( T obj ) throws FilterException
 	{
 		switch( this.mode )
 		{

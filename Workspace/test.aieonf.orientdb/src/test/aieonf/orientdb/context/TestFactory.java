@@ -2,7 +2,7 @@ package test.aieonf.orientdb.context;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 /**

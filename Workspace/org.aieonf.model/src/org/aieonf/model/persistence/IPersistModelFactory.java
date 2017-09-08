@@ -3,8 +3,8 @@ package org.aieonf.model.persistence;
 import java.io.InputStream;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelException;
 
 public interface IPersistModelFactory< T extends IModelLeaf<? extends IDescriptor>>
 {

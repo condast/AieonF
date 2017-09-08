@@ -7,8 +7,8 @@ import java.util.Map;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.template.property.ITemplateProperty;
 
 public class TemplateWrapper implements ITemplate
@@ -108,7 +108,7 @@ public class TemplateWrapper implements ITemplate
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child)
 	{
 		if( this.model instanceof IModelNode ){
-			IModelNode<IDescriptor> node = ( IModelNode<IDescriptor> )this.model;
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.addChild( child );
 		}
 		return children.add(child );
@@ -123,7 +123,7 @@ public class TemplateWrapper implements ITemplate
 	public boolean removeChild(IModelLeaf<? extends IDescriptor> child)
 	{
 		if( this.model instanceof IModelNode ){
-			IModelNode<IDescriptor> node = ( IModelNode<IDescriptor> )this.model;
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.removeChild( child );
 		}
 		return children.remove(child );
@@ -138,7 +138,7 @@ public class TemplateWrapper implements ITemplate
 	public Collection<IModelLeaf<? extends IDescriptor>> getChildren()
 	{
 		if( this.model instanceof ITemplateNode ){
-			IModelNode<IDescriptor> node = ( IModelNode<IDescriptor> )this.model;
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.getChildren();
 		}
 		return children;
@@ -165,7 +165,7 @@ public class TemplateWrapper implements ITemplate
 	public IModelLeaf<? extends IDescriptor> getChild( IDescriptor descriptor)
 	{
 		if( this.model instanceof ITemplateNode ){
-			IModelNode<IDescriptor> node = ( IModelNode<IDescriptor> )this.model;
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.getChild( descriptor );
 		}
 		for( IModelLeaf<? extends IDescriptor> child: children ){
@@ -193,7 +193,7 @@ public class TemplateWrapper implements ITemplate
 	public boolean hasChildren()
 	{
 		if( this.model instanceof IModelNode ){
-			IModelNode<IDescriptor> node = ( IModelNode<IDescriptor> )this.model;
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.hasChildren();
 		}
 		return ( children.size() > 0 );
@@ -208,7 +208,7 @@ public class TemplateWrapper implements ITemplate
 	public int nrOfchildren()
 	{
 		if( this.model instanceof IModelNode ){
-			IModelNode<IDescriptor> node = ( IModelNode<IDescriptor> )this.model;
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.nrOfchildren();
 		}
 		return children.size();

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Stack;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.ModelException;
 
 public class AbstractModelProcessor<T extends IDescriptor>
 {
@@ -170,7 +170,7 @@ public class AbstractModelProcessor<T extends IDescriptor>
 			listener.processModelNode( node );
 		}
 		for( IModelLeaf<? extends IDescriptor> child: node.getChildren() ){
-			this.process(( IModelNode<T> )child );
+			this.process((org.aieonf.model.core.IModelNode<T> )child );
 		}
 	}
 
@@ -216,7 +216,7 @@ public class AbstractModelProcessor<T extends IDescriptor>
 		}
 		
 		children = new ArrayList<IModelLeaf<? extends IDescriptor>>( parent.getChildren() );
-		IModelNode<T> node = ( IModelNode<T> )children.get( index );
+		IModelNode<T> node = (org.aieonf.model.core.IModelNode<T> )children.get( index );
 		this.parents.push( node );
 		this.index = 0;
 		for( IModelFactory<IModelNode<T>> listener: listeners ){

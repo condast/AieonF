@@ -3,7 +3,7 @@ package org.aieonf.model.function;
 import java.util.EventObject;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.function.IModelCompleteListener.ParseEvents;
 
 public class ModelCompleteEvent extends EventObject {

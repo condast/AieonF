@@ -30,10 +30,10 @@ import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.library.URLAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
-import org.aieonf.model.Model;
-import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.Model;
+import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 

@@ -44,7 +44,7 @@ public interface IFilter<T>
    * @return boolean
    * @throws FilterException
   */
-  public boolean accept( Object obj ) throws FilterException;
+  public boolean accept( T obj ) throws FilterException;
   
   /**
    * Returns a filtered list of objects provided by the input list

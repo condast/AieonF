@@ -101,8 +101,8 @@ public class VertexImpl implements IAieonFVertex<IDescriptor> {
 	 * @return
 	 */
 	public static Vertex convert( OrientGraph graph, IVertex<? extends IDescriptor> vertex, String meaning ){
-		  Vertex vtx = graph.addVertex(null); 
 		  IDescriptor descriptor = vertex.get();
+		  Vertex vtx = graph.addVertex(descriptor.getID()); 
 		  while( descriptor.iterator().hasNext() ){
 			  String key = descriptor.iterator().next();
 			  vtx.setProperty(key, descriptor.get( key ));

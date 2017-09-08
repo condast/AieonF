@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 
 public class ModelSearch<T extends IDescriptor> {
 

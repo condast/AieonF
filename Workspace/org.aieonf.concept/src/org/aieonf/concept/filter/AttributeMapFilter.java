@@ -137,7 +137,7 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
    * @throws FilterException
   */
   @Override
-	protected boolean acceptEnabled( Object descriptor ) throws FilterException
+	protected boolean acceptEnabled( T descriptor ) throws FilterException
   {
     if( descriptor == null )
     	return false;

@@ -4,7 +4,7 @@ import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.HierarchicalFilter;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.DescriptorFilter;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 
 public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends HierarchicalFilter<IModelLeaf<T>> implements IModelFilter<T>
 {
@@ -66,7 +66,7 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 	}
 
 	@Override
-	protected boolean acceptEnabled(Object obj) throws FilterException {
+	protected boolean acceptEnabled( IModelLeaf<T> obj) throws FilterException {
 		if( ! ModelFilterWrapper.acceptDepth( minDepth, maxDepth, obj ))
 			return false;
 		return super.acceptEnabled(obj);

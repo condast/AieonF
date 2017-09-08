@@ -3,13 +3,11 @@ package org.aieonf.orientdb.cache;
 import java.io.Closeable;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.aieonf.concept.IDescriptor;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import com.orientechnologies.orient.core.sql.query.OSQLQuery;
 
 public class CacheController<T extends IDescriptor> implements Closeable{
 

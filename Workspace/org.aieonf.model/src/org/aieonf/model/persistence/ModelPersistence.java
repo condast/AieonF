@@ -13,7 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.aieonf.commons.persistence.AbstractPersistence;
 import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelNode;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.xml.StoreModel;
 import org.w3c.dom.Document;
 

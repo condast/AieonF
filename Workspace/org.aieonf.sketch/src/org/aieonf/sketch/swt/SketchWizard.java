@@ -3,7 +3,7 @@ package org.aieonf.sketch.swt;
 import java.io.FileNotFoundException;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.sketch.swt.SketchController.Pages;
 import org.condast.commons.ui.wizard.xml.AbstractXmlFlowWizard;
 import org.eclipse.jface.wizard.IWizardPage;

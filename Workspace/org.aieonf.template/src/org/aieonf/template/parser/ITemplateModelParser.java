@@ -1,7 +1,7 @@
 package org.aieonf.template.parser;
 
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelException;
 
 /**
  * Is called when a model parser parses a node

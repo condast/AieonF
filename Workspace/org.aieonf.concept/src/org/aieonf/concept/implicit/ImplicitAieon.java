@@ -212,12 +212,6 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 		return isFamily( this, attribute, desc );
 	}
 
-	@Override
-	public IDescriptorViewer getViewer()
-	{
-		return new ImplicitDescriptorViewer<IDescriptor>( this );
-	}
-
 	/**
 	 * Default implies operation. This happens when the given descriptor is of the same family as the reference
 	 * @param descriptor

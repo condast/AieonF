@@ -58,7 +58,7 @@ public class BatchFilter<T extends Object> implements IFilter<T>
 	}
 
 	@Override
-	public boolean accept(Object obj) throws FilterException
+	public boolean accept( T obj) throws FilterException
 	{
 		if( !this.batch.contains(obj))
 			return false;

@@ -1,8 +1,8 @@
 package org.aieonf.template.factory;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelException;
 import org.aieonf.model.persistence.IPersistModelFactory;
 import org.aieonf.template.ITemplate;
 

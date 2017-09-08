@@ -29,4 +29,5 @@ Import-Package: org.aieonf.commons.encryption,
  org.aieonf.concept.wrapper,
  org.aieonf.concept.xml,
  org.aieonf.model,
+ org.aieonf.model.core,
  org.aieonf.model.library

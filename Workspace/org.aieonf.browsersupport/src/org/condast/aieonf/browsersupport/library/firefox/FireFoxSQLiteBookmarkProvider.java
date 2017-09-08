@@ -26,12 +26,12 @@ import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
-import org.aieonf.model.Model;
-import org.aieonf.model.ModelLeaf;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.collections.ModelCollections;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.Model;
+import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 import org.condast.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute;
@@ -219,7 +219,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 					if( CategoryAieon.isCategory( concept )){
 						category = new CategoryAieon( concept );
 						category.setProvider( super.getManifest().getIdentifier() );
-						if( filter.accept( category ))
+						if( filter.accept( new ModelLeaf<IDescriptor>( category )))
 							categories.put( BookmarkAieon.getPrimKey( category ), new Model<IDescriptor>(category ));
 					}else{
 						IModelLeaf<IDescriptor> child = new ModelLeaf<IDescriptor>(concept);

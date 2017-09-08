@@ -16,10 +16,8 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.aieonf.commons.Utils;
-import org.aieonf.concept.DescriptorViewer;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.IDescriptorViewer;
 import org.aieonf.concept.body.BodyFactory;
 
 /**
@@ -74,7 +72,7 @@ public class Descriptor implements IDescriptor
 		if( this.checkName( name) == false )
 			throw new IllegalArgumentException( S_ERR_INVALID_NAME + ": " + name );
 
-		base.set( IDescriptor.Attributes.NAME, name );
+		base.set( IDescriptor.Attributes.NAME.name(), name );
 	}
 
 	/**
@@ -85,7 +83,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( String id, String name )
 	{
 		this( name );
-		base.set( IDescriptor.Attributes.ID, id );
+		base.set( IDescriptor.Attributes.ID.name(), id );
 	}
 
 	/**
@@ -96,7 +94,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( IDescriptor descriptor )
 	{
 		this( descriptor.getName() );
-		base.set( IDescriptor.Attributes.ID, descriptor.getID() );
+		base.set( IDescriptor.Attributes.ID.name(), descriptor.getID() );
 		this.setVersion( descriptor.getVersion() );
 		this.setDescription( descriptor.getDescription() );
 		this.setClassName( descriptor.getClass().getName() );
@@ -135,7 +133,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getID()
 	{
-		return this.get( IDescriptor.Attributes.ID );
+		return this.get( IDescriptor.Attributes.ID.name() );
 	}
 
 	/**
@@ -146,7 +144,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getName()
 	{
-		return this.get( IDescriptor.Attributes.NAME );
+		return this.get( IDescriptor.Attributes.NAME.name() );
 	}
 
 	/**
@@ -157,7 +155,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final int getVersion()
 	{
-		String version = this.get( Attributes.VERSION );
+		String version = this.get( Attributes.VERSION.name() );
 		if( Descriptor.isNull( version ))
 			return Integer.MIN_VALUE;
 		return Integer.parseInt( version );
@@ -172,7 +170,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final void setVersion( int version )
 	{
-		base.set( Attributes.VERSION, String.valueOf( version ));
+		base.set( Attributes.VERSION.name(), String.valueOf( version ));
 	}
 
 	/**
@@ -703,12 +701,6 @@ public class Descriptor implements IDescriptor
 				return true;
 		}
 		return false;
-	}
-
-	@Override
-	public IDescriptorViewer getViewer()
-	{
-		return new DescriptorViewer( this );
 	}
 
 	/**

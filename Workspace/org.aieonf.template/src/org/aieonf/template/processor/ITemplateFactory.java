@@ -1,6 +1,6 @@
 package org.aieonf.template.processor;
 
-import org.aieonf.model.ModelException;
+import org.aieonf.model.core.ModelException;
 import org.aieonf.template.ITemplate;
 
 public interface ITemplateFactory<T extends ITemplate>

@@ -12,7 +12,9 @@ public interface IDomainAieon extends IDescriptor
 		PERSPECTIVE,
 		ACTIVE,
 		SORT,
-		PARENT;
+		PARENT,
+		USER_NAME,
+		PASSWORD;
 		
 		@Override
 		public String toString() {
@@ -49,4 +51,12 @@ public interface IDomainAieon extends IDescriptor
 	 * @return
 	 */
 	public boolean isHidden();
+	
+	/**
+	 * Access to the aieon, if required
+	 * @return
+	 */
+	public String getUserName();
+	
+	public String getPassword();
 }

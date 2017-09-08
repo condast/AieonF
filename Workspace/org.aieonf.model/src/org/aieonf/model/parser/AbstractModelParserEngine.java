@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.IModelLeaf;
-import org.aieonf.model.IModelNode;
-import org.aieonf.model.ModelException;
-import org.aieonf.model.ModelLeaf;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.ModelException;
+import org.aieonf.model.core.ModelLeaf;
 
 public abstract class AbstractModelParserEngine<T extends IDescriptor, U extends Object> implements IModelParserEngine<T, U>
 {

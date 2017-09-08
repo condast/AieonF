@@ -2,8 +2,8 @@ package test.aieonf.orientdb.service;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.IModelLeaf;
 import org.aieonf.model.builder.IFunctionProvider;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
@@ -45,6 +45,6 @@ public class FunctionComponent extends AbstractExecuteThread
 
 	@Override
 	public void onExecute() {
-		suite.runTests( factory.getFunction( IModelFunctionProvider.S_MODEL_PROVIDER_ID ));
+		suite.runTests( (IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>>) factory.getFunction( IModelFunctionProvider.S_MODEL_PROVIDER_ID ));
 	}
 }
