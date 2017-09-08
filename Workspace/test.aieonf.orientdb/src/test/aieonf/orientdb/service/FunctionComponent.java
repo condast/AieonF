@@ -39,8 +39,8 @@ public class FunctionComponent extends AbstractExecuteThread
 	}
 
 	@Override
-	public void onInitialise() {
-		// NOTHING	
+	public boolean onInitialise() {
+		return true;
 	}
 
 	@Override
