@@ -6,7 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.aieonf.sketch.Activator
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.aieonf.commons,
+Import-Package: javax.servlet;version="3.1.0.20150414",
+ javax.servlet.http;version="3.1.0.20150414",
+ org.aieonf.commons,
  org.aieonf.commons.filter,
  org.aieonf.commons.strings,
  org.aieonf.concept,

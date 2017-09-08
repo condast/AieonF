@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+      <extension
+           id="testFilter"
+           point="org.eclipse.equinox.http.registry.filters">
+        <filter
+              alias="/aieonf/sketch"
+              class="org.aieonf.sketch.internal.entry.EntryFilter">
+        </filter>
+     </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+    <servlet
+      alias="/aieonf/sketch"
+      class="org.aieonf.sketch.internal.entry.EntryServlet"/>
+   </extension>
+</plugin>
