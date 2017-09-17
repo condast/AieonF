@@ -13,10 +13,11 @@ import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.osgi.js.AbstractJavascriptController;
+import org.aieonf.osgi.js.AbstractJavascriptController.LoadTypes;
 import org.aieonf.sketch.factory.SelectedFactory;
 import org.aieonf.sketch.factory.SketchModelFactory;
 import org.aieonf.sketch.preferences.SketchPreferences;
-import org.condast.js.commons.controller.AbstractJavascriptController;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 

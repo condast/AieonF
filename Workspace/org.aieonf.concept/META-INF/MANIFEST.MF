@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Concept Plug-in
 Bundle-SymbolicName: org.aieonf.concept
-Bundle-Version: 1.0.0.v20080603
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
-Eclipse-BuddyPolicy: registered
 Export-Package: org.aieonf.concept,
  org.aieonf.concept.body,
  org.aieonf.concept.context,

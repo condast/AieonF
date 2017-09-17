@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.osgi.wizard.xml.AbstractXmlFlowWizard;
 import org.aieonf.sketch.swt.SketchController.Pages;
-import org.condast.commons.ui.wizard.xml.AbstractXmlFlowWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -21,7 +21,7 @@ public class SketchWizard extends AbstractXmlFlowWizard<IModelLeaf<IDescriptor>>
 	private SketchController controller; 
 
 	public SketchWizard( Composite parent, int style ) {
-		super( SketchWizard.class.getResourceAsStream( S_WIZARD_DESC ), SketchWizard.class, null );
+		super( SketchWizard.class.getResourceAsStream( S_WIZARD_DESC ), SketchWizard.class );
 		controller = new SketchController( new Browser( parent, style ));
 		wizard = this;
 	}

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Concept Collections
 Bundle-SymbolicName: org.aieonf.collections
-Bundle-Version: 1.0.0.20142008
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: AieonF.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.aieonf.collections,

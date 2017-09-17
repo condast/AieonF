@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: AieonF Template
 Bundle-SymbolicName: org.aieonf.template
-Bundle-Version: 1.0.0.v20120821
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.aieonf.template,

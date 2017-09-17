@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Browser Support for Saight
 Bundle-SymbolicName: org.aieonf.browsersupport
-Bundle-Version: 1.0.0.v20140820
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/provider.xml
@@ -29,7 +29,6 @@ Import-Package: org.aieonf.collections,
  org.aieonf.concept.loader,
  org.aieonf.concept.locator,
  org.aieonf.concept.wrapper,
- org.aieonf.model,
  org.aieonf.model.builder,
  org.aieonf.model.collections,
  org.aieonf.model.core,
@@ -40,7 +39,6 @@ Import-Package: org.aieonf.collections,
  org.aieonf.model.xml,
  org.aieonf.osgi.service,
  org.aieonf.template,
- org.aieonf.template.builder,
  org.aieonf.template.context,
  org.aieonf.template.provider
 Bundle-ClassPath: lib/htmlparser.jar,

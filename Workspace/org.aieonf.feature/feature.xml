@@ -1,24 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.aieonf.feature"
-      label="AieonF Feature"
-      version="1.0.0.v20141007"
-      provider-name="Condast">
+      label="AieonF Core Feature"
+      version="1.0.0.qualifier">
 
-   <description url="https://github.com/condast/AieonF">
-      The Aieon Framework (AieonF) provides means to link urls into models; groups of websites that are meaningful for a user. Instances of these models can be shared
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
    </description>
 
-   <copyright>
-      Copyright 2002-2014 AieonF
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
    </copyright>
 
-   <license url="http://www.apache.org/licenses/LICENSE-2.0.html">
-      This software is licensed with an apache 2.0
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
    </license>
+
+   <requires>
+      <import plugin="org.apache.commons.codec"/>
+      <import plugin="org.eclipse.core.runtime" version="3.9.100" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.rap.jface"/>
+      <import plugin="org.eclipse.rap.rwt"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.equinox.preferences"/>
+   </requires>
+
+   <plugin
+         id="org.aieonf.browsersupport"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.aieonf.collections"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.commons"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.commons.base64"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -32,14 +61,21 @@
          unpack="false"/>
 
    <plugin
-         id="org.aieonf.graph"
+         id="org.aieonf.model"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.aieonf.model"
+         id="org.aieonf.osgi"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.aieonf.sketch"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -53,7 +89,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.aieonf.util"
+         id="org.aieonf.tinkerpop"
          download-size="0"
          install-size="0"
          version="0.0.0"

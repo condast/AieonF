@@ -1,8 +1,8 @@
 package org.aieonf.commons.base64;
 
+import org.aieonf.commons.io.IOUtils;
 import org.aieonf.concept.core.Descriptor;
 import org.apache.commons.codec.binary.Base64;
-import org.condast.commons.io.IOUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
