@@ -1,4 +1,4 @@
-package org.aieonf.sketch.swt;
+package org.aieonf.osgi.js;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -6,33 +6,35 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.filter.WildcardFilter;
+import org.aieonf.commons.parser.ParseException;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
-import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.osgi.js.AbstractJavascriptController;
-import org.aieonf.osgi.js.AbstractJavascriptController.LoadTypes;
-import org.aieonf.sketch.factory.SelectedFactory;
-import org.aieonf.sketch.factory.SketchModelFactory;
-import org.aieonf.sketch.preferences.SketchPreferences;
+import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.provider.IModelDatabase;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
 
-public class SketchController extends AbstractJavascriptController {
+import com.google.gson.Gson;
 
-	public static final String S_INITIALISTED_ID = "SketchInitialisedId";
+public class DatabaseController<V extends IDescribable<? extends IDescriptor>> extends AbstractJavascriptController {
+
+	public static final String S_INITIALISTED_ID = "DatabaseInitialisedId";
 	public static final String S_IS_INITIALISTED = "isInitialised";
-	public static final String S_BAR_CLICKED = "barclicked";
+	
+	public static final String S_DATABASE_QUERY = "dbquery";
 
 	public enum Pages{
-		BAR,
-		INTRO,
+		GET,
 		SEARCH,
-		SHOW,
-		EDIT;
+		ADD,
+		REMOVE,
+		UPDATE;
 
 		@Override
 		public String toString() {
@@ -50,48 +52,78 @@ public class SketchController extends AbstractJavascriptController {
 			return items;
 		}
 	}
-
-	private SketchPreferences prefs = SketchPreferences.getInstance();
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 
-	private SelectedFactory selected = SelectedFactory.getInstance();
-	
-	private BrowserFunction barfunction;
+	private IModelDatabase<IDomainAieon, V> database;
+	private Class<V> clss;
 
-	public SketchController(Browser browser ) {
+	public DatabaseController(Browser browser ) {
 		super(browser, S_INITIALISTED_ID);
-		barfunction = new BrowserFunction(browser, S_BAR_CLICKED){
+		new BrowserFunction(browser, S_DATABASE_QUERY){
 
+			@SuppressWarnings("unchecked")
 			@Override
-			public Object function(Object[] arguments) {
-				prefs.setSearchType( arguments[0].toString());
-				prefs.setWildcard( arguments[1].toString());
-				prefs.setCleared(false);
-				logger.info( arguments.toString() );
-				return super.function(arguments);
+			public Object function(Object[] args) {
+				Pages page = Pages.valueOf((String) args[1]);
+				Gson gson = new Gson();
+				V leaf = null;
+				try {
+					switch( page ){
+					case GET:
+						IDescriptor descriptor = gson.fromJson( (String) args[1], IDescriptor.class );
+						database.get(descriptor);
+						break;
+					case SEARCH:
+						IModelFilter<IDescriptor> filter = gson.fromJson( (String) args[1], IModelFilter.class );
+						database.search(filter);
+						break;
+					case ADD:
+						leaf = (V) gson.fromJson( (String) args[1], clss );
+						database.add(leaf);
+						break;
+					case REMOVE:
+						leaf = (V) gson.fromJson( (String) args[1], clss );
+						database.remove(leaf);
+						break;
+					case UPDATE:
+						leaf = (V) gson.fromJson( (String) args[1], clss );
+						database.update(leaf);
+						break;
+
+					default:
+						break;
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				logger.info( args.toString() );
+				return super.function(args);
 			}
 		};	
 	}
 
-	private SketchController(Browser browser, String id, String url) {
+	private DatabaseController(Class<V> clss, IModelDatabase<IDomainAieon, V> database, Browser browser, String id, String url) {
 		super(browser, id, url);
+		this.database = database;
+		this.clss = clss;
 	}
 
-	private SketchController(Browser browser, String id, LoadTypes type, String url) {
+	private DatabaseController(Class<V> clss, IModelDatabase<IDomainAieon, V> database, Browser browser, String id, LoadTypes type, String url) {
 		super(browser, id, type, url);
+		this.database = database;
+		this.clss = clss;
 	}
 
-	private SketchController(Browser browser, String id, InputStream in) {
+	private DatabaseController(Class<V> clss, IModelDatabase<IDomainAieon, V> database, Browser browser, String id, InputStream in) {
 		super(browser, id, in);
+		this.database = database;
+		this.clss = clss;
 	}
 
-	public void setBrowser( Pages page ) throws FileNotFoundException {
-		SketchModelFactory smf = selected.getFactory();
-		if( smf == null )
-			return;
+	public void setBrowser( String location ) throws FileNotFoundException {
 		try {
-			String location = smf.getFilePath( page.toString() );
 			super.setBrowser( new FileInputStream( location ));
 		} catch ( Exception e) {
 			e.printStackTrace();
@@ -127,13 +159,13 @@ public class SketchController extends AbstractJavascriptController {
 			filter.setHierarchyRule( HierarchyRules.ALLCHILDREN );
 			break;
 		}
-		*/
 		SketchModelFactory factory = selected.getFactory();
 		if( factory == null )
 			return;
 		factory.getFunction( IModelProvider.S_MODEL_PROVIDER_ID).search(filter);
 		SketchPreferences preferences = SketchPreferences.getInstance();
 		preferences.setGetDate();
+		*/
 	}
 
 }

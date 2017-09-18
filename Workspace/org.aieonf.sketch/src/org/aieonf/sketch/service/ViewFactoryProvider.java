@@ -2,9 +2,9 @@ package org.aieonf.sketch.service;
 
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.osgi.swt.IViewFactory;
+import org.aieonf.sketch.controller.SketchController;
+import org.aieonf.sketch.controller.SketchController.Pages;
 import org.aieonf.sketch.factory.SelectedFactory;
-import org.aieonf.sketch.swt.SketchController;
-import org.aieonf.sketch.swt.SketchController.Pages;
 import org.aieonf.sketch.swt.SketchWizard;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;

@@ -6,12 +6,20 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.aieonf.osgi.Activator
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.aieonf.commons,
+Import-Package: com.google.gson;version="2.7.0",
+ org.aieonf.commons,
+ org.aieonf.commons.filter,
  org.aieonf.commons.io,
+ org.aieonf.commons.parser,
  org.aieonf.commons.strings,
  org.aieonf.concept,
  org.aieonf.concept.context,
+ org.aieonf.concept.core,
  org.aieonf.concept.domain,
+ org.aieonf.concept.filter,
+ org.aieonf.concept.library,
+ org.aieonf.model.core,
+ org.aieonf.model.filter,
  org.aieonf.model.provider,
  org.aieonf.osgi.controller,
  org.aieonf.template,
