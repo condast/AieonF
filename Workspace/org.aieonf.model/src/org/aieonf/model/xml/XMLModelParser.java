@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implements IModelParser<T>{
+public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implements IModelParser{
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	private static final String S_ERR_NO_CHILDREN   = " The node cannot contain children. ";
@@ -75,13 +75,13 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 
 	private IModelNode<T> root;
 
-	private IModelLeaf<T> parent;
-	private IModelLeaf<T> current;
+	private IModelLeaf<IDescriptor> parent;
+	private IModelLeaf<IDescriptor> current;
 	
 	private Stack<ModelAttributes> stack;
 	
 	private Collection<IXMLModelBuilder<T,IModelLeaf<T>>> creators;	
-	private Collection<IModelBuilderListener<IModelLeaf<T>>> listeners;
+	private Collection<IModelBuilderListener> listeners;
 
 	private XMLApplication application;
 	private XMLModel xmlModel;
@@ -94,7 +94,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	public XMLModelParser() {
 		this.stack = new Stack<ModelAttributes>();
 		this.creators = new ArrayList<IXMLModelBuilder<T,IModelLeaf<T>>>();
-		listeners = new ArrayList<IModelBuilderListener<IModelLeaf<T>>>();
+		listeners = new ArrayList<IModelBuilderListener>();
 	}
 
 	public void clear(){
@@ -132,7 +132,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * @param event
 	 */
 	@Override
-	public void addModelBuilderListener( IModelBuilderListener<IModelLeaf<T>> listener ){
+	public void addModelBuilderListener( IModelBuilderListener listener ){
 		this.listeners.add( listener );
 	}
 
@@ -141,12 +141,12 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * @param event
 	 */
 	@Override
-	public void removeModelBuilderListener( IModelBuilderListener<IModelLeaf<T>> listener ){
+	public void removeModelBuilderListener( IModelBuilderListener listener ){
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<IModelLeaf<T>> event ){
-		for( IModelBuilderListener<IModelLeaf<T>> listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent event ){
+		for( IModelBuilderListener listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -185,8 +185,8 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 				xmlModel.extendContext( ca );
 				this.root = (IModelNode<T>) model;
 				this.root.setIdentifier( ModelAttributes.CONTEXT.toString());
-				this.current = (IModelLeaf<T>) model;
-				xmlModel.fill((IModelLeaf<IDescriptor>) this.current );
+				this.current = (IModelLeaf<IDescriptor>) model;
+				xmlModel.fill( this.current );
 				break;
 			case CHILDREN:
 				index = this.stack.lastElement();
@@ -216,8 +216,8 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 							" index: " + index + S_ERR_NO_CHILDREN );
 					
 				IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) this.current;
-				this.current =  (IModelLeaf<T>) model;
-				xmlModel.fill(( IModelLeaf<IDescriptor>) this.current );
+				this.current =  (IModelLeaf<IDescriptor>) model;
+				xmlModel.fill( this.current );
 				String strng = StringStyler.styleToEnum( qName );
 				this.current.setIdentifier( StringStyler.prettyString( strng));
 				node.addChild( this.current );
@@ -237,13 +237,12 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		this.stack.push(ma);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		ModelAttributes ma = this.stack.pop();
 		switch( ma ){
 		case MODEL:
-			this.notifyListeners( new ModelBuilderEvent<IModelLeaf<T>>( this, (IModelLeaf<T>) this.current ));
+			this.notifyListeners( new ModelBuilderEvent( this, this.current ));
 			if(( this.parent != null ) &&( this.parent != current )){
 				((IModelNode<IDescriptor>) parent).addChild( current );
 				current = parent;
@@ -290,7 +289,6 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		}
 	}
 
-		@SuppressWarnings("unchecked")
 		@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String value = new String(ch, start, length);
@@ -302,7 +300,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 			descriptor.set( creator.getKey(), value);
 		}
 		catch( Exception ex ){
-			logger.severe( printError( (IModelLeaf<IDescriptor>) this.current, "Exception thrown for [" + value + "]"));
+			logger.severe( printError( this.current, "Exception thrown for [" + value + "]"));
 			throw new SAXException( ex );
 		}
 	}

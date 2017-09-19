@@ -33,7 +33,7 @@ public class ModelController<T extends IModelLeaf<? extends IDescriptor>> implem
 	
 	private Logger logger;
 
-	protected ModelController( )
+	public ModelController( )
 	{
 		logger = Logger.getLogger( this.getClass().getName() );
 		this.modelCreated = false;

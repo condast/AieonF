@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Concept Model
 Bundle-SymbolicName: org.aieonf.model
-Bundle-Version: 1.0.0.v20140815
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: AieonF
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.aieonf.model,

@@ -112,7 +112,6 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#build()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public IModelLeaf<T> build() {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -157,10 +156,10 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 						listener.notifyChange(event);
 				}	
 			};
-			parser.addModelBuilderListener((IModelBuilderListener<IModelLeaf<T>>) listener);
+			parser.addModelBuilderListener(listener);
 			parser.addDescriptorCreator( builder);
 			saxParser.parse( in, parser );
-			parser.removeModelBuilderListener((IModelBuilderListener<IModelLeaf<T>>) listener);
+			parser.removeModelBuilderListener(listener);
 			root = parser.getRoot();
 			parser.removeDescriptorCreator( builder );
 			parser.clear();

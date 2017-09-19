@@ -23,9 +23,9 @@ import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
 
-import com.orientechnologies.orient.core.metadata.security.ORole;
-import com.orientechnologies.orient.core.metadata.security.OSecurity;
-import com.orientechnologies.orient.core.metadata.security.OUser;
+//import com.orientechnologies.orient.core.metadata.security.ORole;
+//import com.orientechnologies.orient.core.metadata.security.OSecurity;
+//import com.orientechnologies.orient.core.metadata.security.OUser;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -80,10 +80,10 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 		source = source.replace( S_FILE, S_LOCAL);
 		factory = new OrientGraphFactory( source, user, pwd ).setupPool(1, 10);
 		factory.setAutoStartTx(false);
-		OSecurity security = factory.getDatabase().getMetadata().getSecurity();
-		OUser ouser = security.getUser( user );
-		if(ouser == null )
-			security.createUser( user, pwd, ORole.ADMIN );
+		//OSecurity security = factory.getDatabase().getMetadata().getSecurity();
+		//OUser ouser = security.getUser( user );
+		//if(ouser == null )
+		//	security.createUser( user, pwd, ORole.ADMIN );
 		this.connected = true;
 	}
 	

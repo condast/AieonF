@@ -1,24 +1,22 @@
 package org.aieonf.model.xml;
 
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.core.IModelLeaf;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public interface IModelParser<T extends IDescriptor> {
+public interface IModelParser {
 
 	/**
 	 * Add a model builder listener
 	 * @param event
 	 */
-	public void addModelBuilderListener( IModelBuilderListener<IModelLeaf<T>> listener );
+	public void addModelBuilderListener( IModelBuilderListener listener );
 
 	/**
 	 * Remove a model builder listener
 	 * @param event
 	 */
-	public void removeModelBuilderListener( IModelBuilderListener<IModelLeaf<T>> listener );
+	public void removeModelBuilderListener( IModelBuilderListener listener );
 
 	/**
 	 * Provide the start element of a SAX parser

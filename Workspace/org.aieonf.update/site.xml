@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description name="AieonF" url="https://github.com/condast/AieonF">
-      AieonF provides a light-weight modelling framework that collects url&apos;s into meaningful models.
-   </description>
-   <feature url="features/org.aieonf.feature_1.0.0.v20141007.jar" id="org.aieonf.feature" version="1.0.0.v20141007">
-      <category name="AieonF"/>
-   </feature>
-   <category-def name="AieonF" label="AieonF"/>
+   <feature url="features/org.aieonf.feature_1.0.0.qualifier.jar" id="org.aieonf.feature" version="1.0.0.qualifier"/>
 </site>

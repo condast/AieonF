@@ -151,7 +151,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 	}
 
 	@SuppressWarnings("unchecked")
-	protected boolean add(IModelLeaf<IDescriptor> leaf, Vertex parent ) {
+	protected boolean add(final IModelLeaf<IDescriptor> leaf, final Vertex parent ) {
 		super.getGraph().executeOutsideTx( new OCallable<Object, OrientBaseGraph>(){
 
 			@Override

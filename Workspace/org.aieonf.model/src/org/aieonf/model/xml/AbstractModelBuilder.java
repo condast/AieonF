@@ -44,22 +44,6 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 		return key.toString();
 	}
 
-	protected boolean setKey( String key ) {
-		this.key = key;
-		return true;
-	}
-
-	@Override
-	public boolean setValue(String value) {
-		this.model.getDescriptor().set(key, value);
-		return true;
-	}
-
-	@Override
-	public void endProperty() {
-		this.key = null;
-	}
-
 	/**
 	 * Get the currently selected model
 	 * @return
@@ -80,7 +64,7 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 	}
 
 	/**
-	 * Create a descriptor from the given name and attributes.
+	 * Create a descriptor from the given nae and attributes.
 	 * @param name
 	 * @param attributes
 	 * @return
@@ -94,11 +78,6 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 		return model;
 	}
 
-	@Override
-	public void notifyDescriptorCreated(ModelCreatorEvent event) {
-		// DO NOTHING	
-	}
-
 	/**
 	 * Create a factory from a class definition
 	 * @param componentName
@@ -107,7 +86,7 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected IConcept createConcept( Class<?> clss, Attributes attributes ){
+	protected static IConcept createConcept( Class<?> clss, Attributes attributes ){
 		if( attributes.getValue( Keys.CLASS.toString().toLowerCase()) == null )
 			return null;
 		String className = attributes.getValue( Keys.CLASS.toString().toLowerCase());
@@ -130,5 +109,26 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 			}
 		}
 		return null;
+	}
+
+	protected boolean setKey( String key ) {
+		this.key = key;
+		return true;
+	}
+
+	@Override
+	public boolean setValue(String value) {
+		this.model.getDescriptor().set(key, value);
+		return true;
+	}
+
+	@Override
+	public void endProperty() {
+		this.key = null;
+	}
+
+	@Override
+	public void notifyDescriptorCreated(ModelCreatorEvent event) {
+		// DO NOTHING	
 	}
 }
