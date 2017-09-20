@@ -10,7 +10,6 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
-import org.aieonf.model.filter.ModelFilterWrapper;
 import org.aieonf.model.provider.IModelDatabase;
 import org.condast.commons.test.AbstractTestSuite;
 
@@ -24,7 +23,7 @@ public class TestSuite extends AbstractTestSuite {
 	}
 	private static TestSuite suite = new TestSuite();
 	
-	private static IModelDatabase<IDomainAieon,IModelLeaf<IDescriptor>> provider;
+	private static IModelDatabase<IDomainAieon,IModelLeaf<IDescriptor>> database;
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 	
@@ -33,7 +32,7 @@ public class TestSuite extends AbstractTestSuite {
 	}
 	
 	public void runTests( IModelDatabase<IDomainAieon,IModelLeaf<IDescriptor>> func ){
-		provider = func;
+		database = func;
 		suite.performTests();
 	}
 
@@ -59,11 +58,11 @@ public class TestSuite extends AbstractTestSuite {
 	private final void testOpenDatabase() throws Exception{
 		TestFactory factory = TestFactory.getInstance();
 		try{
-			provider.open( factory.getDomain());
+			database.open( factory.getDomain());
 		}
 		finally{
-			provider.close();
-			provider.deactivate();
+			database.close();
+			database.deactivate();
 		}
 		//GraphModelTreeModel tm = model;
 	}
@@ -71,25 +70,25 @@ public class TestSuite extends AbstractTestSuite {
 	private final void testAddReadDatabase() throws Exception{
 		TestFactory factory = TestFactory.getInstance();
 		try{
-			provider.open( factory.getDomain());
+			database.open( factory.getDomain());
 			IModelLeaf<IDescriptor> model = new Model<IDescriptor>( factory.getDomain());
-			provider.add(model);
+			database.add(model);
 			IModelFilter<IDescriptor> filter = new ModelFilter<IDescriptor>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME, "*"));
-			Collection<IModelLeaf<IDescriptor>> results = provider.search(filter);
+			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
 			if( results.isEmpty()){
 				logger.info( "No Results. Stopping");
 			}
 			logger.info( "Results found: " + results.size() );
-			provider.remove( results.iterator().next());
-			results = provider.search(filter);
+			database.remove( results.iterator().next());
+			results = database.search(filter);
 			logger.info( "Results found: " + results.size() );
 				
 		}
 		finally{
-			provider.close();
-			provider.deactivate();
+			database.close();
+			database.deactivate();
 		}
 		//GraphModelTreeModel tm = model;
 	}

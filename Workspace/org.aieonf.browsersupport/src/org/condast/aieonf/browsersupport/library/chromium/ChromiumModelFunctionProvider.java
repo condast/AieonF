@@ -35,7 +35,7 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> {
 	public boolean canProvide( String functionName) {
 		if( DEFAULT_CHROMIUM_IDENTIFIER.equals( functionName ))
 			return true;
-		return super.canProvide(S_FUNCTION_PROVIDER_ID );
+		return super.canProvide( functionName );
 	}
 
 	
