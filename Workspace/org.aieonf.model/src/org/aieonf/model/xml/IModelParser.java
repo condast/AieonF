@@ -4,19 +4,19 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public interface IModelParser {
+public interface IModelParser<M extends Object> {
 
 	/**
 	 * Add a model builder listener
 	 * @param event
 	 */
-	public void addModelBuilderListener( IModelBuilderListener listener );
+	public void addModelBuilderListener( IModelBuilderListener<M> listener );
 
 	/**
 	 * Remove a model builder listener
 	 * @param event
 	 */
-	public void removeModelBuilderListener( IModelBuilderListener listener );
+	public void removeModelBuilderListener( IModelBuilderListener<M> listener );
 
 	/**
 	 * Provide the start element of a SAX parser
