@@ -170,12 +170,6 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 		notifyListeners( new ModelBuilderEvent<V>(this, models ));
 		return models;
 	}
-
-	@Override
-	public String printDatabase() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	@Override
 	public void deactivate() {

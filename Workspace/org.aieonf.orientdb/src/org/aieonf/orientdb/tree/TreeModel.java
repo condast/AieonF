@@ -15,6 +15,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
+import org.aieonf.orientdb.cache.CacheDatabase;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
 import org.aieonf.template.ITemplateLeaf;
@@ -30,10 +31,25 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>> {
 	
 	private ITemplateLeaf<IContextAieon> template;
+	private CacheDatabase<IDomainAieon> cache;
 	
 	public TreeModel( ITemplateLeaf<IContextAieon> template ) {
 		super();
+		cache = new CacheDatabase<IDomainAieon>();
 		this.template = template;
+	}
+
+	@Override
+	public void open(IDomainAieon domain) {
+		this.cache.open(domain);
+		if( this.cache.isOpen() )
+			super.open(domain);
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		this.cache.close();
 	}
 
 	@Override
@@ -48,7 +64,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.NAME ), S_ROOT );
 		root.setProperty( ConceptBase.getAttributeKey( IDescriptor.Attributes.VERSION ), 1 );
 		IModelLeaf<IDescriptor> parent = new OrientDBNode( super.getGraph(), root ); 
-		this.notifyListeners( new TemplateModelBuilderEvent(this, template, new OrientDBNode( super.getGraph(), root )));
+		this.notifyListeners( new TemplateModelBuilderEvent<IContextAieon, IModelLeaf<IDescriptor>>(this, template, new OrientDBNode( super.getGraph(), root )));
 		create( root, template );
 		return parent;
 	}
@@ -62,7 +78,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 		descriptor.set( ConceptBase.getAttributeKey( IDescriptor.Attributes.CREATE_DATE ), date );
 		descriptor.set( IModelLeaf.Attributes.IDENTIFIER, leaf.getIdentifier() );
 		super.getGraph().addEdge(null, vertex, child, leaf.getIdentifier());
-		this.notifyListeners( new TemplateModelBuilderEvent(this, leaf, new OrientDBNode( super.getGraph(), child )));
+		this.notifyListeners( new TemplateModelBuilderEvent<IContextAieon, IModelLeaf<IDescriptor>>(this, (ITemplateLeaf<IContextAieon>) leaf, new OrientDBNode( super.getGraph(), child )));
 		if( !leaf.isLeaf()){
 			ITemplateNode<IDescriptor> nd = (ITemplateNode<IDescriptor>) leaf;
 			for( IModelLeaf<? extends IDescriptor> next: nd.getChildren() )
@@ -136,6 +152,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 
 	public boolean add(IModelLeaf<IDescriptor> leaf) {
 		try{
+			cache.add(leaf.getDescriptor());
 			Vertex base = super.getGraph().addVertex(leaf.getID());
 			super.createDescriptor( super.getGraph(), base);
 			return add( (IModelLeaf<IDescriptor>) leaf, base );

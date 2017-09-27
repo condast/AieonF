@@ -148,15 +148,6 @@ public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U e
 	}
 	
 	@Override
-	public String printDatabase() {
-		StringBuffer buffer = new StringBuffer();
-		for( IModelProvider<D,U> provider: this.providers ){
-			buffer.append( provider.printDatabase() + "\n\n" );
-		}
-		return buffer.toString();
-	}
-
-	@Override
 	public void deactivate() {
 		for( IModelProvider<D,U> provider: this.providers ){
 			provider.deactivate();

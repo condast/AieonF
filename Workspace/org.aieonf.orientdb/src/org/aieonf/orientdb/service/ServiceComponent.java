@@ -5,7 +5,7 @@ import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelDatabase;
-import org.aieonf.model.provider.IProvider.DefaultModels;
+import org.aieonf.model.provider.IModelProvider.DefaultModels;
 import org.aieonf.orientdb.factory.OrientDBFactory;
 import org.aieonf.orientdb.graph.GraphModel;
 import org.aieonf.orientdb.tree.TreeModel;

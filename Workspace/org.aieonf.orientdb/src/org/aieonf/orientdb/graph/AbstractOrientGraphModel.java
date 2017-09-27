@@ -171,7 +171,6 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	/**
 	 * Print the given database
 	 */
-	@Override
 	public String printDatabase(){
 		Iterator<Vertex> iterator = graph.getVertices().iterator();
 		StringBuffer buffer = new StringBuffer();

@@ -222,12 +222,6 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextA
 	}
 
 	@Override
-	public String printDatabase() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected boolean onOpen(IDomainAieon key) {
 		return true;
 	}

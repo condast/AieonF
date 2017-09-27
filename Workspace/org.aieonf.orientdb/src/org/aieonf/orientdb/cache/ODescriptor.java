@@ -189,6 +189,10 @@ public class ODescriptor implements IDescriptor{
 		return names.iterator();
 	}
 
+	public ODocument getDocument() {
+		return document;
+	}
+
 	@Override
 	public int size() {
 		return document.fields();
