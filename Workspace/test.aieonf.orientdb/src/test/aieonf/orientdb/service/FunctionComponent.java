@@ -46,5 +46,6 @@ public class FunctionComponent extends AbstractExecuteThread
 	@Override
 	public void onExecute() {
 		suite.runTests( (IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>>) factory.getFunction( IModelFunctionProvider.S_MODEL_PROVIDER_ID ));
+		super.stop();
 	}
 }
