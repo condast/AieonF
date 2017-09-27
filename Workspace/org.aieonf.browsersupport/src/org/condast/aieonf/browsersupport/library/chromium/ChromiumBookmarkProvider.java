@@ -366,10 +366,4 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 			super.fill();
 		}
 	}
-
-	@Override
-	public String printDatabase() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

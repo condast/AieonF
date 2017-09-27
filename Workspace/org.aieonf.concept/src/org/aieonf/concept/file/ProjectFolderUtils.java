@@ -178,18 +178,6 @@ public class ProjectFolderUtils {
 	}
 	
 	/**
-	 * Return the default user directory. This is '%system-user%\<folder>\<name>\config'
-	 * @param aieon
-	 * @return 
-	 */
-	public static URI getDefaultJxseDir( String folder, String name )
-	{
-		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator + 
-				folder + File.separator + StringStyler.prettyString( name ) + File.separator + S_JXTA_CACHE);
-		return file.toURI();
-	}
-
-	/**
 	 * Return the default user directory. This is '%system-user%\<folder>\'
 	 * @param aieon
 	 * @return

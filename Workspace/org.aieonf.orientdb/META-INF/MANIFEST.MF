@@ -7,7 +7,9 @@ Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/provider.xml
 Import-Package: com.orientechnologies.common.util;version="2.2.19",
+ com.orientechnologies.orient.core.db;version="2.2.19",
  com.orientechnologies.orient.core.db.document;version="2.2.19",
+ com.orientechnologies.orient.core.record;version="2.2.19",
  com.orientechnologies.orient.core.record.impl;version="2.2.19",
  com.orientechnologies.orient.server;version="2.2.19",
  com.tinkerpop.blueprints,
@@ -15,6 +17,7 @@ Import-Package: com.orientechnologies.common.util;version="2.2.19",
  org.aieonf.commons,
  org.aieonf.commons.filter,
  org.aieonf.commons.graph,
+ org.aieonf.commons.parser,
  org.aieonf.commons.strings,
  org.aieonf.commons.transaction,
  org.aieonf.concept,

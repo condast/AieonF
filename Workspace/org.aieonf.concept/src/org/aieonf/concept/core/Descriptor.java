@@ -72,7 +72,7 @@ public class Descriptor implements IDescriptor
 		if( this.checkName( name) == false )
 			throw new IllegalArgumentException( S_ERR_INVALID_NAME + ": " + name );
 
-		base.set( IDescriptor.Attributes.NAME, name );
+		setValue( IDescriptor.Attributes.NAME, name );
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( String id, String name )
 	{
 		this( name );
-		base.set( IDescriptor.Attributes.ID, id );
+		setValue( IDescriptor.Attributes.ID, id );
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( IDescriptor descriptor )
 	{
 		this( descriptor.getName() );
-		base.set( IDescriptor.Attributes.ID, descriptor.getID() );
+		setValue( IDescriptor.Attributes.ID, descriptor.getID() );
 		this.setVersion( descriptor.getVersion() );
 		this.setDescription( descriptor.getDescription() );
 		this.setClassName( descriptor.getClass().getName() );
@@ -170,7 +170,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final void setVersion( int version )
 	{
-		base.set( Attributes.VERSION, String.valueOf( version ));
+		setValue( Attributes.VERSION, String.valueOf( version ));
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final void setDescription( String description )
 	{
-		base.set( IDescriptor.Attributes.DESCRIPTION, description );
+		setValue( IDescriptor.Attributes.DESCRIPTION, description );
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public void setProvider( String provider )
 	{
-		base.set( IDescriptor.Attributes.PROVIDER, provider );  	
+		setValue( IDescriptor.Attributes.PROVIDER, provider );  	
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public void setProviderName( String provider )
 	{
-		base.set( IDescriptor.Attributes.PROVIDER_NAME, provider );  	
+		setValue( IDescriptor.Attributes.PROVIDER_NAME, provider );  	
 	}
 
 	/**
@@ -272,9 +272,13 @@ public class Descriptor implements IDescriptor
 	 */
 	protected final void setClassName( String className )
 	{
-		base.set( Attributes.CLASS, className );
+		setValue( Attributes.CLASS, className );
 	}
 
+	protected void setValue( Attributes attr, String value ) {
+		set(attr.name().toLowerCase(), value);
+	}
+	
 	protected void remove( Enum<?> key ){
 		this.base.remove(key);
 	}
