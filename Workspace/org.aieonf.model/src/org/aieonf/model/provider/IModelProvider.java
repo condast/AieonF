@@ -123,7 +123,7 @@ public interface IModelProvider<K extends Object, T extends IDescribable<? exten
 	public boolean contains( T leaf );
 
 	/**
-	 * Get the models conforming to the given descriptor. Tse the model builder
+	 * Get the models conforming to the given descriptor. Use the model builder
 	 * listener to obtain them
 	 * @param descriptor
 	 * @throws ParseException
@@ -131,7 +131,7 @@ public interface IModelProvider<K extends Object, T extends IDescribable<? exten
 	public Collection<T> get( IDescriptor descriptor ) throws ParseException;
 
 	/**
-	 * Get the models conforming to the given descriptor. Tse the model builder
+	 * Get the models conforming to the given descriptor. Use the model builder
 	 * listener to obtain them
 	 * @param descriptor
 	 * @throws ParseException
