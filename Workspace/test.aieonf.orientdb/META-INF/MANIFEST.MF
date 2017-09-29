@@ -8,6 +8,7 @@ Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.aieonf.commons.filter,
  org.aieonf.commons.parser,
+ org.aieonf.commons.security,
  org.aieonf.concept,
  org.aieonf.concept.context,
  org.aieonf.concept.core,
@@ -26,6 +27,9 @@ Import-Package: org.aieonf.commons.filter,
  org.condast.commons.service,
  org.condast.commons.test,
  org.condast.commons.thread,
- org.osgi.framework;version="1.3.0"
+ org.osgi.framework;version="1.3.0",
+ org.osgi.service.component.annotations;version="1.2.0"
+ationPolicy: lazy
+Service-Component: OSGI-INF/models.xml,
+ OSGI-INF/test.aieonf.orientdb.service.LoginProvider.xml
 Bundle-ActivationPolicy: lazy
-Service-Component: OSGI-INF/models.xml

@@ -3,6 +3,8 @@ package test.aieonf.orientdb.suite;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.security.ILoginListener.LoginEvents;
+import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.AttributeFilter;
@@ -14,12 +16,14 @@ import org.aieonf.model.provider.IModelDatabase;
 import org.condast.commons.test.AbstractTestSuite;
 
 import test.aieonf.orientdb.context.TestFactory;
+import test.aieonf.orientdb.service.LoginDispatcher;
 
 public class TestSuite extends AbstractTestSuite {
 
 	public enum Tests{
 		TEST_OPEN_AND_CLOSE,
-		TEST_ADD_AND_READ;
+		TEST_ADD_AND_READ,
+		TEST_REGISTER;
 	}
 	private static TestSuite suite = new TestSuite();
 	
@@ -38,11 +42,14 @@ public class TestSuite extends AbstractTestSuite {
 
 	@Override
 	protected void testSuite() throws Exception {
-		Tests test = Tests.TEST_ADD_AND_READ;
+		Tests test = Tests.TEST_REGISTER;
 		try{
 			switch( test ){
 			case TEST_ADD_AND_READ:
 				testAddReadDatabase();
+				break;
+			case TEST_REGISTER:
+				testRegister();
 				break;
 			default:
 				testOpenDatabase();
@@ -53,6 +60,12 @@ public class TestSuite extends AbstractTestSuite {
 			ex.printStackTrace();
 		}
 		logger.info("Tests completed");
+	}
+
+	private final void testRegister() throws Exception{
+		LoginDispatcher dispatcher = LoginDispatcher.getInstance();
+		LoginEvent le = new LoginEvent( this, LoginEvents.LOGIN, "test", "test_pwd" );
+		dispatcher.setLoginEvent(le);
 	}
 
 	private final void testOpenDatabase() throws Exception{

@@ -11,13 +11,10 @@ public class LoginEvent extends EventObject{
 	
 	private String loginName;
 	private String password;
+	private boolean loggedIn;
 
-	public LoginEvent( Object source)
-	{
-		super( source );
-		this.loginEvent = LoginEvents.LOGOFF;
-		this.loginName = null;
-		this.password = null;
+	public LoginEvent( Object source){
+		this( source, LoginEvents.LOGOFF, null, null );
 	}
 
 	public LoginEvent( Object source, LoginEvents loginEvent, String loginName, String password )
@@ -26,19 +23,22 @@ public class LoginEvent extends EventObject{
 		this.loginEvent = loginEvent;
 		this.loginName = loginName;
 		this.password = password;
+		this.loggedIn = false;
 	}
 
 	public synchronized LoginEvents getLoginEvent() {
 		return loginEvent;
 	}
 
-	public boolean isLoggedIn()
-	{
-		return loginName != null;
+	public boolean isLoggedIn(){
+		return this.loggedIn;
 	}
 
-	public String getLoginName()
-	{
+	public synchronized void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
+
+	public String getLoginName(){
 		return this.loginName;
 	}
 
