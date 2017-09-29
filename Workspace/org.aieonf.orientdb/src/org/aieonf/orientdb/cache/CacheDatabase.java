@@ -170,8 +170,12 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Collection<IDescriptor> query( String query ){
-		Collection<IDescriptor> results = this.database.query(new OSQLSynchQuery<ODocument>(query));
+		Collection<ODocument> docs = (Collection<ODocument>) this.database.query(new OSQLSynchQuery<ODocument>(query));
+		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
+		for( ODocument doc: docs )
+			results.add( new ODescriptor( doc ));
 		return results;
 	}
 	
