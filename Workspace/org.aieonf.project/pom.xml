@@ -43,6 +43,7 @@
 
   <modules>
     <module>../org.aieonf.commons</module>
+    <module>../org.aieonf.commons.ui</module>
     <module>../org.aieonf.collections</module>
     <module>../org.aieonf.commons.base64</module>
     <module>../org.aieonf.concept</module>

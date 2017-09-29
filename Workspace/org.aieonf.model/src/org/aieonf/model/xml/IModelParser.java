@@ -7,7 +7,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public interface IModelParser<T extends IDescriptor, M extends IDescribable<T>> {
-
 	/**
 	 * Add a model builder listener
 	 * @param event

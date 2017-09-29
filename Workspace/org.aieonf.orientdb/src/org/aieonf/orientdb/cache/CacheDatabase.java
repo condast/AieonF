@@ -18,11 +18,13 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
+import org.aieonf.concept.security.LoginData;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.orientdb.service.LoginConsumer;
 
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -69,8 +71,11 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 	protected void connect( IDomainAieon domain ){
 		if( connected )
 			return;
-		String user = domain.getUserName();
-		String pwd = domain.getPassword();
+		LoginData login = LoginConsumer.getLoginData();
+		if(( login == null ) || !login.isLoggedIn() )
+			return;
+		String user = login.getLoginName();
+		String pwd = login.getPassword();
 		ILoaderAieon loader = new LoaderAieon( domain);
 		loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
 		loader.setIdentifier( S_CACHE );

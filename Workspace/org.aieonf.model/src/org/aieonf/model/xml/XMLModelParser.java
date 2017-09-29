@@ -243,7 +243,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 		ModelAttributes ma = this.stack.pop();
 		switch( ma ){
 		case MODEL:
-			this.notifyListeners( new ModelBuilderEvent( this, this.current ));
+			this.notifyListeners( new ModelBuilderEvent<IModelLeaf<T>>( this, (IModelLeaf<T>) this.current ));
 			if(( this.parent != null ) &&( this.parent != current )){
 				((IModelNode<IDescriptor>) parent).addChild( current );
 				current = (ModelLeaf<IDescriptor>) parent;

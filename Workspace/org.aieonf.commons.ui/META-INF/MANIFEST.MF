@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Common UI for AieonF
+Bundle-SymbolicName: org.aieonf.commons.ui
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: AieonF.org
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.aieonf.commons,
+ org.aieonf.commons.i8n,
+ org.aieonf.commons.strings,
+ org.aieonf.commons.ui.swt,
+ org.condast.commons,
+ org.condast.commons.strings,
+ org.eclipse.swt,
+ org.eclipse.swt.events,
+ org.eclipse.swt.graphics,
+ org.eclipse.swt.widgets
+Export-Package: org.aieonf.commons.ui.language,
+ org.aieonf.commons.ui.swt,
+ org.aieonf.commons.ui.verification
