@@ -6,7 +6,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.DescriptorFilter;
 import org.aieonf.model.core.IModelLeaf;
 
-public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends HierarchicalFilter<IModelLeaf<T>> implements IModelFilter<T>
+public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends HierarchicalFilter<IModelLeaf<T>> implements IModelFilter<T,IModelLeaf<T>>
 {
 	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";
 
@@ -83,7 +83,7 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 			retval = true;
 			break;
 		case ALLPARENTS:
-			retval = super.getChildFilter().accept( child );
+			retval = super.getChildFilter().accept( (IModelLeaf<T>) child );
 		case AS_IS:
 			break;
 		}

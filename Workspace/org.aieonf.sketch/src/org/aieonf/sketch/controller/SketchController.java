@@ -131,7 +131,7 @@ public class SketchController extends AbstractJavascriptController {
 		SketchModelFactory factory = selected.getFactory();
 		if( factory == null )
 			return;
-		factory.getFunction( IModelProvider.S_MODEL_PROVIDER_ID).search(filter);
+		//factory.getFunction( IModelProvider.S_MODEL_PROVIDER_ID).search(filter);
 		SketchPreferences preferences = SketchPreferences.getInstance();
 		preferences.setGetDate();
 	}

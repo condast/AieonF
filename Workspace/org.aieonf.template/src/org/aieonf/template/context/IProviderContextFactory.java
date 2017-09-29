@@ -16,7 +16,7 @@ import org.aieonf.model.provider.IModelProvider;
  * @param <D>
  * @param <C>
  */
-public interface IProviderContextFactory<C extends IContextAieon, D extends IDomainAieon, T extends Object, U extends IDescribable<? extends IDescriptor>> extends IModelContextFactory<C,D> {
+public interface IProviderContextFactory<C extends IContextAieon, D extends IDomainAieon, T extends Object, U extends IDescribable<IDescriptor>> extends IModelContextFactory<C,D> {
 
 	public void addProvider(IFunctionProvider<T, IModelProvider<D, U>> function);
 

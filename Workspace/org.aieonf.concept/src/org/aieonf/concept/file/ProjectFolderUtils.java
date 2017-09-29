@@ -140,7 +140,7 @@ public class ProjectFolderUtils {
 	 * @param aieon
 	 * @return
 	 */
-	public static URI getDefaultUserDir( ILoaderAieon loader, boolean create )
+	public static File getDefaultUserFile( ILoaderAieon loader, boolean create )
 	{
 		String folder = loader.getSource();
 		String name = loader.getIdentifier();
@@ -149,6 +149,17 @@ public class ProjectFolderUtils {
 				folder + File.separator + StringStyler.prettyString( name ));
 		if( create & !file.exists())
 			file.mkdirs();
+		return file;
+	}
+
+	/**
+	 * Return the default user directory. This is '%system-user%\<folder>\'
+	 * @param aieon
+	 * @return
+	 */
+	public static URI getDefaultUserDir( ILoaderAieon loader, boolean create )
+	{
+		File file = getDefaultUserFile(loader, create);
 		return file.toURI();
 	}
 

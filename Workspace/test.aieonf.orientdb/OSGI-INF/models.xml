@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="test.aieonf.orientdb">
    <implementation class="test.aieonf.orientdb.service.FunctionComponent"/>
-   <reference bind="addProvider" cardinality="1..n" interface="org.aieonf.model.provider.IModelFunctionProvider" name="org.aieonf.orientdbstaticModelFunction" policy="dynamic" unbind="removeProvider"/>
+   <reference bind="addProvider" cardinality="1..n" interface="org.aieonf.model.provider.IModelFunctionProvider" name="org.aieonf.orientdbstaticModelFunction" policy="static" unbind="removeProvider"/>
 </scr:component>

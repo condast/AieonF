@@ -11,7 +11,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	private Vector<IModelLeaf<? extends IDescriptor>>children;
 
 	/**
-	 * Create the model
+	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
 	public Model( T descriptor )
@@ -24,9 +24,19 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 * Create the model
 	 * @param concept
 	 */
-	public Model( T descriptor, Implies<T,IDescriptor> implies )
+	public Model( T descriptor, String type )
 	{
-		super( descriptor, implies );
+		super( descriptor, type );
+		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
+	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public Model( T descriptor, String type, Implies<T,IDescriptor> implies )
+	{
+		super( descriptor, type, implies );
 		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
 	}
 

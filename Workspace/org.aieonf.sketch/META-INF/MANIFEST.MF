@@ -39,4 +39,5 @@ Import-Package: org.aieonf.commons,
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/aieonf.xml,
  OSGI-INF/view.xml,
- OSGI-INF/domain.xml 
+ OSGI-INF/domain.xml,
+ OSGI-INF/models.xml  

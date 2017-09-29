@@ -64,7 +64,7 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieo
 		}
 	
 		@Override
-		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor> filter) throws ParseException {
+		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
 			Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 			results.addAll( cmf.getFunction( super.getIdentifier()).search( filter ));
 			results.addAll( ffmf.getFunction( super.getIdentifier()).search( filter ));

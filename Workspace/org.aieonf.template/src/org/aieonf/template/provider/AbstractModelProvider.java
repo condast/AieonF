@@ -156,14 +156,16 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 
 	@Override
 	public Collection<V> get(IDescriptor descriptor) throws ParseException {
-		IModelFilter<IDescriptor> flt = new HierarchicalModelDescriptorFilter<IDescriptor>( descriptor );
+		@SuppressWarnings("unchecked")
+		IModelFilter<IDescriptor,V> flt = (IModelFilter<IDescriptor, V>) new HierarchicalModelDescriptorFilter<IDescriptor>( descriptor );
 		return this.search(flt);
 	}
 
-	protected abstract Collection<V> onSearch(IModelFilter<IDescriptor> filter) throws ParseException;
+	protected abstract Collection<V> onSearch(IModelFilter<IDescriptor,V> filter) throws ParseException;
 
+	
 	@Override
-	public Collection<V> search(IModelFilter<IDescriptor> filter) throws ParseException {
+	public Collection<V> search(IModelFilter<IDescriptor,V> filter) throws ParseException {
 		if( !open )
 			throw new ParseException( S_ERR_PROVIDER_NOT_OPEN );
 		models = onSearch( filter);

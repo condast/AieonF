@@ -6,20 +6,20 @@ import java.util.Collection;
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.filter.AbstractFilter.Mode;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.core.IModelLeaf;
 
-public class ModelFilter<T extends IDescriptor> implements
-		IModelFilter<T> {
+public class ModelFilter<T extends IDescriptor, M extends IDescribable<T>> implements
+		IModelFilter<T,M> {
 
 	private IFilter<T> filter;
 	
-	private Collection<IModelLeaf<T>> rejected;
+	private Collection<M> rejected;
 	
 	public ModelFilter( IFilter<T> filter ) {
 		super();
 		this.filter = filter;
-		rejected = new ArrayList<IModelLeaf<T>>();
+		rejected = new ArrayList<M>();
 	}
 
 	@Override
@@ -58,15 +58,15 @@ public class ModelFilter<T extends IDescriptor> implements
 	}
 
 	@Override
-	public boolean accept( IModelLeaf<T> leaf) throws FilterException {
+	public boolean accept( M leaf) throws FilterException {
 		return filter.accept( leaf.getDescriptor() );
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> doFilter(Collection<IModelLeaf<T>> collection) throws FilterException {
-		Collection<IModelLeaf<T>> results = new ArrayList<IModelLeaf<T>>();
+	public Collection<M> doFilter(Collection<M> collection) throws FilterException {
+		Collection<M> results = new ArrayList<M>();
 		rejected.clear();
-		for( IModelLeaf<T> model: collection ){
+		for( M model: collection ){
 			if( filter.accept( model.getDescriptor()))
 				results.add(model);
 			else
@@ -76,12 +76,12 @@ public class ModelFilter<T extends IDescriptor> implements
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> doFilter(
-			Collection<IModelLeaf<T>> collection, int amount)
+	public Collection<M> doFilter(
+			Collection<M> collection, int amount)
 			throws FilterException {
-		Collection<IModelLeaf<T>> results = new ArrayList<IModelLeaf<T>>();
+		Collection<M> results = new ArrayList<M>();
 		rejected.clear();
-		for( IModelLeaf<T> model: collection ){
+		for( M model: collection ){
 			if( filter.accept( model.getDescriptor())){
 				results.add(model);
 				if( results.size() == amount )
@@ -93,12 +93,12 @@ public class ModelFilter<T extends IDescriptor> implements
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> getRejected() {
+	public Collection<M> getRejected() {
 		return rejected;
 	}
 	
 	@Override
-	public boolean acceptChild(IModelLeaf<T> child) {
+	public boolean acceptChild(M child) {
 		return filter.accept( child.getDescriptor() );
 	}
 }

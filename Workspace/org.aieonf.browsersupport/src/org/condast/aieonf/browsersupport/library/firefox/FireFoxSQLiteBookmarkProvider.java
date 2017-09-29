@@ -76,7 +76,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor> filter ) throws ParseException {
+	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ParseException {
 		{
 			getModels().clear();
 			threadpool.submit( getBookmarksFuture(this, filter));
@@ -84,7 +84,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 		}
 	}
 
-	protected Callable<Collection<IModelLeaf<IDescriptor>>> getBookmarksFuture( final Object source, final IModelFilter<IDescriptor> filter){
+	protected Callable<Collection<IModelLeaf<IDescriptor>>> getBookmarksFuture( final Object source, final IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter){
 		Callable<Collection<IModelLeaf<IDescriptor>>> task = new Callable<Collection<IModelLeaf<IDescriptor>>>(){
 
 			@Override
@@ -198,7 +198,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	 * @return
 	 * @throws ConceptException
 	 */
-	private Collection<IModelNode<IDescriptor>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources, IModelFilter<IDescriptor> filter ) throws ConceptException{
+	private Collection<IModelNode<IDescriptor>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_bookmarks = "SELECT * FROM moz_bookmarks";
 
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
@@ -273,7 +273,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	 * @return
 	 * @throws ConceptException
 	 */
-	private IModelLeaf<IDescriptor> getHistory( IModelFilter<IDescriptor> filter ) throws ConceptException{
+	private IModelLeaf<IDescriptor> getHistory( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places, moz_inputhistory WHERE moz_places.id = moz_inputhistory.place_id";
 		return this.getConceptsFromQuery("Input History", query_inputhistory, filter );
 	}
@@ -284,7 +284,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IDescriptor> getPopularSites( IModelFilter<IDescriptor> filter ) throws ConceptException{
+	protected IModelLeaf<IDescriptor> getPopularSites( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places ORDER by visit_count DESC LIMIT 20";
 		return this.getConceptsFromQuery("Most Popular", query_inputhistory, filter );
 	}
@@ -295,7 +295,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	 * @return
 	 * @throws ConceptException
 	 */
-	private IModelLeaf<IDescriptor> getConceptsFromQuery( String title, String query, IModelFilter<IDescriptor> filter ) throws ConceptException{
+	private IModelLeaf<IDescriptor> getConceptsFromQuery( String title, String query, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		IModelNode<IDescriptor> model = null;
 		try
 		{
@@ -337,7 +337,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IDescriptor> getHistoryVisits( IModelFilter<IDescriptor> filter ) throws ConceptException{
+	protected IModelLeaf<IDescriptor> getHistoryVisits( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places WHERE moz_places.id = ( SELECT place_id FROM moz_historyvisits )";
 		IModelNode<IDescriptor> model;
 		try

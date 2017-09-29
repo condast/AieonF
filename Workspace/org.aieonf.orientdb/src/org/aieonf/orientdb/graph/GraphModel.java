@@ -112,7 +112,7 @@ public class GraphModel extends AbstractOrientGraphModel<IDomainAieon, IModelLea
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IDescriptor> filter) {
+	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		Iterable<Vertex> iter = graph.getVertices();
 		if( iter.iterator() == null )

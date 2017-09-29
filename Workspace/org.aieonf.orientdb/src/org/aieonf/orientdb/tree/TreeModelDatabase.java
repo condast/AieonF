@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
@@ -28,12 +29,14 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
-public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>> {
+public class TreeModelDatabase extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf<IDescriptor>> implements IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>> {
+	
+	public static final String S_ERR_NO_TYPE = "The leaf has no type! Please provide one";
 	
 	private ITemplateLeaf<IContextAieon> template;
 	private CacheDatabase<IDomainAieon> cache;
 	
-	public TreeModel( ITemplateLeaf<IContextAieon> template ) {
+	public TreeModelDatabase( ITemplateLeaf<IContextAieon> template ) {
 		super();
 		cache = new CacheDatabase<IDomainAieon>();
 		this.template = template;
@@ -48,8 +51,8 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 
 	@Override
 	public void close() {
-		super.close();
 		this.cache.close();
+		super.close();
 	}
 
 	@Override
@@ -121,7 +124,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IDescriptor> filter) {
+	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		Iterable<Vertex> iter = super.getGraph().getVertices();
 		if( iter.iterator() == null )
@@ -137,7 +140,7 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 	}
 
 	@SuppressWarnings("unchecked")
-	protected boolean accept( IModelFilter<IDescriptor> filter, IModelLeaf<IDescriptor> leaf ){
+	protected boolean accept( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter, IModelLeaf<IDescriptor> leaf ){
 		if( !filter.accept( leaf ))
 			return false;
 		if( leaf.isLeaf() )
@@ -152,8 +155,13 @@ public class TreeModel extends AbstractOrientGraphModel<IDomainAieon, IModelLeaf
 
 	public boolean add(IModelLeaf<IDescriptor> leaf) {
 		try{
-			cache.add(leaf.getDescriptor());
-			Vertex base = super.getGraph().addVertex(leaf.getID());
+			IDescriptor descriptor = leaf.getDescriptor();
+			String type = leaf.getType();
+			if( StringUtils.isEmpty( type ))
+				throw new NullPointerException( S_ERR_NO_TYPE + ": " + descriptor.getID() ); 
+					
+			cache.add( descriptor );
+			Vertex base = super.getGraph().addVertex( descriptor.getName());
 			super.createDescriptor( super.getGraph(), base);
 			return add( (IModelLeaf<IDescriptor>) leaf, base );
 		}

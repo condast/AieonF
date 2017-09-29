@@ -22,7 +22,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.google.gson.Gson;
 
-public class DatabaseController<V extends IDescribable<? extends IDescriptor>> extends AbstractJavascriptController {
+public class DatabaseController<M extends IDescribable<IDescriptor>> extends AbstractJavascriptController {
 
 	public static final String S_INITIALISTED_ID = "DatabaseInitialisedId";
 	public static final String S_IS_INITIALISTED = "isInitialised";
@@ -55,8 +55,8 @@ public class DatabaseController<V extends IDescribable<? extends IDescriptor>> e
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 
-	private IModelDatabase<IDomainAieon, V> database;
-	private Class<V> clss;
+	private IModelDatabase<IDomainAieon, M> database;
+	private Class<M> clss;
 
 	public DatabaseController(Browser browser ) {
 		super(browser, S_INITIALISTED_ID);
@@ -67,7 +67,7 @@ public class DatabaseController<V extends IDescribable<? extends IDescriptor>> e
 			public Object function(Object[] args) {
 				Pages page = Pages.valueOf((String) args[1]);
 				Gson gson = new Gson();
-				V leaf = null;
+				M leaf = null;
 				try {
 					switch( page ){
 					case GET:
@@ -75,19 +75,19 @@ public class DatabaseController<V extends IDescribable<? extends IDescriptor>> e
 						database.get(descriptor);
 						break;
 					case SEARCH:
-						IModelFilter<IDescriptor> filter = gson.fromJson( (String) args[1], IModelFilter.class );
+						IModelFilter<IDescriptor, M> filter = gson.fromJson( (String) args[1], IModelFilter.class );
 						database.search(filter);
 						break;
 					case ADD:
-						leaf = (V) gson.fromJson( (String) args[1], clss );
+						leaf = (M) gson.fromJson( (String) args[1], clss );
 						database.add(leaf);
 						break;
 					case REMOVE:
-						leaf = (V) gson.fromJson( (String) args[1], clss );
+						leaf = (M) gson.fromJson( (String) args[1], clss );
 						database.remove(leaf);
 						break;
 					case UPDATE:
-						leaf = (V) gson.fromJson( (String) args[1], clss );
+						leaf = (M) gson.fromJson( (String) args[1], clss );
 						database.update(leaf);
 						break;
 
@@ -104,19 +104,19 @@ public class DatabaseController<V extends IDescribable<? extends IDescriptor>> e
 		};	
 	}
 
-	private DatabaseController(Class<V> clss, IModelDatabase<IDomainAieon, V> database, Browser browser, String id, String url) {
+	private DatabaseController(Class<M> clss, IModelDatabase<IDomainAieon, M> database, Browser browser, String id, String url) {
 		super(browser, id, url);
 		this.database = database;
 		this.clss = clss;
 	}
 
-	private DatabaseController(Class<V> clss, IModelDatabase<IDomainAieon, V> database, Browser browser, String id, LoadTypes type, String url) {
+	private DatabaseController(Class<M> clss, IModelDatabase<IDomainAieon, M> database, Browser browser, String id, LoadTypes type, String url) {
 		super(browser, id, type, url);
 		this.database = database;
 		this.clss = clss;
 	}
 
-	private DatabaseController(Class<V> clss, IModelDatabase<IDomainAieon, V> database, Browser browser, String id, InputStream in) {
+	private DatabaseController(Class<M> clss, IModelDatabase<IDomainAieon, M> database, Browser browser, String id, InputStream in) {
 		super(browser, id, in);
 		this.database = database;
 		this.clss = clss;

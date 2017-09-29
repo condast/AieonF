@@ -11,7 +11,7 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U extends IDescribable<? extends IDescriptor>> implements IModelProvider<D, U> 
+public class CombinedProvider<D extends IDescribable<IDescriptor>, U extends IDescribable<IDescriptor>> implements IModelProvider<D, U> 
 {
 	public final static String S_IDENTIFIER = "Combined";
 	
@@ -130,7 +130,7 @@ public class CombinedProvider<D extends IDescribable<? extends IDescriptor>, U e
 
 	@Override
 	public Collection<U> search(
-			IModelFilter<IDescriptor> filter) throws ParseException {
+			IModelFilter<IDescriptor, U> filter) throws ParseException {
 		Collection<U> results = new ArrayList<U>();
 		for( IModelProvider<D,U> provider: this.providers ){
 			try{

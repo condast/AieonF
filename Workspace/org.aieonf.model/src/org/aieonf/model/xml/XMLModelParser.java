@@ -24,6 +24,7 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.xml.IModelParser;
 
 import org.xml.sax.Attributes;
@@ -31,7 +32,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implements IModelParser{
+public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implements IModelParser<T, IModelLeaf<T>>{
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	private static final String S_ERR_NO_CHILDREN   = " The node cannot contain children. ";
@@ -76,12 +77,12 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	private IModelNode<T> root;
 
 	private IModelLeaf<IDescriptor> parent;
-	private IModelLeaf<IDescriptor> current;
+	private ModelLeaf<IDescriptor> current;
 	
 	private Stack<ModelAttributes> stack;
 	
 	private Collection<IXMLModelBuilder<T,IModelLeaf<T>>> creators;	
-	private Collection<IModelBuilderListener> listeners;
+	private Collection<IModelBuilderListener<IModelLeaf<T>>> listeners;
 
 	private XMLApplication application;
 	private XMLModel xmlModel;
@@ -94,7 +95,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	public XMLModelParser() {
 		this.stack = new Stack<ModelAttributes>();
 		this.creators = new ArrayList<IXMLModelBuilder<T,IModelLeaf<T>>>();
-		listeners = new ArrayList<IModelBuilderListener>();
+		listeners = new ArrayList<IModelBuilderListener<IModelLeaf<T>>>();
 	}
 
 	public void clear(){
@@ -132,7 +133,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * @param event
 	 */
 	@Override
-	public void addModelBuilderListener( IModelBuilderListener listener ){
+	public void addModelBuilderListener( IModelBuilderListener<IModelLeaf<T>> listener ){
 		this.listeners.add( listener );
 	}
 
@@ -141,12 +142,12 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * @param event
 	 */
 	@Override
-	public void removeModelBuilderListener( IModelBuilderListener listener ){
+	public void removeModelBuilderListener( IModelBuilderListener<IModelLeaf<T>> listener ){
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent event ){
-		for( IModelBuilderListener listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<IModelLeaf<T>> event ){
+		for( IModelBuilderListener<IModelLeaf<T>> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -185,7 +186,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 				xmlModel.extendContext( ca );
 				this.root = (IModelNode<T>) model;
 				this.root.setIdentifier( ModelAttributes.CONTEXT.toString());
-				this.current = (IModelLeaf<IDescriptor>) model;
+				this.current = (ModelLeaf<IDescriptor>) model;
 				xmlModel.fill( this.current );
 				break;
 			case CHILDREN:
@@ -216,7 +217,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 							" index: " + index + S_ERR_NO_CHILDREN );
 					
 				IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) this.current;
-				this.current =  (IModelLeaf<IDescriptor>) model;
+				this.current =  (ModelLeaf<IDescriptor>) model;
 				xmlModel.fill( this.current );
 				String strng = StringStyler.styleToEnum( qName );
 				this.current.setIdentifier( StringStyler.prettyString( strng));
@@ -245,7 +246,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 			this.notifyListeners( new ModelBuilderEvent( this, this.current ));
 			if(( this.parent != null ) &&( this.parent != current )){
 				((IModelNode<IDescriptor>) parent).addChild( current );
-				current = parent;
+				current = (ModelLeaf<IDescriptor>) parent;
 			}
 			if( this.creator != null )
 				this.creator.clear();
@@ -359,7 +360,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 	 * @param attributes
 	 * @return
 	 */
-	public static void fillAttributes( IModelLeaf<IDescriptor> leaf, Attributes attributes ){
+	public static void fillAttributes( ModelLeaf<IDescriptor> leaf, Attributes attributes ){
 		for( int i=0; i<attributes.getLength(); i++  ){
 			if( !Utils.assertNull( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
@@ -428,7 +429,7 @@ public class XMLModelParser<T extends IDescriptor> extends DefaultHandler implem
 			context.set( IDescriptor.Attributes.ID.toString(), this.getID() );
 		}
 		
-		public void fill( IModelLeaf<IDescriptor> leaf ){
+		public void fill( ModelLeaf<IDescriptor> leaf ){
 			Iterator<Map.Entry<String, String>> iterator = this.properties.entrySet().iterator();
 			
 			while( iterator.hasNext() ){

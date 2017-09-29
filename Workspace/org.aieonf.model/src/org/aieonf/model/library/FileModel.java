@@ -48,7 +48,7 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 	 */
 	public FileModel( File file )
 	{
-		super( selectConcept(file));
+		super( selectConcept(file), FILE);
 		this.file = file;
 		if( this.hasChildren() ){
 			for( File child: file.listFiles() )

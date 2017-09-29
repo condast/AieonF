@@ -62,6 +62,12 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	public String getID();
 
 	/**
+	 * The type is mandatory, and is used to assign a model to a cluster. 
+	 * @return
+	 */
+	public String getType();
+
+	/**
 	 * Get the identifier of the changeable object
 	 * @return
 	 */
@@ -92,13 +98,6 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	 * @param value
 	 */
 	public String get( Enum<?> attr ); 
-
-	/**
-	 * Set the leaf with the given value
-	 * @param attr
-	 * @param value
-	 */
-	public void set( Enum<?> attr, String value ); 
 
 	/**
 	 * Returns true if the node is a root

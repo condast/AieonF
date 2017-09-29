@@ -5,6 +5,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 
 /**
@@ -50,7 +51,7 @@ public interface IModelDelegate<U extends IDescribable<? extends IDescriptor>>{
 	 * @param filter
 	 * @throws ParseException
 	 */
-	public void search( IModelFilter<IDescriptor> filter ) throws ParseException;
+	public void search( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ParseException;
 
 	/**
 	 * Add a change listener

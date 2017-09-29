@@ -21,7 +21,7 @@ import org.aieonf.template.context.AbstractModelContextFactory;
  * The simple context factory creates a default context and model
  * @author Kees Pieters
  */
-public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable<? extends IDescriptor>> 
+public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable<IDescriptor>> 
 extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDomainAieon, String, U>
 {
 	private static final String S_MODEL = "Model";

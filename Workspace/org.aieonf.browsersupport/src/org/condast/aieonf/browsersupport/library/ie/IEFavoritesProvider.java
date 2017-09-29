@@ -69,7 +69,7 @@ public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, ID
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
 		super.getModels().clear();
 		FileModel model = new FileModel( root );
 		this.parseFileModel(model);

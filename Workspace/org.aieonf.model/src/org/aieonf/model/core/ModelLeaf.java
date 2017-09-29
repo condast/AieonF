@@ -19,13 +19,12 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	private Implies<T,IDescriptor> implies;
 	
 	private IModelLeaf<? extends IDescriptor> parent;
-	
+
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( T descriptor )
-	{
+	public ModelLeaf( T descriptor ){
 		this( descriptor, new DefaultImplies<T>( descriptor ));
  	}
 
@@ -33,11 +32,41 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * Create the model
 	 * @param concept
 	 */
-	ModelLeaf( T descriptor, Implies<T,IDescriptor> implies )
-	{
+	public ModelLeaf( T descriptor, String type ){
+		this( descriptor, new DefaultImplies<T>( descriptor ));
+		this.set( Attributes.TYPE, type );
+ 	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public ModelLeaf( T descriptor, Implies<T,IDescriptor> implies ){
 		this.descriptor = descriptor;
+		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
+		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
+		this.set( IDescriptor.Attributes.VERSION, String.valueOf( descriptor.getVersion() ));
 		this.implies = implies;
 		this.leaf = true;
+	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public ModelLeaf( T descriptor, String type, Implies<T,IDescriptor> implies ){
+		this( descriptor, implies );
+		this.set( Attributes.TYPE, type );
+	}
+
+	/**
+	 * Set the leaf with the given value
+	 * @param attr
+	 * @param value
+	 */
+	@Override
+	public String get( Enum<?> attr ){
+		return super.get( attr.name());
 	}
 
 	/**
@@ -47,15 +76,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public void set( Enum<?> attr, String value ){
-		super.set( attr, value);
-	}
-
-	/**
-	 * Fill the model with the given descriptor
-	 */
-	public void fill(){
-		super.set( IModelLeaf.Attributes.DIRECTION, Direction.UNI_DIRECTIONAL.toString() );
-		super.set( IModelLeaf.Attributes.DEPTH, String.valueOf( 0 ));
+		super.set( attr.name(), value);
 	}
 
 	/**
@@ -64,7 +85,13 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public String getID(){
-		return super.get( Attributes.ID );
+		return get( Attributes.ID );
+	}
+
+	
+	@Override
+	public String getType() {
+		return get( Attributes.TYPE );
 	}
 
 	/**
@@ -73,7 +100,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public String getIdentifier(){
-		return super.get( Attributes.IDENTIFIER );
+		return get( Attributes.IDENTIFIER );
 	}
 
 	/**
@@ -82,7 +109,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public void setIdentifier( String identifier ){
-		super.set( Attributes.IDENTIFIER , identifier );
+		set( Attributes.IDENTIFIER , identifier );
 	}
 
 	/**
@@ -117,8 +144,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
    * @return
   */
 	@Override
-  public boolean hasChanged()
-  {
+  public boolean hasChanged(){
   	if( descriptor.hasChanged() )
   		return true;
   	return super.hasChanged();

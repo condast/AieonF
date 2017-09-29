@@ -8,6 +8,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
@@ -103,9 +104,9 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 		}
 	}
 
-	protected void onSearch( IModelProvider<IDomainAieon,T> provider, IModelFilter<IDescriptor> filter ){
+	protected void onSearch( IModelProvider<IDomainAieon,T> provider, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ){
 		try {
-			provider.search( filter );
+			provider.search( (IModelFilter<IDescriptor, T>) filter );
 			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -113,7 +114,7 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 		}
 	}
 	@Override
-	public synchronized void search( IModelFilter<IDescriptor> filter) throws ParseException {
+	public synchronized void search( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
 		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			this.onSearch(provider, filter);
 		}

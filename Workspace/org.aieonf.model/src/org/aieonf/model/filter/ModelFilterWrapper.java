@@ -5,22 +5,23 @@ import java.util.Collection;
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.filter.AbstractFilter.Mode;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 
-public class ModelFilterWrapper<T extends IDescriptor> implements
-		IModelFilter<T> {
+public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable<T>> implements
+		IModelFilter<T,M> {
 
 	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";
-	private IFilter<IModelLeaf<T>> filter;
+	private IFilter<M> filter;
 	
 	private int minDepth, maxDepth;
 	
-	public ModelFilterWrapper( IFilter<IModelLeaf<T>> filter ) {
+	public ModelFilterWrapper( IFilter<M> filter ) {
 		this( filter, 0, -1 );
 	}
 
-	public ModelFilterWrapper( IFilter<IModelLeaf<T>> filter, int minDepth, int maxDepth ) {
+	public ModelFilterWrapper( IFilter<M> filter, int minDepth, int maxDepth ) {
 		super();
 		this.filter = filter;
 		if( minDepth < 0 )
@@ -29,7 +30,7 @@ public class ModelFilterWrapper<T extends IDescriptor> implements
 		this.maxDepth = maxDepth;
 	}
 
-	public ModelFilterWrapper( IFilter<IModelLeaf<T>> filter, int maxDepth ) {
+	public ModelFilterWrapper( IFilter<M> filter, int maxDepth ) {
 		this( filter, 0, maxDepth );
 	}
 
@@ -69,32 +70,32 @@ public class ModelFilterWrapper<T extends IDescriptor> implements
 	}
 
 	@Override
-	public boolean accept(IModelLeaf<T> obj) throws FilterException {
+	public boolean accept( M obj) throws FilterException {
 		if( !acceptDepth(minDepth, maxDepth, obj ))
 			return false;
 		return filter.accept( obj );
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> doFilter(
-			Collection<IModelLeaf<T>> collection) throws FilterException {
+	public Collection<M> doFilter(
+			Collection<M> collection) throws FilterException {
 		return filter.doFilter(collection);
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> doFilter(
-			Collection<IModelLeaf<T>> collection, int amount)
+	public Collection<M> doFilter(
+			Collection<M> collection, int amount)
 			throws FilterException {
 		return filter.doFilter(collection, amount);
 	}
 
 	@Override
-	public Collection<IModelLeaf<T>> getRejected() {
+	public Collection<M> getRejected() {
 		return filter.getRejected();
 	}
 	
 	@Override
-	public boolean acceptChild(IModelLeaf<T> child) {
+	public boolean acceptChild( M child) {
 		if( !acceptDepth(minDepth, maxDepth, child ))
 				return false;
 		return filter.accept( child );

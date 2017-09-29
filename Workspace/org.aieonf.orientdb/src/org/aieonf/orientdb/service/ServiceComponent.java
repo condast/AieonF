@@ -8,7 +8,7 @@ import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider.DefaultModels;
 import org.aieonf.orientdb.factory.OrientDBFactory;
 import org.aieonf.orientdb.graph.GraphModel;
-import org.aieonf.orientdb.tree.TreeModel;
+import org.aieonf.orientdb.tree.TreeModelDatabase;
 import org.aieonf.osgi.service.AbstractServiceComponent;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.TemplateNodeWrapper;
@@ -36,7 +36,7 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 			database = new GraphModel( template ); 
 			break;
 		default:
-			database = new TreeModel( template ); 
+			database = new TreeModelDatabase( template ); 
 			break;
 		}
 		//AsynchronousProviderDelegate<IDomainAieon, IDescriptor> delegate = new AsynchronousProviderDelegate<IDomainAieon, IDescriptor>();

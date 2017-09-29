@@ -35,6 +35,11 @@ public class TemplateWrapper implements ITemplate
 	}
 
 	@Override
+	public String getType() {
+		return this.model.getType();
+	}
+
+	@Override
 	public String getIdentifier() {
 		return this.model.getIdentifier();
 	}
@@ -49,12 +54,6 @@ public class TemplateWrapper implements ITemplate
 		return this.model.get(attr);
 	}
 	
-	@Override
-	public void set( Enum<?> attr, String value) {
-		this.model.set(attr, value);
-	}
-
-
 	/**
 	 * Returns true if the node is a root
 	 * @return

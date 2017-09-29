@@ -112,7 +112,7 @@ public abstract class AbstractFunctionProvider<C extends IContextAieon, T extend
 	 */
 	protected static IModelLeaf<IDescriptor> getModelForLoader( ILoaderAieon loader, IContextAieon context ){
 		Descriptor.overwrite( loader, context.getDescriptor() );
-		IModelLeaf<IDescriptor> model = new ModelLeaf<IDescriptor>( loader );
+		IModelLeaf<IDescriptor> model = new ModelLeaf<IDescriptor>( loader, IContextAieon.Attributes.CONTEXT.name() );
 		if( !Utils.assertNull( context.getID()))
 			model.setIdentifier( context.getID() );
 		return model;

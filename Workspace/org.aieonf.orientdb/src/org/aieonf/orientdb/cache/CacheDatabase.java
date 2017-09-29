@@ -1,11 +1,13 @@
 package org.aieonf.orientdb.cache;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IConcept;
@@ -22,8 +24,11 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
 
+import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.metadata.security.OSecurity;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.query.*;
 
 /**
  * Handles the Orient Databae
@@ -42,6 +47,7 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 	private static final String S_FILE = "file:";
 	protected static final String S_ROOT = "Root";
 	protected static final String S_CACHE = "Cache";
+	protected static final String S_DESCRIPTORS = "Descriptors";
 
 	private ODatabaseDocumentTx database;
 	private String source;
@@ -68,9 +74,20 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 		ILoaderAieon loader = new LoaderAieon( domain);
 		loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
 		loader.setIdentifier( S_CACHE );
-		source = ProjectFolderUtils.getDefaultUserDir( loader, true).toString();
+		File file = ProjectFolderUtils.getDefaultUserFile( loader, true); 
+		source = file.toURI().toString();
 		source = source.replace( S_FILE, S_LOCAL);
-		database = new ODatabaseDocumentTx (source).open( user, pwd );
+		ODatabaseDocumentTx doc = new ODatabaseDocumentTx (source); 
+		if(!doc.exists() ) {
+			database = doc.create();
+			database.addCluster(S_DESCRIPTORS);
+			OSecurity sm = database.getMetadata().getSecurity();
+			sm.createUser( user, pwd,  new String[]{"admin"});
+		}
+		else {
+			OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , user, pwd );
+			database = pool.acquire();
+		}
 		this.connected = true;
 	}
 	
@@ -133,7 +150,7 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 
 	@Override
 	public void close(){
-		this.sync();
+		//database.commit();
 		if( database != null )
 			database.close();
 	}
@@ -148,6 +165,11 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 		return false;
 	}
 
+	public Collection<IDescriptor> query( String query ){
+		Collection<IDescriptor> results = this.database.query(new OSQLSynchQuery<ODocument>(query));
+		return results;
+	}
+	
 	@Override
 	public Collection<IDescriptor> get(IDescriptor descriptor) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
@@ -160,9 +182,14 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 	}
 
 	@Override
-	public Collection<IDescriptor> search(IModelFilter<IDescriptor> filter) throws ParseException {
-		// NOT IMPLEMENTED; not needed for cache!
-		return null;
+	public Collection<IDescriptor> search(IModelFilter<IDescriptor, IDescriptor> filter) throws ParseException {
+		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
+		for (ODocument document : database.browseCluster( S_DESCRIPTORS )) {
+			ODescriptor descriptor = new ODescriptor(document);    
+			if( filter.accept( descriptor ))
+				results.add( descriptor );
+		}		
+		return results;
 	}
 
 	@Override
@@ -173,7 +200,7 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 	@Override
 	public boolean add(IDescriptor descriptor) {
 		ODocument odesc= createDocument( descriptor );
-		odesc.save();
+		odesc.save( /*S_DESCRIPTORS*/ );//Add to cluster descriptors
 		return true;
 	}
 
@@ -208,7 +235,10 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 		Iterator<String> iterator = descriptor.iterator();
 		while( iterator.hasNext()) {
 			String attr = iterator.next();
-			doc.field( attr, descriptor.get( attr ));
+			attr = attr.replace(".", "@8");
+			String value = descriptor.get( attr );
+			if( !StringUtils.isEmpty( value ))
+				doc.field( attr, value);
 		}
 		BodyFactory.IDFactory( descriptor );
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());

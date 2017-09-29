@@ -48,7 +48,7 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IContextA
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
 		Collection<IModelLeaf<IDescriptor>> results = super.getModels();
 		stack = new Stack<IModelNode<IDescriptor>>();
 		CategoryAieon root = new CategoryAieon();

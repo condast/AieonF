@@ -5,26 +5,27 @@ import org.aieonf.commons.filter.HierarchicalFilter;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.filter.WildcardFilter;
 import org.aieonf.concept.IDescribable;
+import org.aieonf.concept.IDescriptor;
 
-public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends HierarchicalFilter<T>
+public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescribable<T>> extends HierarchicalFilter<M>
 {
 	private String defaultParentRefVal;
 	private String defaultChildRefVal;
 	
-	public HierarchicalAttributeFilter(AttributeFilter<T> parentFilter, AttributeFilter<T> childFilter)
+	public HierarchicalAttributeFilter(AttributeFilter<M> parentFilter, AttributeFilter<M> childFilter)
 			throws FilterException
 	{
 		this( Rules.OrChain, parentFilter, childFilter);
 	}
 
-	public HierarchicalAttributeFilter(Rules chainRule, IFilter<T> parentFilter,
-			IFilter<T> childFilter) throws FilterException
+	public HierarchicalAttributeFilter(Rules chainRule, IFilter<M> parentFilter,
+			IFilter<M> childFilter) throws FilterException
 	{
 		super(chainRule, parentFilter, childFilter);
 	}
 
 	public HierarchicalAttributeFilter(HierarchyRules rule,
-			IFilter<T> parentFilter, IFilter<T> childFilter) throws FilterException
+			IFilter<M> parentFilter, IFilter<M> childFilter) throws FilterException
 	{
 		this( Rules.OrChain, parentFilter, childFilter);
 	}
@@ -39,6 +40,7 @@ public class HierarchicalAttributeFilter<T extends IDescribable<?>> extends Hier
 		this.setFiltersForRule();
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void setFiltersForRule(){
 		AttributeFilter<T> parentFilter = ( AttributeFilter<T> )super.getParentFilter();
 		this.defaultParentRefVal = parentFilter.refVal;

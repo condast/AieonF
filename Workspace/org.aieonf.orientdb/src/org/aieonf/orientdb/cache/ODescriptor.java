@@ -62,17 +62,17 @@ public class ODescriptor implements IDescriptor{
 
 	@Override
 	public String getName() {
-		return document.field( IDescriptor.Attributes.NAME.toString() );
+		return document.field( IDescriptor.Attributes.NAME.name() );
 	}
 
 	@Override
 	public String getID() {
-		return document.field( IDescriptor.Attributes.ID.toString() );
+		return document.field( IDescriptor.Attributes.ID.name() );
 	}
 
 	@Override
 	public int getVersion() {
-		return document.field( IDescriptor.Attributes.VERSION.toString() );
+		return document.field( IDescriptor.Attributes.VERSION.name() );
 	}
 
 	@Override
@@ -82,12 +82,14 @@ public class ODescriptor implements IDescriptor{
 
 	@Override
 	public String get(String key) {
-		return document.field( key);
+		String newKey = key.replace(".", "@8");
+		return document.field( newKey);
 	}
 
 	@Override
 	public void set(String key, String value) {
-		document.field(key, value );
+		String newKey = key.replace(".", "@8");
+		document.field( newKey, value );
 	}
 
 	@Override

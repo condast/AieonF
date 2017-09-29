@@ -3,7 +3,7 @@ package org.aieonf.model.provider;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 
-public interface IModelDatabase<K extends Object, V extends IDescribable<? extends IDescriptor>> extends IModelProvider<K, V>{
+public interface IModelDatabase<K extends Object, V extends IDescribable<IDescriptor>> extends IModelProvider<K, V>{
 	
 	/**
 	 * Add a model
@@ -18,7 +18,6 @@ public interface IModelDatabase<K extends Object, V extends IDescribable<? exten
 	 * @return
 	 */
 	public void remove( V leaf );
-
 
 	/**
 	 * update a model 
