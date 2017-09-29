@@ -34,11 +34,10 @@ public class TreeModelDatabase extends AbstractOrientGraphModel<IDomainAieon, IM
 	public static final String S_ERR_NO_TYPE = "The leaf has no type! Please provide one";
 	
 	private ITemplateLeaf<IContextAieon> template;
-	private CacheDatabase<IDomainAieon> cache;
+	private CacheDatabase cache = CacheDatabase.getInstance();
 	
 	public TreeModelDatabase( ITemplateLeaf<IContextAieon> template ) {
 		super();
-		cache = new CacheDatabase<IDomainAieon>();
 		this.template = template;
 	}
 

@@ -7,24 +7,22 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
-import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
-import org.aieonf.concept.security.LoginData;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.orientdb.service.LoginConsumer;
 
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -40,7 +38,7 @@ import com.orientechnologies.orient.core.sql.query.*;
  * @param <D>
  * @param <Descriptor>
  */
-public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, IDescriptor> {
+public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> {
 	
 	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
 	public static final String S_IDENTIFIER = "documenttxModel";
@@ -57,22 +55,24 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 	
 	private Collection<IModelBuilderListener<IDescriptor>> listeners;
 	
-	public CacheDatabase() {
+	private static CacheDatabase cache = new CacheDatabase();
+	
+	private CacheDatabase() {
 		listeners = new ArrayList<IModelBuilderListener<IDescriptor>>();
 		this.connected = false;
 	}
 
+	public static CacheDatabase getInstance(){
+		return cache;
+	}
 	/**
 	 * Connect to the database
 	 * 
 	 * @param loader
 	 */
 	@SuppressWarnings("resource")
-	protected void connect( IDomainAieon domain ){
+	public void connect( IDomainAieon domain, LoginEvent login ){
 		if( connected )
-			return;
-		LoginData login = LoginConsumer.getLoginData();
-		if(( login == null ) || !login.isLoggedIn() )
 			return;
 		String user = login.getLoginName();
 		String pwd = login.getPassword();
@@ -119,7 +119,6 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 	@Override
 	public void open( IDomainAieon domain){
 		try{
-			this.connect(domain);
 			if(!connected )
 				return;
 		}
@@ -147,7 +146,7 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 		}
 	}
 
-	public ITransaction<IDescriptor,IModelProvider<D, IDescriptor>> createTransaction() {
+	public ITransaction<IDescriptor,IModelProvider<IDomainAieon, IDescriptor>> createTransaction() {
 		Transaction transaction = new Transaction( this );
 		transaction.create();
 		return transaction;
@@ -255,9 +254,9 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 		return doc;		
 	}
 
-	protected class Transaction extends AbstractTransaction<IDescriptor, IModelProvider<D, IDescriptor>>{
+	protected class Transaction extends AbstractTransaction<IDescriptor, IModelProvider<IDomainAieon, IDescriptor>>{
 
-		protected Transaction( IModelProvider<D,IDescriptor> provider) {
+		protected Transaction( IModelProvider<IDomainAieon,IDescriptor> provider) {
 			super( provider );
 		}
 
@@ -268,7 +267,7 @@ public class CacheDatabase<D extends IDomainAieon> implements IModelDatabase<D, 
 		}
 
 		@Override
-		protected boolean onCreate(IModelProvider<D, IDescriptor> provider) {
+		protected boolean onCreate(IModelProvider<IDomainAieon, IDescriptor> provider) {
 			return super.getProvider().isOpen();
 		}
 	}
