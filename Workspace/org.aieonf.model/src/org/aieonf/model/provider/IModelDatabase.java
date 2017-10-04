@@ -5,6 +5,16 @@ import org.aieonf.concept.IDescriptor;
 
 public interface IModelDatabase<K extends Object, V extends IDescribable<IDescriptor>> extends IModelProvider<K, V>{
 	
+	public enum Roles{
+		ADMIN,
+		READ;
+
+		@Override
+		public String toString() {
+			return this.name().toLowerCase();
+		}
+	}
+	
 	/**
 	 * Add a model
 	 * @param descriptor

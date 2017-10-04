@@ -10,7 +10,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.sketch.Activator;
-import org.aieonf.template.builder.DefaultModelBuilder;
+import org.aieonf.template.builder.TemplateInterpreter;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 public class SketchModelFactory extends AbstractProviderContextFactory<IContextAieon,IDescriptor> {
@@ -20,7 +20,7 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IContextA
 	private File root;
 	
 	public SketchModelFactory(File root ) throws MalformedURLException {
-		super( Activator.BUNDLE_ID, new DefaultModelBuilder( SketchModelFactory.class, getAieonFURL( root ) ));
+		super( Activator.BUNDLE_ID, new TemplateInterpreter( SketchModelFactory.class, getAieonFURL( root ) ));
 		this.root = root;
 	}
 

@@ -4,7 +4,7 @@ import org.aieonf.commons.security.LoginEvent;
 
 public class LoginDispatcher {
 
-	private static LoginDispatcher dispatcher;
+	private static LoginDispatcher dispatcher = new LoginDispatcher();
 	
 	private LoginProvider provider;
 	

@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 
 
-public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> {
+public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> implements IModelBuilder<T> {
 
 	protected static final String JAXP_SCHEMA_SOURCE =
 		    "http://java.sun.com/xml/jaxp/properties/schemaSource";
@@ -51,45 +51,39 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		
 	private boolean completed, failed;
 	
-	private String modelId;
-	private IXMLModelBuilder<T, IModelLeaf<T>> builder;
+	private String domainId;
+	private IXMLModelInterpreter<T, M> builder;
 
-	private Collection<IModelBuilderListener<IModelLeaf<T>>> listeners;
+	private Collection<IModelBuilderListener<M>> listeners;
 		
 	private Logger logger = Logger.getLogger( XMLModelBuilder.class.getName() );
 	
 	/**
 	 * Build the factories from the given resource in the class file and add them to the container
-	 * @param modelId
+	 * @param domainId
 	 * @param clss
 	 * @param location
 	 * @param builder
 	 */
-	public XMLModelBuilder( String modelId, IXMLModelBuilder<T, IModelLeaf<T>> builder ) {
-		this.modelId = modelId;
+	public XMLModelBuilder( String domainId, IXMLModelInterpreter<T, M> builder ) {
+		this.domainId = domainId;
 		this.builder = builder;
 		this.completed = false;
 		this.failed = false;
-		this.listeners = new ArrayList<IModelBuilderListener<IModelLeaf<T>>>();
+		this.listeners = new ArrayList<IModelBuilderListener<M>>();
 	}
 
 	/* (non-Javadoc)
-	 * @see net.osgi.jxta.factory.ICompositeFactory#addListener(net.osgi.jxta.factory.ICompositeFactoryListener)
-	 */
-	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#addListener(net.jp2p.container.builder.IModelBuilderListener)
 	 */
-	public void addListener( IModelBuilderListener<IModelLeaf<T>> listener ){
+	public void addListener( IModelBuilderListener<M> listener ){
 		this.listeners.add(listener);
 	}
 
 	/* (non-Javadoc)
-	 * @see net.osgi.jxta.factory.ICompositeFactory#removeListener(net.osgi.jxta.factory.ICompositeFactoryListener)
-	 */
-	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#removeListener(net.jp2p.container.builder.IModelBuilderListener)
 	 */
-	public void removeListener( IModelBuilderListener<IModelLeaf<T>> listener ){
+	public void removeListener( IModelBuilderListener<M> listener ){
 		this.listeners.remove( listener);
 	}
 
@@ -137,7 +131,7 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 		//First parse the XML file
 		IModelLeaf<T> root = null;
 		try {
-			logger.info("Parsing SAIGHT Bundle: " + this.modelId + "\n");
+			logger.info("Parsing SAIGHT Bundle: " + this.domainId + "\n");
 			//Schema schema = schemaFactory.newSchema(schemaFile);
 			//factory.setSchema(schema);//saxParser.
 			
@@ -147,23 +141,23 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 			
 			//saxParser.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA); 
 			//saxParser.setProperty(JAXP_SCHEMA_SOURCE, new File(JP2P_XSD_SCHEMA)); 
-			XMLModelParser<T> parser = new XMLModelParser<T>();
-			IModelBuilderListener<IModelLeaf<T>> listener = new IModelBuilderListener<IModelLeaf<T>>(){
+			XMLModelParser<T,M> parser = new XMLModelParser<T,M>();
+			IModelBuilderListener<M> listener = new IModelBuilderListener<M>(){
 
 				@Override
-				public void notifyChange(ModelBuilderEvent<IModelLeaf<T>> event) {
-					for( IModelBuilderListener<IModelLeaf<T>> listener: listeners )
+				public void notifyChange(ModelBuilderEvent<M> event) {
+					for( IModelBuilderListener<M> listener: listeners )
 						listener.notifyChange(event);
 				}	
 			};
 			parser.addModelBuilderListener(listener);
-			parser.addDescriptorCreator( builder);
+			parser.addModelCreator( builder);
 			saxParser.parse( in, parser );
 			parser.removeModelBuilderListener(listener);
 			root = parser.getRoot();
-			parser.removeDescriptorCreator( builder );
+			parser.removeModelCreator( builder );
 			parser.clear();
-			logger.info("AIEONF Bundle Parsed: " + this.modelId + "\n");
+			logger.info("AIEONF Bundle Parsed: " + this.domainId + "\n");
 		} catch( SAXNotRecognizedException e ){
 			failed = true;
 			e.printStackTrace();			
@@ -174,6 +168,9 @@ public class XMLModelBuilder<T extends IDescriptor> implements IModelBuilder<T> 
 			failed = true;
 			e.printStackTrace();
 		} catch (IOException e) {
+			failed = true;
+			e.printStackTrace();
+		} catch (Exception e) {
 			failed = true;
 			e.printStackTrace();
 		}

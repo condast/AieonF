@@ -2,25 +2,40 @@ package org.aieonf.model.xml;
 
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.model.builder.IModelBuilderListener;
+import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.xml.sax.Attributes;
 
-public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IModelLeaf<T>> implements IXMLModelBuilder<T,U> {
+public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends IModelLeaf<T>> implements IXMLModelInterpreter<T,M> {
 
 	private boolean active;
-	private U model;
+	private M model;
 	private String key;
 	private URL url;
+	
+	private Collection<IModelBuilderListener<T>> listeners;
 
-	protected AbstractModelBuilder( Class<?> clss, String resourceLocation) {
+	protected AbstractModelInterpreter( Class<?> clss, String resourceLocation) {
 		this( clss.getResource( resourceLocation ));
 	}
 
-	protected AbstractModelBuilder( URL url ) {
+	protected AbstractModelInterpreter( URL url ) {
 		this.url = url;
+		this.listeners = new ArrayList<IModelBuilderListener<T>>();
+	}
+
+	public void addModelBuilderListener( IModelBuilderListener<T> listener ) {
+		this.listeners.add( listener );
+	}
+
+	public void removedModelBuilderListener( IModelBuilderListener<T> listener ) {
+		this.listeners.remove( listener );
 	}
 
 	/**
@@ -49,7 +64,7 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 	 * @return
 	 */
 	@Override
-	public U getModel() {
+	public M getModel() {
 		return model;
 	}
 
@@ -69,10 +84,10 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 	 * @param attributes
 	 * @return
 	 */
-	protected abstract U onCreate( String name, Attributes attributes );
+	protected abstract M onCreate( String name, Attributes attributes );
 
 	@Override
-	public synchronized U create( String name, Attributes attributes) {
+	public synchronized M create( String name, Attributes attributes) {
 		this.model = this.onCreate( name, attributes);
 		this.active = ( this.model != null );
 		return model;
@@ -128,7 +143,7 @@ public abstract class AbstractModelBuilder<T extends IDescriptor, U extends IMod
 	}
 
 	@Override
-	public void notifyDescriptorCreated(ModelCreatorEvent event) {
-		// DO NOTHING	
+	public void notifyModelCreated(ModelCreatorEvent event) {
+
 	}
 }

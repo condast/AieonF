@@ -10,7 +10,8 @@ public class LoginDispatcher implements ILoginListener{
 
 	private OrientDBFactory factory = OrientDBFactory.getInstance();
 	
-	private static LoginDispatcher dispatcher;
+	private static LoginDispatcher dispatcher = new LoginDispatcher();
+	
 	private CacheDatabase cache = CacheDatabase.getInstance();
 	
 	private LoginDispatcher() {
@@ -20,22 +21,13 @@ public class LoginDispatcher implements ILoginListener{
 		return dispatcher;
 	}
 	
-	
 	@Override
 	public void notifyLoginEvent(LoginEvent event) {
 		factory.createTemplate();
 		IDomainAieon domain = factory.getDomain();
-		switch( event.getLoginEvent()){
-		case REGISTER:
+		if( !LoginEvents.LOGOFF.equals( event.getLoginEvent() ))
 			cache.connect(domain, event );
-			break;
-		case LOGIN:
-			cache.connect(domain, event );
-			break;
-		default:
-			break;
-		}
-		
+		else
+			cache.disconnect();
 	}
-
 }

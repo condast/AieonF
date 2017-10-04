@@ -12,9 +12,9 @@ import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.model.xml.IXMLModelBuilder;
+import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.builder.DefaultModelBuilder;
+import org.aieonf.template.builder.TemplateInterpreter;
 import org.aieonf.template.context.AbstractModelContextFactory;
 
 /**
@@ -29,13 +29,13 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	
 	private Collection<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>> functions;
 	
-	private IXMLModelBuilder<IDescriptor,ITemplateLeaf<IDescriptor>> creator;
+	private IXMLModelInterpreter<IDescriptor,ITemplateLeaf<IDescriptor>> creator;
 
 	protected AbstractProviderContextFactory( String bundle_id, Class<?> clss ) {
-		this( bundle_id, new DefaultModelBuilder(clss));
+		this( bundle_id, new TemplateInterpreter(clss));
 	}
 	
-	protected AbstractProviderContextFactory( String bundle_id, IXMLModelBuilder<IDescriptor,ITemplateLeaf<IDescriptor>> creator ) {
+	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor,ITemplateLeaf<IDescriptor>> creator ) {
 		this.bundle_id = bundle_id;
 		functions = new ArrayList<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>>();
 		this.creator = creator;

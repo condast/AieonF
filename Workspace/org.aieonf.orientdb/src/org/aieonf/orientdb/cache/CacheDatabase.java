@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.security.ILoginListener.LoginEvents;
 import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.transaction.AbstractTransaction;
@@ -27,6 +29,7 @@ import org.aieonf.model.provider.IModelProvider;
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
+import com.orientechnologies.orient.core.metadata.security.OUser;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.*;
 
@@ -65,6 +68,33 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 	public static CacheDatabase getInstance(){
 		return cache;
 	}
+	
+	/**
+	 * Register a new user to the database
+	 * @param domain
+	 * @param login
+	 * @return
+	 */
+	protected boolean register( ODatabaseDocumentTx dbdoc, IDomainAieon domain, LoginEvent login ) {
+		if( !LoginEvents.REGISTER.equals( login.getLoginEvent() ))
+			return false;
+		String user = login.getLoginName();
+		if( StringUtils.isEmpty(user))
+			return false;
+		String pwd = login.getPassword();
+		if( StringUtils.isEmpty(pwd))
+			return false;
+		OSecurity sm = dbdoc.getMetadata().getSecurity();
+		List<ODocument> users = sm.getAllUsers();
+		for( ODocument doc: users ) {
+			OUser ouser = new OUser( doc );
+			if(ouser.getName().equals( user ))
+				return false;
+		}
+		OUser ouser = sm.createUser( user, pwd, new String[]{ Roles.ADMIN.toString()});	
+		return ( ouser != null );
+	}
+	
 	/**
 	 * Connect to the database
 	 * 
@@ -83,19 +113,33 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 		source = file.toURI().toString();
 		source = source.replace( S_FILE, S_LOCAL);
 		ODatabaseDocumentTx doc = new ODatabaseDocumentTx (source); 
-		if(!doc.exists() ) {
-			database = doc.create();
-			database.addCluster(S_DESCRIPTORS);
-			OSecurity sm = database.getMetadata().getSecurity();
-			sm.createUser( user, pwd,  new String[]{"admin"});
-		}
-		else {
-			OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , user, pwd );
+		switch( login.getLoginEvent() ) {
+		case REGISTER:
+			if(!doc.exists() ) {
+				database = doc.create();
+				database.addCluster(S_DESCRIPTORS);
+				register( database, domain, login );
+			}else {
+				OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , user, pwd  );
+				database = pool.acquire();				
+			}
+			break;
+		case LOGIN:
+			OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , user, pwd  );
 			database = pool.acquire();
+			break;
+		default:
+			database.close();
+			break;
 		}
 		this.connected = true;
 	}
 	
+	public void disconnect() {
+		close();
+		this.connected = false;
+	}
+
 	@Override
 	public String getIdentifier(){
 		return S_IDENTIFIER;

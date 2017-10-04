@@ -7,7 +7,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.xml.sax.Attributes;
 
-public interface IXMLModelBuilder<T extends IDescriptor, U extends IModelLeaf<T>> {
+public interface IXMLModelInterpreter<T extends IDescriptor, U extends IModelLeaf<T>> {
 
 	/**
 	 * The keys of attributes with special meaning
@@ -90,7 +90,7 @@ public interface IXMLModelBuilder<T extends IDescriptor, U extends IModelLeaf<T>
 	 * Notification that a descriptor was created
 	 * @param event
 	 */
-	public void notifyDescriptorCreated( ModelCreatorEvent event );
+	public void notifyModelCreated( ModelCreatorEvent event );
 
 	/**
 	 * Get the key that currently is being processed

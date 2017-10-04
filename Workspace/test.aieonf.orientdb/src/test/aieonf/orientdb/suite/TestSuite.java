@@ -13,9 +13,15 @@ import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
+import org.aieonf.model.xml.IXMLModelInterpreter;
+import org.aieonf.model.xml.InterpreterCollection;
+import org.aieonf.model.xml.XMLModelBuilder;
+import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.builder.TemplateInterpreter;
 import org.condast.commons.test.AbstractTestSuite;
 
 import test.aieonf.orientdb.context.TestFactory;
+import test.aieonf.orientdb.model.ModelInterpreter;
 import test.aieonf.orientdb.service.LoginDispatcher;
 
 public class TestSuite extends AbstractTestSuite {
@@ -23,7 +29,8 @@ public class TestSuite extends AbstractTestSuite {
 	public enum Tests{
 		TEST_OPEN_AND_CLOSE,
 		TEST_ADD_AND_READ,
-		TEST_REGISTER;
+		TEST_REGISTER,
+		TEST_MODEL_BUILDER;
 	}
 	private static TestSuite suite = new TestSuite();
 	
@@ -42,7 +49,7 @@ public class TestSuite extends AbstractTestSuite {
 
 	@Override
 	protected void testSuite() throws Exception {
-		Tests test = Tests.TEST_REGISTER;
+		Tests test = Tests.TEST_MODEL_BUILDER;
 		try{
 			switch( test ){
 			case TEST_ADD_AND_READ:
@@ -50,6 +57,9 @@ public class TestSuite extends AbstractTestSuite {
 				break;
 			case TEST_REGISTER:
 				testRegister();
+				break;
+			case TEST_MODEL_BUILDER:
+				testModelBuilder();
 				break;
 			default:
 				testOpenDatabase();
@@ -64,7 +74,13 @@ public class TestSuite extends AbstractTestSuite {
 
 	private final void testRegister() throws Exception{
 		LoginDispatcher dispatcher = LoginDispatcher.getInstance();
-		LoginEvent le = new LoginEvent( this, LoginEvents.LOGIN, "test", "test_pwd" );
+		LoginEvent le = new LoginEvent( this, LoginEvents.REGISTER, "test", "test_pwd" );
+		dispatcher.setLoginEvent(le);
+		le = new LoginEvent( this );
+		dispatcher.setLoginEvent(le);
+		le = new LoginEvent( this, LoginEvents.LOGIN, "test", "test_pwd" );
+		dispatcher.setLoginEvent(le);
+		le = new LoginEvent( this );
 		dispatcher.setLoginEvent(le);
 	}
 
@@ -106,4 +122,14 @@ public class TestSuite extends AbstractTestSuite {
 		//GraphModelTreeModel tm = model;
 	}
 
+	public void testModelBuilder() {
+		TestFactory factory = TestFactory.getInstance();
+		factory.createTemplate();
+		ModelInterpreter interpreter = new ModelInterpreter(); 
+		IXMLModelInterpreter<IDescriptor, ITemplateLeaf<IDescriptor>> tinterpreter = new TemplateInterpreter( this.getClass() ); 
+		InterpreterCollection<IDescriptor, IModelLeaf<IDescriptor>> cinterpreter = new InterpreterCollection<IDescriptor, IModelLeaf<IDescriptor>>( tinterpreter ); 
+		cinterpreter.addInterpreter( interpreter );
+		XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>> builder = new XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>>( factory.getDomain().getDomain(), cinterpreter);
+		builder.build();
+	}
 }

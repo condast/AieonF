@@ -25,13 +25,13 @@ import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.xml.AbstractModelBuilder;
+import org.aieonf.model.xml.AbstractModelInterpreter;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.TemplateNode;
 import org.aieonf.template.property.ITemplateProperty;
 import org.xml.sax.Attributes;
 
-public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemplateLeaf<IDescriptor>> {
+public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, ITemplateLeaf<IDescriptor>> {
 
 	public static final String S_WRN_CONCEPT_NOT_FOUND = "No concept has name: ";
 	public static final String S_WRN_DEFAULTING_TO = ". Defaulting to concept instance. ";
@@ -68,21 +68,21 @@ public class DefaultModelBuilder extends AbstractModelBuilder<IDescriptor, ITemp
 		}
 	}
 
-	private Logger logger  = Logger.getLogger( DefaultModelBuilder.class.getName() );
+	private Logger logger  = Logger.getLogger( TemplateInterpreter.class.getName() );
 	
 	private IContextAieon context;
 	private Class<?> clss;
 	
-	public DefaultModelBuilder( Class<?> clss ) {
+	public TemplateInterpreter( Class<?> clss ) {
 		this( clss, IModelBuilder.S_DEFAULT_LOCATION );
 		this.clss = clss;
 	}
 
-	public DefaultModelBuilder( Class<?> clss, String location ) {
+	public TemplateInterpreter( Class<?> clss, String location ) {
 		super( clss, location );
 	}
 
-	public DefaultModelBuilder( Class<?> clss, URL url ) {
+	public TemplateInterpreter( Class<?> clss, URL url ) {
 		super( url );
 		this.clss = clss;
 	}

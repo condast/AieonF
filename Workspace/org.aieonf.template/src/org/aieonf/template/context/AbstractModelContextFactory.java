@@ -12,7 +12,7 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.search.ModelScanner;
-import org.aieonf.model.xml.IXMLModelBuilder;
+import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.model.xml.XMLModelBuilder;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
@@ -83,7 +83,7 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelBuilder creator ) {
+	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
 		IModelBuilderListener listener = new IModelBuilderListener(){
 
 			@Override
@@ -91,7 +91,7 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 				notifyListeners( event );
 			}	
 		};
-		XMLModelBuilder<C> builder = new XMLModelBuilder<C>( identifier, creator );
+		XMLModelBuilder<C,ITemplateLeaf<C>> builder = new XMLModelBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );
 		builder.addListener(listener);
 		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.build();
 		builder.removeListener(listener);
