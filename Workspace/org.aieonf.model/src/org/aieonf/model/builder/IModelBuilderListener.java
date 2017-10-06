@@ -7,7 +7,50 @@
  *******************************************************************************/
 package org.aieonf.model.builder;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
+
 public interface IModelBuilderListener<M extends Object> {
 	
+	
+	/**
+	 * The keys of attributes with special meaning
+	 * @author Kees
+	 *
+	 */
+	public enum ModelAttributes{
+		APPLICATION,
+		MODEL,
+		CONTEXT,
+		DESCRIPTOR,
+		CHILDREN,
+		PROPERTIES;
+	
+		@Override
+		public String toString() {
+			return StringStyler.prettyString( super.toString());
+		}
+		
+		/**
+		 * Returns true if the given string is a model attribute
+		 * @param attr
+		 * @return
+		 */
+		public static boolean isModelAttribute( String attr ){
+			String str = StringStyler.styleToEnum( attr );
+			if( Utils.assertNull(str))
+				return false;
+			for( ModelAttributes ma: ModelAttributes.values() ){
+				if( str.equals( ma.name()))
+					return true;
+			}
+			return false;
+		}
+	}
+
+	/**
+	 * Notify relevant events duribng the build process 
+	 * @param event
+	 */
 	public void notifyChange( ModelBuilderEvent<M> event );
 }

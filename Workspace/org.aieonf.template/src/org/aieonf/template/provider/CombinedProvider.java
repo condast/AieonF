@@ -7,7 +7,7 @@ import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.builder.IModelBuilderListener;
+import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
@@ -84,14 +84,14 @@ public class CombinedProvider<D extends IDescribable<IDescriptor>, U extends IDe
 
 	
 	@Override
-	public void addListener(IModelBuilderListener<U> listener) {
+	public void addListener(IModelListener<U> listener) {
 		for( IModelProvider<D,U> provider: this.providers ){
 			provider.addListener(listener);
 		}
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<U> listener) {
+	public void removeListener(IModelListener<U> listener) {
 		for( IModelProvider<D,U> provider: this.providers ){
 			provider.removeListener(listener);
 		}

@@ -24,6 +24,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.io.IOUtils;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.builder.IModelBuilderListener;
@@ -32,7 +33,6 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.xml.XMLModelParser;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
-
 
 public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> implements IModelBuilder<T> {
 
@@ -54,7 +54,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	private String domainId;
 	private IXMLModelInterpreter<T, M> builder;
 
-	private Collection<IModelBuilderListener<M>> listeners;
+	private Collection<IModelBuilderListener<? extends IDescribable<?>>> listeners;
 		
 	private Logger logger = Logger.getLogger( XMLModelBuilder.class.getName() );
 	
@@ -70,21 +70,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 		this.builder = builder;
 		this.completed = false;
 		this.failed = false;
-		this.listeners = new ArrayList<IModelBuilderListener<M>>();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#addListener(net.jp2p.container.builder.IModelBuilderListener)
-	 */
-	public void addListener( IModelBuilderListener<M> listener ){
-		this.listeners.add(listener);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#removeListener(net.jp2p.container.builder.IModelBuilderListener)
-	 */
-	public void removeListener( IModelBuilderListener<M> listener ){
-		this.listeners.remove( listener);
+		this.listeners = new ArrayList<IModelBuilderListener<? extends IDescribable<?>>>();
 	}
 
 	/**
@@ -141,22 +127,9 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 			
 			//saxParser.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA); 
 			//saxParser.setProperty(JAXP_SCHEMA_SOURCE, new File(JP2P_XSD_SCHEMA)); 
-			XMLModelParser<T,M> parser = new XMLModelParser<T,M>();
-			IModelBuilderListener<M> listener = new IModelBuilderListener<M>(){
-
-				@Override
-				public void notifyChange(ModelBuilderEvent<M> event) {
-					for( IModelBuilderListener<M> listener: listeners )
-						listener.notifyChange(event);
-				}	
-			};
-			parser.addModelBuilderListener(listener);
-			parser.addModelCreator( builder);
+			XMLModelParser<T,M> parser = new XMLModelParser<T,M>( builder );
 			saxParser.parse( in, parser );
-			parser.removeModelBuilderListener(listener);
 			root = parser.getRoot();
-			parser.removeModelCreator( builder );
-			parser.clear();
 			logger.info("AIEONF Bundle Parsed: " + this.domainId + "\n");
 		} catch( SAXNotRecognizedException e ){
 			failed = true;

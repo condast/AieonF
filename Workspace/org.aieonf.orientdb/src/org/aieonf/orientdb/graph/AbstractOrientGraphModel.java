@@ -18,8 +18,8 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
-import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.core.IModelListener;
+import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
 
@@ -59,10 +59,10 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	private String source;
 	private boolean connected;
 	
-	private Collection<IModelBuilderListener<U>> listeners;
+	private Collection<IModelListener<U>> listeners;
 	
 	protected AbstractOrientGraphModel() {
-		listeners = new ArrayList<IModelBuilderListener<U>>();
+		listeners = new ArrayList<IModelListener<U>>();
 		this.connected = false;
 	}
 
@@ -105,17 +105,17 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 
 
 	@Override
-	public void addListener(IModelBuilderListener<U> listener) {
+	public void addListener(IModelListener<U> listener) {
 		this.listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<U> listener) {
+	public void removeListener(IModelListener<U> listener) {
 		this.listeners.remove(listener);
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<U> event ){
-		for( IModelBuilderListener<U> listener: this.listeners )
+	protected final void notifyListeners( ModelEvent<U> event ){
+		for( IModelListener<U> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 	

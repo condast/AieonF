@@ -8,8 +8,8 @@ import java.util.Collection;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelEvent;
 import org.xml.sax.Attributes;
 
 public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends IModelLeaf<T>> implements IXMLModelInterpreter<T,M> {

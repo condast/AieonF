@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.model.builder.IModelBuilderListener;
@@ -35,76 +36,31 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> extends DefaultHandler implements IModelParser<T, M>{
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
+	private static final String S_ERR_NO_EXTENDER   = " No extender found for: ";
 	private static final String S_ERR_NO_CHILDREN   = " The node cannot contain children. ";
-	private static final String S_ERR_NO_INTERPRETER_FOUND = "No interpreter found for: ";
 	private static final String S_WRN_DESCRIPTOR_NOT_FOUND = "The descriptor was not found. Defaulting to standard concept: ";
 	
-	/**
-	 * The keys of attributes with special meaning
-	 * @author Kees
-	 *
-	 */
-	private enum ModelAttributes{
-		APPLICATION,
-		MODEL,
-		CONTEXT,
-		DESCRIPTOR,
-		CHILDREN,
-		PROPERTIES;
-
-		@Override
-		public String toString() {
-			return StringStyler.prettyString( super.toString());
-		}
-		
-		/**
-		 * Returns true if the given string is a model attribute
-		 * @param attr
-		 * @return
-		 */
-		public static boolean isModelAttribute( String attr ){
-			String str = StringStyler.styleToEnum( attr );
-			if( Utils.assertNull(str))
-				return false;
-			for( ModelAttributes ma: ModelAttributes.values() ){
-				if( str.equals( ma.name()))
-					return true;
-			}
-			return false;
-		}
-	}
-
 	private IModelNode<T> root;
 
 	private IModelLeaf<IDescriptor> parent;
 	private M current;
 	
-	private Stack<ModelAttributes> stack;
-	private int skipindex;
+	private Stack<IModelBuilderListener.ModelAttributes> stack;
 	
-	private Collection<IXMLModelInterpreter<T, M>> creators;	
-	private Collection<IModelBuilderListener<M>> listeners;
+	private IXMLModelInterpreter<T, M> creator;	
+	private Collection<IXMLModelInterpreter<T, M>> extenders;
 
 	private XMLApplication application;
 	private XMLModel xmlModel;
 	
-	//Allows transformation of the strings to the correct properties
-	private IXMLModelInterpreter<T, M> creator;
-
 	private Logger logger = Logger.getLogger( XMLModelParser.class.getName() );
 
-	public XMLModelParser() {
-		this.stack = new Stack<ModelAttributes>();
-		this.skipindex = Integer.MAX_VALUE;
-		this.creators = new ArrayList<IXMLModelInterpreter<T, M>>();
-		listeners = new ArrayList<IModelBuilderListener<M>>();
+	public XMLModelParser( IXMLModelInterpreter<T, M> creator ) {
+		this.stack = new Stack<IModelBuilderListener.ModelAttributes>();
+		this.creator = creator;
+		extenders = new ArrayList<IXMLModelInterpreter<T, M>>();
 	}
 
-	public void clear(){
-		this.creators.clear();
-		this.listeners.clear();
-	}
-	
 	/**
 	 * Get the root factory 
 	 * @return
@@ -112,31 +68,14 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 	public IModelLeaf<T> getRoot() {
 		return root;
 	}
-	
-	/**
-	 * Add a model parser
-	 * @param parser
-	 */
-	public void addModelCreator( IXMLModelInterpreter<T, M> creator ){
-		this.creators.add( creator );
-	}
-
-	/**
-	 * Add a model parser
-	 * @param parser
-	 */
-	public void removeModelCreator( IXMLModelInterpreter<T, M> creator ){
-		this.creators.remove( creator );
-	}
-
 
 	/**
 	 * Add a model builder listener
 	 * @param event
 	 */
 	@Override
-	public void addModelBuilderListener( IModelBuilderListener<M> listener ){
-		this.listeners.add( listener );
+	public void addModelExtender( IXMLModelInterpreter<T, M> extender ){
+		this.extenders.add( extender );
 	}
 
 	/**
@@ -144,30 +83,30 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 	 * @param event
 	 */
 	@Override
-	public void removeModelBuilderListener( IModelBuilderListener<M> listener ){
-		this.listeners.remove( listener );
+	public void removeModelExtender( IXMLModelInterpreter<T, M> extender ){
+		this.extenders.remove( extender );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<M> event ){
-		for( IModelBuilderListener<M> listener: this.listeners )
-			listener.notifyChange(event);
+	protected final IXMLModelInterpreter<T, M> getExtender( String name, Attributes attributes ){
+		for( IXMLModelInterpreter<T, M> extender: this.extenders ) {
+			if( extender.canCreate(name, attributes))
+				return extender;
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized void startElement(String uri, String localName, String qName, 
 			Attributes attributes) throws SAXException {
-		ModelAttributes ma = null;
-		if( this.stack.size() > this.skipindex ) {
-			ma = ModelAttributes.DESCRIPTOR;
-			this.stack.push(ma);
-			return;
-		}
+		IModelBuilderListener.ModelAttributes ma = null;
+
 		//First check for model elements
-		String str = StringStyler.styleToEnum(qName);
-		ModelAttributes index = ModelAttributes.APPLICATION;
-		if( ModelAttributes.isModelAttribute( qName )){
-			ma = ModelAttributes.valueOf( str );
+		String str = StringStyler.styleToEnum( qName );
+		IModelBuilderListener.ModelAttributes attr = IModelBuilderListener.ModelAttributes.APPLICATION;
+		attr = ( this.stack.isEmpty())? null : this.stack.lastElement();
+		if( IModelBuilderListener.ModelAttributes.isModelAttribute( qName )){
+			ma = IModelBuilderListener.ModelAttributes.valueOf( str );
 			switch( ma ){
 			case APPLICATION:
 				if( !this.stack.isEmpty() )
@@ -176,55 +115,51 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 				application.fill(attributes);
 				break;
 			case MODEL:
-				index = this.stack.lastElement();
-				if(( !index.equals( ModelAttributes.APPLICATION )) && ( !index.equals( ModelAttributes.CHILDREN )))
-					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
+				if(( !attr.equals( IModelBuilderListener.ModelAttributes.APPLICATION )) && ( !attr.equals( IModelBuilderListener.ModelAttributes.CHILDREN )))
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + attr);
 				xmlModel = new XMLModel();
 				xmlModel.fill(attributes);
 				break;
 			case CONTEXT:
-				index = this.stack.lastElement();
-				if( !index.equals( ModelAttributes.MODEL ))
-					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
-				this.creator = this.getModelCreator( qName, attributes);
+				if( !attr.equals( IModelBuilderListener.ModelAttributes.MODEL ))
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + attr);
 				IModelLeaf<T> model = this.creator.create( qName, attributes);
 				ContextAieon ca = (ContextAieon) model.getDescriptor();
 				application.extendContext( ca );
 				xmlModel.extendContext( ca );
 				this.root = (IModelNode<T>) model;
-				this.root.setIdentifier( ModelAttributes.CONTEXT.toString());
+				this.root.setIdentifier( IModelBuilderListener.ModelAttributes.CONTEXT.toString());
 				this.current = (M) model;
 				xmlModel.fill(( ModelLeaf<IDescriptor>) this.current );
 				break;
 			case CHILDREN:
-				index = this.stack.lastElement();
-				if( !index.equals( ModelAttributes.MODEL ))
-					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
+				if( !attr.equals( IModelBuilderListener.ModelAttributes.MODEL ))
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + attr);
 				if(!( current instanceof IModelLeaf ))
-					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + attr);
 					this.parent = (IModelLeaf<IDescriptor>) this.current;
 				break;
 			default:
 				break; //do nothing
 			}
 		}else{
-			index = this.stack.lastElement();
-			switch( index ){
+			IXMLModelInterpreter<T, M> extender  = getExtender(qName, attributes);
+			if( extender == null )
+				throw new IllegalArgumentException( S_ERR_NO_EXTENDER + qName );
+			extender.create( qName, attributes);
+			switch( attr ){
 			case MODEL:
-				ma = ModelAttributes.DESCRIPTOR;
-				this.creator = this.getModelCreator( qName, attributes);
-				if( this.creator == null ) {
-					this.skipindex = this.stack.size();
-					logger.warning( S_ERR_NO_INTERPRETER_FOUND + qName );
-					break;
-				}
+				ma = IModelBuilderListener.ModelAttributes.DESCRIPTOR;
 				IModelLeaf<T> model = creator.create( qName, attributes);
-				if( model == null  )
+				if( model == null  ) {
+					ModelBuilderEvent<IDescribable<?>> event = new ModelBuilderEvent<IDescribable<?>>( this, ma );
+					model = (IModelLeaf<T>) event.getModel();
 					logger.warning( S_WRN_DESCRIPTOR_NOT_FOUND + qName );
+				}
 				
 				if(!( this.current instanceof IModelNode ))
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + this.current.toString() + 
-							" index: " + index + S_ERR_NO_CHILDREN );
+							" index: " + attr + S_ERR_NO_CHILDREN );
 					
 				IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) this.current;
 				this.current =  (M) model;
@@ -234,50 +169,40 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 				node.addChild( this.current );
 				break;
 			case CONTEXT:
+				ma = IModelBuilderListener.ModelAttributes.PROPERTIES;
+				creator.setProperty( StringStyler.prettyString( qName ), attributes);				
+				break;
 			case DESCRIPTOR:
-				ma = ModelAttributes.PROPERTIES;
+				ma = IModelBuilderListener.ModelAttributes.PROPERTIES;
+				M created = creator.getModel();
 				creator.setProperty( StringStyler.prettyString( qName ), attributes);				
 				break;
 			case PROPERTIES:
 				creator.setProperty( StringStyler.prettyString( qName ), attributes);
 				break;
 			default:	
-				throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
+				throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + attr);
 			}
 		}
-		this.stack.push(ma);
+		this.stack.push( ma );
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		ModelAttributes ma = null;
-		if( skip() ) {
-			ma = this.stack.pop();
-			return;
-		}
+		IModelBuilderListener.ModelAttributes ma = null;
 		ma = this.stack.pop();
-		this.skipindex = Integer.MAX_VALUE;
 		switch( ma ){
 		case MODEL:
-			this.notifyListeners( new ModelBuilderEvent<M>( this, this.current ));
 			if(( this.parent != null ) &&( this.parent != current )){
 				((IModelNode<IDescriptor>) parent).addChild( current );
 				current =  (M) parent;
 			}
-			if( this.creator != null )
-				this.creator.clear();
-			this.creator = null;
 			break;
 		case CONTEXT:
-			this.notifyDescriptorCreated( this.current.getDescriptor());
 			break;
 		case DESCRIPTOR:
-			this.notifyDescriptorCreated( this.current.getDescriptor());
 			this.creator.endProperty();
-			if( this.creator != null )
-				this.creator.clear();
-			this.creator = null;
 			break;
 		case PROPERTIES:
 			this.creator.endProperty();
@@ -286,31 +211,9 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 			break;
 		}
 	}
-
-	/**
-	 * Returns the correct descriptor from the creators
-	 * @param name
-	 * @param attributes
-	 * @return
-	 */
-	protected final IXMLModelInterpreter<T, M> getModelCreator( String name, Attributes attributes ){
-		for( IXMLModelInterpreter<T, M> creator: this.creators ){
-			if( creator.canCreate( name, attributes))
-				return creator;
-		}
-		return null;	
-	}
 	
-	private void notifyDescriptorCreated( IDescriptor descriptor ){
-		//for( IXMLModelBuilder<T,IModelLeaf<T>> creator: this.creators ){
-		//	creator.notifyDescriptorCreated( new ModelCreatorEvent(this, descriptor));
-		//}
-	}
-
 	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
-		if( skip() )
-			return;
 		String value = new String(ch, start, length);
 		if( Utils.assertNull( value  ))
 			return;
@@ -479,6 +382,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 			properties = new HashMap<String, String>();
 		}
 		
+		
 		public void fill( Attributes attributes ){
 			properties = XMLUtils.convertAttributesToProperties(attributes);
 		}
@@ -506,9 +410,5 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 			if( !Utils.assertNull(id))
 				context.setApplicationID(id);
 		}
-	}
-	
-	protected boolean skip() {
-		return ( this.stack.size() > this.skipindex );
 	}
 }

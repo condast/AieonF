@@ -176,7 +176,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 	@Override
 	public boolean setProperty(String id, Attributes attrs ) {
 		ITemplateLeaf<IDescriptor> leaf = super.getModel();
-		IDescriptor descriptor = super.getModel().getDescriptor();
+		IDescriptor descriptor = leaf.getDescriptor();
 		String str = StringStyler.styleToEnum( descriptor.getName() );
 
 		if( !Concepts.isValid( str ))

@@ -3,11 +3,11 @@ package org.aieonf.model.xml;
 import java.net.URL;
 
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.core.IModelLeaf;
 import org.xml.sax.Attributes;
 
-public interface IXMLModelInterpreter<T extends IDescriptor, U extends IModelLeaf<T>> {
+public interface IXMLModelInterpreter<T extends IDescriptor, U extends IDescribable<T>> {
 
 	/**
 	 * The keys of attributes with special meaning

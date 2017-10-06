@@ -5,9 +5,13 @@ import java.util.logging.Logger;
 
 import org.aieonf.commons.security.ILoginListener.LoginEvents;
 import org.aieonf.commons.security.LoginEvent;
+import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.AttributeFilter;
+import org.aieonf.model.builder.IModelBuilderListener;
+import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.IModelFilter;
@@ -121,15 +125,11 @@ public class TestSuite extends AbstractTestSuite {
 		}
 		//GraphModelTreeModel tm = model;
 	}
-
+	
 	public void testModelBuilder() {
 		TestFactory factory = TestFactory.getInstance();
 		factory.createTemplate();
-		ModelInterpreter interpreter = new ModelInterpreter(); 
-		IXMLModelInterpreter<IDescriptor, ITemplateLeaf<IDescriptor>> tinterpreter = new TemplateInterpreter( this.getClass() ); 
-		InterpreterCollection<IDescriptor, IModelLeaf<IDescriptor>> cinterpreter = new InterpreterCollection<IDescriptor, IModelLeaf<IDescriptor>>( tinterpreter ); 
-		cinterpreter.addInterpreter( interpreter );
-		XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>> builder = new XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>>( factory.getDomain().getDomain(), cinterpreter);
-		builder.build();
 	}
+	
+	
 }

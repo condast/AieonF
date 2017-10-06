@@ -4,8 +4,8 @@ import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.filter.IModelFilter;
 
 /**
@@ -57,11 +57,11 @@ public interface IModelDelegate<U extends IDescribable<? extends IDescriptor>>{
 	 * Add a change listener
 	 * @param listener
 	 */
-	void addListener(IModelBuilderListener<U> listener);
+	void addListener(IModelListener<U> listener);
 
 	/**
 	 * Remove a listener
 	 * @param listener
 	 */
-	void removeListener(IModelBuilderListener<U> listener);
+	void removeListener(IModelListener<U> listener);
 }

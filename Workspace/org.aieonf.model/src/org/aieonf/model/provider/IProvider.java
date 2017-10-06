@@ -1,6 +1,6 @@
 package org.aieonf.model.provider;
 
-import org.aieonf.model.builder.IModelBuilderListener;
+import org.aieonf.model.core.IModelListener;
 
 /**
  * A provider can return an object U, if the correct model is provided. This
@@ -24,9 +24,9 @@ public interface IProvider<U extends Object> {
 	 */
 	public boolean hasFunction( String function ); 
 	
-	public void addListener( IModelBuilderListener<U> listener );
+	public void addListener( IModelListener<U> listener );
 
-	public void removeListener( IModelBuilderListener<U> listener );
+	public void removeListener( IModelListener<U> listener );
 	
 	
 	/**

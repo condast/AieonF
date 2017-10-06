@@ -6,21 +6,21 @@ import java.util.Collection;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelListener;
+import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
 public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T> 
 {
 	private Collection<IModelProvider<IDomainAieon, T>> providers;
-	private Collection<IModelBuilderListener<T>> listeners;
+	private Collection<IModelListener<T>> listeners;
 	
-	private IModelBuilderListener<T> listener = new IModelBuilderListener<T>() {
+	private IModelListener<T> listener = new IModelListener<T>() {
 		
 		@Override
-		public void notifyChange(ModelBuilderEvent<T> event) {
+		public void notifyChange(ModelEvent<T> event) {
 			notifyEventChange(event);
 		}
 	};
@@ -28,7 +28,7 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 	public ModelDelegate()
 	{
 		providers = new ArrayList<IModelProvider<IDomainAieon,T>>();
-		listeners = new ArrayList<IModelBuilderListener<T>>();
+		listeners = new ArrayList<IModelListener<T>>();
 	}
 
 	
@@ -41,18 +41,18 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 	}
 
 	@Override
-	public void addListener(IModelBuilderListener<T> listener) {
+	public void addListener(IModelListener<T> listener) {
 		this.listeners.add( listener );	
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<T> listener) {
+	public void removeListener(IModelListener<T> listener) {
 		this.listeners.remove( listener );
 	}
 
-	protected void notifyEventChange( ModelBuilderEvent<T> event ) {
-		for( IModelBuilderListener<T> mbl: listeners )
-			mbl.notifyChange( new ModelBuilderEvent<T>( this, event.getModel() ));
+	protected void notifyEventChange( ModelEvent<T> event ) {
+		for( IModelListener<T> mbl: listeners )
+			mbl.notifyChange( new ModelEvent<T>( this, event.getModel() ));
 	}
 
 	public void open( IDomainAieon domain) {
@@ -80,19 +80,19 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 	public void contains( T descriptor) {
 		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
 			if( provider.contains( descriptor )){
-				listener.notifyChange( new ModelBuilderEvent<T>( provider, descriptor ));
+				listener.notifyChange( new ModelEvent<T>( provider, descriptor ));
 			}
 		}
-		listener.notifyChange( new ModelBuilderEvent<T>( this ));
+		listener.notifyChange( new ModelEvent<T>( this ));
 	}
 
 	protected void onGet( IModelProvider<IDomainAieon, T> provider, IDescriptor descriptor ){
 		try {
 			provider.get(descriptor);
-			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
+			listener.notifyChange( new ModelEvent<T>( provider, null, true ));
 		} catch (ParseException e) {
 			e.printStackTrace();
-			listener.notifyChange( new ModelBuilderEvent<T>( provider ));
+			listener.notifyChange( new ModelEvent<T>( provider ));
 		}
 	}
 	
@@ -104,13 +104,14 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void onSearch( IModelProvider<IDomainAieon,T> provider, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ){
 		try {
-			provider.search( (IModelFilter<IDescriptor, T>) filter );
-			listener.notifyChange( new ModelBuilderEvent<T>( provider, null, true ));
+			provider.search(  (IModelFilter<IDescriptor, T>) filter );
+			listener.notifyChange( new ModelEvent<T>( provider, null, true ));
 		} catch (ParseException e) {
 			e.printStackTrace();
-			listener.notifyChange( new ModelBuilderEvent<T>( provider ));
+			listener.notifyChange( new ModelEvent<T>( provider ));
 		}
 	}
 	@Override

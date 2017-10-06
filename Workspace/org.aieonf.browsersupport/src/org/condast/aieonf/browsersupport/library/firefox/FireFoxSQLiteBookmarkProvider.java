@@ -26,11 +26,11 @@ import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.collections.ModelCollections;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.Model;
+import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
@@ -106,7 +106,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IContextAieon,
 					result = getPopularSites( filter );
 					if( result != null )
 						getModels().add( result );
-					notifyListeners( new ModelBuilderEvent<>(source, getModels()));
+					notifyListeners( new ModelEvent<>(source, getModels()));
 				}
 				catch (Exception e) {
 					e.printStackTrace();

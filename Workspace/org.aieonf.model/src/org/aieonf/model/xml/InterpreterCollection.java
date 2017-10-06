@@ -108,5 +108,4 @@ public class InterpreterCollection<T extends IDescriptor, M extends IModelLeaf<T
 	public String getKey() {
 		return main.getKey();
 	}
-
 }

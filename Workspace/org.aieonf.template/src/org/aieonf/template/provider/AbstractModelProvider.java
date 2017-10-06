@@ -12,8 +12,8 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.sign.SignatureFactory;
-import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.core.IModelListener;
+import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
@@ -22,7 +22,7 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 
 	private static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
-	private Collection<IModelBuilderListener<V>> listeners;
+	private Collection<IModelListener<V>> listeners;
 	private boolean open;
 	private boolean requestClose; //delay closing when search is conducted in separate threads
 	private int pending;
@@ -36,7 +36,7 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	private SignatureFactory signer = SignatureFactory.getInstance();
 
 	protected AbstractModelProvider( String identifier, T template ) {
-		listeners = new ArrayList<IModelBuilderListener<V>>();
+		listeners = new ArrayList<IModelListener<V>>();
 		this.identifier = identifier;
 		this.template = template;
 		manifest = this.setup( template);
@@ -60,17 +60,17 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	
 
 	@Override
-	public void addListener(IModelBuilderListener<V> listener) {
+	public void addListener(IModelListener<V> listener) {
 		this.listeners.add( listener );
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<V> listener) {
+	public void removeListener(IModelListener<V> listener) {
 		this.listeners.remove( listener );
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<V> event ){
-		for( IModelBuilderListener<V> listener: this.listeners )
+	protected final void notifyListeners( ModelEvent<V> event ){
+		for( IModelListener<V> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -169,7 +169,7 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 		if( !open )
 			throw new ParseException( S_ERR_PROVIDER_NOT_OPEN );
 		models = onSearch( filter);
-		notifyListeners( new ModelBuilderEvent<V>(this, models ));
+		notifyListeners( new ModelEvent<V>(this, models ));
 		return models;
 	}
 	

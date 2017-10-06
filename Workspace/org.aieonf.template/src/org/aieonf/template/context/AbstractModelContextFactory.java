@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
@@ -21,30 +22,14 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 
 	private ITemplateLeaf<C> template;
 
-	private Collection<IModelBuilderListener<C>> listeners;
+	private Collection<IModelBuilderListener<IDescribable<?>>> listeners;
 
 	protected AbstractModelContextFactory() {
-		listeners = new ArrayList<IModelBuilderListener<C>>();
+		listeners = new ArrayList<IModelBuilderListener<IDescribable<?>>>();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.aieonf.template.context.IModelContextFactory#addListener(org.aieonf.model.builder.IModelBuilderListener)
-	 */
-	@Override
-	public void addListener( IModelBuilderListener<C> listener ){
-		this.listeners.add( listener );
-	}
-
-	/* (non-Javadoc)
-	 * @see org.aieonf.template.context.IModelContextFactory#removeListener(org.aieonf.model.builder.IModelBuilderListener)
-	 */
-	@Override
-	public void removeListener( IModelBuilderListener<C>  listener ){
-		this.listeners.remove( listener );
-	}
-
-	protected final void notifyListeners( ModelBuilderEvent<C>  event ){
-		for( IModelBuilderListener<C>  listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<IDescribable<?>>  event ){
+		for( IModelBuilderListener<IDescribable<?>>  listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -84,17 +69,8 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
-		IModelBuilderListener listener = new IModelBuilderListener(){
-
-			@Override
-			public void notifyChange(ModelBuilderEvent event) {
-				notifyListeners( event );
-			}	
-		};
 		XMLModelBuilder<C,ITemplateLeaf<C>> builder = new XMLModelBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );
-		builder.addListener(listener);
 		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.build();
-		builder.removeListener(listener);
 		root.getDescriptor().set( IConcept.Attributes.SOURCE, identifier );
 		return root;	
 	}

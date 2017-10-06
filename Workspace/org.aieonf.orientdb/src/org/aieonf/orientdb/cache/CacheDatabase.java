@@ -20,8 +20,8 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.file.ProjectFolderUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
-import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.ModelBuilderEvent;
+import org.aieonf.model.core.IModelListener;
+import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
@@ -56,12 +56,12 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 	private String source;
 	private boolean connected;
 	
-	private Collection<IModelBuilderListener<IDescriptor>> listeners;
+	private Collection<IModelListener<IDescriptor>> listeners;
 	
 	private static CacheDatabase cache = new CacheDatabase();
 	
 	private CacheDatabase() {
-		listeners = new ArrayList<IModelBuilderListener<IDescriptor>>();
+		listeners = new ArrayList<IModelListener<IDescriptor>>();
 		this.connected = false;
 	}
 
@@ -146,17 +146,17 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 	}
 	
 	@Override
-	public void addListener(IModelBuilderListener<IDescriptor> listener) {
+	public void addListener(IModelListener<IDescriptor> listener) {
 		this.listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(IModelBuilderListener<IDescriptor> listener) {
+	public void removeListener(IModelListener<IDescriptor> listener) {
 		this.listeners.remove(listener);
 	}
 
-	protected final void notifyListeners( ModelBuilderEvent<IDescriptor> event ){
-		for( IModelBuilderListener<IDescriptor> listener: this.listeners )
+	protected final void notifyListeners( ModelEvent<IDescriptor> event ){
+		for( IModelListener<IDescriptor> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 	
