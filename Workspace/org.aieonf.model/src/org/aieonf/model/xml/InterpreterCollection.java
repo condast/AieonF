@@ -100,11 +100,6 @@ public class InterpreterCollection<T extends IDescriptor, M extends IModelLeaf<T
 	}
 
 	@Override
-	public void notifyModelCreated(ModelCreatorEvent event) {
-		main.notifyModelCreated(event);
-	}
-
-	@Override
 	public String getKey() {
 		return main.getKey();
 	}

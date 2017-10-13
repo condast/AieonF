@@ -141,9 +141,4 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	public void endProperty() {
 		this.key = null;
 	}
-
-	@Override
-	public void notifyModelCreated(ModelCreatorEvent event) {
-
-	}
 }

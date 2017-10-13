@@ -66,7 +66,7 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
 		return domain;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
 		XMLModelBuilder<C,ITemplateLeaf<C>> builder = new XMLModelBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );

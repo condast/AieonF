@@ -9,8 +9,11 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelLeaf;
+import org.aieonf.model.xml.XMLModelBuilder;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.context.AbstractProviderContextFactory;
+
+import test.aieonf.orientdb.utils.AuthenticationExtender;
 
 /**
  * The application configurator is defined by an
@@ -22,7 +25,7 @@ public class TestFactory extends AbstractProviderContextFactory<IContextAieon, I
 	
 	private static final String S_BUNDLE_ID = "org.test.orientdb";
 
-	private static TestFactory factory = new TestFactory();
+	private static TestFactory factory;
 
 	private IModelBuilderListener<IDescribable<?>> listener = new IModelBuilderListener<IDescribable<?>>() {
 
@@ -43,11 +46,20 @@ public class TestFactory extends AbstractProviderContextFactory<IContextAieon, I
 
 	private TestFactory() {
 		super( S_BUNDLE_ID, TestFactory.class );
+		factory = new TestFactory();
 		super.createTemplate();
 	}
 
 	public static TestFactory getInstance(){
 		return factory;
+	}
+
+	
+	@Override
+	protected void onCreateTemplateBuilder(String identifier,
+			XMLModelBuilder<IContextAieon, ITemplateLeaf<IContextAieon>> builder) {
+		builder.addExtender( new AuthenticationExtender( factory.getDomain()) );
+		super.onCreateTemplateBuilder(identifier, builder);
 	}
 
 	@Override

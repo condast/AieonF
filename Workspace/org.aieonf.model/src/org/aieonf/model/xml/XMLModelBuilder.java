@@ -24,11 +24,9 @@ import javax.xml.validation.SchemaFactory;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.io.IOUtils;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.xml.XMLModelParser;
 import org.xml.sax.SAXException;
@@ -54,7 +52,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	private String domainId;
 	private IXMLModelInterpreter<T, M> builder;
 
-	private Collection<IModelBuilderListener<? extends IDescribable<?>>> listeners;
+	private Collection<IModelBuilderListener<IModelLeaf<IDescriptor>>> listeners;
 		
 	private Logger logger = Logger.getLogger( XMLModelBuilder.class.getName() );
 	
@@ -70,7 +68,15 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 		this.builder = builder;
 		this.completed = false;
 		this.failed = false;
-		this.listeners = new ArrayList<IModelBuilderListener<? extends IDescribable<?>>>();
+		this.listeners = new ArrayList<IModelBuilderListener<IModelLeaf<IDescriptor>>>();
+	}
+
+	public void addModelBuilderListener( IModelBuilderListener<IModelLeaf<IDescriptor>> listener ){
+		this.listeners.add( listener );
+	}
+
+	public void removeodelBuilderListener( IModelBuilderListener<IModelLeaf<IDescriptor>> listener ){
+		this.listeners.remove( listener );
 	}
 
 	/**
@@ -128,6 +134,8 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 			//saxParser.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA); 
 			//saxParser.setProperty(JAXP_SCHEMA_SOURCE, new File(JP2P_XSD_SCHEMA)); 
 			XMLModelParser<T,M> parser = new XMLModelParser<T,M>( builder );
+			for( IModelBuilderListener<IModelLeaf<IDescriptor>> listener: this.listeners )
+				parser.addModelBuilderListener( listener );
 			saxParser.parse( in, parser );
 			root = parser.getRoot();
 			logger.info("AIEONF Bundle Parsed: " + this.domainId + "\n");

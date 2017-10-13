@@ -5,27 +5,17 @@ import java.util.logging.Logger;
 
 import org.aieonf.commons.security.ILoginListener.LoginEvents;
 import org.aieonf.commons.security.LoginEvent;
-import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.AttributeFilter;
-import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
-import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.model.xml.InterpreterCollection;
-import org.aieonf.model.xml.XMLModelBuilder;
-import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.builder.TemplateInterpreter;
 import org.condast.commons.test.AbstractTestSuite;
 
 import test.aieonf.orientdb.context.TestFactory;
-import test.aieonf.orientdb.model.ModelInterpreter;
 import test.aieonf.orientdb.service.LoginDispatcher;
 
 public class TestSuite extends AbstractTestSuite {
@@ -130,6 +120,4 @@ public class TestSuite extends AbstractTestSuite {
 		TestFactory factory = TestFactory.getInstance();
 		factory.createTemplate();
 	}
-	
-	
 }

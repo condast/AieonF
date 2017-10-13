@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> extends DefaultHandler implements IModelParser<T, M>{
+public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> extends DefaultHandler implements IModelParser<IDescriptor, IModelLeaf<IDescriptor>>{
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	private static final String S_ERR_NO_EXTENDER   = " No extender found for: ";
@@ -48,8 +48,8 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 	private Stack<IModelBuilderListener.ModelAttributes> stack;
 	
 	private IXMLModelInterpreter<T, M> creator;	
-	private Collection<IXMLModelInterpreter<T, M>> extenders;
-
+	private Collection<IModelBuilderListener<IModelLeaf<IDescriptor>>> listeners;
+	
 	private XMLApplication application;
 	private XMLModel xmlModel;
 	
@@ -58,7 +58,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 	public XMLModelParser( IXMLModelInterpreter<T, M> creator ) {
 		this.stack = new Stack<IModelBuilderListener.ModelAttributes>();
 		this.creator = creator;
-		extenders = new ArrayList<IXMLModelInterpreter<T, M>>();
+		listeners = new ArrayList<IModelBuilderListener<IModelLeaf<IDescriptor>>>();
 	}
 
 	/**
@@ -69,13 +69,9 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 		return root;
 	}
 
-	/**
-	 * Add a model builder listener
-	 * @param event
-	 */
 	@Override
-	public void addModelExtender( IXMLModelInterpreter<T, M> extender ){
-		this.extenders.add( extender );
+	public void addModelBuilderListener(IModelBuilderListener<IModelLeaf<IDescriptor>> listener) {
+		this.listeners.add( listener );
 	}
 
 	/**
@@ -83,16 +79,14 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 	 * @param event
 	 */
 	@Override
-	public void removeModelExtender( IXMLModelInterpreter<T, M> extender ){
-		this.extenders.remove( extender );
+	public void removeModelBuilderListener( IModelBuilderListener<IModelLeaf<IDescriptor>> listener ){
+		this.listeners.remove( listener );
 	}
 
-	protected final IXMLModelInterpreter<T, M> getExtender( String name, Attributes attributes ){
-		for( IXMLModelInterpreter<T, M> extender: this.extenders ) {
-			if( extender.canCreate(name, attributes))
-				return extender;
+	protected final void notifyBuilderListeners( ModelBuilderEvent<IModelLeaf<IDescriptor>> event ){
+		for( IModelBuilderListener<IModelLeaf<IDescriptor>> listener: this.listeners ) {
+			listener.notifyChange(event);
 		}
-		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -137,16 +131,14 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + attr);
 				if(!( current instanceof IModelLeaf ))
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + attr);
-					this.parent = (IModelLeaf<IDescriptor>) this.current;
+				this.parent = (IModelLeaf<IDescriptor>) this.current;
 				break;
 			default:
 				break; //do nothing
 			}
 		}else{
-			IXMLModelInterpreter<T, M> extender  = getExtender(qName, attributes);
-			if( extender == null )
+			if(!this.creator.isValid(qName))
 				throw new IllegalArgumentException( S_ERR_NO_EXTENDER + qName );
-			extender.create( qName, attributes);
 			switch( attr ){
 			case MODEL:
 				ma = IModelBuilderListener.ModelAttributes.DESCRIPTOR;
@@ -156,11 +148,11 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 					model = (IModelLeaf<T>) event.getModel();
 					logger.warning( S_WRN_DESCRIPTOR_NOT_FOUND + qName );
 				}
-				
+
 				if(!( this.current instanceof IModelNode ))
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + this.current.toString() + 
 							" index: " + attr + S_ERR_NO_CHILDREN );
-					
+
 				IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) this.current;
 				this.current =  (M) model;
 				xmlModel.fill(( ModelLeaf<IDescriptor>) this.current );
@@ -248,16 +240,16 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 
 
 	private MessageFormat message =
-		      new MessageFormat("({0}: {1}, {2}): {3}");
-	
+			new MessageFormat("({0}: {1}, {2}): {3}");
+
 	private void print(SAXParseException x)
 	{
 		String msg = message.format(new Object[]
 				{
-				x.getSystemId(),
-				new Integer(x.getLineNumber()),
-				new Integer(x.getColumnNumber()),
-				x.getMessage()
+						x.getSystemId(),
+						new Integer(x.getLineNumber()),
+						new Integer(x.getColumnNumber()),
+						x.getMessage()
 				});
 		Logger.getLogger( this.getClass().getName()).info(msg);
 	}
@@ -276,7 +268,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 		buffer.append( StoreModel.printModel(model, false));
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Convert the attributes to a string map
 	 * @param attributes
@@ -325,15 +317,15 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 			super();
 			properties = new HashMap<String, String>();
 		}
-		
+
 		public void fill( Attributes attributes ){
 			properties = XMLUtils.convertAttributesToProperties(attributes);
 			String name = getName();
 			if(!Utils.assertNull( name ))
 				properties.put( IModelLeaf.Attributes.IDENTIFIER.name().toLowerCase(), getName());
 		}
-		
-		
+
+
 		public String getID(){
 			return properties.get( IDescriptor.Attributes.ID.name().toLowerCase());
 		}
@@ -350,10 +342,10 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 			context.setContext( this.getName() );
 			context.set( IDescriptor.Attributes.ID.toString(), this.getID() );
 		}
-		
+
 		public void fill( ModelLeaf<IDescriptor> leaf ){
 			Iterator<Map.Entry<String, String>> iterator = this.properties.entrySet().iterator();
-			
+
 			while( iterator.hasNext() ){
 				Map.Entry<String, String> entry = iterator.next();
 				IModelLeaf.Attributes attr = IModelLeaf.Attributes.valueOf( StringStyler.styleToEnum( entry.getKey() ));
@@ -368,7 +360,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IModelLeaf<T>> exte
 			ID,
 			NAME,
 			VERSION;
-			
+
 			@Override
 			public String toString() {
 				return StringStyler.prettyString( super.toString());

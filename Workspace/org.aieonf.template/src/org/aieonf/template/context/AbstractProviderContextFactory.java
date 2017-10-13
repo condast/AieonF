@@ -83,7 +83,7 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	public void removeProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, U>> function ){
 		this.functions.remove( function );
 	}
-
+	
 	@Override
 	public ITemplateLeaf<C> onCreateTemplate() {
 		ITemplateLeaf<C> template  = this.createDefaultTemplate( bundle_id, this.creator );	

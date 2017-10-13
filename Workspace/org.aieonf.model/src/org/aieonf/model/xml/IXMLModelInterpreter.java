@@ -87,12 +87,6 @@ public interface IXMLModelInterpreter<T extends IDescriptor, U extends IDescriba
 	public void endProperty();
 	
 	/**
-	 * Notification that a descriptor was created
-	 * @param event
-	 */
-	public void notifyModelCreated( ModelCreatorEvent event );
-
-	/**
 	 * Get the key that currently is being processed
 	 * @return
 	 */
