@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<application version="0" name="saight" domain="test.aieonf.orientdb" id="6B2F71AFDFCD4947815FA4CDE5C5F392E4CD9463A3F74ACD954CCB0E49E0ED9F04">
+  <model id="org.test.orientdb" name="Links">
+    <context name="OrientDB Test">
+		<version type="int">1</version>
+        <source>test.aieonf.orientdb</source>
+		<read-only>true</read-only>
+		<id type="string" regex="[a..z\\.]*[:]//d">org.condast.concept.template:-4914886299605302745</id>
+		<scope type="enum">Application</scope>
+		<organisation>Condast</organisation>
+		<website>"www.saight.com"</website>
+		<author>Kees Pieters</author>
+		<copyright>2004-2014 condast.com</copyright>
+		<license>Apache 2.0</license>
+	  </context>
+	  <children>
+		  <model>
+		  	<domain>
+		       <domain type="string" use="mandatory" create="template">org.aieonf.orientdb.test</domain>
+		       <short-name type="string" use="mandatory" create="template">Test Orient DB</short-name>
+               <user-name>keesp</user-name>
+               <password>test</password>
+		    </domain>
+		  </model>
+          <model id="org.aieonf.database">
+            <loader>
+              <source>test.aieonf.orientdb</source>
+              <read-only>false</read-only>
+              <creatable>true</creatable>
+              <user-name>keesp</user-name>
+              <password>test</password>
+            </loader>
+          </model>
+		  <model id="org.aieonf.model.provider">
+		    <category>
+		      <category init="clear" use="mandatory">{Category}</category>
+		    </category>
+		    <loader>
+              <user-name>keesp</user-name>
+              <password>test</password>
+	          <source>test.aieonf.orientdb</source>
+		    </loader>
+		    <children>
+		       <model>
+				 <url id="descriptor">
+		 		   <version type="int" use="mandatory" create="auto">1</version>
+			 	   <description type="string" use="optional">{Description}</description>
+				   <url type="url" use="mandatory">{http://www.url.org}</url>
+                   <scope type="enum" use="mandatory">{Scope}</scope>
+ 		         </url>
+ 		       </model>
+ 		     </children>  
+		 </model>
+      <model id="org.aieonf.model.provider" name="Authentication Model" type="authentication">
+ 	    <login>
+		  <scope init="default">private</scope>
+		  <name>Login</name>
+		  <version>1</version>
+		  <user-name init="clear">${UserName}</user-name>
+		  <password init="clear">${Password}</password>
+		</login>
+		<children>
+		  <model>
+ 	        <person>
+              <first-name init="clear"/>
+              <email init="clear"/>
+              <last-name init="clear"/>
+              <gender init="clear">Female</gender>
+			</person>
+			<children>
+              <model>
+                <birth-date regex="\d{2}-\d{2}-\d{4}">
+                  <scope init="default">Public</scope>
+                  <description>BirthDate</description>
+                </birth-date>
+			  </model>
+			  <model>
+ 			    <address>
+				  <scope init="default">Public</scope>
+				  <street init="clear">{Street}</street>
+				  <zip-code init="clear">{ZipCode}</zip-code>
+				  <number init="clear" use="optional">{Number}</number>
+				</address>
+				<children>
+				  <model>
+					<town>
+					  <scope init="default">Public</scope>
+					  <max-zip-code use="optional" init="clear">{MaxZipCode}</max-zip-code>
+					  <phone-code use="optional" init="clear">{PhoneCode}</phone-code>
+					  <min-zip-code use="optional" init="clear">{MinZipCode}</min-zip-code>
+                      <state init="clear" use="optional">{State}</state>
+					</town>
+					<children>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+					  <model>
+					    <country>
+					      <scope init="default">Public</scope>
+  					      <country init="default">United States</country>
+					      <phone-code init="clear">{PhoneCode}</phone-code>
+						</country>
+					  </model>
+				    </children>
+		          </model>
+		        </children>
+		      </model>
+	        </children>
+          </model>
+        </children>
+      </model>
+	 </children>
+  </model>
+</application>

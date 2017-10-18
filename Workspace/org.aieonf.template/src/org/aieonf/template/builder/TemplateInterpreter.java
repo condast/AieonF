@@ -79,11 +79,11 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 	}
 
 	public TemplateInterpreter( Class<?> clss, String location ) {
-		super( clss, location );
+		super( ITemplateLeaf.S_TEMPLATE, clss, location );
 	}
 
 	public TemplateInterpreter( Class<?> clss, URL url ) {
-		super( url );
+		super( ITemplateLeaf.S_TEMPLATE, url );
 		this.clss = clss;
 	}
 

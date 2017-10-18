@@ -24,6 +24,13 @@ public interface IXMLModelInterpreter<T extends IDescriptor, U extends IDescriba
 	}
 
 	/**
+	 * Get an identifier for this interpreter. This is a human readable
+	 * name that can be used to follow the parsing.
+	 * @return
+	 */
+	public String getIdentifier();
+	
+	/**
 	 * Clear the creator
 	 */
 	void clear();

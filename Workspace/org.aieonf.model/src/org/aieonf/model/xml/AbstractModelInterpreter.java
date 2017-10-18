@@ -6,28 +6,34 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.core.ModelEvent;
 import org.xml.sax.Attributes;
 
-public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends IModelLeaf<T>> implements IXMLModelInterpreter<T,M> {
+public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends IDescribable<T>> implements IXMLModelInterpreter<T,M> {
 
 	private boolean active;
+	private String identifier;
 	private M model;
 	private String key;
 	private URL url;
 	
 	private Collection<IModelBuilderListener<T>> listeners;
 
-	protected AbstractModelInterpreter( Class<?> clss, String resourceLocation) {
-		this( clss.getResource( resourceLocation ));
+	protected AbstractModelInterpreter( String identifier, Class<?> clss, String resourceLocation) {
+		this( identifier, clss.getResource( resourceLocation ));
 	}
 
-	protected AbstractModelInterpreter( URL url ) {
+	protected AbstractModelInterpreter( String identifier, URL url ) {
 		this.url = url;
+		this.identifier = identifier;
 		this.listeners = new ArrayList<IModelBuilderListener<T>>();
+	}
+
+	@Override
+	public String getIdentifier() {
+		return this.identifier;
 	}
 
 	public void addModelBuilderListener( IModelBuilderListener<T> listener ) {

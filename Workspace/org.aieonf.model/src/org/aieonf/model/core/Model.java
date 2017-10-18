@@ -2,6 +2,7 @@ package org.aieonf.model.core;
 
 import java.util.*;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.implicit.Implies;
@@ -9,6 +10,15 @@ import org.aieonf.concept.implicit.Implies;
 public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModelNode<T>
 {	
 	private Vector<IModelLeaf<? extends IDescriptor>>children;
+
+	/**
+	 * Create the model. Use only when parsing data
+	 * @param concept
+	 */
+	protected Model(){
+		super();
+		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
+	}
 
 	/**
 	 * Create the model. Use only when parsing data
@@ -47,8 +57,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	@Override
 	public Collection<IModelLeaf<? extends IDescriptor>> getChildren()
 	{
-		List<IModelLeaf<? extends IDescriptor>> models = new ArrayList<IModelLeaf<? extends IDescriptor>>( this.children );
-		return models;
+		return this.children;
 	}
 
 	/**
@@ -148,6 +157,8 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 			return;
 		IModelNode<? extends IDescriptor> md = 
 			(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
+		if( Utils.assertNull(md.getChildren()))
+			return;
 		for( IModelLeaf<? extends IDescriptor> child: md.getChildren() ){
 			try {
 				child.setDepth( model.getDepth() + 1 );

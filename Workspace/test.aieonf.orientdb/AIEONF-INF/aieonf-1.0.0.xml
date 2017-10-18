@@ -51,61 +51,6 @@
  		       </model>
  		     </children>  
 		 </model>
-      <model id="org.aieonf.model.provider" name="Authentication Model" type="authentication">
- 	    <login>
-		  <scope init="default">private</scope>
-		  <name>Login</name>
-		  <version>1</version>
-		  <user-name init="clear">${UserName}</user-name>
-		  <password init="clear">${Password}</password>
-		</login>
-		<children>
-		  <model>
- 	        <person>
-              <first-name init="clear"/>
-              <email init="clear"/>
-              <last-name init="clear"/>
-              <gender init="clear">Female</gender>
-			</person>
-			<children>
-              <model>
-                <birth-date regex="\d{2}-\d{2}-\d{4}">
-                  <scope init="default">Public</scope>
-                  <description>BirthDate</description>
-                </birth-date>
-			  </model>
-			  <model>
- 			    <address>
-				  <scope init="default">Public</scope>
-				  <street init="clear">{Street}</street>
-				  <zip-code init="clear">{ZipCode}</zip-code>
-				  <number init="clear" use="optional">{Number}</number>
-				</address>
-				<children>
-				  <model>
-					<town>
-					  <scope init="default">Public</scope>
-					  <max-zip-code use="optional" init="clear">{MaxZipCode}</max-zip-code>
-					  <phone-code use="optional" init="clear">{PhoneCode}</phone-code>
-					  <min-zip-code use="optional" init="clear">{MinZipCode}</min-zip-code>
-                      <state init="clear" use="optional">{State}</state>
-					</town>
-					<children>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-					  <model>
-					    <country>
-					      <scope init="default">Public</scope>
-  					      <country init="default">United States</country>
-					      <phone-code init="clear">{PhoneCode}</phone-code>
-						</country>
-					  </model>
-				    </children>
-		          </model>
-		        </children>
-		      </model>
-	        </children>
-          </model>
-        </children>
-      </model>
-	 </children>
+      </children>
   </model>
 </application>

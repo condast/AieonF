@@ -23,6 +23,8 @@ import org.xml.sax.Attributes;
 
 public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IModelLeaf<IDescriptor>> {
 
+	public static final String S_IDENTIFIER = "Model";
+
 	public static final String S_WRN_CONCEPT_NOT_FOUND = "No concept has name: ";
 	public static final String S_WRN_PROPERTY_NOT_FOUND = "The property is not found for this concept: ";
 
@@ -57,7 +59,7 @@ public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IMod
 	private Logger logger  = Logger.getLogger( ModelInterpreter.class.getName() );
 	
 	public ModelInterpreter() {
-		super( ModelInterpreter.class, IModelBuilder.S_DEFAULT_LOCATION );
+		super( S_IDENTIFIER, ModelInterpreter.class, IModelBuilder.S_DEFAULT_LOCATION );
 	}
 
 	@Override

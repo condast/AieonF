@@ -27,13 +27,12 @@ import org.aieonf.commons.io.IOUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.builder.IModelCollectionBuilder;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.xml.XMLTemplateParser;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 
-public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> implements IModelCollectionBuilder<T, M> {
+public class XMLTemplateBuilder<T extends IDescriptor, M extends IModelLeaf<T>> implements IModelBuilder<T> {
 
 	protected static final String JAXP_SCHEMA_SOURCE =
 		    "http://java.sun.com/xml/jaxp/properties/schemaSource";
@@ -51,11 +50,11 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	private boolean completed, failed;
 	
 	private String domainId;
-	private IXMLModelInterpreter<IDescriptor, T> interpreter;
+	private IXMLModelInterpreter<T, M> interpreter;
 
 	private Collection<IModelBuilderListener<M>> listeners;
 		
-	private Logger logger = Logger.getLogger( XMLModelBuilder.class.getName() );
+	private Logger logger = Logger.getLogger( XMLTemplateBuilder.class.getName() );
 	
 	/**
 	 * Build the factories from the given resource in the class file and add them to the container
@@ -64,7 +63,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLModelBuilder( String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
+	public XMLTemplateBuilder( String domainId, IXMLModelInterpreter<T, M> interpreter ) {
 		this.domainId = domainId;
 		this.interpreter = interpreter;
 		this.completed = false;
@@ -100,9 +99,9 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#build()
 	 */
 	@Override
-	public Collection<M> build() {
+	public IModelLeaf<T> build() {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
-		URL schema_in = XMLModelBuilder.class.getResource( IModelBuilder.S_SCHEMA_LOCATION); 
+		URL schema_in = XMLTemplateBuilder.class.getResource( S_SCHEMA_LOCATION); 
 		if( schema_in == null )
 			throw new RuntimeException( S_ERR_NO_SCHEMA_FOUND );
 		
@@ -110,7 +109,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 		// note that if your XML already declares the XSD to which it has to conform, then there's no need to create a validator from a Schema object
-		Source schemaFile = new StreamSource( XMLTemplateParser.class.getResourceAsStream( IModelBuilder.S_SCHEMA_LOCATION ));
+		Source schemaFile = new StreamSource( XMLTemplateParser.class.getResourceAsStream( S_SCHEMA_LOCATION ));
 		InputStream in;
 		URL url = this.interpreter.getURL();
 		try {
@@ -122,7 +121,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 		}
 		
 		//First parse the XML file
-		Collection<M> models = null;
+		IModelLeaf<T> root = null;
 		try {
 			logger.info("Parsing SAIGHT Bundle: " + this.domainId + "\n");
 			//Schema schema = schemaFactory.newSchema(schemaFile);
@@ -134,11 +133,11 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 			
 			//saxParser.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA); 
 			//saxParser.setProperty(JAXP_SCHEMA_SOURCE, new File(JP2P_XSD_SCHEMA)); 
-			XMLModelParser<T,M> parser = new XMLModelParser<T,M>( interpreter );
+			XMLTemplateParser<T,M> parser = new XMLTemplateParser<T,M>( (IXMLModelInterpreter<T, IModelLeaf<T>>) interpreter );
 			for( IModelBuilderListener<M> listener: this.listeners )
 				parser.addModelBuilderListener( listener );
 			saxParser.parse( in, parser );
-			models = parser.getModels();
+			root = parser.getRoot();
 			logger.info("AIEONF Bundle Parsed: " + this.domainId + "\n");
 		} catch( SAXNotRecognizedException e ){
 			failed = true;
@@ -161,7 +160,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 		}
 		
 		this.completed = true;
-		return models;
+		return root;
 	}
 
 	public boolean complete() {

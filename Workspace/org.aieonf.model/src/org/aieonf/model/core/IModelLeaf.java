@@ -100,6 +100,14 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	public String get( Enum<?> attr ); 
 
 	/**
+	 * Set a value
+	 * @param attr
+	 * @param value
+	 * @return
+	 */
+	public void set( Enum<?> attr, String value );
+	
+	/**
 	 * Returns true if the node is a root
 	 * @return
 	 */

@@ -15,6 +15,8 @@ import org.xml.sax.Attributes;
 
 public class AuthenticationExtender implements IXMLModelInterpreter<IDescriptor, IModelLeaf<IDescriptor>> {
 
+	public static final String S_IDENTIFIER = "Authentication Model";
+
 	private IDomainAieon domain;
 	private boolean active;
 	private IModelLeaf<IDescriptor> model;
@@ -27,6 +29,12 @@ public class AuthenticationExtender implements IXMLModelInterpreter<IDescriptor,
 	public AuthenticationExtender( IDomainAieon domain, boolean active) {
 		this.active = active;
 		this.domain = domain;
+	}
+
+	
+	@Override
+	public String getIdentifier() {
+		return S_IDENTIFIER;
 	}
 
 	@Override

@@ -21,6 +21,13 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	private IModelLeaf<? extends IDescriptor> parent;
 
 	/**
+	 * Only used for special models
+	 */
+	protected ModelLeaf(){
+		this.leaf = true;
+	}
+	
+	/**
 	 * Create the model
 	 * @param concept
 	 */
@@ -42,12 +49,16 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * @param concept
 	 */
 	public ModelLeaf( T descriptor, Implies<T,IDescriptor> implies ){
+		this.init(descriptor);
+		this.implies = implies;
+		this.leaf = true;
+	}
+	
+	protected void init( T descriptor ){
 		this.descriptor = descriptor;
 		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
 		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
-		this.set( IDescriptor.Attributes.VERSION, String.valueOf( descriptor.getVersion() ));
-		this.implies = implies;
-		this.leaf = true;
+		this.set( IDescriptor.Attributes.VERSION, String.valueOf( descriptor.getVersion() ));		
 	}
 
 	/**

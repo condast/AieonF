@@ -20,6 +20,7 @@ public interface IModelBuilderListener<M extends Object> {
 	 */
 	public enum ModelAttributes{
 		APPLICATION,
+		MODELS,
 		MODEL,
 		CONTEXT,
 		DESCRIPTOR,

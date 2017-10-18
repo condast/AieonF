@@ -12,12 +12,18 @@ public class InterpreterCollection<T extends IDescriptor, M extends IModelLeaf<T
 
 	private Collection<IXMLModelInterpreter<T, ? extends M>> interpreters;
 	private IXMLModelInterpreter<T, ? extends M> main;
+	private String identifier;
 	
-	
-	public InterpreterCollection( IXMLModelInterpreter<T, ? extends M> interpreter ) {
+	public InterpreterCollection( String identifier, IXMLModelInterpreter<T, ? extends M> interpreter ) {
 		interpreters = new ArrayList<IXMLModelInterpreter<T, ? extends M>>();
 		this.interpreters.add( interpreter );
 		this.main = interpreter;
+		this.identifier = identifier;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return this.identifier;
 	}
 
 	@Override

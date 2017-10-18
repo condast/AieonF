@@ -54,6 +54,12 @@ public class TemplateWrapper implements ITemplate
 		return this.model.get(attr);
 	}
 	
+	
+	@Override
+	public void set(Enum<?> attr, String value) {
+		this.model.set(attr, value);
+	}
+
 	/**
 	 * Returns true if the node is a root
 	 * @return
