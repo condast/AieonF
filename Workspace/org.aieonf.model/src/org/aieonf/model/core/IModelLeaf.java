@@ -125,6 +125,12 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	 * @return
 	 */
 	public boolean isLeaf();
+	
+	/**
+	 * If the boolean value is set, the node is always considered to be a leaf. 
+	 * @param choice
+	 */
+	public void setLeaf( boolean choice );
 
 	/**
 	 * Returns true if the leaf contains the given descriptor

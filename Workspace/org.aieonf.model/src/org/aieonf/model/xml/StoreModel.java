@@ -172,8 +172,8 @@ public class StoreModel<T extends IDescriptor>
 	public static final String printModel( IModelLeaf<? extends IDescriptor> model, boolean includeAttrs )
 	{
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("{ Created: " + Descriptor.getCreateDate( model.getDescriptor()) + "}\n" );
-		buffer.append("{ Updated: " + Descriptor.getUpdateDate( model.getDescriptor()) + "}\n" );
+		buffer.append("{ Created: " + Descriptor.getDate( model, IDescriptor.Attributes.CREATE_DATE ) + "}\n" );
+		buffer.append("{ Updated: " + Descriptor.getDate( model, IDescriptor.Attributes.UPDATE_DATE ) + "}\n" );
 		if( includeAttrs )
 			printExtendedModel( buffer, model, 0 );
 		else

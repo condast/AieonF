@@ -1,4 +1,4 @@
-package org.aieonf.template;
+package org.aieonf.template.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,17 +9,21 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
+import org.aieonf.template.ITemplate;
+import org.aieonf.template.ITemplateAieon;
+import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.ITemplateNode;
+import org.aieonf.template.TemplateAieon;
 import org.aieonf.template.property.ITemplateProperty;
 
-public class TemplateWrapper implements ITemplate
+public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 {
-	private ITemplateLeaf<IDescriptor> model;
+	private ITemplateLeaf<T> model;
 
 	private Collection<IModelLeaf<? extends IDescriptor>> children;
 
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public TemplateWrapper( ITemplateLeaf<IDescriptor>model )
+	TemplateWrapper( ITemplateLeaf<T>model )
 	{
 		this.model = model;
 		if(!(model instanceof ITemplateNode ))
@@ -294,5 +298,10 @@ public class TemplateWrapper implements ITemplate
 	@Override
 	public int compareTo(IDescribable<?> o) {
 		return this.model.compareTo(o);
+	}
+
+	@Override
+	public void setLeaf(boolean choice) {
+		this.model.setLeaf(choice);
 	}
 }

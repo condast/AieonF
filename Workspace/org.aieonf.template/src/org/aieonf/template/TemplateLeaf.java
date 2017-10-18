@@ -6,17 +6,31 @@ import java.util.Map;
 import java.util.Set;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.core.ModelLeaf;
+import org.aieonf.model.xml.XMLModel;
 import org.aieonf.template.property.ITemplateProperty;
 import org.aieonf.template.property.TemplateProperty;
 
-public class TemplateLeaf<T extends IDescriptor> extends ModelLeaf<T> implements ITemplateLeaf<T>
+public class TemplateLeaf<T extends IDescriptor> extends XMLModel<T> implements ITemplateLeaf<T>
 {
 	private Map<Enum<?>,TemplateProperty<T, Enum<?>, String>> attributes;
-	
+
+	protected TemplateLeaf( org.xml.sax.Attributes attrs )
+	{
+		super(attrs);
+		attributes = new HashMap<Enum<?>, TemplateProperty<T,Enum<?>,String>>();
+	}
+
 	public TemplateLeaf( T descriptor )
 	{
-		super( descriptor );
+		super(null);
+		super.init( descriptor );
+		attributes = new HashMap<Enum<?>, TemplateProperty<T,Enum<?>,String>>();
+	}
+
+	public TemplateLeaf( T descriptor, org.xml.sax.Attributes attrs )
+	{
+		super(attrs);
+		super.init( descriptor );
 		attributes = new HashMap<Enum<?>, TemplateProperty<T,Enum<?>,String>>();
 	}
 

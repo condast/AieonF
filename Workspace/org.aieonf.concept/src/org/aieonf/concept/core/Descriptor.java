@@ -582,8 +582,9 @@ public class Descriptor implements IDescriptor
 	 * @param descriptor IDescriptor
 	 * @return Date
 	 */
-	public final static Date getDate( IDescriptor descriptor, IDescriptor.Attributes attr )
+	public final static Date getDate( IDescribable<? extends IDescriptor> describable, IDescriptor.Attributes attr )
 	{
+		IDescriptor descriptor = describable.getDescriptor();
 		String str = descriptor.get( attr );
 		if(( str == null ) || ( str.trim().length() == 0 ))
 			return Calendar.getInstance().getTime();

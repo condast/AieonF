@@ -42,12 +42,12 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 	
 	private Stack<ModelAttributes> stack;
 	
-	private IXMLModelInterpreter<IDescriptor,T> creator;	
+	private IXMLModelInterpreter<? extends IDescriptor,T> creator;	
 	private Collection<IModelBuilderListener<M>> listeners;
 
 	private Logger logger = Logger.getLogger( XMLModelParser.class.getName() );
 
-	public XMLModelParser( IXMLModelInterpreter<IDescriptor,T> creator) {
+	public XMLModelParser( IXMLModelInterpreter<? extends IDescriptor,T> creator) {
 		this.stack = new Stack<ModelAttributes>();
 		this.creator = creator;
 		this.models = new ArrayList<M>();
@@ -58,23 +58,15 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 		return stack;
 	}
 
-	protected synchronized IXMLModelInterpreter<IDescriptor, T> getCreator() {
+	protected synchronized IXMLModelInterpreter<? extends IDescriptor, T> getCreator() {
 		return creator;
-	}
-
-	protected synchronized void setParent(XMLModel<T> parent) {
-		this.parent = parent;
 	}
 
 	protected synchronized void setCurrent(XMLModel<T> current) {
 		this.current = current;
 	}
 
-	protected synchronized XMLModel<T> getParent() {
-		return parent;
-	}
-
-	protected synchronized XMLModel<T> getCurrent() {
+	protected synchronized IModelLeaf<T> getCurrent() {
 		return current;
 	}
 
@@ -109,6 +101,20 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			listener.notifyChange(event);
 	}
 
+	/**
+	 * Check if the model is well-formed
+	 * @param index
+	 * @param qName
+	 */
+	protected void checkModel( ModelAttributes index, String qName ) {
+		if( !index.equals( ModelAttributes.MODELS ) && !index.equals( ModelAttributes.CHILDREN))
+			throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
+	}
+	
+	protected XMLModel<T> createModel( Attributes attributes ){
+		return new XMLModel<T>( attributes );
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized void startElement(String uri, String localName, String qName, 
@@ -120,16 +126,24 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 		if( ModelAttributes.isModelAttribute( qName )){
 			ma = ModelAttributes.valueOf( str );
 			switch( ma ){
+			case APPLICATION:
+				if( !stack.isEmpty() )
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: 0");
+				break;
 			case MODELS:
 				if( !this.stack.isEmpty() )
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: 0");
 				break;
 			case MODEL:
 				index = this.stack.lastElement();
-				if( !index.equals( ModelAttributes.MODELS ) && !index.equals( ModelAttributes.CHILDREN))
-					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
-				this.current = new XMLModel<T>( attributes );
+				this.checkModel(index, qName);
+				this.current = this.createModel(attributes);
 				this.models.add( (M) this.current);
+				break;
+			case CONTEXT:
+				index = stack.lastElement();
+				if( !index.equals( ModelAttributes.MODEL ))
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
 				break;
 			case CHILDREN:
 				index = this.stack.lastElement();
@@ -145,15 +159,16 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			index = this.stack.lastElement();
 			switch( index ){
 			case MODEL:
-			ma = ModelAttributes.DESCRIPTOR;
-			this.current.init( creator.create( qName, attributes));
-			break;
+				ma = ModelAttributes.DESCRIPTOR;
+				this.current.init( creator.create( qName, attributes));
+				break;
+			case CONTEXT:
 			case DESCRIPTOR:
 				ma = ModelAttributes.PROPERTIES;
 				creator.setProperty( StringStyler.prettyString( qName ), attributes);				
 				break;
 			default:	
-				throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
+				break;
 			}
 		}
 		this.stack.push(ma);
@@ -172,10 +187,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			}
 			break;
 		case CONTEXT:
-			break;
 		case DESCRIPTOR:
-			this.creator.endProperty();
-			break;
 		case PROPERTIES:
 			this.creator.endProperty();
 			break;
@@ -190,11 +202,12 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 		if( Utils.assertNull( value  ))
 			return;
 		try{
-			logger.fine("Setting value for key: " + creator.getKey() );
+			logger.info("Setting value for key: " + creator.getKey() );
 			IDescriptor descriptor = current.getDescriptor();
 			descriptor.set( creator.getKey(), value);
 		}
 		catch( Exception ex ){
+			ex.printStackTrace();
 			logger.severe( printError( this.current, "Exception thrown for [" + value + "]"));
 			throw new SAXException( ex );
 		}

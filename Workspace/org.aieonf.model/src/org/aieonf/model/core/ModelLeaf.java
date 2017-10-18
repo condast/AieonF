@@ -191,8 +191,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 		return leaf;
 	}
 
-	
-	protected void setLeaf(boolean leaf) {
+	public void setLeaf(boolean leaf) {
 		this.leaf = leaf;
 	}
 

@@ -14,9 +14,9 @@ import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.search.ModelScanner;
 import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.model.xml.XMLTemplateBuilder;
 import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
+import org.aieonf.template.xml.XMLTemplateBuilder;
 
 public abstract class AbstractModelContextFactory<C extends IContextAieon> implements IModelContextFactory<C,IDomainAieon> {
 
@@ -70,7 +70,8 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
 		XMLTemplateBuilder<C,ITemplateLeaf<C>> builder = new XMLTemplateBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );
-		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.build();
+		builder.build();
+		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.getModel();
 		root.getDescriptor().set( IConcept.Attributes.SOURCE, identifier );
 		return root;	
 	}

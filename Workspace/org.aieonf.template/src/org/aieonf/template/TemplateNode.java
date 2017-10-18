@@ -12,9 +12,19 @@ public class TemplateNode<T extends IDescriptor>
 {
 	private Collection<IModelLeaf<? extends IDescriptor>> children;
 
-	public TemplateNode( T descriptor )
-	{
+	public TemplateNode( T descriptor ){
 		super( descriptor );
+		this.children = new TreeSet<IModelLeaf<? extends IDescriptor>>();
+	}
+	
+	public TemplateNode(org.xml.sax.Attributes attrs) {
+		super(attrs);
+		this.children = new TreeSet<IModelLeaf<? extends IDescriptor>>();
+	}
+
+	public TemplateNode( T descriptor, org.xml.sax.Attributes attributes )
+	{
+		super( descriptor, attributes );
 		this.children = new TreeSet<IModelLeaf<? extends IDescriptor>>();
 	}
 

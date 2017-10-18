@@ -38,10 +38,8 @@ import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.TemplateAieon;
 import org.aieonf.template.TemplateNode;
-import org.aieonf.template.TemplateWrapper;
 import org.aieonf.template.parser.attr.TemplateAttributeValidator;
 import org.aieonf.template.property.TemplateProperty;
-import org.aieonf.template.xml.XMLTemplateNode;
 
 /**
  *
@@ -125,9 +123,9 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 			ITemplate template = parse( doc );
 			switch( specify ){
 			case SKIPROOT:
-				return new TemplateWrapper( (ITemplateLeaf<IDescriptor>) template.getChildren().iterator().next() );
+				return new TemplateWrapper<IDescriptor>( (ITemplateLeaf<IDescriptor>) template.getChildren().iterator().next() );
 			case ASPECT:
-				return new TemplateWrapper( (ITemplateLeaf<IDescriptor>) template.getChildren().iterator().next() );
+				return new TemplateWrapper<IDescriptor>( (ITemplateLeaf<IDescriptor>) template.getChildren().iterator().next() );
 			default:
 				return template;
 			}
@@ -170,7 +168,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 		ITemplateAieon aieon = new TemplateAieon();
 		ITemplateNode<IDescriptor> tRoot = new TemplateNode<IDescriptor>( aieon );
 		//parseTemplate( tRoot, root );
-		return new TemplateWrapper( tRoot );
+		return new TemplateWrapper<IDescriptor>( tRoot );
 	}
 
 	/**
@@ -288,7 +286,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 					chld = chldren.item( j );
 					if( chld.getNodeType() != Node.ELEMENT_NODE )
 						continue;
-					ITemplateNode<IDescriptor> tChild = new TemplateNode<IDescriptor>( null );
+					ITemplateNode<IDescriptor> tChild = new TemplateNode<IDescriptor>( null, null );
 					tNode.addChild( tChild );
 					parseTemplate( tChild, chld );
 				}
@@ -319,7 +317,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 	protected static final void validateNode( ITemplateLeaf<? extends IDescriptor> tNode, Node node ) throws DOMException, ParseException, ConceptException{
 		TemplateProperty<?,?,?> tda = null;//new TemplateProperty( tNode.getDescriptor(), node );
 		tda.fill(node.getAttributes() );
-		TemplateAttributeValidator validator = new TemplateAttributeValidator( tda );
+		TemplateAttributeValidator<?> validator = new TemplateAttributeValidator( tda );
 		String result = validator.initValue( node.getTextContent() );
 		if( !Descriptor.isNull( result )){
 			tNode.getDescriptor().set( node.getNodeName(), result );
@@ -345,7 +343,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 			TemplateProperty<?,?,?> ta = null;//new TemplateProperty( target, key, source.get( key ));
 			ta.fill( parser.getDirective(key));
 			//target.addAttribute( ta );
-			TemplateAttributeValidator validator = new TemplateAttributeValidator( ta );
+			TemplateAttributeValidator<?> validator = new TemplateAttributeValidator( ta );
 			String result = validator.initValue( value );
 			if( !Descriptor.isNull( result ))
 				target.set( key,  result);

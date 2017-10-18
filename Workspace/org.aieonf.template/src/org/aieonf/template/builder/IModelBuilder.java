@@ -7,9 +7,9 @@ import org.aieonf.template.ITemplateLeaf;
 
 public interface IModelBuilder<T extends IDescriptor> {
 
-	void addListener(IModelBuilderListener listener);
+	void addListener(IModelBuilderListener<T> listener);
 
-	void removeListener(IModelBuilderListener listener);
+	void removeListener(IModelBuilderListener<T> listener);
 
 	IModelLeaf<T> createModel(
 			ITemplateLeaf<? extends IDescriptor> template);

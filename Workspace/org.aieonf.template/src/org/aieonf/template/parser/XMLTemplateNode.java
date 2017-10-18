@@ -1,4 +1,4 @@
-package org.aieonf.template.xml;
+package org.aieonf.template.parser;
 
 import java.util.List;
 
@@ -12,11 +12,6 @@ import org.w3c.dom.Node;
 
 public class XMLTemplateNode<T extends ITemplateAieon> extends TemplateNode<T>
 {
-	public XMLTemplateNode(T descriptor)
-	{
-		super(descriptor);
-	}
-
 	//This interface defines the relationships with other concepts
 	public static final String ATTRIBUTES = "Attributes";
 	public static final String GROUP = "Group";
@@ -24,6 +19,11 @@ public class XMLTemplateNode<T extends ITemplateAieon> extends TemplateNode<T>
 
 	//Attributes
 	public static final String ID = "id";
+
+	public XMLTemplateNode(T descriptor){
+		super(descriptor);
+	}
+
 
 	public void fill( Node node ){
 		//Add the attributes

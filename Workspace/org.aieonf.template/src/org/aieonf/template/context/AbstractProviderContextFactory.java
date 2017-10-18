@@ -29,13 +29,13 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	
 	private Collection<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>> functions;
 	
-	private IXMLModelInterpreter<IDescriptor,ITemplateLeaf<IDescriptor>> creator;
+	private IXMLModelInterpreter<IDescriptor,IDescriptor> creator;
 
 	protected AbstractProviderContextFactory( String bundle_id, Class<?> clss ) {
 		this( bundle_id, new TemplateInterpreter(clss));
 	}
 	
-	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor,ITemplateLeaf<IDescriptor>> creator ) {
+	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor,IDescriptor> creator ) {
 		this.bundle_id = bundle_id;
 		functions = new ArrayList<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>>();
 		this.creator = creator;

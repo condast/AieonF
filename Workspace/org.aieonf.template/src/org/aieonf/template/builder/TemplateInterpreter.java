@@ -27,11 +27,10 @@ import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.xml.AbstractModelInterpreter;
 import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.TemplateNode;
 import org.aieonf.template.property.ITemplateProperty;
 import org.xml.sax.Attributes;
 
-public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, ITemplateLeaf<IDescriptor>> {
+public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, IDescriptor> {
 
 	public static final String S_WRN_CONCEPT_NOT_FOUND = "No concept has name: ";
 	public static final String S_WRN_DEFAULTING_TO = ". Defaulting to concept instance. ";
@@ -102,14 +101,13 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 	}
 
 	@Override
-	public synchronized ITemplateLeaf<IDescriptor> onCreate( String name, Attributes attributes) {
+	public synchronized IDescriptor onCreate( String name, Attributes attributes) {
 		String str = StringStyler.styleToEnum( name );
 		if( !Concepts.isValid( str ))
 			return null;
 
 		String desc = StringStyler.prettyString( str );
 		IDescriptor descriptor = null;
-		ITemplateLeaf<IDescriptor> leaf = null;
 		
 		String id_name = StringStyler.xmlStyleString( IModelLeaf.Attributes.NAME.toString() );
 		String name_attr = attributes.getValue( id_name );
@@ -169,14 +167,12 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 		}
 		descriptor.set( IDescriptor.Attributes.NAME, desc );
 		descriptor.setVersion(1);
-		leaf = new TemplateNode<IDescriptor>( descriptor );
-		return leaf;
+		return descriptor;
 	}
 
 	@Override
 	public boolean setProperty(String id, Attributes attrs ) {
-		ITemplateLeaf<IDescriptor> leaf = super.getModel();
-		IDescriptor descriptor = leaf.getDescriptor();
+		IDescriptor descriptor = super.getModel();
 		String str = StringStyler.styleToEnum( descriptor.getName() );
 
 		if( !Concepts.isValid( str ))
@@ -239,7 +235,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 		}
 		if( enm != null ){
 			super.setKey( enm.toString() );
-			leaf.addAttributes( enm , ca );			
+			//descriptor.set( enm , ca );			
 		}
 		if( !retval )
 			logger.warning( S_WRN_PROPERTY_NOT_FOUND + id );

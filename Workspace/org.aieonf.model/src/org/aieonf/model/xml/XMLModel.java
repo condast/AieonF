@@ -9,7 +9,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 
-public class XMLModel<T extends IDescriptor> extends Model<T> {
+public class XMLModel<T extends IDescriptor> extends Model<T>{
 
 	private Map<String, String> properties;
 
@@ -35,13 +35,21 @@ public class XMLModel<T extends IDescriptor> extends Model<T> {
 		return properties.get( IDescriptor.Attributes.NAME.name().toLowerCase());
 	}
 
+	protected String getAttribute( String key ) {
+		return this.properties.get(key);
+	}
+
+	protected void addAttribute( String key, String value ) {
+		this.properties.put(key, value);
+	}
+	
 	@Override
 	public void setLeaf(boolean leaf) {
 		super.setLeaf(leaf);
 	}
 
 	@Override
-	protected void init(T descriptor) {
+	public void init(T descriptor) {
 		String str = properties.get( IModelLeaf.Attributes.IDENTIFIER.name()); 
 		if(!StringUtils.isEmpty(str))
 			descriptor.set( IDescriptor.Attributes.ID, str);
