@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Model And Template Tests
+Bundle-SymbolicName: test.aieonf.model
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Condast
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.aieonf.commons.strings,
+ org.aieonf.concept,
+ org.aieonf.concept.context,
+ org.aieonf.concept.core,
+ org.aieonf.concept.domain,
+ org.aieonf.model.builder,
+ org.aieonf.model.core,
+ org.aieonf.model.xml,
+ org.aieonf.template,
+ org.aieonf.template.context,
+ org.condast.commons.test,
+ org.osgi.framework;version="1.8.0"
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: test.aieonf.model.Activator
