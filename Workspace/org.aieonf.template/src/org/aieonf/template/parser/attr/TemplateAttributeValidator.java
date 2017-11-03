@@ -6,20 +6,20 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.template.property.TemplateProperty;
 
-public class TemplateAttributeValidator<T extends Enum<?>> extends AbstractValidator<T, String>
+public class TemplateAttributeValidator<T extends Enum<?>> extends AbstractValidator<T>
 {
 	public static final String S_ERR_REGEX_FAILURE = "The String is not correct: ";
 	public static final String S_ERR_USE_FAILURE_MANDATORY = "The mandatory field is not filled in correctly: ";
 
-	private TemplateProperty<IDescriptor, T,String> attr;
+	private TemplateProperty<IDescriptor, String> attr;
 	
-	public TemplateAttributeValidator( TemplateProperty<IDescriptor, T,String> attr )
+	public TemplateAttributeValidator( TemplateProperty<IDescriptor, String> attr )
 	{
 		super( attr.getKey() );		
 		this.attr = attr;
 	}
 	
-	protected TemplateProperty<IDescriptor, T, String> getAttr() {
+	protected TemplateProperty<IDescriptor, String> getAttr() {
 		return attr;
 	}
 
@@ -61,7 +61,7 @@ public class TemplateAttributeValidator<T extends Enum<?>> extends AbstractValid
 	 * @return
 	 */
 	@Override
-	protected ValidationEvent<T, String> performValidation(String str)
+	protected ValidationEvent<String, T> performValidation(T str)
 	{
 /*
 		if( Descriptor.isNull(str))

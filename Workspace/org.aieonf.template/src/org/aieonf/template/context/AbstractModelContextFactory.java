@@ -14,8 +14,8 @@ import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.search.ModelScanner;
 import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.ITemplateNode;
+import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateNode;
 import org.aieonf.template.xml.XMLTemplateBuilder;
 
 public abstract class AbstractModelContextFactory<C extends IContextAieon> implements IModelContextFactory<C,IDomainAieon> {

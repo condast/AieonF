@@ -4,10 +4,10 @@ import org.aieonf.commons.validation.AbstractValidator;
 import org.aieonf.commons.validation.IValidator;
 import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.template.ITemplate;
+import org.aieonf.template.def.ITemplate;
 import org.aieonf.template.parser.attr.TemplateAttributes;
 
-public class TemplateValidator extends AbstractValidator<String, String> implements IValidator<String,String>
+public class TemplateValidator extends AbstractValidator<String> implements IValidator<String,String>
 {
 	private ITemplate template;
 	

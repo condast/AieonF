@@ -3,11 +3,12 @@ package test.aieonf.model.suite;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.utils.PrintModel;
 import org.aieonf.model.xml.XMLModelBuilder;
-import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.condast.commons.test.AbstractTestSuite;
 
 import test.aieonf.model.context.TestFactory;
@@ -16,6 +17,7 @@ import test.aieonf.model.interpreter.AuthenticationInterpreter;
 public class TestSuite extends AbstractTestSuite {
 
 	public enum Tests{
+		TEST_FACTORY,
 		TEST_MODEL_BUILDER;
 	}
 	private static TestSuite suite = new TestSuite();
@@ -35,6 +37,9 @@ public class TestSuite extends AbstractTestSuite {
 		Tests test = Tests.TEST_MODEL_BUILDER;
 		try{
 			switch( test ){
+			case TEST_FACTORY:
+				testFactory();
+				break;
 			case TEST_MODEL_BUILDER:
 				testModelBuilder();
 				break;
@@ -47,8 +52,15 @@ public class TestSuite extends AbstractTestSuite {
 		}
 		logger.info("Tests completed");
 	}
+
+	private void testFactory() {
+		TestFactory factory = TestFactory.getInstance();
+		ITemplateLeaf<IContextAieon> template = factory.createTemplate();
+		String print = PrintModel.printModel(template, false );
+		logger.info( print );
+	}
 	
-	public void testModelBuilder() {
+	private void testModelBuilder() {
 		TestFactory factory = TestFactory.getInstance();
 		factory.createTemplate();
 		
@@ -59,5 +71,10 @@ public class TestSuite extends AbstractTestSuite {
 		builder.build();
 		Collection<IModelLeaf<IDescriptor>> models = builder.getModel();
 		logger.info("Models found: " + models.size());
+		for( IModelLeaf<IDescriptor> leaf: models ) {
+			String print = PrintModel.printModel(leaf, false );
+			logger.info( print );
+		}
+
 	}
 }

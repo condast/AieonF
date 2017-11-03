@@ -1,4 +1,4 @@
-package org.aieonf.template;
+package org.aieonf.template.def;
 
 public interface ITemplate extends ITemplateNode<ITemplateAieon>
 {

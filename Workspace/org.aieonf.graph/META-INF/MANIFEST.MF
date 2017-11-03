@@ -22,4 +22,5 @@ Import-Package: org.aieonf.commons.graph,
  org.aieonf.template,
  org.aieonf.template.builder,
  org.aieonf.template.context,
- org.aieonf.template.controller
+ org.aieonf.template.controller,
+ org.aieonf.template.def

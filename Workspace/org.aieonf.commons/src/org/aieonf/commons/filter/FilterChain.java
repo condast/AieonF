@@ -156,7 +156,7 @@ public class FilterChain<T> extends AbstractFilter<T>
   {
 	  Collection<T> list = new ArrayList<T>();
 	  try{
-		  list.add(( T )obj );
+		  list.add(obj );
 	  }
 	  catch( ClassCastException ex ){
 		  return false;

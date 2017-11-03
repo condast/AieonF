@@ -1,4 +1,4 @@
-package org.aieonf.template;
+package org.aieonf.template.core;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.model.core.ModelException;
 import org.aieonf.model.persistence.IPersistModel.Persistence;
+import org.aieonf.template.def.ITemplate;
 import org.aieonf.template.factory.ITemplateFactory;
 
 public abstract class AbstractPersistTemplateFactory<T extends ITemplate> implements ITemplateFactory

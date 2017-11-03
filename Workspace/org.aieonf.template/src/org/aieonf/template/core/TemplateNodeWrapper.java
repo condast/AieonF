@@ -1,10 +1,11 @@
-package org.aieonf.template;
+package org.aieonf.template.core;
 
 import java.util.Collection;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelLeaf;
+import org.aieonf.template.def.ITemplateNode;
 
 public class TemplateNodeWrapper<T extends IDescriptor> extends TemplateNode<T> implements
 ITemplateNode<T>

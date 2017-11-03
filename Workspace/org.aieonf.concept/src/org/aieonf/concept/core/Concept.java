@@ -65,7 +65,7 @@ public class Concept extends Descriptor implements IConcept
 	public Concept( String id, String name )
 	{
 		this( name );
-		this.set( IDescriptor.Attributes.ID, id );
+		super.set( IDescriptor.Attributes.ID, id );
 	}
 
 
@@ -86,7 +86,7 @@ public class Concept extends Descriptor implements IConcept
 	 */
 	final void setID( String id )
 	{
-		this.set( IDescriptor.Attributes.ID, id );
+		super.set( IDescriptor.Attributes.ID, id );
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class Concept extends Descriptor implements IConcept
 		name = name.trim();
 		if( this.checkName( name) == false )
 			throw new IllegalArgumentException( S_ERR_INVALID_NAME + ": " + name );
-		this.set( IDescriptor.Attributes.NAME, name );
+		super.set( IDescriptor.Attributes.NAME, name );
 	}
 	
 	@Override
@@ -114,12 +114,12 @@ public class Concept extends Descriptor implements IConcept
 	 */
 	protected void setSource( String source )
 	{
-		this.set( IConcept.Attributes.SOURCE, source );
+		super.set( IConcept.Attributes.SOURCE, source );
 	}
 
 	@Override
 	public String getURIPath() {
-		return this.get( IConcept.Attributes.URI.name() );
+		return super.get( IConcept.Attributes.URI.name() );
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final Scope getScope()
 	{
-		String scopeStr = this.get( IConcept.Attributes.SCOPE );
+		String scopeStr = super.get( IConcept.Attributes.SCOPE );
 		if(( scopeStr == null ) || ( scopeStr == "" ))
 			return Scope.UNKNOWN;
 		return Scope.valueOf( StringStyler.styleToEnum( scopeStr ));
@@ -144,7 +144,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final void setScope( Scope scope )
 	{
-		this.set( IConcept.Attributes.SCOPE, scope.toString());
+		super.set( IConcept.Attributes.SCOPE, scope.toString());
 	}
 
 	/**
@@ -155,10 +155,8 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final boolean isReadOnly()
 	{
-		String readOnly = this.get( IConcept.Attributes.READ_ONLY );
-		if( readOnly == null )
-			return false;
-		return readOnly.toLowerCase().equals( "true" );
+		String readOnly = super.get( IConcept.Attributes.READ_ONLY );
+		return ( readOnly == null )? false: readOnly.toLowerCase().equals( "true" );
 	}
 
 	/**
@@ -169,7 +167,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final void setReadOnly( boolean readonly )
 	{
-		this.set( IConcept.Attributes.READ_ONLY, String.valueOf( readonly ));
+		super.set( IConcept.Attributes.READ_ONLY, String.valueOf( readonly ));
 	}
 
 	/**
@@ -180,10 +178,8 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final boolean isHidden()
 	{
-		String result = this.get( IConcept.Attributes.HIDDEN );
-		if( result == null )
-			return false;
-		return result.toLowerCase().trim().equals( "true" );
+		String result = super.get( IConcept.Attributes.HIDDEN );
+		return  ( result == null )? false: result.toLowerCase().trim().equals( Boolean.TRUE );
 	}
 
 	/**
@@ -194,7 +190,17 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final void setHidden( boolean hidden )
 	{
-		this.set( IConcept.Attributes.HIDDEN, String.valueOf( hidden ));
+		super.set( IConcept.Attributes.HIDDEN, String.valueOf( hidden ));
+	}
+
+	@Override
+	public String get(Enum<?> enm) {
+		return super.getBase().get(enm);
+	}
+
+	@Override
+	public void set(Enum<?> enm, String value) {
+		super.getBase().set(enm, value);
 	}
 
 	/**

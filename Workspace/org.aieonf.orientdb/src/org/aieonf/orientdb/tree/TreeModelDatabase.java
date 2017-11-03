@@ -19,9 +19,9 @@ import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.orientdb.cache.CacheDatabase;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
-import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.builder.TemplateModelBuilderEvent;
+import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateNode;
 
 import com.orientechnologies.common.util.OCallable;
 import com.tinkerpop.blueprints.Edge;

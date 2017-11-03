@@ -1,4 +1,4 @@
-package org.aieonf.template;
+package org.aieonf.template.def;
 
 import java.util.Map;
 
@@ -28,6 +28,8 @@ public interface ITemplateLeaf<T extends IDescriptor> extends IModelLeaf<T>
 	}
 
 	public static final String S_TEMPLATE = "Template";
+
+	public void init(T descriptor);
 
 	public void addAttribute( Enum<?> key, ITemplateProperty.Attributes attr, String value );
 

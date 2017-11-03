@@ -10,9 +10,9 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
-import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.builder.IModelBuilder;
 import org.aieonf.template.context.IModelContextFactory;
+import org.aieonf.template.def.ITemplateLeaf;
 
 public abstract class AbstractModelController<C extends IContextAieon, D extends IDomainAieon, U extends IDescriptor> implements IModelController<U> {
 

@@ -25,6 +25,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	protected ModelLeaf(){
 		this.leaf = true;
+		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
 	
 	/**
@@ -179,7 +180,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public Direction getDirection()
 	{
-		return Direction.valueOf( super.get( IModelLeaf.Attributes.DIRECTION ));
+		return Direction.valueOf( get( IModelLeaf.Attributes.DIRECTION ));
 	}
 
 	/**
@@ -203,7 +204,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public int getDepth()
 	{
-		String str = super.get( IModelLeaf.Attributes.DEPTH);
+		String str = get( IModelLeaf.Attributes.DEPTH);
 		if( Utils.assertNull(str))
 			str = "0";
 		return Integer.parseInt( str );
@@ -215,7 +216,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	*/
 	@Override
 	public void setDepth( int depth ) throws ConceptException{
-		super.set( IModelLeaf.Attributes.DEPTH, String.valueOf( depth ));
+		set( IModelLeaf.Attributes.DEPTH, String.valueOf( depth ));
 	}
 
 	/**

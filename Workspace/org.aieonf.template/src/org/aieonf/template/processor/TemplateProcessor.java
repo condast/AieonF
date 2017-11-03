@@ -7,10 +7,10 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.constraints.IAspect;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelException;
-import org.aieonf.template.ITemplate;
-import org.aieonf.template.ITemplateAieon;
-import org.aieonf.template.ITemplateNode;
-import org.aieonf.template.TemplateNodeWrapper;
+import org.aieonf.template.core.TemplateNodeWrapper;
+import org.aieonf.template.def.ITemplate;
+import org.aieonf.template.def.ITemplateAieon;
+import org.aieonf.template.def.ITemplateNode;
 
 public class TemplateProcessor<T extends ITemplateAieon>
 {

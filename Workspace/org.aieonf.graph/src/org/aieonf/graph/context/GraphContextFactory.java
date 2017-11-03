@@ -3,8 +3,8 @@ package org.aieonf.graph.context;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.context.AbstractModelContextFactory;
+import org.aieonf.template.def.ITemplateLeaf;
 
 
 /**

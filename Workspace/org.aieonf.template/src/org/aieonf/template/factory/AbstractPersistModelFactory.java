@@ -4,7 +4,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelException;
 import org.aieonf.model.persistence.IPersistModelFactory;
-import org.aieonf.template.ITemplate;
+import org.aieonf.template.def.ITemplate;
 
 public abstract class AbstractPersistModelFactory<T extends IModelLeaf<? extends IDescriptor>> implements IPersistModelFactory<T>
 {

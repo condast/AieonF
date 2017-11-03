@@ -18,6 +18,7 @@ public class Utils
 	 * @return
 	 * @deprecated Use assertNull
 	 */
+	@Deprecated
 	public static final boolean isNull( String str ){
 		return (( str == null) || ( str.trim().length() == 0 ));
 	}
@@ -37,6 +38,7 @@ public class Utils
 	 * @return
 	 * @deprecated Use assertNull
 	 */
+	@Deprecated
 	public static boolean isNull( Collection<?> collection ){
 		return (( collection == null ) || ( collection.isEmpty() )); 
 	}
@@ -56,6 +58,7 @@ public class Utils
 	 * @return
 	 * @deprecated Use assertNull
 	 */
+	@Deprecated
 	public static boolean isNull( Object[] collection ){
 		return (( collection == null ) || ( collection.length == 0 )); 
 	}

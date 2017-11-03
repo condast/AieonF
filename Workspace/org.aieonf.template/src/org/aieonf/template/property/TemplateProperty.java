@@ -1,23 +1,23 @@
 package org.aieonf.template.property;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class TemplateProperty<T extends IDescriptor, U extends Enum<?>, V extends Object> extends AbstractTemplateProperty<T, U, ITemplateProperty.Attributes, V> implements Comparable<TemplateProperty<?,?,?>>
+public class TemplateProperty<T extends IDescriptor, V extends Object> extends AbstractTemplateProperty<T, ITemplateProperty.Attributes, V> implements Comparable<TemplateProperty<?,?>>
 {
 	public static final String S_DEFAULT_REGEX = ".+";
 
-	public TemplateProperty( ITemplateLeaf<T> leaf, U key )
+	public TemplateProperty( ITemplateLeaf<T> leaf, String key )
 	{
 		this( leaf, key, null );
 	}
 	
-	public TemplateProperty( ITemplateLeaf<T> leaf, U key, V defaultValue )
+	public TemplateProperty( ITemplateLeaf<T> leaf, String key, V defaultValue )
 	{
 		super( leaf, key, defaultValue );
-		super.setAttribute( ITemplateProperty.Attributes.TYPE, ITemplateProperty.Types.STRING.toString() );
+		super.setAttribute( ITemplateProperty.Attributes.TYPE, ITemplateProperty.Types.STRING.name().toLowerCase() );
 		super.setAttribute( ITemplateProperty.Attributes.USE, ITemplateProperty.Usage.OPTIONAL.toString() );
 		super.setAttribute( ITemplateProperty.Attributes.INIT, ITemplateProperty.Init.FIXED.toString() );
 		super.setAttribute( ITemplateProperty.Attributes.REGEX, S_DEFAULT_REGEX );
@@ -42,8 +42,9 @@ public class TemplateProperty<T extends IDescriptor, U extends Enum<?>, V extend
 		}
 	}
 
+
 	@Override
-	public int compareTo(TemplateProperty<?,?,?> arg0)
+	public int compareTo(TemplateProperty<?,?> arg0)
 	{
 		return this.getKey().toString().compareTo( arg0.getKey().toString());
 	}

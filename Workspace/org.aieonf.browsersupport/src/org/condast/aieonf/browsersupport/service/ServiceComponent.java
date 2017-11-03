@@ -7,7 +7,7 @@ import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.osgi.service.AbstractServiceComponent;
-import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
 
@@ -19,6 +19,7 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 		super( new ContextFactory());
 	}
 
+	@Override
 	public void activate(){
 		try{
 			ITemplateLeaf<IContextAieon> template = super.getFactory().createTemplate();

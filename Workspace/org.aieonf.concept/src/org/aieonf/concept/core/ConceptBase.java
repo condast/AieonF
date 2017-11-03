@@ -215,7 +215,7 @@ public class ConceptBase implements IConceptBase
 	
 	@Override
 	public String toString() {
-		return this.properties.toString().replace(",", ",\n");
+		return this.properties.toString();
 	}
 
 	/**

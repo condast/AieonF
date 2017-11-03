@@ -32,12 +32,12 @@ import org.aieonf.concept.xml.StoreConcept;
 import org.aieonf.model.constraints.IAspect;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelException;
-import org.aieonf.template.ITemplate;
-import org.aieonf.template.ITemplateAieon;
-import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.ITemplateNode;
-import org.aieonf.template.TemplateAieon;
-import org.aieonf.template.TemplateNode;
+import org.aieonf.template.core.TemplateAieon;
+import org.aieonf.template.core.TemplateNode;
+import org.aieonf.template.def.ITemplate;
+import org.aieonf.template.def.ITemplateAieon;
+import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateNode;
 import org.aieonf.template.parser.attr.TemplateAttributeValidator;
 import org.aieonf.template.property.TemplateProperty;
 
@@ -215,7 +215,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 		StoreConcept.createElement( doc, parentNode, parent );
 		if(!( template instanceof ITemplateNode ))
 			return doc;
-		ITemplateNode<? extends IDescriptor> tn = ( ITemplateNode<? extends IDescriptor> )template;
+		ITemplateNode<? extends IDescriptor> tn = (org.aieonf.template.def.ITemplateNode<? extends IDescriptor> )template;
 		if( tn.hasChildren() == false )
 			return doc;
 
@@ -315,7 +315,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 	 */
 	@SuppressWarnings("null")
 	protected static final void validateNode( ITemplateLeaf<? extends IDescriptor> tNode, Node node ) throws DOMException, ParseException, ConceptException{
-		TemplateProperty<?,?,?> tda = null;//new TemplateProperty( tNode.getDescriptor(), node );
+		TemplateProperty<?,?> tda = null;//new TemplateProperty( tNode.getDescriptor(), node );
 		tda.fill(node.getAttributes() );
 		TemplateAttributeValidator<?> validator = new TemplateAttributeValidator( tda );
 		String result = validator.initValue( node.getTextContent() );
@@ -340,7 +340,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 		while( iterator.hasNext() ){
 			key = iterator.next();
 			value = source.get( key );
-			TemplateProperty<?,?,?> ta = null;//new TemplateProperty( target, key, source.get( key ));
+			TemplateProperty<?,?> ta = null;//new TemplateProperty( target, key, source.get( key ));
 			ta.fill( parser.getDirective(key));
 			//target.addAttribute( ta );
 			TemplateAttributeValidator<?> validator = new TemplateAttributeValidator( ta );

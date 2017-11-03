@@ -114,6 +114,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#build()
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public void build() {
 		SAXParserFactory factory = SAXParserFactory.newInstance();

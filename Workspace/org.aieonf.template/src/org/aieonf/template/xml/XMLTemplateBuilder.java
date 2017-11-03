@@ -17,6 +17,7 @@ import org.aieonf.template.xml.XMLTemplateParser;
 public class XMLTemplateBuilder<T extends IDescriptor, M extends IModelLeaf<T>> implements IModelBuilder<IModelLeaf<T>>{
 
 	private XMLModelBuilder<T,M> builder;
+	private boolean completed;
 	/**
 	 * Build the factories from the given resource in the class file and add them to the container
 	 * @param domainId
@@ -26,11 +27,13 @@ public class XMLTemplateBuilder<T extends IDescriptor, M extends IModelLeaf<T>> 
 	 */
 	public XMLTemplateBuilder( String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
 		builder = new XMLModelBuilder<T,M>( new XMLTemplateParser<T,M>( interpreter ), domainId, interpreter );
+		this.completed = false;
 	}
 
 	@Override
 	public void build() {
 		builder.build();
+		this.completed = true;
 	}
 
 	@Override
@@ -40,7 +43,6 @@ public class XMLTemplateBuilder<T extends IDescriptor, M extends IModelLeaf<T>> 
 
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.completed;
 	}
 }

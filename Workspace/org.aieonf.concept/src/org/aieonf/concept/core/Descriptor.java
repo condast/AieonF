@@ -57,6 +57,7 @@ public class Descriptor implements IDescriptor
 	protected Descriptor( IConceptBase base ) {
 		this.base = base;
 		this.setClassName( this.getClass().getName());
+		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class Descriptor implements IDescriptor
 		if( this.checkName( name) == false )
 			throw new IllegalArgumentException( S_ERR_INVALID_NAME + ": " + name );
 
-		setValue( IDescriptor.Attributes.NAME, name );
+		set( IDescriptor.Attributes.NAME, name );
 	}
 
 	/**
@@ -144,7 +145,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getName()
 	{
-		return this.get( IDescriptor.Attributes.NAME );
+		return this.get( IDescriptor.Attributes.NAME.name() );
 	}
 
 	/**
@@ -750,12 +751,12 @@ public class Descriptor implements IDescriptor
 
 	@Override
 	public String get(Enum<?> enm) {
-		return base.get(enm);
+		return base.get(enm.name());
 	}
 
 	@Override
 	public void set( Enum<?> enm, String value) {
-		base.set(enm, value);
+		base.set(enm.name(), value);
 	}
 
 	@Override

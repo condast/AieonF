@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
@@ -23,16 +24,21 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 	private void fill( org.xml.sax.Attributes attributes ){
 		properties = XMLUtils.convertAttributesToProperties(attributes);
 		String name = getName();
-		if(!Utils.assertNull( name ))
+		if(!Utils.assertNull( name )) {
 			properties.put( IModelLeaf.Attributes.IDENTIFIER.name().toLowerCase(), getName());
+		}
+		set( IDescriptor.Attributes.ID, getID());
+		set( IDescriptor.Attributes.NAME, getName());
 	}
 
 	public String getID(){
-		return properties.get( IDescriptor.Attributes.ID.name().toLowerCase());
+		String key = StringStyler.xmlStyleString( IDescriptor.Attributes.ID.name().toLowerCase()); 
+		return properties.get( key);
 	}
 
 	public String getName(){
-		return properties.get( IDescriptor.Attributes.NAME.name().toLowerCase());
+		String key = StringStyler.xmlStyleString( IDescriptor.Attributes.NAME.name().toLowerCase()); 
+		return properties.get( key);
 	}
 
 	protected String getAttribute( String key ) {
@@ -43,11 +49,6 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 		this.properties.put(key, value);
 	}
 	
-	@Override
-	public void setLeaf(boolean leaf) {
-		super.setLeaf(leaf);
-	}
-
 	@Override
 	public void init(T descriptor) {
 		String str = properties.get( IModelLeaf.Attributes.IDENTIFIER.name()); 

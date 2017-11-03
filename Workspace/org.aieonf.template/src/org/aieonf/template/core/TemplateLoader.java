@@ -1,4 +1,4 @@
-package org.aieonf.template;
+package org.aieonf.template.core;
 
 import java.io.File;
 import java.net.MalformedURLException;

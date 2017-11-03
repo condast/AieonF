@@ -10,8 +10,8 @@ import org.aieonf.orientdb.factory.OrientDBFactory;
 import org.aieonf.orientdb.graph.GraphModel;
 import org.aieonf.orientdb.tree.TreeModelDatabase;
 import org.aieonf.osgi.service.AbstractServiceComponent;
-import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.TemplateNodeWrapper;
+import org.aieonf.template.core.TemplateNodeWrapper;
+import org.aieonf.template.def.ITemplateLeaf;
 
 public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IDomainAieon, String, IModelLeaf<IDescriptor>>
 {

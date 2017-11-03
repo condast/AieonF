@@ -1,10 +1,12 @@
-package org.aieonf.template;
+package org.aieonf.template.core;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.locator.ILocatorAieon;
+import org.aieonf.template.def.ITemplateAieon;
+import org.aieonf.template.def.ITemplateLeaf;
 
 public class TemplateAieon extends Descriptor implements ITemplateAieon
 {

@@ -10,7 +10,7 @@ import org.aieonf.commons.validation.IValidationListener;
 import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.parser.attr.TemplateAttributeValidator;
 import org.aieonf.template.property.TemplateProperty;
 
@@ -78,7 +78,7 @@ public class TemplateConceptValidator
 	 */
 	public boolean validateDescriptor( IDescriptor descriptor, Enum<?>[] keys ) throws ParseException{		
 		List<Enum<?>>keyCol = Arrays.asList(keys);
-		Collection<TemplateProperty<?,?,?>> attrs = new ArrayList<TemplateProperty<?,?,?>>();
+		Collection<TemplateProperty<?,?>> attrs = new ArrayList<TemplateProperty<?,?>>();
 		
 		/* 
 		 for( TemplateProperty<?,?,?> tda: leaf.attributes(keys[0])){
@@ -94,7 +94,7 @@ public class TemplateConceptValidator
 		boolean retVal = true;
 		String value = null;
 		ValidationEvent<String, String> event;
-		for( TemplateProperty<?,?,?> tda: attrs ){
+		for( TemplateProperty<?,?> tda: attrs ){
 			tav = new TemplateAttributeValidator( tda );
 			value = descriptor.get( tda.getKey() );
 			if( Descriptor.isNull(value ))

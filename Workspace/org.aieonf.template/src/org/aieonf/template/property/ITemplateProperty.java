@@ -3,7 +3,7 @@ package org.aieonf.template.property;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.core.Descriptor;
 
-public interface ITemplateProperty<T extends Enum<?>, U extends Enum<?>, V extends Object> {
+public interface ITemplateProperty<T extends Object, U extends Object, V extends Object> {
 
 	public enum Attributes{
 		INIT,

@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 
-public abstract class AbstractTemplateProperty<T extends IDescriptor, U extends Enum<?>, V extends Enum<?>, X extends Object> implements ITemplateProperty<U,V, String>{
+public abstract class AbstractTemplateProperty<T extends IDescriptor, V extends Enum<?>, X extends Object> implements ITemplateProperty< String,V, String>{
 
 	private ITemplateLeaf<T> leaf;
-	private U key;
+	private String key;
 	private X defaultValue;
 
 	private Map<V, String> attributes;
 
-	protected AbstractTemplateProperty( ITemplateLeaf<T> leaf, U key, X defaultValue )
+	protected AbstractTemplateProperty( ITemplateLeaf<T> leaf, String key, X defaultValue )
 	{
 		super();
 		this.leaf = leaf;
@@ -24,7 +24,7 @@ public abstract class AbstractTemplateProperty<T extends IDescriptor, U extends 
 	}
 
 	@Override
-	public U getKey() {
+	public String getKey() {
 		return this.key;
 	}
 

@@ -16,9 +16,9 @@ import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.orientdb.core.OrientDBNode;
-import org.aieonf.template.ITemplateLeaf;
-import org.aieonf.template.ITemplateNode;
 import org.aieonf.template.builder.TemplateModelBuilderEvent;
+import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateNode;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;

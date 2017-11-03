@@ -26,7 +26,7 @@ import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.xml.AbstractModelInterpreter;
-import org.aieonf.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.property.ITemplateProperty;
 import org.xml.sax.Attributes;
 
@@ -165,7 +165,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 			}
 			break;
 		}
-		descriptor.set( IDescriptor.Attributes.NAME, desc );
+		descriptor.set( IDescriptor.Attributes.NAME.name(), desc );
 		descriptor.setVersion(1);
 		return descriptor;
 	}

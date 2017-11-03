@@ -111,7 +111,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
 	}
 	
-	protected XMLModel<T> createModel( Attributes attributes ){
+	protected IModelNode<T> createModel( Attributes attributes ){
 		return new XMLModel<T>( attributes );
 	}
 	
@@ -137,7 +137,9 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			case MODEL:
 				index = this.stack.lastElement();
 				this.checkModel(index, qName);
-				this.current = this.createModel(attributes);
+				this.current = (XMLModel<T>) this.createModel(attributes);
+				if( this.parent != null )
+					this.parent.addChild( this.current );
 				this.models.add( (M) this.current);
 				break;
 			case CONTEXT:
@@ -181,9 +183,11 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 		switch( ma ){
 		case MODEL:
 			this.notifyListeners( new ModelBuilderEvent<M>( this, ma, (M) this.current ));
+			break;
+		case CHILDREN:
 			if(( this.parent != null ) &&( this.parent != current )){
-				((IModelNode<IDescriptor>) parent).addChild( current );
 				current = parent;
+				parent = (XMLModel<T>) current.getParent();
 			}
 			break;
 		case CONTEXT:
@@ -230,7 +234,6 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 		print(arg0);
 		super.warning(arg0);
 	}
-
 
 	private MessageFormat message =
 		      new MessageFormat("({0}: {1}, {2}): {3}");

@@ -16,11 +16,14 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.model.builder.IModelBuilderListener.ModelAttributes;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.model.xml.XMLModel;
 import org.aieonf.model.xml.XMLModelParser;
 import org.aieonf.model.xml.XMLUtils;
-import org.aieonf.template.TemplateNode;
+import org.aieonf.template.core.TemplateNode;
+import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateNode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -29,7 +32,7 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	
 
-	private XMLModel<T> root;	
+	private ITemplateNode<T> root;	
 	private XMLApplication application;
 
 	public XMLTemplateParser( IXMLModelInterpreter<IDescriptor, T> creator) {
@@ -50,9 +53,8 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 			throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
 	}
 
-	
 	@Override
-	protected XMLModel<T> createModel(Attributes attributes) {
+	protected IModelNode<T> createModel(Attributes attributes) {
 		this.root = new TemplateNode<T>( attributes );
 		return this.root;
 	}

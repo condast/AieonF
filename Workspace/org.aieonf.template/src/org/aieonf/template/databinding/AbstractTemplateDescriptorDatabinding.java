@@ -71,7 +71,7 @@ public abstract class AbstractTemplateDescriptorDatabinding<T,U extends Object> 
 	 * @param td
 	 * @return
 	 */
-	protected abstract AbstractValidationDatabinding<T,U> getDataBinding(TemplateProperty<?,?,?> ta );
+	protected abstract AbstractValidationDatabinding<T,U> getDataBinding(TemplateProperty<?,?> ta );
 
 	/**
 	 * Create a descriptor from the given template descriptor
@@ -83,7 +83,7 @@ public abstract class AbstractTemplateDescriptorDatabinding<T,U extends Object> 
 	protected void addAttributeValidator( IDescriptor td ){
 		Iterator<String> iterator = td.iterator();
 		String key;
-		TemplateProperty<?,?,?> ta;
+		TemplateProperty<?,?> ta;
 		AbstractValidationDatabinding<T,U> listener;
 		
 		while( iterator.hasNext() ){

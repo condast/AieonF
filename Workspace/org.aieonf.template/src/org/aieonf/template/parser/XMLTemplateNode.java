@@ -5,9 +5,9 @@ import java.util.List;
 import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.ModelException;
-import org.aieonf.template.ITemplateAieon;
-import org.aieonf.template.ITemplateNode;
-import org.aieonf.template.TemplateNode;
+import org.aieonf.template.core.TemplateNode;
+import org.aieonf.template.def.ITemplateAieon;
+import org.aieonf.template.def.ITemplateNode;
 import org.w3c.dom.Node;
 
 public class XMLTemplateNode<T extends ITemplateAieon> extends TemplateNode<T>

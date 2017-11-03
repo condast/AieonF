@@ -12,9 +12,11 @@ Import-Package: org.aieonf.commons.strings,
  org.aieonf.concept.domain,
  org.aieonf.model.builder,
  org.aieonf.model.core,
+ org.aieonf.model.utils,
  org.aieonf.model.xml,
  org.aieonf.template,
  org.aieonf.template.context,
+ org.aieonf.template.def,
  org.condast.commons.test,
  org.osgi.framework;version="1.8.0"
 Bundle-ActivationPolicy: lazy

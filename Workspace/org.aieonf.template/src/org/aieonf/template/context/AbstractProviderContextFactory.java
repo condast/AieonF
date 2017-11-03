@@ -13,9 +13,9 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.template.ITemplateLeaf;
 import org.aieonf.template.builder.TemplateInterpreter;
 import org.aieonf.template.context.AbstractModelContextFactory;
+import org.aieonf.template.def.ITemplateLeaf;
 
 /**
  * The simple context factory creates a default context and model
