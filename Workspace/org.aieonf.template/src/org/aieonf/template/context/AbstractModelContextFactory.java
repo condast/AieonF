@@ -2,6 +2,7 @@ package org.aieonf.template.context;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
@@ -24,6 +25,8 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 
 	private Collection<IModelBuilderListener<IDescribable<?>>> listeners;
 
+	private Logger logger = Logger.getLogger( this.getClass().getName() );
+	
 	protected AbstractModelContextFactory() {
 		listeners = new ArrayList<IModelBuilderListener<IDescribable<?>>>();
 	}
@@ -69,6 +72,7 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
+		logger.info("Parsing model: " + identifier );
 		XMLTemplateBuilder<C,ITemplateLeaf<C>> builder = new XMLTemplateBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );
 		builder.build();
 		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.getModel();

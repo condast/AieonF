@@ -18,7 +18,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	private boolean leaf;
 	private Implies<T,IDescriptor> implies;
 	
-	private IModelLeaf<? extends IDescriptor> parent;
+	private IModelNode<? extends IDescriptor> parent;
 
 	/**
 	 * Only used for special models
@@ -55,7 +55,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 		this.leaf = true;
 	}
 	
-	protected void init( T descriptor ){
+	public void init( T descriptor ){
 		this.descriptor = descriptor;
 		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
 		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
@@ -128,7 +128,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * @return the parent
 	 */
 	@Override
-	public IModelLeaf<? extends IDescriptor> getParent()
+	public IModelNode<? extends IDescriptor> getParent()
 	{
 		return parent;
 	}
@@ -137,7 +137,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * @param parent the parent to set
 	 */
 	@Override
-	public void setParent(IModelLeaf<? extends IDescriptor> parent)
+	public void setParent(IModelNode<? extends IDescriptor> parent)
 	{
 		this.parent = parent;
 	}

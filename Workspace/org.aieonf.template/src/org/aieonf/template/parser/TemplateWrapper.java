@@ -259,7 +259,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	}
 
 	@Override
-	public void setParent(IModelLeaf<? extends IDescriptor> parent)
+	public void setParent(IModelNode<? extends IDescriptor> parent)
 	{
 		this.model.setParent(parent);
 	}
@@ -306,6 +306,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void init(ITemplateAieon descriptor) {
 		this.model.init((T) descriptor);

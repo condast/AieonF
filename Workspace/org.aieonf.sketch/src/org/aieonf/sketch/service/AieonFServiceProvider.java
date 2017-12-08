@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
@@ -32,6 +33,8 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 	private SelectedFactory selected = SelectedFactory.getInstance();
 	
 	private Collection<SketchModelFactory> modelFactories;
+	
+	private final Logger logger = Logger.getLogger( this.getClass().getName() );
 
 	public AieonFServiceProvider() {
 		modelFactories = new ArrayList<SketchModelFactory>();
@@ -60,6 +63,7 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 			selected.setFactory( this.modelFactories.iterator().next());
 		}
 		catch( Exception e ){
+			logger.severe( factory.getDomain().getDomain());
 			e.printStackTrace();
 		}
 	}

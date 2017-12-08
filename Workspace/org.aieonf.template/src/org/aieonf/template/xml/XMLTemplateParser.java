@@ -18,11 +18,9 @@ import org.aieonf.model.builder.IModelBuilderListener.ModelAttributes;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.model.xml.XMLModel;
 import org.aieonf.model.xml.XMLModelParser;
 import org.aieonf.model.xml.XMLUtils;
 import org.aieonf.template.core.TemplateNode;
-import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.def.ITemplateNode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -31,7 +29,6 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	
-
 	private ITemplateNode<T> root;	
 	private XMLApplication application;
 

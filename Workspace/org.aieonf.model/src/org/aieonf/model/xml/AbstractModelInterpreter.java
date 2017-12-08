@@ -96,6 +96,9 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	public synchronized M create( String name, Attributes attributes) {
 		this.model = this.onCreate( name, attributes);
 		this.active = ( this.model != null );
+		if( model == null ) {
+			return null;
+		}
 		return model;
 	}
 

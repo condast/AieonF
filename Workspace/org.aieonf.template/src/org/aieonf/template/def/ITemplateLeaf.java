@@ -29,8 +29,6 @@ public interface ITemplateLeaf<T extends IDescriptor> extends IModelLeaf<T>
 
 	public static final String S_TEMPLATE = "Template";
 
-	public void init(T descriptor);
-
 	public void addAttribute( Enum<?> key, ITemplateProperty.Attributes attr, String value );
 
 	public void addAttributes( Enum<?> key, Map<ITemplateProperty.Attributes, String> attrs );

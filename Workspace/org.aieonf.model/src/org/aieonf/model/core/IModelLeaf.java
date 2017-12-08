@@ -56,6 +56,12 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	}
 
 	/**
+	 * allow for initialisation
+	 * @param descriptor
+	 */
+	public void init(T descriptor);
+
+	/**
 	 * Get the (optional) id of the model. 
 	 * @return
 	 */
@@ -84,13 +90,13 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	 * Get the parent of this leaf, or null if the leaf is a root
 	 * @return
 	 */
-	public IModelLeaf<? extends IDescriptor> getParent();
+	public IModelNode<? extends IDescriptor> getParent();
 
 	/**
 	 * Set the parent
 	 * @param parent
 	 */
-	void setParent( IModelLeaf<? extends IDescriptor> parent );
+	void setParent( IModelNode<? extends IDescriptor> parent );
 
 	/**
 	 * Get the attribute
