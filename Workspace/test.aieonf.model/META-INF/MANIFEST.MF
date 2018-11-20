@@ -17,7 +17,8 @@ Import-Package: org.aieonf.commons.strings,
  org.aieonf.template,
  org.aieonf.template.context,
  org.aieonf.template.def,
- org.condast.commons.test,
+ org.condast.commons.test.core,
  org.osgi.framework;version="1.8.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: test.aieonf.model.Activator
+Automatic-Module-Name: test.aieonf.model

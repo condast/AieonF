@@ -42,3 +42,4 @@ Service-Component: OSGI-INF/aieonf.xml,
  OSGI-INF/view.xml,
  OSGI-INF/domain.xml,
  OSGI-INF/models.xml  
+Automatic-Module-Name: org.aieonf.sketch

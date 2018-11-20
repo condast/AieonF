@@ -48,4 +48,16 @@ public class FunctionComponent extends AbstractExecuteThread
 		suite.runTests( (IModelDatabase<IDomainAieon, IModelLeaf<IDescriptor>>) factory.getFunction( IModelFunctionProvider.S_MODEL_PROVIDER_ID ));
 		super.stop();
 	}
+
+	@Override
+	public int getTimer() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTimer(int timer) {
+		// TODO Auto-generated method stub
+		
+	}
 }

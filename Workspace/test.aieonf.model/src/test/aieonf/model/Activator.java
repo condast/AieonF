@@ -20,7 +20,7 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		try{
 			Activator.context = bundleContext;
-			TestSuite suite = new TestSuite();
+			TestSuite suite = TestSuite.getInstance();
 			try{
 				suite.runTests();
 			}

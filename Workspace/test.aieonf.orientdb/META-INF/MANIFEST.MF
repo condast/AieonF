@@ -32,7 +32,7 @@ Import-Package: org.aieonf.commons,
  org.aieonf.template.context,
  org.aieonf.template.def,
  org.condast.commons.service,
- org.condast.commons.test,
+ org.condast.commons.test.core,
  org.condast.commons.thread,
  org.osgi.framework;version="1.3.0",
  org.osgi.service.component.annotations;version="1.2.0"
@@ -40,3 +40,4 @@ ationPolicy: lazy
 Service-Component: OSGI-INF/models.xml,
  OSGI-INF/test.aieonf.orientdb.service.LoginProvider.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: test.aieonf.orientdb

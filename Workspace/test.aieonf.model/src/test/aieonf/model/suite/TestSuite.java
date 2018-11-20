@@ -9,18 +9,25 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.utils.PrintModel;
 import org.aieonf.model.xml.XMLModelBuilder;
 import org.aieonf.template.def.ITemplateLeaf;
-import org.condast.commons.test.AbstractTestSuite;
+import org.condast.commons.test.core.AbstractTestSuite;
+import org.condast.commons.test.core.ITestEvent;
+import org.xml.sax.Attributes;
 
 import test.aieonf.model.context.TestFactory;
 import test.aieonf.model.interpreter.AuthenticationInterpreter;
 
 public class TestSuite extends AbstractTestSuite {
 
+	protected TestSuite(String id, Attributes attrs) {
+		super(id, attrs);
+		// TODO Auto-generated constructor stub
+	}
+
 	public enum Tests{
 		TEST_FACTORY,
 		TEST_MODEL_BUILDER;
 	}
-	private static TestSuite suite = new TestSuite();
+	private static TestSuite suite = new TestSuite(null, null);
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 	
@@ -76,5 +83,17 @@ public class TestSuite extends AbstractTestSuite {
 			logger.info( print );
 		}
 
+	}
+
+	@Override
+	protected void onPrepare(ITestEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onPerform(ITestEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }

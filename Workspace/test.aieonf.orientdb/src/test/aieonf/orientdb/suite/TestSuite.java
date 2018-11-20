@@ -13,12 +13,19 @@ import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
-import org.condast.commons.test.AbstractTestSuite;
+import org.condast.commons.test.core.AbstractTestSuite;
+import org.condast.commons.test.core.ITestEvent;
+import org.xml.sax.Attributes;
 
 import test.aieonf.orientdb.context.TestFactory;
 import test.aieonf.orientdb.service.LoginDispatcher;
 
 public class TestSuite extends AbstractTestSuite {
+
+	protected TestSuite(String id, Attributes attrs) {
+		super(id, attrs);
+		// TODO Auto-generated constructor stub
+	}
 
 	public enum Tests{
 		TEST_OPEN_AND_CLOSE,
@@ -26,7 +33,7 @@ public class TestSuite extends AbstractTestSuite {
 		TEST_REGISTER,
 		TEST_MODEL_BUILDER;
 	}
-	private static TestSuite suite = new TestSuite();
+	private static TestSuite suite = new TestSuite( null, null);
 	
 	private static IModelDatabase<IDomainAieon,IModelLeaf<IDescriptor>> database;
 	
@@ -119,5 +126,17 @@ public class TestSuite extends AbstractTestSuite {
 	public void testModelBuilder() {
 		TestFactory factory = TestFactory.getInstance();
 		factory.createTemplate();
+	}
+
+	@Override
+	protected void onPrepare(ITestEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onPerform(ITestEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 }
