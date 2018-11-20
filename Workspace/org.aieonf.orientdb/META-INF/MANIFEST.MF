@@ -55,3 +55,4 @@ Import-Package: com.orientechnologies.common.util;version="2.2.19",
 Bundle-Activator: org.aieonf.orientdb.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
+Automatic-Module-Name: org.aieonf.orientdb

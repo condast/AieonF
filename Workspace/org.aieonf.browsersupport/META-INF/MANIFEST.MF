@@ -49,3 +49,4 @@ Bundle-ClassPath: lib/htmlparser.jar,
  lib/jackson-databind-2.3.5-20140808.063113-2.jar,
  lib/sqlite-jdbc-3.16.1.jar
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: org.aieonf.browsersupport

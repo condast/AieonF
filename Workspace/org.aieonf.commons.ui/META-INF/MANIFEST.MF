@@ -9,8 +9,6 @@ Import-Package: org.aieonf.commons,
  org.aieonf.commons.i8n,
  org.aieonf.commons.strings,
  org.aieonf.commons.ui.swt,
- org.condast.commons,
- org.condast.commons.strings,
  org.eclipse.swt,
  org.eclipse.swt.events,
  org.eclipse.swt.graphics,
@@ -18,3 +16,4 @@ Import-Package: org.aieonf.commons,
 Export-Package: org.aieonf.commons.ui.language,
  org.aieonf.commons.ui.swt,
  org.aieonf.commons.ui.verification
+Automatic-Module-Name: org.aieonf.commons.ui

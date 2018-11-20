@@ -1,8 +1,9 @@
 package org.aieonf.commons.ui.verification;
 
 import java.util.regex.Pattern;
-import org.condast.commons.Utils;
-import org.condast.commons.strings.StringStyler;
+
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
