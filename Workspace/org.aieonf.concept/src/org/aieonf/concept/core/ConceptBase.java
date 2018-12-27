@@ -215,7 +215,12 @@ public class ConceptBase implements IConceptBase
 	
 	@Override
 	public String toString() {
-		return this.properties.toString();
+		Set<Map.Entry<String, String>> set = this.properties.entrySet();
+		StringBuffer buffer = new StringBuffer();
+		for( Map.Entry<String, String> entry: set) {
+			buffer.append( entry.getKey() + ", " + entry.getValue() + "\n");
+		}
+		return buffer.toString();
 	}
 
 	/**

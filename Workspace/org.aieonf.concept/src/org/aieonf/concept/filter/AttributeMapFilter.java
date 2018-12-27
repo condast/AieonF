@@ -114,17 +114,17 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
   protected AttributeFilter.Rules translateRule()
   {
     if( this.getRule().equals( AttributeMapFilter.Rules.ContainsAll.name() ))
-      return( AttributeFilter.Rules.Contains );
+      return( AttributeFilter.Rules.CONTAINS );
     if( this.getRule().equals( AttributeMapFilter.Rules.ContainsNone.name() ))
-      return( AttributeFilter.Rules.ContainsNot );
+      return( AttributeFilter.Rules.CONTAINS_NOT );
     if( this.getRule().equals( AttributeMapFilter.Rules.EqualsAll.name() ))
-      return( AttributeFilter.Rules.Equals );
+      return( AttributeFilter.Rules.EQUALS );
     if( this.getRule().equals( AttributeMapFilter.Rules.EqualsNone.name() ))
-      return( AttributeFilter.Rules.EqualsNot );
+      return( AttributeFilter.Rules.EQUALS_NOT );
     if( this.getRule().equals( AttributeMapFilter.Rules.WildcardAnd.name() ))
-      return( AttributeFilter.Rules.Wildcard );
+      return( AttributeFilter.Rules.WILDCARD );
     if( this.getRule().equals( AttributeMapFilter.Rules.WildcardOr.name() ))
-      return( AttributeFilter.Rules.Wildcard );
+      return( AttributeFilter.Rules.WILDCARD );
     return null;
   }
 

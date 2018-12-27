@@ -14,5 +14,4 @@ public class DomainComponent implements IActiveDomainManager {
 	public void notifyActiveDomainChanged(DomainEvent event) {
 		service.notifyActiveDomainChanged(event);
 	}
-
 }

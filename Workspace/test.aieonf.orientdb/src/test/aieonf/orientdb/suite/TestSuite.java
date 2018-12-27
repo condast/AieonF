@@ -103,7 +103,7 @@ public class TestSuite extends AbstractTestSuite {
 			database.open( factory.getDomain());
 			IModelLeaf<IDescriptor> model = new Model<IDescriptor>( factory.getDomain(), "TEST");
 			database.add(model);
-			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME, "*"));
+			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "*"));
 			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );

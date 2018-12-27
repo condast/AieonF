@@ -11,6 +11,10 @@
  *******************************************************************************/
 package  org.aieonf.commons.strings;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -180,8 +184,32 @@ public final class StringUtils {
 		return split;
 	}
 	
-	
-	
-	
+	public static String readInput( InputStream in ){
+		StringBuffer buffer = new StringBuffer();
+		Scanner scanner = new Scanner( in );
+		try{
+			while( scanner.hasNextLine() )
+				buffer.append( scanner.nextLine() );
+		}
+		finally{
+			scanner.close();
+		}
+		return buffer.toString();
+	}
 
+	public static String getContent( File file ) {
+		StringBuffer buffer = new StringBuffer();
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(file );
+			while( scanner.hasNextLine())
+				buffer.append(scanner.nextLine());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		finally {
+			scanner.close();
+		}
+		return buffer.toString();
+	}	
 }

@@ -145,9 +145,9 @@ public class DatabaseController<M extends IDescribable<IDescriptor>> extends Abs
 	{
 		if( Descriptor.isNull( wildcard ))
 			wildcard = WildcardFilter.S_ALL;
-		AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.Wildcard, 
+		AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
 				CategoryAieon.Attributes.CATEGORY, wildcard );
-		AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.Wildcard, 
+		AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
 				IDescriptor.Attributes.DESCRIPTION, wildcard );
 		HierarchicalModelAttributeFilter<IDescriptor> filter = new HierarchicalModelAttributeFilter<IDescriptor>( categoryFilter, urlFilter );
 		/*

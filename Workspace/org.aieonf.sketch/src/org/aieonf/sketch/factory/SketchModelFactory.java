@@ -24,6 +24,10 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IContextA
 		this.root = root;
 	}
 
+	public File getRoot() {
+		return root;
+	}
+
 	public String getWebPath( String location ) throws MalformedURLException{
 		Path path = Paths.get( root.getAbsolutePath(), S_WEB + location );
 		return path.toUri().toString();
