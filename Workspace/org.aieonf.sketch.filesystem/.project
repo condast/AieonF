@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>org.aieonf.sketch.filesystem</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>sketch</name>
+			<type>2</type>
+			<location>C:/Users/Condast/saight/sketch</location>
+		</link>
+	</linkedResources>
+	<variableList>
+		<variable>
+			<name>Sketch</name>
+			<value>file:/C:/Users/Condast/saight</value>
+		</variable>
+	</variableList>
+</projectDescription>

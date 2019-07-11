@@ -1,5 +1,6 @@
 package org.aieonf.template.builder;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +26,9 @@ import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.template.ITemplateLeaf;
+import org.aieonf.model.template.property.ITemplateProperty;
 import org.aieonf.model.xml.AbstractModelInterpreter;
-import org.aieonf.template.def.ITemplateLeaf;
-import org.aieonf.template.property.ITemplateProperty;
 import org.xml.sax.Attributes;
 
 public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, IDescriptor> {
@@ -81,7 +82,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 		super( ITemplateLeaf.S_TEMPLATE, clss, location );
 	}
 
-	public TemplateInterpreter( Class<?> clss, URL url ) {
+	public TemplateInterpreter( Class<?> clss, URL url ) throws IOException {
 		super( ITemplateLeaf.S_TEMPLATE, url );
 		this.clss = clss;
 	}

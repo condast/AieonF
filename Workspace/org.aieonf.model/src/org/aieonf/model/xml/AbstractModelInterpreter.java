@@ -1,5 +1,7 @@
 package org.aieonf.model.xml;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,16 +19,20 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	private String identifier;
 	private M model;
 	private String key;
-	private URL url;
+	private InputStream in;
 	
 	private Collection<IModelBuilderListener<T>> listeners;
 
-	protected AbstractModelInterpreter( String identifier, Class<?> clss, String resourceLocation) {
-		this( identifier, clss.getResource( resourceLocation ));
+	protected AbstractModelInterpreter( String identifier, Class<?> clss, String resourceLocation){
+		this( identifier, clss.getResourceAsStream( resourceLocation ));
 	}
 
-	protected AbstractModelInterpreter( String identifier, URL url ) {
-		this.url = url;
+	protected AbstractModelInterpreter( String identifier, URL url ) throws IOException {
+		this( identifier, url.openStream());
+	}
+	
+	protected AbstractModelInterpreter( String identifier, InputStream in ) {
+		this.in = in;
 		this.identifier = identifier;
 		this.listeners = new ArrayList<IModelBuilderListener<T>>();
 	}
@@ -54,8 +60,8 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	}
 	
 	@Override
-	public URL getURL() {
-		return url;
+	public InputStream getInputStream() {
+		return in;
 	}
 	
 	@Override
@@ -85,7 +91,7 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	}
 
 	/**
-	 * Create a descriptor from the given nae and attributes.
+	 * Create a descriptor from the given name and attributes.
 	 * @param name
 	 * @param attributes
 	 * @return

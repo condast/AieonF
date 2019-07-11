@@ -6,8 +6,8 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.osgi.service.AbstractServiceComponent;
-import org.aieonf.template.def.ITemplateLeaf;
 import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
 

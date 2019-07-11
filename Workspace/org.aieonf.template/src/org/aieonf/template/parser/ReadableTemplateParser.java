@@ -32,12 +32,12 @@ import org.aieonf.concept.xml.StoreConcept;
 import org.aieonf.model.constraints.IAspect;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelException;
+import org.aieonf.model.template.ITemplateAieon;
+import org.aieonf.model.template.ITemplateLeaf;
+import org.aieonf.model.template.ITemplateNode;
+import org.aieonf.template.core.ITemplate;
 import org.aieonf.template.core.TemplateAieon;
 import org.aieonf.template.core.TemplateNode;
-import org.aieonf.template.def.ITemplate;
-import org.aieonf.template.def.ITemplateAieon;
-import org.aieonf.template.def.ITemplateLeaf;
-import org.aieonf.template.def.ITemplateNode;
 import org.aieonf.template.parser.attr.TemplateAttributeValidator;
 import org.aieonf.template.property.TemplateProperty;
 
@@ -215,7 +215,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 		StoreConcept.createElement( doc, parentNode, parent );
 		if(!( template instanceof ITemplateNode ))
 			return doc;
-		ITemplateNode<? extends IDescriptor> tn = (org.aieonf.template.def.ITemplateNode<? extends IDescriptor> )template;
+		ITemplateNode<? extends IDescriptor> tn = (org.aieonf.model.template.ITemplateNode<? extends IDescriptor> )template;
 		if( tn.hasChildren() == false )
 			return doc;
 

@@ -10,7 +10,6 @@ package org.aieonf.orientdb;
 
 import java.io.File;
 import java.net.URI;
-
 import org.aieonf.concept.Universe;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.concept.context.IContextAieon;

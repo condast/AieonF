@@ -13,7 +13,8 @@ public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 		USER_NAME,
 		PASSWORD,
 		CONFIRMATION,
-		REGISTER;
+		REGISTER,
+		EMAIL;
 		
 		@Override
 		public String toString() {
@@ -70,6 +71,20 @@ public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 	 * @param password String
 	 */
 	public abstract void setConfirmation(String password);
+
+	/**
+	 * Get the email of the concept
+	 *
+	 * @return String
+	 */
+	public abstract String getEmail();
+
+	/**
+	 * Set the email
+	 *
+	 * @param password String
+	 */
+	public abstract void setEmail(String email);
 
 	/**
 	 * If true, the loaded collection is registering

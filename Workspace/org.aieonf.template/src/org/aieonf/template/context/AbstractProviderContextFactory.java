@@ -12,22 +12,22 @@ import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.template.builder.TemplateInterpreter;
 import org.aieonf.template.context.AbstractModelContextFactory;
-import org.aieonf.template.def.ITemplateLeaf;
 
 /**
  * The simple context factory creates a default context and model
  * @author Kees Pieters
  */
-public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable<IDescriptor>> 
-extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDomainAieon, String, U>
+public abstract class AbstractProviderContextFactory<C extends IContextAieon, M extends IDescribable<IDescriptor>> 
+extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDomainAieon, String, M>
 {
 	private static final String S_MODEL = "Model";
 	private String bundle_id;
 	
-	private Collection<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>> functions;
+	private Collection<IFunctionProvider<String, IModelProvider<IDomainAieon, M>>> functions;
 	
 	private IXMLModelInterpreter<IDescriptor,IDescriptor> creator;
 
@@ -37,7 +37,7 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	
 	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor,IDescriptor> creator ) {
 		this.bundle_id = bundle_id;
-		functions = new ArrayList<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>>();
+		functions = new ArrayList<IFunctionProvider<String, IModelProvider<IDomainAieon, M>>>();
 		this.creator = creator;
 	}
 
@@ -52,7 +52,7 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	public boolean hasFunction( String name ){
 		if( Utils.assertNull( name ))
 			return false;
-		for( IFunctionProvider<String, IModelProvider<IDomainAieon, U>> function: functions ){
+		for( IFunctionProvider<String, IModelProvider<IDomainAieon, M>> function: functions ){
 			if( function.canProvide( name ))
 				return true;
 		}
@@ -60,8 +60,8 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	}
 	
 	@Override
-	public IModelProvider<IDomainAieon, U> getFunction( String name ) {
-		for( IFunctionProvider<String, IModelProvider<IDomainAieon, U>> function: functions ){
+	public IModelProvider<IDomainAieon, M> getFunction( String name ) {
+		for( IFunctionProvider<String, IModelProvider<IDomainAieon, M>> function: functions ){
 			if( function.canProvide( name ))
 				return function.getFunction(name);
 		}
@@ -69,7 +69,7 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	}
 
 	@Override
-	public void addProvider(IFunctionProvider<String, IModelProvider<IDomainAieon, U>> function) {
+	public void addProvider(IFunctionProvider<String, IModelProvider<IDomainAieon, M>> function) {
 		IDomainAieon domain = super.getDomain();
 		if( function.supportsDomain( domain )){
 			this.functions.add( function );
@@ -80,7 +80,7 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	 * @see org.aieonf.template.context.IProviderContextFactory#removeProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
 	@Override
-	public void removeProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, U>> function ){
+	public void removeProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, M>> function ){
 		this.functions.remove( function );
 	}
 	

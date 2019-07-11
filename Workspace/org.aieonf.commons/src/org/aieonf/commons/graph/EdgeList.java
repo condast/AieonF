@@ -638,8 +638,16 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized boolean removeAll( Collection<Edge<T,U>> edgeCollection )
   {
-    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = edgeList.entrySet();
-    return edgeSet.removeAll( edgeCollection );
+    Collection<U> remove = new ArrayList<>();
+	Iterator<Map.Entry<U, IEdge<T,U>>> iterator = edgeList.entrySet().iterator();
+    while(  iterator.hasNext()) {
+    	Map.Entry<U, IEdge<T,U>> entry = iterator.next();
+    	if( edgeCollection.contains( entry.getValue()))
+    		remove.add(entry.getKey());
+    }
+    for( U rem: remove )
+    	edgeList.remove(rem);
+    return !remove.isEmpty();
   }
 
   /**
@@ -650,8 +658,16 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized boolean retainAll( Collection<Edge<T,U>> edgeCollection )
   {
-    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = edgeList.entrySet();
-    return edgeSet.retainAll( edgeCollection );
+	    Collection<U> remove = new ArrayList<>();
+		Iterator<Map.Entry<U, IEdge<T,U>>> iterator = edgeList.entrySet().iterator();
+	    while(  iterator.hasNext()) {
+	    	Map.Entry<U, IEdge<T,U>> entry = iterator.next();
+	    	if( !edgeCollection.contains( entry.getValue()))
+	    		remove.add(entry.getKey());
+	    }
+	    for( U rem: remove )
+	    	edgeList.remove(rem);
+	    return !remove.isEmpty();
   }
 
   /**

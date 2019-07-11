@@ -13,7 +13,7 @@ import org.aieonf.concept.implicit.Implies;
 
 public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IModelLeaf<T>
 {	
-	//The concept that is modelled
+	//The concept that is modeled
 	private T descriptor;
 	private boolean leaf;
 	private Implies<T,IDescriptor> implies;
@@ -55,13 +55,6 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 		this.leaf = true;
 	}
 	
-	public void init( T descriptor ){
-		this.descriptor = descriptor;
-		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
-		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
-		this.set( IDescriptor.Attributes.VERSION, String.valueOf( descriptor.getVersion() ));		
-	}
-
 	/**
 	 * Create the model
 	 * @param concept
@@ -69,6 +62,13 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	public ModelLeaf( T descriptor, String type, Implies<T,IDescriptor> implies ){
 		this( descriptor, implies );
 		this.set( Attributes.TYPE, type );
+	}
+
+	public void init( T descriptor ){
+		this.descriptor = descriptor;
+		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
+		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
+		this.set( IDescriptor.Attributes.VERSION, String.valueOf( descriptor.getVersion() ));		
 	}
 
 	/**

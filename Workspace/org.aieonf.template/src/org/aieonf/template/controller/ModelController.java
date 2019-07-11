@@ -15,11 +15,11 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelException;
+import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.model.xml.StoreModel;
 import org.aieonf.template.builder.ITemplateModelBuilder;
+import org.aieonf.template.core.ITemplate;
 import org.aieonf.template.databinding.TemplateConceptValidator;
-import org.aieonf.template.def.ITemplate;
-import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.factory.ITemplateFactory;
 import org.aieonf.template.parser.ReadableTemplateParser;
 

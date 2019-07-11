@@ -5,7 +5,7 @@ import java.util.TreeSet;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.template.def.ITemplateNode;
+import org.aieonf.model.template.ITemplateNode;
 
 public class TemplateNode<T extends IDescriptor>
 		extends TemplateLeaf<T> implements ITemplateNode<T>
@@ -54,7 +54,7 @@ public class TemplateNode<T extends IDescriptor>
 			return true;
 
 		ITemplateNode<? extends IDescriptor> md = 
-			(org.aieonf.template.def.ITemplateNode<? extends IDescriptor> )model;
+			(org.aieonf.model.template.ITemplateNode<? extends IDescriptor> )model;
 		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren();		
 		for( IModelLeaf<? extends IDescriptor> child: children )
 			if( contains( store, child, descr ))

@@ -40,6 +40,11 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	  super.getDescriptor().set( IDescriptor.Attributes.CLASS, this.getClass().getName() );
 	}
 
+	
+	public DomainAieon(IDescriptor descriptor ) {
+		super(descriptor, IDomainAieon.Attributes.DOMAIN.toString());
+	}
+
 	/**
 	 * Get the short name for this domain
 	 */

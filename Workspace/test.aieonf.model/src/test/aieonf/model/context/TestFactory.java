@@ -9,8 +9,8 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.ModelLeaf;
+import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.template.context.AbstractProviderContextFactory;
-import org.aieonf.template.def.ITemplateLeaf;
 
 /**
  * The application configurator is defined by an

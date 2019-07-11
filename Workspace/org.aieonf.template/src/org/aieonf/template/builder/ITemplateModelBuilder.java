@@ -6,9 +6,9 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.template.ITemplateLeaf;
+import org.aieonf.template.core.ITemplate;
 import org.aieonf.template.databinding.TemplateConceptValidator;
-import org.aieonf.template.def.ITemplate;
-import org.aieonf.template.def.ITemplateLeaf;
 
 public interface ITemplateModelBuilder extends IParserListener<ITemplateLeaf<? extends IDescriptor>>
 {

@@ -1,7 +1,7 @@
 package org.aieonf.template.processor;
 
 import org.aieonf.model.core.ModelException;
-import org.aieonf.template.def.ITemplate;
+import org.aieonf.template.core.ITemplate;
 
 public interface ITemplateFactory<T extends ITemplate>
 {

@@ -42,31 +42,31 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 	
 	private Stack<ModelAttributes> stack;
 	
-	private IXMLModelInterpreter<? extends IDescriptor,T> interpreter;	
+	private IXMLModelInterpreter<T,M> interpreter;	
 	private Collection<IModelBuilderListener<M>> listeners;
 
 	private Logger logger = Logger.getLogger( XMLModelParser.class.getName() );
 
-	public XMLModelParser( IXMLModelInterpreter<? extends IDescriptor,T> interpreter) {
+	public XMLModelParser( IXMLModelInterpreter<T,M> interpreter) {
 		this.stack = new Stack<ModelAttributes>();
 		this.interpreter = interpreter;
 		this.models = new ArrayList<M>();
 		listeners = new ArrayList<IModelBuilderListener<M>>();
 	}
 	
-	protected synchronized Stack<ModelAttributes> getStack() {
+	protected Stack<ModelAttributes> getStack() {
 		return stack;
 	}
 
-	protected synchronized IXMLModelInterpreter<? extends IDescriptor, T> getCreator() {
+	public IXMLModelInterpreter<T,M> getCreator() {
 		return interpreter;
 	}
 
-	protected synchronized void setCurrent(XMLModel<T> current) {
+	protected void setCurrent(XMLModel<T> current) {
 		this.current = current;
 	}
 
-	protected synchronized IModelLeaf<T> getCurrent() {
+	protected IModelLeaf<T> getCurrent() {
 		return current;
 	}
 
@@ -162,7 +162,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			switch( index ){
 			case MODEL:
 				ma = ModelAttributes.DESCRIPTOR;
-				this.current.init( interpreter.create( qName, attributes));
+				this.current.init( interpreter.create( qName, attributes).getDescriptor());
 				break;
 			case CONTEXT:
 			case DESCRIPTOR:

@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.model.utils.PrintModel;
 import org.aieonf.model.xml.XMLModelBuilder;
-import org.aieonf.template.def.ITemplateLeaf;
 import org.condast.commons.test.core.AbstractTestSuite;
 import org.condast.commons.test.core.ITestEvent;
 import org.xml.sax.Attributes;
@@ -74,7 +74,7 @@ public class TestSuite extends AbstractTestSuite {
 		AuthenticationInterpreter interpreter = new AuthenticationInterpreter(factory.getDomain());
 		
 		XMLModelBuilder<IDescriptor,IModelLeaf<IDescriptor>> builder = 
-				new XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>>( factory.getDomain().getDomain(), interpreter );
+				new XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>>( factory.getDomain().getDomain(), null /*interpreter*/ );
 		builder.build();
 		Collection<IModelLeaf<IDescriptor>> models = builder.getModel();
 		logger.info("Models found: " + models.size());

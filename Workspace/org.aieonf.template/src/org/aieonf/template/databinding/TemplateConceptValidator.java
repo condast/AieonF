@@ -10,7 +10,7 @@ import org.aieonf.commons.validation.IValidationListener;
 import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.template.parser.attr.TemplateAttributeValidator;
 import org.aieonf.template.property.TemplateProperty;
 

@@ -12,7 +12,7 @@ import org.aieonf.commons.validation.IValidator;
 import org.aieonf.commons.validation.ValidationEvent;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.template.def.ITemplateNode;
+import org.aieonf.model.template.ITemplateNode;
 
 public class TemplateNodeValidator<T extends IDescriptor> implements IValidationListener<String, String>
 {

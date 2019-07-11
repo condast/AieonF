@@ -1,7 +1,7 @@
 package org.aieonf.template.core;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.template.def.ITemplateNode;
+import org.aieonf.model.template.ITemplateNode;
 
 /**
  * Create a template from the given template aieon

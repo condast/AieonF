@@ -183,6 +183,10 @@ public final class StringUtils {
 		
 		return split;
 	}
+
+	public static String readInput( Class<?> clss, String path ){
+		return readInput(clss.getResourceAsStream(path));
+	}
 	
 	public static String readInput( InputStream in ){
 		StringBuffer buffer = new StringBuffer();

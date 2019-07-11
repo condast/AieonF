@@ -3,8 +3,6 @@ package test.aieonf.orientdb;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import test.aieonf.orientdb.service.FunctionComponent;
-
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
@@ -20,8 +18,8 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		try{
 			Activator.context = bundleContext;
-			FunctionComponent fc = new FunctionComponent();
-			fc.start();
+			//FunctionComponent fc = new FunctionComponent();
+			//fc.start();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

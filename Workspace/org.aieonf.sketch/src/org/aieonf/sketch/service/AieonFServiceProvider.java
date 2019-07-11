@@ -1,6 +1,7 @@
 package org.aieonf.sketch.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
@@ -84,6 +85,8 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 			try {
 				factory.addSketchModelFactory( new SketchModelFactory( child ));
 			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
