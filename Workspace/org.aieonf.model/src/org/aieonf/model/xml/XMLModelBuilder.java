@@ -38,6 +38,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	protected static final String JP2P_XSD_SCHEMA = "http://www.condast.com/saight/saight-schema.xsd";
 
 	private static final String S_ERR_NO_SCHEMA_FOUND = "The XML Schema was not found";
+	private static final String S_ERR_NO_TEMPLATE_FOUND = "The template is not found: ";
 	private static final String S_WRN_NOT_NAMESPACE_AWARE = "The parser is not validating or is not namespace aware";
 	
 	static final String S_DOCUMENT_ROOT = "DOCUMENT_ROOT";
@@ -48,7 +49,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	private boolean completed, failed;
 	
 	private String domainId;
-	private IXMLModelInterpreter<T,M> interpreter;
+	private IXMLModelInterpreter<IDescriptor, T> interpreter;
 
 	private Collection<IModelBuilderListener<M>> listeners;
 	
@@ -66,7 +67,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLModelBuilder( String domainId, IXMLModelInterpreter<T,M> interpreter ) {
+	public XMLModelBuilder( String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
 		this( new XMLModelParser<T,M>(interpreter), domainId, interpreter );
 	}
 	
@@ -77,9 +78,9 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLModelBuilder( IModelParser<T,M> parser, String domainId, IXMLModelInterpreter<T, M> interpreter ) {
+	public XMLModelBuilder( XMLModelParser<T,M> parser, String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
 		this.domainId = domainId;
-		this.parser = (XMLModelParser<T, M>) parser;
+		this.parser = parser;
 		this.interpreter = interpreter;
 		this.completed = false;
 		this.failed = false;
@@ -99,8 +100,15 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @return
 	 */
 	public boolean canCreate(){
-		InputStream inp= this.interpreter.getInputStream();
-		return (inp != null);
+		URL url = this.interpreter.getURL();
+		if( url == null )
+			return false;
+		try {
+			return ( url.openConnection().getContentLengthLong() > 0 );
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -119,7 +127,14 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 
 		// note that if your XML already declares the XSD to which it has to conform, then there's no need to create a validator from a Schema object
 		Source schemaFile = new StreamSource( this.interpreter.getClass().getResourceAsStream( IModelBuilder.S_SCHEMA_LOCATION ));
-		InputStream in = this.interpreter.getInputStream();
+		InputStream in = null;
+		URL url = this.interpreter.getURL();
+		try {
+			in = url.openStream();
+		} catch (Exception e1) {
+			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.interpreter.getURL() + "\n");
+			e1.printStackTrace();
+		}
 		
 		try {
 			logger.info("Parsing SAIGHT Bundle: " + this.domainId + "\n");

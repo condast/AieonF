@@ -35,4 +35,3 @@ Import-Package: org.aieonf.commons,
  org.aieonf.commons.strings,
  org.aieonf.commons.tree,
  org.aieonf.commons.xml
-Automatic-Module-Name: org.aieonf.concept

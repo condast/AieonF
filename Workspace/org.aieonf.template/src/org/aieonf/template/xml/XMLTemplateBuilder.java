@@ -7,18 +7,17 @@
  *******************************************************************************/
 package org.aieonf.template.xml;
 
-import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilder;
-import org.aieonf.model.template.ITemplateLeaf;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.model.xml.XMLModelBuilder;
 import org.aieonf.template.xml.XMLTemplateParser;
 
-public class XMLTemplateBuilder<C extends IContextAieon, T extends ITemplateLeaf<C>> implements IModelBuilder<T>{
+public class XMLTemplateBuilder<T extends IDescriptor, M extends IModelLeaf<T>> implements IModelBuilder<IModelLeaf<T>>{
 
-	private XMLModelBuilder<C,T> builder;
+	private XMLModelBuilder<T,M> builder;
 	private boolean completed;
-	
 	/**
 	 * Build the factories from the given resource in the class file and add them to the container
 	 * @param domainId
@@ -26,20 +25,8 @@ public class XMLTemplateBuilder<C extends IContextAieon, T extends ITemplateLeaf
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLTemplateBuilder( String domainId, IXMLModelInterpreter<C,T> interpreter ) {
-		builder = new XMLModelBuilder<C,T>( new XMLTemplateParser<C,T>( interpreter ), domainId, interpreter );
-		this.completed = false;
-	}
-
-	/**
-	 * Build the factories from the given resource in the class file and add them to the container
-	 * @param domainId
-	 * @param clss
-	 * @param location
-	 * @param interpreter
-	 */
-	public XMLTemplateBuilder( String domainId, ITemplateParser<C,T> parser ) {
-		builder = new XMLModelBuilder<C,T>( parser, domainId, parser.getCreator() );
+	public XMLTemplateBuilder( String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
+		builder = new XMLModelBuilder<T,M>( new XMLTemplateParser<T,M>( interpreter ), domainId, interpreter );
 		this.completed = false;
 	}
 
@@ -50,7 +37,7 @@ public class XMLTemplateBuilder<C extends IContextAieon, T extends ITemplateLeaf
 	}
 
 	@Override
-	public T getModel() {
+	public IModelLeaf<T> getModel() {
 		return builder.getModel().iterator().next();
 	}
 

@@ -1,8 +1,7 @@
 package org.aieonf.template.property;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.template.ITemplateLeaf;
-import org.aieonf.model.template.property.ITemplateProperty;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 

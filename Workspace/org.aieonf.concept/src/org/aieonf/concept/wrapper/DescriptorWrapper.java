@@ -3,6 +3,7 @@ package org.aieonf.concept.wrapper;
 import java.util.Iterator;
 
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.IDescriptorViewer;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;

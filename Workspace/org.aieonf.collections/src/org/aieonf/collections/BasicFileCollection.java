@@ -689,7 +689,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
 	@Override
 	public boolean containsID(String ID)
 	{
-		AbstractFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.ID.name() );
+		AbstractFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.ID.name() );
 		filter.setAmount( 1 );
 		Collection<T> results = this.search(filter, true );
 		return !results.isEmpty();

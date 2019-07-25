@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="rest.target" sequenceNumber="254">
+<locations>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\registry" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\jaxrs" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\EclipseLink" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\jpa" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\security" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\core" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\ext" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\log" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\nebula" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\http" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\gson" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\apache" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\orientdb" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\gson" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\freemarker" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\rap" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\nebula" type="Directory"/>
+<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\p2" type="Directory"/>
+</locations>
+<includeBundles>
+<plugin id="cdi.api"/>
+<plugin id="ch.qos.logback.access"/>
+<plugin id="ch.qos.logback.classic"/>
+<plugin id="ch.qos.logback.core"/>
+<plugin id="com.codahale.metrics.core"/>
+<plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
+<plugin id="com.fasterxml.jackson.core.jackson-core"/>
+<plugin id="com.fasterxml.jackson.core.jackson-databind"/>
+<plugin id="com.google.gson" version="2.7.0"/>
+<plugin id="com.googlecode.concurrentlinkedhashmap.lru"/>
+<plugin id="com.hazelcast"/>
+<plugin id="com.ibm.icu"/>
+<plugin id="com.ibm.icu.source"/>
+<plugin id="com.mysql.jdbc"/>
+<plugin id="com.orientechnologies.orientdb-client"/>
+<plugin id="com.orientechnologies.orientdb-community"/>
+<plugin id="com.orientechnologies.orientdb-core"/>
+<plugin id="com.orientechnologies.orientdb-distributed"/>
+<plugin id="com.orientechnologies.orientdb-graphdb"/>
+<plugin id="com.orientechnologies.orientdb-jdbc"/>
+<plugin id="com.orientechnologies.orientdb-lucene"/>
+<plugin id="com.orientechnologies.orientdb-object"/>
+<plugin id="com.orientechnologies.orientdb-server"/>
+<plugin id="com.orientechnologies.orientdb-tools"/>
+<plugin id="com.springsource.org.apache.commons.httpclient"/>
+<plugin id="com.squareup.okhttp3"/>
+<plugin id="com.squareup.okio"/>
+<plugin id="com.sun.el"/>
+<plugin id="commonj.sdo"/>
+<plugin id="commonj.sdo.source"/>
+<plugin id="groovy"/>
+<plugin id="jackson-core-asl"/>
+<plugin id="jackson-jaxrs"/>
+<plugin id="jackson-mapper-asl"/>
+<plugin id="jackson-xc"/>
+<plugin id="javax.activation"/>
+<plugin id="javax.annotation"/>
+<plugin id="javax.annotation-api" version="1.2"/>
+<plugin id="javax.ejb"/>
+<plugin id="javax.el"/>
+<plugin id="javax.jms" version="1.1.0.v201205091237"/>
+<plugin id="javax.jms" version="1.1.0.v200906010428"/>
+<plugin id="javax.mail.glassfish" version="1.4.1.v201005082020"/>
+<plugin id="javax.persistence" version="2.2.0.v201708071007"/>
+<plugin id="javax.persistence" version="2.1.1.v201509150925"/>
+<plugin id="javax.persistence" version="2.0.6.v201308211412"/>
+<plugin id="javax.persistence.javadoc"/>
+<plugin id="javax.persistence.source" version="2.1.1.v201509150925"/>
+<plugin id="javax.persistence.source" version="2.2.0.v201708071007"/>
+<plugin id="javax.persistence.source" version="2.0.6.v201308211412"/>
+<plugin id="javax.resource"/>
+<plugin id="javax.servlet" version="3.0.0.v201112011016"/>
+<plugin id="javax.servlet" version="2.4.0.v200806031604"/>
+<plugin id="javax.servlet" version="3.1.0.20170128"/>
+<plugin id="javax.servlet.jsp"/>
+<plugin id="javax.servlet.jsp.jstl-api"/>
+<plugin id="javax.transaction" version="1.1.1.v201105210645"/>
+<plugin id="javax.transaction" version="1.1.0.v201002051055"/>
+<plugin id="javax.validation"/>
+<plugin id="javax.validation.api"/>
+<plugin id="javax.ws.rs"/>
+<plugin id="javax.ws.rs-api"/>
+<plugin id="javax.wsdl"/>
+<plugin id="javax.xml" version="1.3.4.v201005080400"/>
+<plugin id="javax.xml.bind"/>
+<plugin id="javax.xml.soap"/>
+<plugin id="javax.xml.ws"/>
+<plugin id="jaxb-core"/>
+<plugin id="jaxb-xjc"/>
+<plugin id="oevm.javax.portlet"/>
+<plugin id="oevm.org.aopalliance"/>
+<plugin id="org.apache.commons.codec" version="1.10.0.v20151023-1447"/>
+<plugin id="org.apache.commons.codec" version="1.6.0"/>
+<plugin id="org.apache.commons.collections"/>
+<plugin id="org.apache.commons.configuration"/>
+<plugin id="org.apache.commons.fileupload"/>
+<plugin id="org.apache.commons.io"/>
+<plugin id="org.apache.commons.lang"/>
+<plugin id="org.apache.commons.lang3"/>
+<plugin id="org.apache.commons.logging"/>
+<plugin id="org.apache.felix.gogo.command"/>
+<plugin id="org.apache.felix.gogo.runtime"/>
+<plugin id="org.apache.felix.gogo.shell"/>
+<plugin id="org.apache.httpcomponents.httpclient"/>
+<plugin id="org.apache.httpcomponents.httpcore"/>
+<plugin id="org.apache.ivy"/>
+<plugin id="org.apache.jasper.glassfish"/>
+<plugin id="org.apache.logging.log4j.api"/>
+<plugin id="org.apache.logging.log4j.core"/>
+<plugin id="org.apache.logging.log4j.slf4j-impl"/>
+<plugin id="org.apache.logging.log4j.to-slf4j"/>
+<plugin id="org.apache.taglibs.standard.glassfish"/>
+<plugin id="org.aspectj.weaver"/>
+<plugin id="org.codehaus.jettison.jettison"/>
+<plugin id="org.eclipse.core.commands"/>
+<plugin id="org.eclipse.core.contenttype"/>
+<plugin id="org.eclipse.core.databinding"/>
+<plugin id="org.eclipse.core.databinding.beans"/>
+<plugin id="org.eclipse.core.databinding.observable"/>
+<plugin id="org.eclipse.core.databinding.property"/>
+<plugin id="org.eclipse.core.jobs"/>
+<plugin id="org.eclipse.core.runtime"/>
+<plugin id="org.eclipse.equinox.app"/>
+<plugin id="org.eclipse.equinox.common"/>
+<plugin id="org.eclipse.equinox.console"/>
+<plugin id="org.eclipse.equinox.console.ssh"/>
+<plugin id="org.eclipse.equinox.ds" version="1.6.0.v20190122-0806"/>
+<plugin id="org.eclipse.equinox.http.jetty"/>
+<plugin id="org.eclipse.equinox.http.registry"/>
+<plugin id="org.eclipse.equinox.p2.core"/>
+<plugin id="org.eclipse.equinox.p2.core.source"/>
+<plugin id="org.eclipse.equinox.p2.director"/>
+<plugin id="org.eclipse.equinox.p2.director.source"/>
+<plugin id="org.eclipse.equinox.p2.engine"/>
+<plugin id="org.eclipse.equinox.p2.engine.source"/>
+<plugin id="org.eclipse.equinox.p2.metadata"/>
+<plugin id="org.eclipse.equinox.p2.metadata.repository"/>
+<plugin id="org.eclipse.equinox.p2.metadata.repository.source"/>
+<plugin id="org.eclipse.equinox.p2.metadata.source"/>
+<plugin id="org.eclipse.equinox.p2.operations"/>
+<plugin id="org.eclipse.equinox.p2.operations.source"/>
+<plugin id="org.eclipse.equinox.p2.repository"/>
+<plugin id="org.eclipse.equinox.p2.repository.source"/>
+<plugin id="org.eclipse.equinox.preferences"/>
+<plugin id="org.eclipse.equinox.region"/>
+<plugin id="org.eclipse.equinox.registry"/>
+<plugin id="org.eclipse.equinox.security" version="1.2.0.v20130424-1801"/>
+<plugin id="org.eclipse.equinox.util"/>
+<plugin id="org.eclipse.gemini.blueprint.core"/>
+<plugin id="org.eclipse.gemini.blueprint.extender"/>
+<plugin id="org.eclipse.gemini.blueprint.extensions"/>
+<plugin id="org.eclipse.gemini.blueprint.io"/>
+<plugin id="org.eclipse.gemini.dbaccess.mysql"/>
+<plugin id="org.eclipse.gemini.dbaccess.util"/>
+<plugin id="org.eclipse.gemini.jpa"/>
+<plugin id="org.eclipse.gemini.management"/>
+<plugin id="org.eclipse.jdt.core.compiler.batch"/>
+<plugin id="org.eclipse.jetty.continuation"/>
+<plugin id="org.eclipse.jetty.deploy"/>
+<plugin id="org.eclipse.jetty.http"/>
+<plugin id="org.eclipse.jetty.io"/>
+<plugin id="org.eclipse.jetty.osgi.boot"/>
+<plugin id="org.eclipse.jetty.security"/>
+<plugin id="org.eclipse.jetty.server"/>
+<plugin id="org.eclipse.jetty.servlet"/>
+<plugin id="org.eclipse.jetty.util"/>
+<plugin id="org.eclipse.jetty.webapp"/>
+<plugin id="org.eclipse.jetty.xml"/>
+<plugin id="org.eclipse.orbit.mongodb"/>
+<plugin id="org.eclipse.orbit.mongodb.source"/>
+<plugin id="org.eclipse.osgi"/>
+<plugin id="org.eclipse.osgi.services.source"/>
+<plugin id="org.eclipse.persistence.antlr"/>
+<plugin id="org.eclipse.persistence.antlr.source"/>
+<plugin id="org.eclipse.persistence.asm"/>
+<plugin id="org.eclipse.persistence.asm.source"/>
+<plugin id="org.eclipse.persistence.core"/>
+<plugin id="org.eclipse.persistence.core.source"/>
+<plugin id="org.eclipse.persistence.dbws"/>
+<plugin id="org.eclipse.persistence.dbws.builder"/>
+<plugin id="org.eclipse.persistence.dbws.builder.source"/>
+<plugin id="org.eclipse.persistence.dbws.source"/>
+<plugin id="org.eclipse.persistence.extension"/>
+<plugin id="org.eclipse.persistence.extension.source"/>
+<plugin id="org.eclipse.persistence.jpa"/>
+<plugin id="org.eclipse.persistence.jpa.jpql"/>
+<plugin id="org.eclipse.persistence.jpa.jpql.source"/>
+<plugin id="org.eclipse.persistence.jpa.modelgen"/>
+<plugin id="org.eclipse.persistence.jpa.modelgen.source"/>
+<plugin id="org.eclipse.persistence.jpa.source"/>
+<plugin id="org.eclipse.persistence.jpars"/>
+<plugin id="org.eclipse.persistence.jpars.source"/>
+<plugin id="org.eclipse.persistence.moxy"/>
+<plugin id="org.eclipse.persistence.moxy.source"/>
+<plugin id="org.eclipse.persistence.nosql"/>
+<plugin id="org.eclipse.persistence.nosql.source"/>
+<plugin id="org.eclipse.persistence.oracle"/>
+<plugin id="org.eclipse.persistence.oracle.nosql"/>
+<plugin id="org.eclipse.persistence.oracle.nosql.source"/>
+<plugin id="org.eclipse.persistence.oracle.source"/>
+<plugin id="org.eclipse.persistence.oracleddlparser"/>
+<plugin id="org.eclipse.persistence.oracleddlparser.source"/>
+<plugin id="org.eclipse.persistence.sdo"/>
+<plugin id="org.eclipse.persistence.sdo.source"/>
+<plugin id="org.eclipse.rap.jface"/>
+<plugin id="org.eclipse.rap.jface.source"/>
+<plugin id="org.eclipse.rap.rwt"/>
+<plugin id="org.eclipse.rap.rwt.osgi"/>
+<plugin id="org.eclipse.rap.rwt.osgi.source"/>
+<plugin id="org.eclipse.rap.rwt.source"/>
+<plugin id="org.eclipse.virgo.kernel.agent.dm"/>
+<plugin id="org.eclipse.virgo.kernel.deployer.dm"/>
+<plugin id="org.eclipse.virgo.kernel.dmfragment"/>
+<plugin id="org.eclipse.virgo.management.fragment"/>
+<plugin id="org.eclipse.virgo.medic"/>
+<plugin id="org.eclipse.virgo.medic.core"/>
+<plugin id="org.eclipse.virgo.web.dm"/>
+<plugin id="org.eclipse.virgo.web.servlet.adapter"/>
+<plugin id="org.freemarker.freemarker"/>
+<plugin id="org.fusesource.jansi"/>
+<plugin id="org.glassfish.hk2.api"/>
+<plugin id="org.glassfish.hk2.external.aopalliance-repackaged"/>
+<plugin id="org.glassfish.hk2.external.javax.inject"/>
+<plugin id="org.glassfish.hk2.locator"/>
+<plugin id="org.glassfish.hk2.osgi-resource-locator"/>
+<plugin id="org.glassfish.hk2.utils"/>
+<plugin id="org.glassfish.javax.json"/>
+<plugin id="org.glassfish.jersey.bundles.repackaged.jersey-guava"/>
+<plugin id="org.glassfish.jersey.containers.jersey-container-servlet"/>
+<plugin id="org.glassfish.jersey.containers.jersey-container-servlet-core"/>
+<plugin id="org.glassfish.jersey.core.jersey-client"/>
+<plugin id="org.glassfish.jersey.core.jersey-common"/>
+<plugin id="org.glassfish.jersey.core.jersey-server"/>
+<plugin id="org.glassfish.jersey.media.jersey-media-jaxb"/>
+<plugin id="org.glassfish.web.javax.servlet.jsp.jstl"/>
+<plugin id="org.jolokia.osgi"/>
+<plugin id="org.mongodb.mongo-java-driver"/>
+<plugin id="org.objectweb.asm"/>
+<plugin id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
+<plugin id="org.slf4j.api.source"/>
+<plugin id="org.slf4j.jcl"/>
+<plugin id="org.slf4j.jul"/>
+<plugin id="org.springframework.aop"/>
+<plugin id="org.springframework.aspects"/>
+<plugin id="org.springframework.beans"/>
+<plugin id="org.springframework.context"/>
+<plugin id="org.springframework.context.support"/>
+<plugin id="org.springframework.core"/>
+<plugin id="org.springframework.expression"/>
+<plugin id="org.springframework.jdbc"/>
+<plugin id="org.springframework.jms"/>
+<plugin id="org.springframework.messaging"/>
+<plugin id="org.springframework.orm"/>
+<plugin id="org.springframework.oxm"/>
+<plugin id="org.springframework.transaction"/>
+<plugin id="org.springframework.web"/>
+<plugin id="org.springframework.webmvc"/>
+<plugin id="org.springframework.webmvc.portlet"/>
+<plugin id="org.springframework.websocket"/>
+<plugin id="org.xerial.snappy.snappy-java"/>
+<plugin id="osgi.enterprise"/>
+	<plugin id="org.eclipse.osgi.services" version="3.8.0.v20190206-2147"/>
+	<plugin id="org.apache.felix.scr"/>
+	<plugin id="org.eclipse.osgi.util"/>
+	<plugin id="javassist"/>
+	<plugin id="org.eclipse.equinox.http.servlet"/>
+	<plugin id="org.eclipse.nebula.widgets.richtext" version="1.2.1.201812241324"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.richtext.source"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.richtext"/>
+	<plugin id="org.tukaani.xz"/>
+	<plugin id="org.tukaani.xz.source"/>
+	<plugin id="org.sat4j.core"/>
+	<plugin id="org.sat4j.pb"/>
+</includeBundles>
+</target>

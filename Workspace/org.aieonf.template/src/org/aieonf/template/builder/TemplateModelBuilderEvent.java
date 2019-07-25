@@ -6,7 +6,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.core.ModelEvent;
-import org.aieonf.model.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 
 public class TemplateModelBuilderEvent<C extends IContextAieon, M extends IDescribable<? extends IDescriptor>> extends ModelEvent<M> {
 	private static final long serialVersionUID = 1L;

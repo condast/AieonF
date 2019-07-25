@@ -2,7 +2,7 @@ package org.aieonf.template.context;
 
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.template.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateLeaf;
 
 public interface IModelContextFactory<C extends IContextAieon, D extends IDomainAieon> {
 

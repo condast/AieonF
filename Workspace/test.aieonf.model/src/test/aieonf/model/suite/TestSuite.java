@@ -6,28 +6,26 @@ import java.util.logging.Logger;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.model.utils.PrintModel;
 import org.aieonf.model.xml.XMLModelBuilder;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.condast.commons.test.core.AbstractTestSuite;
 import org.condast.commons.test.core.ITestEvent;
-import org.xml.sax.Attributes;
 
 import test.aieonf.model.context.TestFactory;
 import test.aieonf.model.interpreter.AuthenticationInterpreter;
 
-public class TestSuite extends AbstractTestSuite {
+public class TestSuite extends AbstractTestSuite<String, String> {
 
-	protected TestSuite(String id, Attributes attrs) {
-		super(id, attrs);
-		// TODO Auto-generated constructor stub
+	public TestSuite() {
+		super("TEST");
 	}
 
 	public enum Tests{
 		TEST_FACTORY,
 		TEST_MODEL_BUILDER;
 	}
-	private static TestSuite suite = new TestSuite(null, null);
+	private static TestSuite suite = new TestSuite();
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 	
@@ -74,7 +72,7 @@ public class TestSuite extends AbstractTestSuite {
 		AuthenticationInterpreter interpreter = new AuthenticationInterpreter(factory.getDomain());
 		
 		XMLModelBuilder<IDescriptor,IModelLeaf<IDescriptor>> builder = 
-				new XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>>( factory.getDomain().getDomain(), null /*interpreter*/ );
+				new XMLModelBuilder<IDescriptor, IModelLeaf<IDescriptor>>( factory.getDomain().getDomain(), interpreter );
 		builder.build();
 		Collection<IModelLeaf<IDescriptor>> models = builder.getModel();
 		logger.info("Models found: " + models.size());
@@ -86,13 +84,13 @@ public class TestSuite extends AbstractTestSuite {
 	}
 
 	@Override
-	protected void onPrepare(ITestEvent event) {
+	protected void onPrepare(ITestEvent<String, String> event) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onPerform(ITestEvent event) {
+	protected void onPerform(ITestEvent<String, String> event) {
 		// TODO Auto-generated method stub
 		
 	}

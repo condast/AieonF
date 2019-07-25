@@ -10,8 +10,8 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
-import org.aieonf.model.template.ITemplateLeaf;
-import org.aieonf.model.template.property.ITemplateProperty;
+import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.template.property.ITemplateProperty;
 import org.aieonf.template.property.TemplateProperty;
 
 public class TemplateLeaf<T extends IDescriptor> extends Model<T> implements ITemplateLeaf<T>

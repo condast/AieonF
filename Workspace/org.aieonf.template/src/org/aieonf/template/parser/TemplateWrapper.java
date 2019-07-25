@@ -9,12 +9,12 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
-import org.aieonf.model.template.ITemplateAieon;
-import org.aieonf.model.template.ITemplateLeaf;
-import org.aieonf.model.template.ITemplateNode;
-import org.aieonf.model.template.property.ITemplateProperty;
-import org.aieonf.template.core.ITemplate;
 import org.aieonf.template.core.TemplateAieon;
+import org.aieonf.template.def.ITemplate;
+import org.aieonf.template.def.ITemplateAieon;
+import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.template.def.ITemplateNode;
+import org.aieonf.template.property.ITemplateProperty;
 
 public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 {
@@ -279,7 +279,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 
 
 	@Override
-	public void addAttributes( Enum<?> key, Map<org.aieonf.model.template.property.ITemplateProperty.Attributes, String> attrs) {
+	public void addAttributes( Enum<?> key, Map<org.aieonf.template.property.ITemplateProperty.Attributes, String> attrs) {
 		this.model.addAttributes(key, attrs);
 	}
 

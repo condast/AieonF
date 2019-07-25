@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.template.ITemplateLeaf;
-import org.aieonf.model.template.property.ITemplateProperty;
+import org.aieonf.template.def.ITemplateLeaf;
 
 public abstract class AbstractTemplateProperty<T extends IDescriptor, V extends Enum<?>, X extends Object> implements ITemplateProperty< String,V, String>{
 

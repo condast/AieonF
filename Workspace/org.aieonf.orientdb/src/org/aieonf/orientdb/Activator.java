@@ -5,16 +5,10 @@ import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
 	
-	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
-	
 	private static BundleContext context;
 	
 	static BundleContext getContext() {
 		return context;
-	}
-
-	public Activator() {
-		super();
 	}
 
 	/*
@@ -34,4 +28,5 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
 	}
+
 }

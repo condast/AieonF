@@ -27,6 +27,5 @@ Export-Package: org.aieonf.commons,
  org.aieonf.commons.transaction,
  org.aieonf.commons.tree,
  org.aieonf.commons.validation,
- org.aieonf.commons.verification,
  org.aieonf.commons.xml
-Automatic-Module-Name: org.aieonf.commons
+Import-Package: org.condast.commons.authentication.user

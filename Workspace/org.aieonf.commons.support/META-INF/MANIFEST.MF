@@ -31,4 +31,3 @@ Export-Package: javax.annotation,
  org.apache.commons.configuration.tree,
  org.apache.commons.configuration.tree.xpath,
  org.apache.commons.configuration.web
-Automatic-Module-Name: org.aieonf.commons.support

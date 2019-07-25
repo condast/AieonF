@@ -18,11 +18,9 @@ Import-Package: org.aieonf.commons.graph,
  org.aieonf.model.builder,
  org.aieonf.model.core,
  org.aieonf.model.provider,
- org.aieonf.model.template,
  org.aieonf.model.xml,
  org.aieonf.template,
  org.aieonf.template.builder,
  org.aieonf.template.context,
  org.aieonf.template.controller,
  org.aieonf.template.def
-Automatic-Module-Name: org.aieonf.graph

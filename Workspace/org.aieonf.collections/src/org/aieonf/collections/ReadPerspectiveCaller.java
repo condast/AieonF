@@ -44,7 +44,7 @@ public class ReadPerspectiveCaller implements Callable<Collection<IConcept>>
   	try{
   		name = name.trim().toLowerCase();
   		this.filter = 
-  			new AttributeFilter<IConcept>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.NAME.name(), name );
+  			new AttributeFilter<IConcept>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), name );
   	}
   	catch( FilterException ex ){
   		throw new CollectionException( ex.getMessage(), ex );
@@ -79,7 +79,7 @@ public class ReadPerspectiveCaller implements Callable<Collection<IConcept>>
 	{
     wildcard = wildcard.trim().toLowerCase();
     try{
-      this.filter = new AttributeFilter<IConcept>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), wildcard );
+      this.filter = new AttributeFilter<IConcept>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME.name(), wildcard );
     }
     catch( Exception ex ){
       throw new CollectionException( ex );
@@ -96,7 +96,7 @@ public class ReadPerspectiveCaller implements Callable<Collection<IConcept>>
 	public void search(String attr, String wildcard) throws CollectionException
 	{
     try{
-    	this.filter = new AttributeFilter<IConcept>( AttributeFilter.Rules.WILDCARD, attr, wildcard );
+    	this.filter = new AttributeFilter<IConcept>( AttributeFilter.Rules.Wildcard, attr, wildcard );
     }
     catch( FilterException ex ){
     	throw new CollectionException( ex.getMessage(), ex );

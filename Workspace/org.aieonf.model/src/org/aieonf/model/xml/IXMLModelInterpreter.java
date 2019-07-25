@@ -1,6 +1,6 @@
 package org.aieonf.model.xml;
 
-import java.io.InputStream;
+import java.net.URL;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescribable;
@@ -36,10 +36,10 @@ public interface IXMLModelInterpreter<T extends IDescriptor, U extends IDescriba
 	void clear();
 
 	/**
-	 * Get the InputStream of the template
+	 * Get the URL of the template
 	 * @return
 	 */
-	public InputStream getInputStream();	
+	public URL getURL();	
 	
 	/**
 	 * Returns true if the creator is active

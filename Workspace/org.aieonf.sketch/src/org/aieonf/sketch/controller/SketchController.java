@@ -12,8 +12,9 @@ import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
+import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.osgi.js.AbstractJavascriptController;
-import org.aieonf.sketch.factory.SketchFactory;
+import org.aieonf.sketch.factory.SelectedFactory;
 import org.aieonf.sketch.factory.SketchModelFactory;
 import org.aieonf.sketch.preferences.SketchPreferences;
 import org.eclipse.swt.browser.Browser;
@@ -54,7 +55,7 @@ public class SketchController extends AbstractJavascriptController {
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 
-	private SketchFactory factory = SketchFactory.getInstance();
+	private SelectedFactory selected = SelectedFactory.getInstance();
 	
 	private BrowserFunction barfunction;
 
@@ -86,7 +87,7 @@ public class SketchController extends AbstractJavascriptController {
 	}
 
 	public void setBrowser( Pages page ) throws FileNotFoundException {
-		SketchModelFactory smf = factory.getSelected();
+		SketchModelFactory smf = selected.getFactory();
 		if( smf == null )
 			return;
 		try {
@@ -112,9 +113,9 @@ public class SketchController extends AbstractJavascriptController {
 	{
 		if( Descriptor.isNull( wildcard ))
 			wildcard = WildcardFilter.S_ALL;
-		AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
+		AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.Wildcard, 
 				CategoryAieon.Attributes.CATEGORY, wildcard );
-		AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
+		AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.Wildcard, 
 				IDescriptor.Attributes.DESCRIPTION, wildcard );
 		HierarchicalModelAttributeFilter<IDescriptor> filter = new HierarchicalModelAttributeFilter<IDescriptor>( categoryFilter, urlFilter );
 		/*
@@ -127,6 +128,7 @@ public class SketchController extends AbstractJavascriptController {
 			break;
 		}
 		*/
+		SketchModelFactory factory = selected.getFactory();
 		if( factory == null )
 			return;
 		//factory.getFunction( IModelProvider.S_MODEL_PROVIDER_ID).search(filter);

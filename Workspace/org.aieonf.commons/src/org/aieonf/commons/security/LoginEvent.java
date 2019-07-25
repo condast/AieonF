@@ -3,26 +3,21 @@ package org.aieonf.commons.security;
 import java.util.EventObject;
 
 import org.aieonf.commons.security.ILoginListener.LoginEvents;
+import org.condast.commons.authentication.user.ILoginUser;
 
 public class LoginEvent extends EventObject{
 	private static final long serialVersionUID = 1L;
 	
 	private LoginEvents loginEvent;
 	
-	private String loginName;
-	private String password;
+	private ILoginUser user;
 	private boolean loggedIn;
 
-	public LoginEvent( Object source){
-		this( source, LoginEvents.LOGOFF, null, null );
-	}
-
-	public LoginEvent( Object source, LoginEvents loginEvent, String loginName, String password )
+	public LoginEvent( Object source, LoginEvents loginEvent, ILoginUser user )
 	{
 		super( source );
 		this.loginEvent = loginEvent;
-		this.loginName = loginName;
-		this.password = password;
+		this.user = user;
 		this.loggedIn = false;
 	}
 
@@ -38,11 +33,7 @@ public class LoginEvent extends EventObject{
 		this.loggedIn = loggedIn;
 	}
 
-	public String getLoginName(){
-		return this.loginName;
-	}
-
-	public synchronized String getPassword() {
-		return password;
+	public ILoginUser getUser(){
+		return this.user;
 	}
 }

@@ -1,7 +1,6 @@
 package org.aieonf.sketch.factory;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -20,13 +19,9 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IContextA
 	
 	private File root;
 	
-	public SketchModelFactory(File root ) throws IOException {
+	public SketchModelFactory(File root ) throws MalformedURLException {
 		super( Activator.BUNDLE_ID, new TemplateInterpreter( SketchModelFactory.class, getAieonFURL( root ) ));
 		this.root = root;
-	}
-
-	public File getRoot() {
-		return root;
 	}
 
 	public String getWebPath( String location ) throws MalformedURLException{

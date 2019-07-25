@@ -6,11 +6,9 @@ import java.util.Collection;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.model.filter.ModelFilter;
 
 public class ModelScanner<T extends IDescriptor>{
 
@@ -34,8 +32,6 @@ public class ModelScanner<T extends IDescriptor>{
 	
 	@SuppressWarnings("unchecked")
 	protected void getDescriptors( Collection<IDescriptor> results, String name, IModelLeaf<?> current ){
-		if( current == null )
-			return;
 		if( name.equals( current.getDescriptor().getName() ))
 			results.add( current.getDescriptor() );
 		if(!( current instanceof IModelNode ))
@@ -65,20 +61,6 @@ public class ModelScanner<T extends IDescriptor>{
 		IModelNode<T> node = (IModelNode<T>) current;
 		for( IModelLeaf<?> child: node.getChildren() )
 			getModel( results, descriptor, (IModelLeaf<IDescriptor>) child );
-	}
-
-	public Collection<IModelLeaf<IDescriptor>> search( Enum<?> attribute, String value) throws ParseException {
-		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
-		IModelFilter<T, IModelLeaf<T>> filter = new ModelFilter<T, IModelLeaf<T>>( new AttributeFilter<T>( AttributeFilter.Rules.EQUALS, attribute, value));
-		searchModel( results, filter, model );
-		return results;
-	}
-
-	public Collection<IModelLeaf<IDescriptor>> search( String attribute, String value) throws ParseException {
-		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
-		IModelFilter<T, IModelLeaf<T>> filter = new ModelFilter<T, IModelLeaf<T>>( new AttributeFilter<T>( AttributeFilter.Rules.EQUALS, attribute, value));
-		searchModel( results, filter, model );
-		return results;
 	}
 
 	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<T, IModelLeaf<T>> filter) throws ParseException {

@@ -177,17 +177,6 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		this.set( IPasswordAieon.Attributes.CONFIRMATION, password );
 	}
 
-	
-	@Override
-	public String getEmail() {
-		return this.get( IPasswordAieon.Attributes.EMAIL );
-	}
-
-	@Override
-	public void setEmail(String email) {
-		this.set( IPasswordAieon.Attributes.EMAIL, email );
-	}
-
 	/**
 	 * Get the alternative identifier for the aieon.
 	 * This is based on the user name

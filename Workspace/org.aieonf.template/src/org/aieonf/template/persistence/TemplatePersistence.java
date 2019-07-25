@@ -9,9 +9,9 @@ import org.aieonf.commons.persistence.AbstractPersistence;
 import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.template.ITemplateLeaf;
 import org.aieonf.model.xml.StoreModel;
-import org.aieonf.template.core.ITemplate;
+import org.aieonf.template.def.ITemplate;
+import org.aieonf.template.def.ITemplateLeaf;
 import org.w3c.dom.Document;
 
 public class TemplatePersistence extends AbstractPersistence<ITemplate> implements

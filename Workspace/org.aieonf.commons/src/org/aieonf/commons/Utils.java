@@ -16,6 +16,17 @@ public class Utils
 	 * returns true if the string is null or empty
 	 * @param str
 	 * @return
+	 * @deprecated Use assertNull
+	 */
+	@Deprecated
+	public static final boolean isNull( String str ){
+		return (( str == null) || ( str.trim().length() == 0 ));
+	}
+
+	/**
+	 * returns true if the string is null or empty
+	 * @param str
+	 * @return
 	 */
 	public static final boolean assertNull( String str ){
 		return (( str == null) || ( str.trim().length() == 0 ));
@@ -25,9 +36,31 @@ public class Utils
 	 * Returns true if the collection is null or empty
 	 * @param collection
 	 * @return
+	 * @deprecated Use assertNull
+	 */
+	@Deprecated
+	public static boolean isNull( Collection<?> collection ){
+		return (( collection == null ) || ( collection.isEmpty() )); 
+	}
+
+	/**
+	 * Returns true if the collection is null or empty
+	 * @param collection
+	 * @return
 	 */
 	public static boolean assertNull( Collection<?> collection ){
 		return (( collection == null ) || ( collection.isEmpty() )); 
+	}
+
+	/**
+	 * Returns true if the collection is null or empty
+	 * @param collection
+	 * @return
+	 * @deprecated Use assertNull
+	 */
+	@Deprecated
+	public static boolean isNull( Object[] collection ){
+		return (( collection == null ) || ( collection.length == 0 )); 
 	}
 
 	/**

@@ -1,35 +1,40 @@
 package org.aieonf.sketch.service;
 
-import java.io.File;
-
-import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.osgi.swt.IViewFactory;
-import org.aieonf.sketch.factory.SketchFactory;
+import org.aieonf.sketch.controller.SketchController;
+import org.aieonf.sketch.controller.SketchController.Pages;
+import org.aieonf.sketch.factory.SelectedFactory;
+import org.aieonf.sketch.swt.SketchWizard;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
+import org.osgi.service.component.annotations.Component;
 
+@Component( name=ViewFactoryProvider.S_SKETCH_ID, immediate=true)
 public class ViewFactoryProvider implements IViewFactory<Composite, Composite>{
 
-	public static final String S_VIEW = "view";
-	public static final String S_TOOLBAR = "toolbar.html";
-	public static final String S_BODY = "body.html";
+	private SelectedFactory selected = SelectedFactory.getInstance();
 
-	private SketchFactory factory = SketchFactory.getInstance();
+	private SketchController barController;
+	private SketchWizard wizard;
+
+	public static final String S_SKETCH_ID = "org.aieonf.sketch.view";
+	private static final String S_SKETCH = "SKETCH";
+	
 
 	public ViewFactoryProvider() {
 		super();
 	}
 
 	public void activate(){ /* NOTHING */}
-
+	
 	public void deactivate(){/* NOTHING */}
-
+	
 	@Override
 	public String getIdentifier() {
-		if( factory.getSelected() == null )
+		if( selected.getFactory() == null )
 			return null;
-		IDomainAieon domain = factory.getSelected().getDomain();
+		IDomainAieon domain = selected.getFactory().getDomain();
 		return domain.getShortName().toLowerCase();
 	}
 
@@ -37,20 +42,18 @@ public class ViewFactoryProvider implements IViewFactory<Composite, Composite>{
 	public Composite createEntry( Views view, Composite parent, int style) {
 		Browser browser = null;
 		try{
-			File root = factory.getSelectedRoot();
-			File viewFolder = new File( root, S_VIEW );
-			switch( view ){
-			case BAR:
-				browser = new Browser( parent, style );
-				browser.setText(StringUtils.getContent(new File( viewFolder, S_TOOLBAR)));
-				break;
-			case BODY:
-				browser = new Browser( parent, style );
-				browser.setText(StringUtils.getContent(new File( viewFolder, S_BODY)));
-				break;
-			default:
-				break;
-			}
+		switch( view ){
+		case BAR:
+			browser = new Browser( parent, style );
+			barController = new SketchController( browser );
+			barController.setBrowser( Pages.BAR );
+			break;
+		case BODY:
+			wizard = new SketchWizard( parent, style );
+			break;
+		default:
+			break;
+		}
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
