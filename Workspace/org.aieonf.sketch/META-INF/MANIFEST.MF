@@ -42,9 +42,6 @@ Import-Package: org.aieonf.commons,
  org.osgi.service.prefs;version="1.1.1"
 Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/aieonf.xml,
- OSGI-INF/view.xml,
- OSGI-INF/domain.xml,
- OSGI-INF/models.xml,
  OSGI-INF/org.aieonf.sketch.view.xml,
- OSGI-INF/org.aieonf.sketch.domain.xml,
+ OSGI-INF/org.aieonf.sketch.domain.provider.service.xml,
  OSGI-INF/org.aieonf.sketch.domain.service.xml

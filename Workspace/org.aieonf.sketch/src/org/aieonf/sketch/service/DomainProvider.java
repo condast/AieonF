@@ -5,7 +5,7 @@ import org.condast.aieonf.osgi.concept.IDomainProvider;
 import org.condast.commons.authentication.user.ILoginUser;
 import org.osgi.service.component.annotations.Component;
 
-@Component( name="org.aieonf.sketch.domain.service",
+@Component( name="org.aieonf.sketch.domain.provider.service",
 immediate=true)
 public class DomainProvider implements IDomainProvider {
 
