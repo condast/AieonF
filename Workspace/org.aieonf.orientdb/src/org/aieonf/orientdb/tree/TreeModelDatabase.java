@@ -16,7 +16,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
-import org.aieonf.orientdb.cache.CacheDatabase;
+import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.OrientDBNode;
 import org.aieonf.orientdb.graph.AbstractOrientGraphModel;
 import org.aieonf.template.builder.TemplateModelBuilderEvent;
@@ -34,7 +34,7 @@ public class TreeModelDatabase extends AbstractOrientGraphModel<IDomainAieon, IM
 	public static final String S_ERR_NO_TYPE = "The leaf has no type! Please provide one";
 	
 	private ITemplateLeaf<IContextAieon> template;
-	private CacheDatabase cache = CacheDatabase.getInstance();
+	private CacheService cache = CacheService.getInstance();
 	
 	public TreeModelDatabase( ITemplateLeaf<IContextAieon> template ) {
 		super();

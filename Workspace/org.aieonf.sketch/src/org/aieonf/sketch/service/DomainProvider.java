@@ -1,8 +1,8 @@
 package org.aieonf.sketch.service;
 
+import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.condast.aieonf.osgi.concept.IDomainProvider;
-import org.condast.commons.authentication.user.ILoginUser;
 import org.osgi.service.component.annotations.Component;
 
 @Component( name="org.aieonf.sketch.domain.provider.service",

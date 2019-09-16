@@ -19,6 +19,7 @@ Export-Package: org.aieonf.commons,
  org.aieonf.commons.net,
  org.aieonf.commons.parser,
  org.aieonf.commons.persistence,
+ org.aieonf.commons.persistence.service,
  org.aieonf.commons.petition,
  org.aieonf.commons.search,
  org.aieonf.commons.security,
@@ -28,4 +29,5 @@ Export-Package: org.aieonf.commons,
  org.aieonf.commons.tree,
  org.aieonf.commons.validation,
  org.aieonf.commons.xml
-Import-Package: org.condast.commons.authentication.user
+Import-Package: javax.persistence;version="2.0.6"
+Automatic-Module-Name: org.aieonf.commons

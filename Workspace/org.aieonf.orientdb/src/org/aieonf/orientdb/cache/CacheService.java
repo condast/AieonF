@@ -1,6 +1,5 @@
 package org.aieonf.orientdb.cache;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -12,20 +11,18 @@ import org.aieonf.commons.security.ILoginListener.LoginEvents;
 import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.transaction.AbstractTransaction;
-import org.aieonf.commons.transaction.ITransaction;
-import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.file.ProjectFolderUtils;
-import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.concept.loader.LoaderAieon;
+import org.aieonf.concept.security.IPasswordAieon;
+import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
-import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
+import org.aieonf.orientdb.factory.OrientDBFactory;
+
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
 import com.orientechnologies.orient.core.metadata.security.OUser;
@@ -40,31 +37,34 @@ import com.orientechnologies.orient.core.sql.query.*;
  * @param <D>
  * @param <Descriptor>
  */
-public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> {
+public class CacheService {
 	
 	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
 	public static final String S_IDENTIFIER = "documenttxModel";
 	
-	private static final String S_LOCAL = "plocal:";
-	private static final String S_FILE = "file:";
 	protected static final String S_ROOT = "Root";
 	protected static final String S_CACHE = "Cache";
 	protected static final String S_DESCRIPTORS = "Descriptors";
 
-	private ODatabaseDocumentTx database;
-	private String source;
-	private boolean connected;
-	
 	private Collection<IModelListener<IDescriptor>> listeners;
 	
-	private static CacheDatabase cache = new CacheDatabase();
+	private static CacheService cache = new CacheService();
+	private static CachePersistenceService persistence;
 	
-	private CacheDatabase() {
+	private ODatabaseDocumentTx database;
+	private boolean connected;
+	private IDomainAieon domain;
+	
+	private CacheService() {
+		OrientDBFactory factory = OrientDBFactory.getInstance();
+		factory.createTemplate();
+		domain = factory.getDomain();
+		persistence = new CachePersistenceService(domain);
 		listeners = new ArrayList<IModelListener<IDescriptor>>();
 		this.connected = false;
 	}
 
-	public static CacheDatabase getInstance(){
+	public static CacheService getInstance(){
 		return cache;
 	}
 	
@@ -90,7 +90,7 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 			if(ouser.getName().equals( user ))
 				return false;
 		}
-		OUser ouser = sm.createUser( user, pwd, new String[]{ Roles.ADMIN.toString()});	
+		OUser ouser = sm.createUser( user, pwd, new String[]{ IModelDatabase.Roles.ADMIN.toString()});	
 		return ( ouser != null );
 	}
 	
@@ -99,57 +99,19 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 	 * 
 	 * @param loader
 	 */
-	@SuppressWarnings("resource")
-	public void connect( IDomainAieon domain, LoginEvent login ){
-		if( connected )
+	public void open( ){
+		if( !persistence.isConnected() )
 			return;
-		String user = login.getUser().getUserName();
-		String pwd = null;//login.getPassword();
-		ILoaderAieon loader = new LoaderAieon( domain);
-		loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
-		loader.setIdentifier( S_CACHE );
-		File file = ProjectFolderUtils.getDefaultUserFile( loader, true); 
-		source = file.toURI().toString();
-		source = source.replace( S_FILE, S_LOCAL);
-		ODatabaseDocumentTx doc = new ODatabaseDocumentTx (source); 
-		switch( login.getLoginEvent() ) {
-		case REGISTER:
-			if(!doc.exists() ) {
-				database = doc.create();
-				database.addCluster(S_DESCRIPTORS);
-				register( database, domain, login );
-			}else {
-				OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , user, pwd  );
-				database = pool.acquire();				
-			}
-			break;
-		case LOGIN:
-			OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , user, pwd  );
-			database = pool.acquire();
-			break;
-		default:
-			database.close();
-			break;
-		}
+		IPasswordAieon password = new PasswordAieon( domain );
+		database = persistence.getDatabase().open(password.getUserName(), password.getPassword() );
 		this.connected = true;
 	}
 	
-	public void disconnect() {
-		close();
-		this.connected = false;
-	}
-
-	@Override
-	public String getIdentifier(){
-		return S_IDENTIFIER;
-	}
 	
-	@Override
 	public void addListener(IModelListener<IDescriptor> listener) {
 		this.listeners.add(listener);
 	}
 
-	@Override
 	public void removeListener(IModelListener<IDescriptor> listener) {
 		this.listeners.remove(listener);
 	}
@@ -159,7 +121,6 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 			listener.notifyChange(event);
 	}
 	
-	@Override
 	public void open( IDomainAieon domain){
 		try{
 			if(!connected )
@@ -170,12 +131,10 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 		}
 	}
 
-	@Override
 	public boolean isOpen(){
 		return !this.database.isClosed();
 	}
 
-	@Override
 	public void sync(){
 		try{
 			this.database.commit();
@@ -189,20 +148,13 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 		}
 	}
 
-	public ITransaction<IDescriptor,IModelProvider<IDomainAieon, IDescriptor>> createTransaction() {
-		Transaction transaction = new Transaction( this );
-		transaction.create();
-		return transaction;
-	}
-
-	@Override
 	public void close(){
+		this.connected = false;
 		//database.commit();
 		if( database != null )
 			database.close();
 	}
 
-	@Override
 	public boolean contains(IDescriptor descriptor) {
 		for (ODocument document : database.browseClass( descriptor.getName())) {
 			String id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
@@ -221,7 +173,6 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 		return results;
 	}
 	
-	@Override
 	public Collection<IDescriptor> get(IDescriptor descriptor) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for (ODocument document : database.browseClass( descriptor.getName())) {
@@ -232,7 +183,6 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 		return results;
 	}
 
-	@Override
 	public Collection<IDescriptor> search(IModelFilter<IDescriptor, IDescriptor> filter) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for (ODocument document : database.browseCluster( S_DESCRIPTORS )) {
@@ -243,32 +193,27 @@ public class CacheDatabase implements IModelDatabase<IDomainAieon, IDescriptor> 
 		return results;
 	}
 
-	@Override
 	public boolean hasFunction(String function) {
 		return IModelProvider.DefaultModels.DESCRIPTOR.equals( function );
 	}
 
-	@Override
 	public boolean add(IDescriptor descriptor) {
 		ODocument odesc= createDocument( descriptor );
 		odesc.save( /*S_DESCRIPTORS*/ );//Add to cluster descriptors
 		return true;
 	}
 
-	@Override
 	public void remove(IDescriptor descriptor) {
 		ODescriptor odesc= (ODescriptor) descriptor;
 		odesc.getDocument().delete();
 	}
 
-	@Override
 	public boolean update(IDescriptor descriptor ){
 		ODescriptor odesc= (ODescriptor) descriptor;
 		odesc.getDocument().save();
 		return true;
 	}
 
-	@Override
 	public void deactivate() {
 		database.close();
 	}

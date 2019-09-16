@@ -1,33 +1,43 @@
 package org.aieonf.orientdb.service;
 
+import java.util.Collection;
+import java.util.TreeSet;
+
 import org.aieonf.commons.security.ILoginListener;
+import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.commons.security.LoginEvent;
-import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.orientdb.cache.CacheDatabase;
-import org.aieonf.orientdb.factory.OrientDBFactory;
 
 public class LoginDispatcher implements ILoginListener{
 
-	private OrientDBFactory factory = OrientDBFactory.getInstance();
-	
 	private static LoginDispatcher dispatcher = new LoginDispatcher();
-	
-	private CacheDatabase cache = CacheDatabase.getInstance();
+		
+	private Collection<ILoginUser> users;
 	
 	private LoginDispatcher() {
+		users = new TreeSet<>();
 	}
 
 	public static LoginDispatcher getInstance(){
 		return dispatcher;
 	}
 	
+	public ILoginUser getUser( long userId ) {
+		for( ILoginUser user: users ) {
+			if( user.getId() == userId )
+				return user;
+		}
+		return null;
+	}
+	
 	@Override
 	public void notifyLoginEvent(LoginEvent event) {
-		factory.createTemplate();
-		IDomainAieon domain = factory.getDomain();
-		if( !LoginEvents.LOGOFF.equals( event.getLoginEvent() ))
-			cache.connect(domain, event );
-		else
-			cache.disconnect();
+		switch( event.getLoginEvent() ) {
+		case LOGOFF:
+			users.add(event.getUser());
+			break;
+		default:
+			users.remove(event.getUser());
+		break;
+		}
 	}
 }

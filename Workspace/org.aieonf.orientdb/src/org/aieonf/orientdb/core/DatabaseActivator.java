@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.aieonf.orientdb.factory.OrientDBFactory;
-import org.osgi.framework.BundleContext;
 
 import com.orientechnologies.orient.server.OServer;
 import com.orientechnologies.orient.server.OServerMain;
@@ -21,11 +20,15 @@ public class DatabaseActivator {
 	//Default JVM setting for OrientDB. Is handled in lauch configuration
 	public static final String S_XX_PROPERTY = "-D-XX:MaxDirectMemorySize=512g";
 	public static final String S_ORIENTDB_HOME = "ORIENTDB_HOME";
+	public static final String S_ORIENTDB_PERSISTENCE = "/META-INF/persistence.xml";
 	public static final String S_ORIENTDB_ROOT_PASSWORD = "ORIENTDB_ROOT_PASSWORD";
 	
 	private ExecutorService service;
 	private OServer server;
 	private OrientDBFactory factory;
+	private boolean activated;
+	
+	private static DatabaseActivator activator = new DatabaseActivator();
 	
 	private Runnable runnable = new Runnable(){
 
@@ -33,8 +36,9 @@ public class DatabaseActivator {
 		public void run() {
 			try {
 				server = OServerMain.create();
-				server.startup( factory.getConfigFile() );
+				server.startup( DatabaseActivator.class.getResourceAsStream( S_ORIENTDB_PERSISTENCE ));
 				server.activate();
+				activated = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -42,8 +46,17 @@ public class DatabaseActivator {
 		
 	};
 	
-	public DatabaseActivator() {
+	private DatabaseActivator() {
 		super();
+		this.activated = false;
+	}
+
+	public static DatabaseActivator getInstance() {
+		return activator;
+	}
+	
+	public boolean isActivated() {
+		return activated;
 	}
 
 	public void startup( ){
@@ -51,13 +64,14 @@ public class DatabaseActivator {
 		Properties props = System.getProperties();
 		props.setProperty( S_ORIENTDB_HOME, factory.getOrientDBRoot().getAbsolutePath());
 		props.setProperty( S_ORIENTDB_ROOT_PASSWORD, "BLANK" );//auto generate a root password (launch config)
-		//props.setProperty("-XX:MaxDirectMemorySize", "4008m");
+		props.setProperty("-XX:MaxDirectMemorySize", "4008m");
 		
 		service = Executors.newSingleThreadExecutor();
 		service.execute(runnable);		
 	}
 	
-	public void shutdown( BundleContext context ){
+	public void shutdown( ){
+		activated = false;
 		server.shutdown();	
 		service.shutdown();
 	}

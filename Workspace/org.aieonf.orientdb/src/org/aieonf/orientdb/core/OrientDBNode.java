@@ -18,7 +18,6 @@ import org.aieonf.orientdb.graph.VertexImpl;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 public class OrientDBNode extends ModelLeaf<IDescriptor> implements IModelNode<IDescriptor> {
 
@@ -47,9 +46,9 @@ public class OrientDBNode extends ModelLeaf<IDescriptor> implements IModelNode<I
 			last = v;
 			break;
 		}		
-		if( last == null ){
-			last = AbstractOrientGraphModel.convert((OrientGraph) graph, child.getDescriptor(), child.getIdentifier() );
-		}
+		//if( last == null ){
+		//	last = AbstractOrientGraphModel.convert((OrientGraph) graph, child.getDescriptor(), child.getIdentifier() );
+		//}
 		graph.addEdge(null, vertex, last, child.getIdentifier());
 		return true;
 	}
