@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.aieonf.concept.IConcept.Scope;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
@@ -310,5 +311,11 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	@Override
 	public void init(ITemplateAieon descriptor) {
 		this.model.init((T) descriptor);
+	}
+
+
+	@Override
+	public Scope getScope() {
+		return model.getScope();
 	}
 }

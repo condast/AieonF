@@ -32,6 +32,7 @@ public interface IConcept extends IDescriptor
     READ_ONLY,
     SCOPE, //public, private, member
     SOURCE,
+    TYPE,
     URI;
 
 	@Override

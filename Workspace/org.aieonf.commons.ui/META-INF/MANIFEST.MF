@@ -7,12 +7,17 @@ Bundle-Vendor: AieonF.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.aieonf.commons,
  org.aieonf.commons.i8n,
+ org.aieonf.commons.security,
  org.aieonf.commons.strings,
  org.aieonf.commons.ui.swt,
+ org.aieonf.concept.domain,
  org.eclipse.swt,
  org.eclipse.swt.events,
  org.eclipse.swt.graphics,
+ org.eclipse.swt.layout,
  org.eclipse.swt.widgets
 Export-Package: org.aieonf.commons.ui.language,
+ org.aieonf.commons.ui.selection,
  org.aieonf.commons.ui.swt,
  org.aieonf.commons.ui.verification
+Automatic-Module-Name: org.aieonf.commons.ui

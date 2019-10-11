@@ -210,7 +210,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	 * @return
 	 */
 	protected static IDescriptor createDescriptor( OrientGraph graph, Vertex vertex ){
-		IVertex<IDescriptor> vtx = new VertexImpl( vertex );
+		IVertex<IDescriptor> vtx = null;
 		IDescriptor descriptor = vtx.get();
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
 		BodyFactory.IDFactory( descriptor );

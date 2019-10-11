@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.commons.security.ILoginListener.LoginEvents;
-import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.concept.IDescriptor;
@@ -19,13 +16,9 @@ import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.orientdb.factory.OrientDBFactory;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.metadata.security.OSecurity;
-import com.orientechnologies.orient.core.metadata.security.OUser;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.*;
 
@@ -49,17 +42,12 @@ public class CacheService {
 	private Collection<IModelListener<IDescriptor>> listeners;
 	
 	private static CacheService cache = new CacheService();
-	private static CachePersistenceService persistence;
+	private static CachePersistenceService persistence = CachePersistenceService.getInstance();
 	
 	private ODatabaseDocumentTx database;
 	private boolean connected;
-	private IDomainAieon domain;
 	
 	private CacheService() {
-		OrientDBFactory factory = OrientDBFactory.getInstance();
-		factory.createTemplate();
-		domain = factory.getDomain();
-		persistence = new CachePersistenceService(domain);
 		listeners = new ArrayList<IModelListener<IDescriptor>>();
 		this.connected = false;
 	}
@@ -67,33 +55,7 @@ public class CacheService {
 	public static CacheService getInstance(){
 		return cache;
 	}
-	
-	/**
-	 * Register a new user to the database
-	 * @param domain
-	 * @param login
-	 * @return
-	 */
-	protected boolean register( ODatabaseDocumentTx dbdoc, IDomainAieon domain, LoginEvent login ) {
-		if( !LoginEvents.REGISTER.equals( login.getLoginEvent() ))
-			return false;
-		String user = login.getUser().getUserName();
-		if( StringUtils.isEmpty(user))
-			return false;
-		String pwd = null;//login.getUser().getPassword();
-		if( StringUtils.isEmpty(pwd))
-			return false;
-		OSecurity sm = dbdoc.getMetadata().getSecurity();
-		List<ODocument> users = sm.getAllUsers();
-		for( ODocument doc: users ) {
-			OUser ouser = new OUser( doc );
-			if(ouser.getName().equals( user ))
-				return false;
-		}
-		OUser ouser = sm.createUser( user, pwd, new String[]{ IModelDatabase.Roles.ADMIN.toString()});	
-		return ( ouser != null );
-	}
-	
+		
 	/**
 	 * Connect to the database
 	 * 
@@ -102,7 +64,7 @@ public class CacheService {
 	public void open( ){
 		if( !persistence.isConnected() )
 			return;
-		IPasswordAieon password = new PasswordAieon( domain );
+		IPasswordAieon password = new PasswordAieon( persistence.getDomain() );
 		database = persistence.getDatabase().open(password.getUserName(), password.getPassword() );
 		this.connected = true;
 	}

@@ -21,6 +21,8 @@ import org.aieonf.template.xml.XMLTemplateBuilder;
 
 public abstract class AbstractModelContextFactory<C extends IContextAieon> implements IModelContextFactory<C,IDomainAieon> {
 
+	public static final String S_DEFAULT_VERSION = "0.1";
+	
 	private ITemplateLeaf<C> template;
 
 	private Collection<IModelBuilderListener<IDescribable<?>>> listeners;
@@ -67,6 +69,8 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	public IDomainAieon getDomain(){
 		ModelScanner<C> search = new ModelScanner<C>( this.template );
 		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
+		domain.set( IDescriptor.Attributes.ID, String.valueOf( domain.getDomain().hashCode() ) );
+		domain.set( IDescriptor.Attributes.VERSION, S_DEFAULT_VERSION );
 		return domain;
 	}
 
@@ -76,6 +80,8 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 		XMLTemplateBuilder<C,ITemplateLeaf<C>> builder = new XMLTemplateBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );
 		builder.build();
 		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.getModel();
+		root.getDescriptor().set( IDescriptor.Attributes.ID, identifier );
+		root.getDescriptor().set( IDescriptor.Attributes.VERSION, S_DEFAULT_VERSION );
 		root.getDescriptor().set( IConcept.Attributes.SOURCE, identifier );
 		return root;	
 	}

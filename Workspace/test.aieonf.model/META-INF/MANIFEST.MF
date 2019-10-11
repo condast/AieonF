@@ -21,3 +21,4 @@ Import-Package: org.aieonf.commons.strings,
  org.osgi.framework;version="1.8.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: test.aieonf.model.Activator
+Automatic-Module-Name: test.aieonf.model

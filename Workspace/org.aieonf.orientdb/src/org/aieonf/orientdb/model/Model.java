@@ -1,10 +1,14 @@
-package org.aieonf.model.core;
+package org.aieonf.orientdb.model;
 
 import java.util.*;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
+
+import com.tinkerpop.blueprints.Vertex;
 
 public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModelNode<T>
 {	
@@ -14,8 +18,8 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
-	protected Model(){
-		super();
+	protected Model( Vertex vertex ){
+		super( vertex );
 		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
 	}
 
@@ -23,9 +27,9 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
-	public Model( T descriptor )
+	public Model( Vertex vertex, T descriptor )
 	{
-		super( descriptor );
+		super( vertex, descriptor );
 		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
 	}
 
@@ -33,9 +37,9 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
-	public Model( T descriptor, String type )
+	public Model( Vertex vertex, T descriptor, String type )
 	{
-		super( descriptor, type );
+		super( vertex, descriptor, type );
 		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
 	}
 

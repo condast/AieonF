@@ -31,6 +31,7 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 		IDENTIFIER,
 		ROOT,
 		LEAF,
+		CHILD,
 		DEPTH,
 		DIRECTION;
 
@@ -85,7 +86,12 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	 */
 	public void setIdentifier( String identifier );
 	
-
+	/**
+	 * Get the scope of the model
+	 * @return
+	 */
+	public IConcept.Scope getScope();
+	
 	/**
 	 * Get the parent of this leaf, or null if the leaf is a root
 	 * @return

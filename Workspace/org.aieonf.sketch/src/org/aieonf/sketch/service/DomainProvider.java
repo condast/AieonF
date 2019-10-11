@@ -9,8 +9,6 @@ import org.osgi.service.component.annotations.Component;
 immediate=true)
 public class DomainProvider implements IDomainProvider {
 
-	public DomainProvider() {
-	}
 		
 	@Override
 	public IDomainAieon getDomain(ILoginUser user) {

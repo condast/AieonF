@@ -44,4 +44,5 @@ Bundle-ActivationPolicy: lazy
 Service-Component: OSGI-INF/aieonf.xml,
  OSGI-INF/org.aieonf.sketch.view.xml,
  OSGI-INF/org.aieonf.sketch.domain.provider.service.xml,
- OSGI-INF/org.aieonf.sketch.domain.service.xml
+ OSGI-INF/org.aieonf.sketch.active.domain.xml
+Automatic-Module-Name: org.aieonf.sketch

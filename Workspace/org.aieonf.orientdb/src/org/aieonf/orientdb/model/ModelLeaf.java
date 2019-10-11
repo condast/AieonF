@@ -1,4 +1,4 @@
-package org.aieonf.model.core;
+package org.aieonf.orientdb.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,12 +7,16 @@ import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.IConcept.Scope;
-import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
+import org.aieonf.orientdb.graph.VertexConceptBase;
 
-public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IModelLeaf<T>
+import com.tinkerpop.blueprints.Vertex;
+
+public class ModelLeaf<T extends IDescriptor> extends VertexConceptBase implements IModelLeaf<T>
 {	
-	//The concept that is modelled
+	//The concept that is modeled
 	private T descriptor;
 	private boolean leaf;
 	
@@ -21,7 +25,8 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	/**
 	 * Only used for special models
 	 */
-	protected ModelLeaf(){
+	protected ModelLeaf( Vertex vertex ){
+		super( vertex );
 		this.leaf = true;
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
@@ -30,8 +35,8 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( T descriptor ){
-		this();
+	public ModelLeaf( Vertex vertex, T descriptor ){
+		this( vertex );
 		init( descriptor);
  	}
 
@@ -39,8 +44,8 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( T descriptor, String type ){
-		this();
+	public ModelLeaf( Vertex vertex, T descriptor, String type ){
+		this( vertex );
 		init( descriptor);
 		this.set( IConcept.Attributes.TYPE, type );
  	}
@@ -104,16 +109,11 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	public void setIdentifier( String identifier ){
 		set( Attributes.IDENTIFIER , identifier );
 	}
-	
+
 	@Override
 	public Scope getScope() {
-		String str = get( IConcept.Attributes.SCOPE ); 
-		Scope scope = StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);
-		return scope;
-	}
-	
-	public void setScope( Scope scope ) {
-		set( IConcept.Attributes.SCOPE, scope.name() );
+		String str = get( IConcept.Attributes.SCOPE.name());
+		return StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);
 	}
 
 	/**

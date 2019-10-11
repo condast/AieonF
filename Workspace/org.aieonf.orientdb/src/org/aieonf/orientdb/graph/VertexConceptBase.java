@@ -20,10 +20,13 @@ public class VertexConceptBase implements IConceptBase {
 	//If true, something has changed
 	private transient boolean changed;
 
-	public VertexConceptBase( Vertex vertex )
-	{
+	public VertexConceptBase( Vertex vertex ){
 		this.vertex = vertex;
 		this.changed = false;
+	}
+	
+	public Vertex getVertex() {
+		return vertex;
 	}
 
 	/* (non-Javadoc)

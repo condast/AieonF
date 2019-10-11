@@ -1,4 +1,4 @@
-package org.aieonf.orientdb.cache;
+package org.aieonf.orientdb.graph;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ import org.aieonf.orientdb.core.AbstractPersistenceService;
 import org.aieonf.orientdb.factory.OrientDBFactory;
 import org.aieonf.template.def.ITemplateLeaf;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 
 /**
@@ -28,30 +28,24 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
  * @param <D>
  * @param <Descriptor>
  */
-public class CachePersistenceService extends AbstractPersistenceService {
+public class GraphPersistenceService extends AbstractPersistenceService {
 	
-	public static final String S_IDENTIFIER = "documenttxModel";
+	public static final String S_IDENTIFIER = "graphtxModel";
 	
-	protected static final String S_CACHE = "Cache";
+	protected static final String S_GRAPH = "Graph";
 	protected static final String S_DESCRIPTORS = "Descriptors";
 
 	private String source;
 	private IDomainAieon domain;
 	private OrientGraphFactory factory;
 	private ITemplateLeaf<IContextAieon> template;
-	private ODatabaseDocumentTx database;
+	private OrientGraph graph;
 
-	private static CachePersistenceService service = new CachePersistenceService();
-	
-	private CachePersistenceService() {
-		super( S_IDENTIFIER, S_CACHE );
+	private GraphPersistenceService( IDomainAieon domain ) {
+		super( S_IDENTIFIER, S_GRAPH );
 		OrientDBFactory factory = OrientDBFactory.getInstance();
 		template=  factory.createTemplate();
-		domain = factory.getDomain();
-	}
-
-	public static CachePersistenceService getInstance() {
-		return service;
+		this.domain = domain;
 	}
 	
 	public IDomainAieon getDomain() {
@@ -69,10 +63,10 @@ public class CachePersistenceService extends AbstractPersistenceService {
 	 * Create a database
 	 * @return
 	 */
-	public ODatabaseDocumentTx getDatabase() {
+	public OrientGraph getGraph() {
 		if(!isConnected())
 			return null;
-		return database; 
+		return graph; 
 	}
 	
 	@Override
@@ -80,15 +74,13 @@ public class CachePersistenceService extends AbstractPersistenceService {
 		ModelScanner<IContextAieon> search = new ModelScanner<IContextAieon>( template );
 		ILoaderAieon loader = new LoaderAieon( search.getDescriptors( ILoaderAieon.Attributes.LOADER.toString())[0]);
 		loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
-		loader.setIdentifier( S_CACHE );
+		loader.setIdentifier( S_GRAPH );
 		File file = ProjectFolderUtils.getDefaultUserFile( loader, true); 
 		source = file.toURI().toString();
 		source = source.replace( S_FILE, S_LOCAL);		
 		IPasswordAieon password = new PasswordAieon( loader );
 		factory = new OrientGraphFactory(source, password.getUserName(), password.getPassword() ).setupPool(1, 10);	
-		database = factory.getDatabase();
-		if( !database.exists())
-			database = database.create();
+		graph = factory.getTx();
 		return true;
 	}
 

@@ -40,3 +40,4 @@ ationPolicy: lazy
 Service-Component: OSGI-INF/models.xml,
  OSGI-INF/test.aieonf.orientdb.service.LoginProvider.xml
 Bundle-ActivationPolicy: lazy
+Automatic-Module-Name: test.aieonf.orientdb

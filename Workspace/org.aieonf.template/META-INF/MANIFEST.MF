@@ -53,3 +53,4 @@ Import-Package: org.aieonf.commons,
  org.aieonf.model.provider,
  org.aieonf.model.search,
  org.aieonf.model.xml
+Automatic-Module-Name: org.aieonf.template

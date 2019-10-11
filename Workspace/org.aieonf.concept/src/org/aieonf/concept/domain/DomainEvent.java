@@ -1,8 +1,6 @@
-package org.aieonf.osgi.selection;
+package org.aieonf.concept.domain;
 
 import java.util.EventObject;
-
-import org.aieonf.concept.domain.IDomainAieon;
 
 public class DomainEvent extends EventObject {
 	private static final long serialVersionUID = 1L;

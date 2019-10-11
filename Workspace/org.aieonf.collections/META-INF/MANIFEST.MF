@@ -31,3 +31,4 @@ Import-Package: org.aieonf.commons.encryption,
  org.aieonf.model,
  org.aieonf.model.core,
  org.aieonf.model.library
+Automatic-Module-Name: org.aieonf.collections

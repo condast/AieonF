@@ -1,13 +1,14 @@
 package org.aieonf.orientdb.service;
 
 import org.aieonf.commons.security.ILoginProvider;
+import org.aieonf.orientdb.core.Dispatcher;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 @Component
 public class LoginConsumer {
 
-	private LoginDispatcher dispatcher = LoginDispatcher.getInstance();
+	private Dispatcher dispatcher = Dispatcher.getInstance();
 	private ILoginProvider provider;
 	
 	public LoginConsumer() {}

@@ -11,6 +11,8 @@
  *******************************************************************************/
 package  org.aieonf.commons.strings;
 
+import java.io.InputStream;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -159,8 +161,6 @@ public final class StringUtils {
 		return rtv;
 	}
 	
-	
-	
 	public static Set<String> getLastStringsSet(Set<String> set, String remove){
 		Set<String> rtv = new TreeSet<String>();
 		for(String s:set){
@@ -168,8 +168,7 @@ public final class StringUtils {
 			snew = snew.trim();
 			if(!snew.isEmpty())
 			 rtv.add(snew);
-		}
-		
+		}	
 		return rtv;		
 	}
 	
@@ -180,8 +179,16 @@ public final class StringUtils {
 		return split;
 	}
 	
-	
-	
-	
-
+	public static String readInput( InputStream in ){
+		StringBuilder buffer = new StringBuilder();
+		Scanner scanner = new Scanner( in );
+		try{
+			while( scanner.hasNextLine() )
+				buffer.append( scanner.nextLine() );
+		}
+		finally{
+			scanner.close();
+		}
+		return buffer.toString();
+	}
 }

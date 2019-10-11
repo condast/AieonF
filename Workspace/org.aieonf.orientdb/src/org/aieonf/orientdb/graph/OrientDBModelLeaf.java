@@ -1,51 +1,56 @@
-package org.aieonf.model.core;
+package org.aieonf.orientdb.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
-import org.aieonf.concept.*;
 import org.aieonf.concept.IConcept.Scope;
-import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.IConcept;
+import org.aieonf.concept.IDescribable;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 
-public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IModelLeaf<T>
-{	
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+
+public class OrientDBModelLeaf extends VertexConceptBase implements IModelLeaf<IDescriptor> {
+
 	//The concept that is modelled
-	private T descriptor;
+	private transient IDescriptor descriptor;
 	private boolean leaf;
 	
 	private IModelNode<? extends IDescriptor> parent;
 
-	/**
-	 * Only used for special models
-	 */
-	protected ModelLeaf(){
+	public OrientDBModelLeaf( IModelNode<? extends IDescriptor> parent, Vertex vertex, IDescriptor descriptor ) {
+		super( vertex );
+		this.parent = parent;
+		this.descriptor = descriptor;
+		setIdentifier( descriptor.get( IModelLeaf.Attributes.IDENTIFIER ));
 		this.leaf = true;
-		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
+
+	public OrientDBModelLeaf( OrientDBModel parent, Object id, OrientGraph graph, IDescriptor descriptor ) {
+		this( parent, graph.addVertex(id), descriptor );
+		try {
+			graph.addEdge(null, parent.getVertex(), super.getVertex(), IModelLeaf.Attributes.CHILD.name());
+			graph.commit();
+		}
+		catch( Exception ex ) {
+			graph.rollback();
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public IDescriptor getDescriptor() {
+		return descriptor;
+	}
+
 	
-	/**
-	 * Create the model
-	 * @param concept
-	 */
-	public ModelLeaf( T descriptor ){
-		this();
-		init( descriptor);
- 	}
-
-	/**
-	 * Create the model
-	 * @param concept
-	 */
-	public ModelLeaf( T descriptor, String type ){
-		this();
-		init( descriptor);
-		this.set( IConcept.Attributes.TYPE, type );
- 	}
-
-	public void init( T descriptor ){
+	public void init( IDescriptor descriptor ){
 		this.descriptor = descriptor;
 		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
 		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
@@ -104,16 +109,11 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	public void setIdentifier( String identifier ){
 		set( Attributes.IDENTIFIER , identifier );
 	}
-	
+
 	@Override
 	public Scope getScope() {
-		String str = get( IConcept.Attributes.SCOPE ); 
-		Scope scope = StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);
-		return scope;
-	}
-	
-	public void setScope( Scope scope ) {
-		set( IConcept.Attributes.SCOPE, scope.name() );
+		String str = get( IConcept.Attributes.SCOPE.name());
+		return StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);
 	}
 
 	/**
@@ -154,16 +154,6 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
   	return super.hasChanged();
   }
   
- 	/**
-	 * Get the descriptor that this tree node represents
-	 * @return
-	 */
-	@Override
-	public T getDescriptor()
-	{
-		return this.descriptor;
-	}
-
 	/**
 	 * Get the direction of this model with 
 	 * respect to its children

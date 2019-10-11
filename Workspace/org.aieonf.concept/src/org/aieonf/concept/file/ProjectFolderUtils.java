@@ -145,8 +145,22 @@ public class ProjectFolderUtils {
 		String folder = loader.getSource();
 		String name = loader.getIdentifier();
 		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator + 
-				S_SAIGHT + File.separator +
-				folder + File.separator + StringStyler.prettyString( name ));
+				S_SAIGHT + File.separator + folder + File.separator + StringStyler.prettyString( name ));
+		if( create & !file.exists())
+			file.mkdirs();
+		return file;
+	}
+
+	/**
+	 * Return the default user directory. This is '%system-user%\<folder>\'
+	 * @param aieon
+	 * @return
+	 */
+	public static File getDefaultUserRoot( String bundleId, boolean create )
+	{
+		String folder = S_SAIGHT + File.separator + bundleId + File.separator;
+		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator + 
+				folder );
 		if( create & !file.exists())
 			file.mkdirs();
 		return file;

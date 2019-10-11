@@ -29,7 +29,7 @@ public class OrientDBFactory extends AbstractProviderContextFactory<IContextAieo
 	}
 
 	public File getOrientDBRoot(){
-		return ProjectFolderUtils.getDefaultRootFolder( S_BUNDLE_ID );	
+		return ProjectFolderUtils.getDefaultUserRoot( S_BUNDLE_ID, true );	
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.Universe;
@@ -129,7 +130,8 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public String getUserName()
 	{
-		return this.get( IPasswordAieon.Attributes.USER_NAME );
+		String userName = this.get(IPasswordAieon.Attributes.USER_NAME.toString());
+		return StringUtils.isEmpty(userName)? this.get( IPasswordAieon.Attributes.USER_NAME ): userName;
 	}
 
 	/* (non-Javadoc)
@@ -147,7 +149,8 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public String getPassword()
 	{
-		return this.get( IPasswordAieon.Attributes.PASSWORD );
+		String password = this.get(IPasswordAieon.Attributes.PASSWORD.toString());
+		return StringUtils.isEmpty(password)? this.get( IPasswordAieon.Attributes.PASSWORD ): password;
 	}
 
 	/* (non-Javadoc)

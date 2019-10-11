@@ -1,34 +1,33 @@
 package org.aieonf.orientdb.db;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.commons.security.ILoginListener.LoginEvents;
 import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.commons.security.LoginEvent;
-import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelListener;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.cache.ODescriptor;
+import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.factory.OrientDBFactory;
+import org.aieonf.orientdb.graph.OrientDBModelLeaf;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
 import com.orientechnologies.orient.core.metadata.security.OUser;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import com.orientechnologies.orient.core.sql.query.*;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
  * Handles the Orient Databae
@@ -38,7 +37,7 @@ import com.orientechnologies.orient.core.sql.query.*;
  * @param <D>
  * @param <Descriptor>
  */
-public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor> {
+public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<IDescriptor>> {
 	
 	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
 	public static final String S_IDENTIFIER = "documenttxModel";
@@ -47,12 +46,14 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 	protected static final String S_CACHE = "Cache";
 	protected static final String S_DESCRIPTORS = "Descriptors";
 
-	private Collection<IModelListener<IDescriptor>> listeners;
+	private Collection<IModelListener<IModelNode<IDescriptor>>> listeners;
 	
-	private static DatabaseService cache = new DatabaseService();
-	private static DatabasePersistenceService persistence;
-	
-	private ODatabaseDocumentTx database;
+	private static DatabaseService service = new DatabaseService();
+	private static DatabasePersistenceService persistence = DatabasePersistenceService.getInstance();
+	private static Dispatcher login = Dispatcher.getInstance();
+	private static CacheService cache = CacheService.getInstance();
+
+	private OrientGraph graph;
 	private boolean connected;
 	private IDomainAieon domain;
 	
@@ -60,13 +61,12 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 		OrientDBFactory factory = OrientDBFactory.getInstance();
 		factory.createTemplate();
 		domain = factory.getDomain();
-		persistence = new DatabasePersistenceService(domain);
-		listeners = new ArrayList<IModelListener<IDescriptor>>();
+		listeners = new ArrayList<>();
 		this.connected = false;
 	}
 
 	public static DatabaseService getInstance(){
-		return cache;
+		return service;
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 	 * @return
 	 */
 	protected boolean register( ODatabaseDocumentTx dbdoc, LoginEvent login ) {
-		OSecurity sm = database.getMetadata().getSecurity();
+		OSecurity sm = graph.getRawGraph().getMetadata().getSecurity();
 		ILoginUser loginUser = login.getUser();
 		switch( login.getLoginEvent() ) {
 		case REGISTER:
@@ -104,8 +104,8 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 	public void open( ){
 		if( !persistence.isConnected() )
 			return;
-		ILoginUser user = persistence.getUser();
-		database = persistence.getDatabase().open(user.getUserName(), String.valueOf( user.getToken()));
+		ILoginUser user = login.getUser();
+		graph = persistence.getDatabase().open(user.getUserName(), String.valueOf( user.getToken()));
 		this.connected = true;
 	}
 	
@@ -115,17 +115,17 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 	}
 	
 	@Override
-	public void addListener(IModelListener<IDescriptor> listener) {
+	public void addListener(IModelListener<IModelNode<IDescriptor>> listener) {
 		this.listeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(IModelListener<IDescriptor> listener) {
+	public void removeListener(IModelListener<IModelNode<IDescriptor>> listener) {
 		this.listeners.remove(listener);
 	}
 
-	protected final void notifyListeners( ModelEvent<IDescriptor> event ){
-		for( IModelListener<IDescriptor> listener: this.listeners )
+	protected final void notifyListeners( ModelEvent<IModelNode<IDescriptor>> event ){
+		for( IModelListener<IModelNode<IDescriptor>> listener: this.listeners )
 			listener.notifyChange(event);
 	}
 	
@@ -142,24 +142,24 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 
 	@Override
 	public boolean isOpen(){
-		return !this.database.isClosed();
+		return !this.graph.isClosed();
 	}
 
 	@Override
 	public void sync(){
 		try{
-			this.database.commit();
+			this.graph.commit();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 		}
 		finally{
-			if( this.database != null )
-				this.database.rollback();
+			if( this.graph != null )
+				this.graph.rollback();
 		}
 	}
 
-	public ITransaction<IDescriptor,IModelProvider<IDomainAieon, IDescriptor>> createTransaction() {
+	public ITransaction<IModelNode<IDescriptor>,IModelProvider<IDomainAieon, IModelNode<IDescriptor>>> createTransaction() {
 		Transaction transaction = new Transaction( this );
 		transaction.create();
 		return transaction;
@@ -169,39 +169,47 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 	public void close(){
 		this.connected = false;
 		//database.commit();
-		if( database != null )
-			database.close();
+		if( graph != null )
+			graph.shutdown();
 	}
 
 	@Override
-	public boolean contains(IDescriptor descriptor) {
-		for (ODocument document : database.browseClass( descriptor.getName())) {
+	public boolean contains(IModelNode<IDescriptor> model ) {
+		/*
+		for (ODocument document : graph.gbrowseClass( model.getID())) {
 			String id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
-			if( descriptor.getID().equals( id ))
+			if( model.getID().equals( id ))
 				return true;
-		}		
+		}	
+		*/	
 		return false;
 	}
 
 	@Override
-	public Collection<IDescriptor> get(IDescriptor descriptor) throws ParseException {
-		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
-		for (ODocument document : database.browseClass( descriptor.getName())) {
+	public Collection<IModelNode<IDescriptor>> get(IDescriptor descriptor) throws ParseException {
+		Collection<IModelNode<IDescriptor>> results = new ArrayList<>();
+		/*
+		for (ODocument document : graph.browseClass( descriptor.getName())) {
 			String id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
 			if( descriptor.getID().equals( id ))
 				results.add( descriptor );
-		}		
+		}	
+		*/	
 		return results;
 	}
 
+	
 	@Override
-	public Collection<IDescriptor> search(IModelFilter<IDescriptor, IDescriptor> filter) throws ParseException {
-		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
-		for (ODocument document : database.browseCluster( S_DESCRIPTORS )) {
+	public Collection<IModelNode<IDescriptor>> search(IModelFilter<IDescriptor, IModelNode<IDescriptor>> filter)
+			throws ParseException {
+		Collection<IModelNode<IDescriptor>> results = new ArrayList<>();
+/*
+		for (ODocument document : graph.browseCluster( S_DESCRIPTORS )) {
 			ODescriptor descriptor = new ODescriptor(document);    
 			if( filter.accept( descriptor ))
 				results.add( descriptor );
 		}		
+		*/
 		return results;
 	}
 
@@ -211,57 +219,33 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 	}
 
 	@Override
-	public boolean add(IDescriptor descriptor) {
-		ODocument odesc= createDocument( descriptor );
-		odesc.save( /*S_DESCRIPTORS*/ );//Add to cluster descriptors
+	public boolean add(IModelNode<IDescriptor> model) {
+		OrientDBModelLeaf odesc= null;//createDocument( model.getDescriptor() );
+		//odesc.save( /*S_DESCRIPTORS*/ );//Add to cluster descriptors
 		return true;
 	}
 
 	@Override
-	public void remove(IDescriptor descriptor) {
-		ODescriptor odesc= (ODescriptor) descriptor;
+	public void remove(IModelNode<IDescriptor> model) {
+		ODescriptor odesc= null;//(ODescriptor) model;
 		odesc.getDocument().delete();
 	}
 
 	@Override
-	public boolean update(IDescriptor descriptor ){
-		ODescriptor odesc= (ODescriptor) descriptor;
+	public boolean update(IModelNode<IDescriptor> model ){
+		ODescriptor odesc= null;//(ODescriptor) model;
 		odesc.getDocument().save();
 		return true;
 	}
 
 	@Override
 	public void deactivate() {
-		database.close();
+		graph.shutdown();
 	}
 
-	
-	/**
-	 * Create a descriptor from the given vertex
-	 * @param database
-	 * @param vertex
-	 * @return
-	 */
-	protected static ODocument createDocument( IDescriptor describable ){
-		IDescriptor descriptor = describable.getDescriptor();
-		ODocument doc = new ODocument( descriptor.getName());
-		Iterator<String> iterator = descriptor.iterator();
-		while( iterator.hasNext()) {
-			String attr = iterator.next();
-			attr = attr.replace(".", "@8");
-			String value = descriptor.get( attr );
-			if( !StringUtils.isEmpty( value ))
-				doc.field( attr, value);
-		}
-		BodyFactory.IDFactory( descriptor );
-		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
-		descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
-		return doc;		
-	}
+	protected class Transaction extends AbstractTransaction<IModelNode<IDescriptor>, IModelProvider<IDomainAieon, IModelNode<IDescriptor>>>{
 
-	protected class Transaction extends AbstractTransaction<IDescriptor, IModelProvider<IDomainAieon, IDescriptor>>{
-
-		protected Transaction( IModelProvider<IDomainAieon,IDescriptor> provider) {
+		protected Transaction( IModelProvider<IDomainAieon,IModelNode<IDescriptor>> provider) {
 			super( provider );
 		}
 
@@ -272,7 +256,7 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IDescriptor
 		}
 
 		@Override
-		protected boolean onCreate(IModelProvider<IDomainAieon, IDescriptor> provider) {
+		protected boolean onCreate(IModelProvider<IDomainAieon, IModelNode<IDescriptor>> provider) {
 			return super.getProvider().isOpen();
 		}
 	}

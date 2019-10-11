@@ -14,12 +14,12 @@
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\http" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\gson" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\apache" type="Directory"/>
-<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\orientdb" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\gson" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\freemarker" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\rap" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\nebula" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\p2" type="Directory"/>
+	<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\orientdb" type="Directory"/>
 </locations>
 <includeBundles>
 <plugin id="cdi.api"/>
@@ -41,20 +41,20 @@
 <plugin id="javax.annotation-api"/>
 <plugin id="javax.ejb"/>
 <plugin id="javax.el"/>
-<plugin id="javax.jms" version="1.1.0.v201205091237"/>
 <plugin id="javax.jms" version="1.1.0.v200906010428"/>
+<plugin id="javax.jms" version="1.1.0.v201205091237"/>
 <plugin id="javax.mail.glassfish" version="1.4.1.v201005082020"/>
 <plugin id="javax.persistence" version="2.2.0.v201708071007"/>
 <plugin id="javax.persistence" version="2.1.1.v201509150925"/>
 <plugin id="javax.persistence" version="2.0.6.v201308211412"/>
 <plugin id="javax.persistence.javadoc"/>
-<plugin id="javax.persistence.source" version="2.2.0.v201708071007"/>
 <plugin id="javax.persistence.source" version="2.0.6.v201308211412"/>
+<plugin id="javax.persistence.source" version="2.2.0.v201708071007"/>
 <plugin id="javax.persistence.source" version="2.1.1.v201509150925"/>
 <plugin id="javax.resource"/>
-<plugin id="javax.servlet" version="2.4.0.v200806031604"/>
 <plugin id="javax.servlet" version="3.1.0.20170128"/>
 <plugin id="javax.servlet" version="3.0.0.v201112011016"/>
+<plugin id="javax.servlet" version="2.4.0.v200806031604"/>
 <plugin id="javax.servlet.jsp"/>
 <plugin id="javax.servlet.jsp.jstl-api"/>
 <plugin id="javax.transaction" version="1.1.0.v201002051055"/>
@@ -245,42 +245,23 @@
 	<plugin id="org.tukaani.xz.source"/>
 	<plugin id="org.sat4j.core"/>
 	<plugin id="org.sat4j.pb"/>
-	<plugin id="com.codahale.metrics.core"/>
-	<plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
-	<plugin id="com.fasterxml.jackson.core.jackson-core"/>
-	<plugin id="com.fasterxml.jackson.core.jackson-databind"/>
-	<plugin id="com.googlecode.concurrentlinkedhashmap.lru"/>
-	<plugin id="com.hazelcast"/>
-	<plugin id="com.hazelcast.aws"/>
+	<plugin id="com.orientechnologies.orientdb-server"/>
 	<plugin id="com.orientechnologies.orientdb-client"/>
-	<plugin id="com.orientechnologies.orientdb-community"/>
 	<plugin id="com.orientechnologies.orientdb-core"/>
+	<plugin id="com.orientechnologies.orientdb-tools"/>
+	<plugin id="com.sun.jna"/>
+	<plugin id="com.sun.jna.platform"/>
+	<plugin id="com.googlecode.concurrentlinkedhashmap.lru"/>
+	<plugin id="com.orientechnologies.orientdb-community"/>
 	<plugin id="com.orientechnologies.orientdb-distributed"/>
-	<plugin id="com.orientechnologies.orientdb-graphdb"/>
 	<plugin id="com.orientechnologies.orientdb-jdbc"/>
 	<plugin id="com.orientechnologies.orientdb-lucene"/>
 	<plugin id="com.orientechnologies.orientdb-object"/>
-	<plugin id="com.orientechnologies.orientdb-server"/>
-	<plugin id="com.orientechnologies.orientdb-tools"/>
-	<plugin id="com.sun.jersey.core"/>
-	<plugin id="com.sun.jersey.json"/>
-	<plugin id="com.sun.jna"/>
-	<plugin id="com.sun.jna.platform"/>
-	<plugin id="groovy"/>
-	<plugin id="jackson-core-asl"/>
-	<plugin id="jackson-jaxrs"/>
-	<plugin id="jackson-mapper-asl"/>
-	<plugin id="jackson-xc"/>
+	<plugin id="com.orientechnologies.orientdb-graphdb"/>
 	<plugin id="javassist" version="3.22.0.GA"/>
-	<plugin id="javax.servlet-api"/>
-	<plugin id="log4j"/>
-	<plugin id="org.apache.commons.collections"/>
-	<plugin id="org.apache.commons.configuration"/>
-	<plugin id="org.apache.commons.lang"/>
-	<plugin id="org.apache.ivy"/>
+	<plugin id="com.fasterxml.jackson.core.jackson-core"/>
+	<plugin id="com.fasterxml.jackson.core.jackson-databind"/>
 	<plugin id="org.codehaus.jettison.jettison"/>
-	<plugin id="org.fusesource.jansi"/>
-	<plugin id="org.neo4j.driver.neo4j-java-driver"/>
-	<plugin id="org.xerial.snappy.snappy-java"/>
+	<plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
 </includeBundles>
 </target>

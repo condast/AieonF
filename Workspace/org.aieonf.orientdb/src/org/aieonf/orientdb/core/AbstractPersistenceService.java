@@ -21,10 +21,12 @@ import org.aieonf.commons.persistence.service.IPersistenceServiceListener.Servic
  * @author keesp
  *
  */
-public abstract class PersistenceService implements IPersistenceService{
+public abstract class AbstractPersistenceService implements IPersistenceService{
 
-	//private EntityManagerFactory factory;
-	//private EntityManager manager;
+	protected static final String S_BUNDLE_ID = "org.aieonf.orientdb";
+	protected static final String S_LOCAL = "plocal:";
+	protected static final String S_FILE = "file:";	
+	protected static final String S_ROOT = "Root";
 
 	private String id;
 	private String name;
@@ -33,18 +35,15 @@ public abstract class PersistenceService implements IPersistenceService{
 	private List<IPersistenceServiceListener> listeners;
 
 	private Lock lock;
-	
-	private DatabaseActivator activator = DatabaseActivator.getInstance(); 
-	
+		
 	private final Logger logger = Logger.getLogger( this.getClass().getCanonicalName());
 
-	protected PersistenceService( String id, String name ) {
+	protected AbstractPersistenceService( String id, String name ) {
 		this.id = id;
 		this.name = name;
 		this.connected = false;
 		lock = new ReentrantLock();
 		listeners = new ArrayList<IPersistenceServiceListener>();
-		activator.startup();
 	}
 
 	@Override
@@ -63,7 +62,7 @@ public abstract class PersistenceService implements IPersistenceService{
 	 */
 	@Override
 	public boolean isEnabled(){
-		return false;//( factory != null );  
+		return true;  
 	}
 
 	protected abstract boolean onConnect();
@@ -165,6 +164,5 @@ public abstract class PersistenceService implements IPersistenceService{
 	}
 	
 	public void shutdown() {
-		activator.shutdown();
 	}
 }
