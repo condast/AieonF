@@ -14,11 +14,20 @@ public class OrientDBModel extends OrientDBModelLeaf implements IModelNode<IDesc
 	private transient OrientGraph graph;
 	
 	private Collection<OrientDBModelLeaf> children;
+
+	public OrientDBModel() {
+		
+	}
+
+	public OrientDBModel( Object id, OrientGraph graph, IDescriptor descriptor ) {
+		this( null, id, graph, descriptor);
+	}
 	
 	public OrientDBModel( OrientDBModel parent, Object id, OrientGraph graph, IDescriptor descriptor ) {
 		super( parent, id, graph, descriptor );
 		this.graph = graph;
 		children = new ArrayList<>();
+		parent.addChild(this);
 	}
 
 	@Override

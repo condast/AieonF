@@ -227,7 +227,7 @@ public abstract class AbstractOrientGraphModel<D extends IDomainAieon, U extends
 	 */
 	public static Vertex convert( OrientGraph graph, IDescriptor descriptor, String meaning ){
 		Vertex vtx = graph.addVertex( descriptor.getID()); // 1st OPERATION: IMPLICITLY BEGIN A TRANSACTION
-		Iterator<String> iterator = descriptor.iterator();
+		Iterator<String> iterator = descriptor.keySet();
 		while( iterator.hasNext() ){
 			String key = iterator.next();
 			String value = descriptor.get( key );

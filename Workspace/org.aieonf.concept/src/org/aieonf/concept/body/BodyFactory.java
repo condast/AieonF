@@ -197,7 +197,7 @@ public class BodyFactory<T extends Object>
 	{
 		if( clear == true)
 			target.clear();
-		Iterator<String> keys = source.iterator();
+		Iterator<String> keys = source.keySet();
 		String key;
 		while( keys.hasNext() == true ){
 			key = keys.next();

@@ -197,15 +197,21 @@ public class ConceptBase implements IConceptBase
 	 * @see org.aieonf.concept.core.IConceptBase#iterator()
 	 */
 	@Override
-	public final Iterator<String> iterator()
+	public final Iterator<String> keySet()
 	{
 		return this.properties.keySet().iterator() ;
+	}
+
+	
+	@Override
+	public Iterator<Map.Entry<String, String>> iterator() {
+		return this.properties.entrySet().iterator();
 	}
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		IConceptBase newBase = new ConceptBase();
-		Iterator<String> iterator = iterator();
+		Iterator<String> iterator = keySet();
 		while( iterator.hasNext() ){
 			String key = iterator.next();
 			newBase.set(key, get( key));

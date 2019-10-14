@@ -136,7 +136,7 @@ public class StoreConcept
 			str = leadingText + ": " + str;
 		buffer.append( str  );
 		if( includeAttrs ){
-			Iterator<String> iterator = descriptor.iterator();
+			Iterator<String> iterator = descriptor.keySet();
 			String key;
 			while( iterator.hasNext() ){
 				for( int i =0; i< depth+1; i++ )
@@ -162,7 +162,7 @@ public class StoreConcept
       doc.createElement( IConcept.ATTRIBUTES );
     root.appendChild( attributesRoot );
 
-    Iterator<String> iterator = descriptor.iterator();
+    Iterator<String> iterator = descriptor.keySet();
     String key;
     Element element;
     Element appendRoot;

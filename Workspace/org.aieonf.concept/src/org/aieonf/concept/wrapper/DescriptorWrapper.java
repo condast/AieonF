@@ -1,9 +1,9 @@
 package org.aieonf.concept.wrapper;
 
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.IDescriptorViewer;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
@@ -312,8 +312,14 @@ public class DescriptorWrapper implements IDescriptor
 	 * @return Iterator<String>
 	 */
 	@Override
-	public final Iterator<String> iterator()
+	public final Iterator<String> keySet()
 	{
+		return this.descriptor.keySet();
+	}
+
+	
+	@Override
+	public Iterator<Entry<String, String>> iterator() {
 		return this.descriptor.iterator();
 	}
 

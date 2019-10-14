@@ -8,39 +8,17 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 
-import com.tinkerpop.blueprints.Vertex;
-
-public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModelNode<T>
+public class Model extends ModelLeaf implements IModelNode<IDescriptor>
 {	
-	private Vector<IModelLeaf<? extends IDescriptor>>children;
+	private Collection<ModelLeaf>children;
 
 	/**
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
-	protected Model( Vertex vertex ){
-		super( vertex );
-		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
-	}
-
-	/**
-	 * Create the model. Use only when parsing data
-	 * @param concept
-	 */
-	public Model( Vertex vertex, T descriptor )
-	{
-		super( vertex, descriptor );
-		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
-	}
-
-	/**
-	 * Create the model. Use only when parsing data
-	 * @param concept
-	 */
-	public Model( Vertex vertex, T descriptor, String type )
-	{
-		super( vertex, descriptor, type );
-		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
+	protected Model(){
+		super();
+		this.children = new ArrayList<>();
 	}
 
 	/**
@@ -50,7 +28,8 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	@Override
 	public Collection<IModelLeaf<? extends IDescriptor>> getChildren()
 	{
-		return this.children;
+		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<IModelLeaf<? extends IDescriptor>>( this.children);
+		return results;
 	}
 
 	/**
@@ -115,29 +94,9 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 			return false;
 		}
 		updateDepth( child );
-		super.setChanged( this.children.add( child ));
+		super.setChanged( this.children.add( (ModelLeaf) child ));
 		super.setLeaf( children.isEmpty() );
 		return super.hasChanged();
-	}
-
-	/**
-	 * Insert a child model to the model at the given index location
-	 * @param child IModelNode<? extends IDescriptor>
-	 * @returns the created model
-	 */
-	public boolean insertChild( IModelLeaf<? extends IDescriptor> child, int index ){
-		child.setParent( this );
-		try {
-			child.setDepth( super.getDepth() + 1 );
-		}
-		catch (ConceptException e) {
-			return false;
-		}
-		updateDepth( child );
-		this.children.insertElementAt( child, index );
-		super.setChanged( true);
-		super.setLeaf( children.isEmpty() );
-		return super.hasChanged();		
 	}
 
 	/**

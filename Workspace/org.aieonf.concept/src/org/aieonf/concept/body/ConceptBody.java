@@ -102,7 +102,7 @@ public class ConceptBody<T extends IDescriptor>
 	public static String getAttributes( IDescriptor descriptor )
 	{
 		StringBuffer buffer = new StringBuffer();
-		Iterator<String> iterator = descriptor.iterator();
+		Iterator<String> iterator = descriptor.keySet();
 		String key;
 		buffer.append( "Attributes of: " + descriptor.toString() );
 		int index = 0;

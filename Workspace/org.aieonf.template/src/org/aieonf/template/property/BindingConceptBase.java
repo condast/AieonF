@@ -38,7 +38,7 @@ public class BindingConceptBase extends ConceptBase implements PropertyChangeLis
 	@Override
 	public synchronized void clear()
 	{
-		Iterator<String> iterator = super.iterator();
+		Iterator<String> iterator = super.keySet();
 		while( iterator.hasNext()){
 			String prop = iterator.next();
 			PropertyChangeListener[] listeners = propertyChangeSupport.getPropertyChangeListeners(prop);

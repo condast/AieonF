@@ -1,6 +1,7 @@
 package org.aieonf.concept.core;
 
 import java.util.Iterator;
+import java.util.Map;
 
 public interface IConceptBase extends Cloneable{
 
@@ -103,5 +104,12 @@ public interface IConceptBase extends Cloneable{
 	 *
 	 * @return Iterator<String>
 	 */
-	public abstract Iterator<String> iterator();
+	public abstract Iterator<String> keySet();
+
+	/**
+	 * Get an iterator of the concept properties
+	 *
+	 * @return Iterator<String>
+	 */
+	public abstract Iterator<Map.Entry<String, String>> iterator();
 }

@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.IConceptBase;
@@ -45,7 +46,7 @@ public class BindingConceptBaseWrapper implements IConceptBase, PropertyChangeLi
 	@Override
 	public synchronized void clear()
 	{
-		Iterator<String> iterator = base.iterator();
+		Iterator<String> iterator = base.keySet();
 		while( iterator.hasNext()){
 			String prop = iterator.next();
 			PropertyChangeListener[] listeners = propertyChangeSupport.getPropertyChangeListeners(prop);
@@ -131,7 +132,13 @@ public class BindingConceptBaseWrapper implements IConceptBase, PropertyChangeLi
 	}
 
 	@Override
-	public Iterator<String> iterator() {
+	public Iterator<String> keySet() {
+		return base.keySet();
+	}
+
+	
+	@Override
+	public Iterator<Entry<String, String>> iterator() {
 		return base.iterator();
 	}
 
@@ -143,7 +150,7 @@ public class BindingConceptBaseWrapper implements IConceptBase, PropertyChangeLi
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		IConceptBase newBase = new ConceptBase();
-		Iterator<String> iterator = base.iterator();
+		Iterator<String> iterator = base.keySet();
 		while( iterator.hasNext() ){
 			String key = iterator.next();
 			newBase.set(key, base.get( key));

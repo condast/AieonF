@@ -335,7 +335,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 	protected static final void validateNode( IDescriptor target, Node node ) throws DOMException, ParseException, ConceptException{
 		ConceptParser parser = new ConceptParser();
 		IDescriptor source = parser.parseConceptNode( node );
-		Iterator<String> iterator = source.iterator();
+		Iterator<String> iterator = source.keySet();
 		String key, value;
 		while( iterator.hasNext() ){
 			key = iterator.next();

@@ -14,8 +14,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.aieonf.concept.IDescriptor;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.Dispatcher;
+import org.aieonf.orientdb.db.DatabaseService;
+import org.aieonf.orientdb.graph.ModelFactory;
 import org.aieonf.orientdb.graph.OrientDBModel;
+import org.aieonf.orientdb.model.Model;
 
 import com.google.gson.Gson;
 
@@ -23,7 +29,7 @@ import com.google.gson.Gson;
 @Path("/")
 public class ModelRestService{
 
-	public static final String S_ERR_UNKNOWN_REQUEST = "An invalid request was rertrieved: ";
+	public static final String S_ERR_UNKNOWN_REQUEST = "An invalid request was retrieved: ";
 	public static final String S_ERR_INVALID_VESSEL = "A request was received from an unknown vessel:";
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
@@ -35,16 +41,28 @@ public class ModelRestService{
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/add")
 	public Response addModel( @QueryParam("id") String id, @QueryParam("token") String token, String data ) {
+		CacheService cache = CacheService.getInstance();
+		DatabaseService dbService = DatabaseService.getInstance();
 		try{
  			if( !dispatcher.isRegistered(id, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
  			Gson gson = new Gson();
-			OrientDBModel node = gson.fromJson(data, OrientDBModel.class);
-			return ( dispatcher.isAllowed(node))?Response.ok().build(): Response.status(Status.FORBIDDEN).build();
+			IModelLeaf<IDescriptor> node = gson.fromJson(data, Model.class);
+			if( !dispatcher.isAllowed(node))
+				return Response.status(Status.FORBIDDEN).build();
+			cache.open();
+			dbService.open();
+			ModelFactory factory = new ModelFactory( cache, dbService.getGraph() );
+			IModelLeaf<IDescriptor> result = factory.transform(node);
+			return ( result == null )? Response.status(Status.NOT_IMPLEMENTED).build(): Response.ok().build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
+		}
+		finally {
+			cache.close();
+			dbService.close();
 		}
 	}
 

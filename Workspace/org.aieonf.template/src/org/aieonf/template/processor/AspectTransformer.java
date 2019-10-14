@@ -61,7 +61,7 @@ public class AspectTransformer
 	 * @throws ConceptException
 	 */
 	public IAspect getAspect( IDescriptor descriptor) throws ConceptException{
-		Iterator<String> iterator = descriptor.iterator();
+		Iterator<String> iterator = descriptor.keySet();
 		String key, value;
 		IAspect aspect = new Aspect();
 		while( iterator.hasNext() ){

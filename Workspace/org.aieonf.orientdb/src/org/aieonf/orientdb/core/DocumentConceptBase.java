@@ -1,6 +1,6 @@
-package org.aieonf.orientdb.graph;
+package org.aieonf.orientdb.core;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,23 +13,23 @@ import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.IConceptBase;
 
-import com.tinkerpop.blueprints.Vertex;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 
-public class VertexConceptBase implements IConceptBase {
+public class DocumentConceptBase implements IConceptBase {
 
 	//The properties collection that contains the data
-	private Vertex vertex;
+	private ODocument document;
 
 	//If true, something has changed
 	private transient boolean changed;
 
-	public VertexConceptBase( Vertex vertex ){
-		this.vertex = vertex;
+	public DocumentConceptBase( ODocument document ){
+		this.document = document;
 		this.changed = false;
 	}
 	
-	public Vertex getVertex() {
-		return vertex;
+	public ODocument getDocument() {
+		return document;
 	}
 
 	/* (non-Javadoc)
@@ -56,9 +56,7 @@ public class VertexConceptBase implements IConceptBase {
 	@Override
 	public void clear()
 	{
-		Iterator<String> iterator = vertex.getPropertyKeys().iterator();
-		while( iterator.hasNext() )
-			this.vertex.removeProperty( iterator.next());
+		document.clear();
 		this.changed = true;
 	}
 
@@ -68,7 +66,7 @@ public class VertexConceptBase implements IConceptBase {
 	@Override
 	public final String get( String key )
 	{
-		return vertex.getProperty( StringStyler.fromPackageString( key ));
+		return document.field( StringStyler.fromPackageString( key ));
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +83,7 @@ public class VertexConceptBase implements IConceptBase {
 		if( key.contains(" ")){
 			throw new IllegalArgumentException( "Invalid key " + key + " contains <space> character" );
 		}
-		vertex.setProperty(StringStyler.fromPackageString( key ), value );
+		document.field(StringStyler.fromPackageString( key ), value );
 		this.changed = true;
 	}
 
@@ -139,7 +137,7 @@ public class VertexConceptBase implements IConceptBase {
 	public void remove( Enum<?> enm )
 	{
 		String id =  ConceptBase.getAttributeKey( enm );
-		vertex.removeProperty( StringStyler.styleToEnum( id ));
+		document.removeField( StringStyler.styleToEnum( id ));
 	}
 
 
@@ -185,7 +183,7 @@ public class VertexConceptBase implements IConceptBase {
 	@Override
 	public final void remove( String key )
 	{
-		this.vertex.removeProperty( StringStyler.prettyString( key ));
+		this.document.removeField( StringStyler.prettyString( key ));
 	}
 
 	/* (non-Javadoc)
@@ -194,7 +192,7 @@ public class VertexConceptBase implements IConceptBase {
 	@Override
 	public int size()
 	{
-		return vertex.getPropertyKeys().size();
+		return document.getSize();
 	}
 
 	/* (non-Javadoc)
@@ -203,22 +201,19 @@ public class VertexConceptBase implements IConceptBase {
 	@Override
 	public final Iterator<String> keySet()
 	{
-		Iterator<String> iterator = this.vertex.getPropertyKeys().iterator() ;
-		Collection<String> results = new ArrayList<String>();
-		while( iterator.hasNext() ){
-			results.add( StringStyler.toPackageString( iterator.next() ));
-		}
+		Collection<String> results = Arrays.asList( document.fieldNames());
 		return results.iterator();
 	}
 
 	
 	@Override
 	public Iterator<Entry<String, String>> iterator() {
-		Iterator<String> iterator = this.vertex.getPropertyKeys().iterator() ;
+		Iterator<Entry<String, Object>> iterator = this.document.iterator();
 		Map<String, String> results = new HashMap<>();
 		while( iterator.hasNext() ){
-			String key = StringStyler.toPackageString(iterator.next());
-			results.put( key, (String) vertex.getProperty(key));
+			Entry<String, Object> entry = iterator.next();
+			String key = StringStyler.toPackageString(entry.getKey());
+			results.put( key, (String) entry.getValue());
 		}
 		return results.entrySet().iterator();
 	}
@@ -245,11 +240,11 @@ public class VertexConceptBase implements IConceptBase {
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("Concept:\n");
-		Iterator<String> iterator = vertex.getPropertyKeys().iterator();
+		Iterator<Entry<String, Object>> iterator = this.document.iterator();
 		while( iterator.hasNext() ){
-			String key = iterator.next();
-			buffer.append( "\t"+ StringStyler.toPackageString( key ) + "=" +
-			vertex.getProperty( key ) + "\n");
+			Entry<String, Object> entry = iterator.next();
+			buffer.append( "\t"+ StringStyler.toPackageString( entry.getKey()) + "=" +
+			entry.getValue() + "\n");
 		}		
 		return buffer.toString();
 	}

@@ -81,7 +81,7 @@ public abstract class AbstractTemplateDescriptorDatabinding<T,U extends Object> 
 	 * @throws ParseException
 	 */
 	protected void addAttributeValidator( IDescriptor td ){
-		Iterator<String> iterator = td.iterator();
+		Iterator<String> iterator = td.keySet();
 		String key;
 		TemplateProperty<?,?> ta;
 		AbstractValidationDatabinding<T,U> listener;

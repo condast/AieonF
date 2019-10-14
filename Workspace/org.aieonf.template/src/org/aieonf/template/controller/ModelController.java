@@ -152,7 +152,7 @@ public class ModelController<T extends IModelLeaf<? extends IDescriptor>> implem
 	 * @param concept
 	 */
 	protected static void removeTemplateDirectives( IConcept concept ){
-		Iterator<String> iterator = concept.iterator();
+		Iterator<String> iterator = concept.keySet();
 		String key, value;
 		while( iterator.hasNext() ){
 			key = iterator.next();

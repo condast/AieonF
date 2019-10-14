@@ -10,6 +10,7 @@ package org.aieonf.concept;
 
 import java.io.*;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.core.ConceptException;
@@ -249,7 +250,14 @@ public interface IDescriptor extends IDescribable<IDescriptor>, Serializable, Cl
 	 *
 	 * @return Enumeration
 	 */
-	public Iterator<String> iterator();
+	public Iterator<String> keySet();
+
+	/**
+	 * Get an enumeration of the concept properties keys
+	 *
+	 * @return Enumeration
+	 */
+	public Iterator<Map.Entry<String, String>> iterator();
 
 	/**
 	 * The size of a concept is defined as the amount of properties of the concept

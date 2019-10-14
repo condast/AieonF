@@ -19,11 +19,19 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class OrientDBModelLeaf extends VertexConceptBase implements IModelLeaf<IDescriptor> {
 
 	//The concept that is modelled
-	private transient IDescriptor descriptor;
+	private IDescriptor descriptor;
 	private boolean leaf;
 	
 	private IModelNode<? extends IDescriptor> parent;
 
+	public OrientDBModelLeaf(  ) {
+		super(null );
+	}
+
+	public OrientDBModelLeaf( Vertex vertex, IDescriptor descriptor ) {
+		this( null, vertex, descriptor);
+	}
+	
 	public OrientDBModelLeaf( IModelNode<? extends IDescriptor> parent, Vertex vertex, IDescriptor descriptor ) {
 		super( vertex );
 		this.parent = parent;

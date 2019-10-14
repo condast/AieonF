@@ -10,6 +10,7 @@ import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
+import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.concept.security.PasswordAieon;
@@ -17,6 +18,7 @@ import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.orientdb.core.DocumentConceptBase;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
@@ -131,24 +133,24 @@ public class CacheService {
 		Collection<ODocument> docs = (Collection<ODocument>) this.database.query(new OSQLSynchQuery<ODocument>(query));
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for( ODocument doc: docs )
-			results.add( new ODescriptor( doc ));
+			results.add( new DocumentDescriptor( doc ));
 		return results;
 	}
 	
-	public Collection<IDescriptor> get(IDescriptor descriptor) throws ParseException {
+	public IDescriptor[] get(IDescriptor descriptor) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for (ODocument document : database.browseClass( descriptor.getName())) {
 			String id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
 			if( descriptor.getID().equals( id ))
-				results.add( descriptor );
+				results.add( new DocumentDescriptor( document ));
 		}		
-		return results;
+		return results.toArray( new IDescriptor[ results.size()]);
 	}
 
 	public Collection<IDescriptor> search(IModelFilter<IDescriptor, IDescriptor> filter) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for (ODocument document : database.browseCluster( S_DESCRIPTORS )) {
-			ODescriptor descriptor = new ODescriptor(document);    
+			IDescriptor descriptor = new DocumentDescriptor(document);    
 			if( filter.accept( descriptor ))
 				results.add( descriptor );
 		}		
@@ -159,19 +161,19 @@ public class CacheService {
 		return IModelProvider.DefaultModels.DESCRIPTOR.equals( function );
 	}
 
-	public boolean add(IDescriptor descriptor) {
+	public IDescriptor add(IDescriptor descriptor) {
 		ODocument odesc= createDocument( descriptor );
 		odesc.save( /*S_DESCRIPTORS*/ );//Add to cluster descriptors
-		return true;
+		return new DocumentDescriptor( odesc );
 	}
 
 	public void remove(IDescriptor descriptor) {
-		ODescriptor odesc= (ODescriptor) descriptor;
+		DocumentDescriptor odesc= (DocumentDescriptor) descriptor;
 		odesc.getDocument().delete();
 	}
 
 	public boolean update(IDescriptor descriptor ){
-		ODescriptor odesc= (ODescriptor) descriptor;
+		DocumentDescriptor odesc= (DocumentDescriptor) descriptor;
 		odesc.getDocument().save();
 		return true;
 	}
@@ -180,6 +182,9 @@ public class CacheService {
 		database.close();
 	}
 
+	public static IDescriptor transform( IDescriptor descriptor ) {
+		return new DocumentDescriptor( createDocument(descriptor));
+	}
 	
 	/**
 	 * Create a descriptor from the given vertex
@@ -190,7 +195,7 @@ public class CacheService {
 	protected static ODocument createDocument( IDescriptor describable ){
 		IDescriptor descriptor = describable.getDescriptor();
 		ODocument doc = new ODocument( descriptor.getName());
-		Iterator<String> iterator = descriptor.iterator();
+		Iterator<String> iterator = descriptor.keySet();
 		while( iterator.hasNext()) {
 			String attr = iterator.next();
 			attr = attr.replace(".", "@8");
@@ -204,6 +209,21 @@ public class CacheService {
 		return doc;		
 	}
 
+	private static class DocumentDescriptor extends Descriptor{
+		private static final long serialVersionUID = -1242830383589783796L;
+		
+		private ODocument document;
+		
+		protected DocumentDescriptor( ODocument document) {
+			super( new DocumentConceptBase( document ));
+			this.document = document;
+		}
+		
+		private ODocument getDocument() {
+			return document;
+		}	
+	}
+	
 	protected class Transaction extends AbstractTransaction<IDescriptor, IModelProvider<IDomainAieon, IDescriptor>>{
 
 		protected Transaction( IModelProvider<IDomainAieon,IDescriptor> provider) {

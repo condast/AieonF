@@ -45,7 +45,7 @@ public class TemplateNodeValidator<T extends IDescriptor> implements IValidation
 	 */
 	public boolean performValidation()
 	{
-		Iterator<String> iterator = node.getDescriptor().iterator();
+		Iterator<String> iterator = node.getDescriptor().keySet();
 		String attribute;
 		while( iterator.hasNext() ){
 			attribute = iterator.next();

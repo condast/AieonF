@@ -6,20 +6,18 @@
  * @author Kees Pieters
  * @version 1.0
  */
-package org.aieonf.concept.core;
+package org.aieonf.orientdb.model;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 
 import org.aieonf.commons.Utils;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
+import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.core.ConceptException;
+import org.aieonf.concept.core.IConceptBase;
 
 /**
  * Create a descriptor, using a properties file
@@ -49,14 +47,10 @@ public class Descriptor implements IDescriptor
 
 	public static final String VALID_NAME_REG_EX = "[^A-Za-z0-9_\\-]+";
 
-	private IConceptBase base;
+	private ConceptBase base;
 	
 	public Descriptor() {
-		this( new ConceptBase() );
-	}
-
-	protected Descriptor( IConceptBase base ) {
-		this.base = base;
+		this.base = new ConceptBase();
 		this.setClassName( this.getClass().getName());
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
@@ -103,10 +97,6 @@ public class Descriptor implements IDescriptor
 	}
 
 	
-	protected IConceptBase getBase() {
-		return base;
-	}
-
 	/**
 	 * Fill the descriptor with default values
 	 */
@@ -560,134 +550,7 @@ public class Descriptor implements IDescriptor
 		return ( descriptor.getVersion() >= 0 );
 	}
 
-	/**
-	 * Create a descriptor from a string array.
-	 *
-	 * @param stringArray String
-	 * @return IDescriptor
-	 * @throws Exception
-	 */
-	public static IDescriptor getDescriptor( String stringArray )
-			throws ConceptException
-	{
-		stringArray = stringArray.replace( '[',' ' );
-		stringArray = stringArray.replace( ']',' ' );
-		stringArray = stringArray.trim();
-		String[] split = stringArray.split( ":" );
-		if( split.length < 3 )
-			throw new ConceptException( S_ERR_INVALID_DESCRIPTOR + stringArray);
 
-		String name = split[ 0 ];
-		String version = split[ split.length - 1];
-		String id = split[1];
-		if( split.length > 3 )
-			id = stringArray.substring( name.length() + 1, 
-					stringArray.length() - version.length() - 1 );
-		IDescriptor descriptor = new Descriptor( id, name );
-		descriptor.setVersion( Integer.parseInt( version ));
-		return descriptor;
-	}
-
-	/**
-	 * Get the given attribute as a date. Returns numberformat exception if the
-	 * representation is incorrect
-	 *
-	 * @param descriptor IDescriptor
-	 * @return Date
-	 */
-	public final static Date getDate( IDescribable<? extends IDescriptor> describable, IDescriptor.Attributes attr )
-	{
-		IDescriptor descriptor = describable.getDescriptor();
-		String str = descriptor.get( attr );
-		if(( str == null ) || ( str.trim().length() == 0 ))
-			return Calendar.getInstance().getTime();
-
-		GregorianCalendar calendar = new GregorianCalendar();
-		long time = Long.parseLong( str );
-		calendar.setTimeInMillis( time );
-		return calendar.getTime();
-	}
-
-	/**
-	 * Set the attribute of the given descriptor as a date
-	 *
-	 * @param descriptor IDescriptor
-	 * @param date Date
-	 */
-	public final static void setDate( IDescriptor descriptor, IDescriptor.Attributes attr, Date date )
-	{
-		GregorianCalendar calendar = new GregorianCalendar();
-		calendar.setTime( date );
-		long time = calendar.getTimeInMillis();
-		descriptor.set( attr, String.valueOf( time ) );
-	}
-
-	/**
-	 * Get the create date of the concept
-	 *
-	 * @param concept IConcept
-	 * @return Date
-	 */
-	public final static Date getCreateDate( IDescriptor descriptor )
-	{
-		return getDate( descriptor, IDescriptor.Attributes.CREATE_DATE );
-	}
-
-	/**
-	 * Set the create date of the concept
-	 *
-	 * @param descriptor IDescriptor
-	 * @param date Date
-	 * @throws ConceptException
-	 */
-	public final static void setCreateDate( IDescribable<? extends IDescriptor> descriptor, Date date )
-	{
-		setDate( descriptor.getDescriptor(), IDescriptor.Attributes.CREATE_DATE, date );
-		setDate( descriptor.getDescriptor(), IDescriptor.Attributes.UPDATE_DATE, date );
-	}
-
-	/**
-	 * Get the update date of the descriptor
-	 *
-	 * @param descriptor IDescriptor
-	 * @return Date
-	 */
-	public final static Date getUpdateDate( IDescribable<? extends IDescriptor> descriptor )
-	{
-		return getDate( descriptor.getDescriptor(), IDescriptor.Attributes.CREATE_DATE );
-	}
-
-	/**
-	 * Set the update date of the concept
-	 *
-	 * @param descriptor IDescriptor
-	 * @param date Date
-	 */
-	public final static void setUpdateDate( IDescribable<? extends IDescriptor> descriptor, Date date )
-	{
-		setDate( descriptor.getDescriptor(), IDescriptor.Attributes.UPDATE_DATE, date );
-	}
-
-	/**
-	 * Get the difference between the given desc1 and desc2. all the properties of
-	 * desc2 that are not in desc1 are returned
-	 *
-	 * @param desc1 Descriptor
-	 * @param desc2 Descriptor
-	 * @return Properties
-	 */
-	public static Properties getDifference( Descriptor desc1, Descriptor desc2 )
-	{
-		Properties properties = new Properties();
-		Iterator<String> iterator = desc2.keySet();
-		String key;
-		while( iterator.hasNext() ){
-			key = iterator.next();
-			if( desc1.get( key ) == null )
-				properties.setProperty( key, desc2.get( key ));
-		}
-		return properties;
-	}
 
 	@Override
 	public String getFromExtendedKey(String key)
@@ -719,22 +582,6 @@ public class Descriptor implements IDescriptor
 				return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Get the text of the given object
-	 * @param element
-	 * @return
-	 */
-	public static String getText(Object element)
-	{
-		if(!( element instanceof IDescribable<?> ))
-			return element.toString();
-		IDescribable<?> desc = ( IDescribable<?> )element;
-		String retval = desc.getDescriptor().getDescription();
-		if( Utils.assertNull( retval ))
-			retval = desc.getDescriptor().getName();
-		return retval;
 	}
 
 	@Override

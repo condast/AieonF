@@ -18,7 +18,6 @@ import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.orientdb.cache.CacheService;
-import org.aieonf.orientdb.cache.ODescriptor;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.factory.OrientDBFactory;
 import org.aieonf.orientdb.graph.OrientDBModelLeaf;
@@ -69,6 +68,10 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 		return service;
 	}
 	
+	public OrientGraph getGraph() {
+		return graph;
+	}
+
 	/**
 	 * Register a new user to the database
 	 * @param domain
@@ -227,14 +230,14 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 
 	@Override
 	public void remove(IModelNode<IDescriptor> model) {
-		ODescriptor odesc= null;//(ODescriptor) model;
-		odesc.getDocument().delete();
+		//ODescriptor odesc= null;//(ODescriptor) model;
+		//odesc.getDocument().delete();
 	}
 
 	@Override
 	public boolean update(IModelNode<IDescriptor> model ){
-		ODescriptor odesc= null;//(ODescriptor) model;
-		odesc.getDocument().save();
+		//ODescriptor odesc= null;//(ODescriptor) model;
+		//odesc.getDocument().save();
 		return true;
 	}
 

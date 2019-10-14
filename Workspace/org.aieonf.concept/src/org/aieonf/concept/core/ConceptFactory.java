@@ -21,7 +21,7 @@ public class ConceptFactory
 	*/
 	public static IConcept create( IDescriptor descriptor ) throws ConceptException
 	{
-		Iterator<String> keys = descriptor.iterator();
+		Iterator<String> keys = descriptor.keySet();
 		IConcept concept = new Concept();
 		String key, value;
 		while( keys.hasNext() ){
