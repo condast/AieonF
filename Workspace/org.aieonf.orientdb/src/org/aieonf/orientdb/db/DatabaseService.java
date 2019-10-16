@@ -17,9 +17,6 @@ import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.orientdb.cache.CacheService;
-import org.aieonf.orientdb.core.Dispatcher;
-import org.aieonf.orientdb.factory.OrientDBFactory;
 import org.aieonf.orientdb.graph.OrientDBModelLeaf;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -42,26 +39,19 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 	public static final String S_IDENTIFIER = "documenttxModel";
 	
 	protected static final String S_ROOT = "Root";
-	protected static final String S_CACHE = "Cache";
 	protected static final String S_DESCRIPTORS = "Descriptors";
 
 	private Collection<IModelListener<IModelNode<IDescriptor>>> listeners;
 	
 	private static DatabaseService service = new DatabaseService();
+	
 	private static DatabasePersistenceService persistence = DatabasePersistenceService.getInstance();
-	private static Dispatcher login = Dispatcher.getInstance();
-	private static CacheService cache = CacheService.getInstance();
 
 	private OrientGraph graph;
-	private boolean connected;
-	private IDomainAieon domain;
+	private boolean open;
 	
 	private DatabaseService() {
-		OrientDBFactory factory = OrientDBFactory.getInstance();
-		factory.createTemplate();
-		domain = factory.getDomain();
 		listeners = new ArrayList<>();
-		this.connected = false;
 	}
 
 	public static DatabaseService getInstance(){
@@ -104,12 +94,12 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 	 * 
 	 * @param loader
 	 */
-	public void open( ){
+	public boolean open( ){
 		if( !persistence.isConnected() )
-			return;
-		ILoginUser user = login.getUser();
-		graph = persistence.getDatabase().open(user.getUserName(), String.valueOf( user.getToken()));
-		this.connected = true;
+			return false;
+		graph = persistence.getDatabase();
+		this.open = true;
+		return true;
 	}
 	
 	@Override
@@ -135,7 +125,7 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 	@Override
 	public void open( IDomainAieon domain){
 		try{
-			if(!connected )
+			if(!open )
 				return;
 		}
 		catch( Exception ex ){
@@ -170,7 +160,7 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 
 	@Override
 	public void close(){
-		this.connected = false;
+		this.open = false;
 		//database.commit();
 		if( graph != null )
 			graph.shutdown();

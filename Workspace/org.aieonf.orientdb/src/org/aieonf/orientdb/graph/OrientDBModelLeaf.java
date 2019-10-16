@@ -21,6 +21,8 @@ public class OrientDBModelLeaf extends VertexConceptBase implements IModelLeaf<I
 	//The concept that is modelled
 	private IDescriptor descriptor;
 	private boolean leaf;
+
+	private transient OrientGraph graph;
 	
 	private IModelNode<? extends IDescriptor> parent;
 
@@ -42,14 +44,20 @@ public class OrientDBModelLeaf extends VertexConceptBase implements IModelLeaf<I
 
 	public OrientDBModelLeaf( OrientDBModel parent, Object id, OrientGraph graph, IDescriptor descriptor ) {
 		this( parent, graph.addVertex(id), descriptor );
+		this.graph = graph;
 		try {
-			graph.addEdge(null, parent.getVertex(), super.getVertex(), IModelLeaf.Attributes.CHILD.name());
+			if( parent != null )
+				graph.addEdge(null, parent.getVertex(), super.getVertex(), IModelLeaf.Attributes.CHILD.name());
 			graph.commit();
 		}
 		catch( Exception ex ) {
 			graph.rollback();
 			ex.printStackTrace();
 		}
+	}
+
+	public OrientGraph getGraph() {
+		return graph;
 	}
 
 	@Override

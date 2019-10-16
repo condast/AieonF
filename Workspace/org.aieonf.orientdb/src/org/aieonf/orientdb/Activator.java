@@ -1,6 +1,7 @@
 package org.aieonf.orientdb;
 
-import org.aieonf.orientdb.cache.CachePersistenceService;
+import org.aieonf.orientdb.core.CachePersistenceService;
+import org.aieonf.orientdb.db.DatabasePersistenceService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -10,8 +11,18 @@ public class Activator implements BundleActivator {
 
 	private static CachePersistenceService cache = CachePersistenceService.getInstance();
 
+	private static DatabasePersistenceService graph = DatabasePersistenceService.getInstance();
+
 	static BundleContext getContext() {
 		return context;
+	}
+
+	public static CachePersistenceService getCacheService() {
+		return cache;
+	}
+
+	public static DatabasePersistenceService getGraphService() {
+		return graph;
 	}
 
 	/*
@@ -22,6 +33,7 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		cache.connect();
+		graph.connect();
 	}
 
 	/*
@@ -31,7 +43,7 @@ public class Activator implements BundleActivator {
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
+		graph.disconnect();
 		cache.disconnect();
 	}
-
 }

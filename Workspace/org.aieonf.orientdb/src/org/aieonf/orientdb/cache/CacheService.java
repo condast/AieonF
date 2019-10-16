@@ -1,5 +1,6 @@
 package org.aieonf.orientdb.cache;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -18,21 +19,23 @@ import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
+import org.aieonf.orientdb.core.CachePersistenceService;
 import org.aieonf.orientdb.core.DocumentConceptBase;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.exception.OQueryParsingException;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.*;
 
 /**
- * Handles the Orient Databae
+ * Handles the Orient Database
  * @See :https://orientdb.com/docs/2.2/documenttx-Database-Tinkerpop.html
  * @author Kees
  *
  * @param <D>
  * @param <Descriptor>
  */
-public class CacheService {
+public class CacheService implements Closeable{
 	
 	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
 	public static final String S_IDENTIFIER = "documenttxModel";
@@ -66,11 +69,15 @@ public class CacheService {
 	public void open( ){
 		if( !persistence.isConnected() )
 			return;
-		IPasswordAieon password = new PasswordAieon( persistence.getDomain() );
-		database = persistence.getDatabase().open(password.getUserName(), password.getPassword() );
-		this.connected = true;
+		IPasswordAieon password = new PasswordAieon( persistence.getLoader() );
+		try {
+			database = persistence.getDatabase().open(password.getUserName(), password.getPassword() );	
+			this.connected = true;
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
 	}
-	
 	
 	public void addListener(IModelListener<IDescriptor> listener) {
 		this.listeners.add(listener);
@@ -115,8 +122,13 @@ public class CacheService {
 	public void close(){
 		this.connected = false;
 		//database.commit();
-		if( database != null )
-			database.close();
+		try {
+			if( database != null )
+				database.close();
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
 	}
 
 	public boolean contains(IDescriptor descriptor) {
@@ -130,7 +142,16 @@ public class CacheService {
 
 	@SuppressWarnings("unchecked")
 	public Collection<IDescriptor> query( String query ){
-		Collection<ODocument> docs = (Collection<ODocument>) this.database.query(new OSQLSynchQuery<ODocument>(query));
+		Collection<ODocument> docs = new ArrayList<>();
+		try{
+			docs = (Collection<ODocument>)this.database.query(new OSQLSynchQuery<ODocument>(query));
+		}
+		catch( OQueryParsingException pex ) {
+			/* NOTHING WAS FOUND */
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for( ODocument doc: docs )
 			results.add( new DocumentDescriptor( doc ));
@@ -138,12 +159,7 @@ public class CacheService {
 	}
 	
 	public IDescriptor[] get(IDescriptor descriptor) throws ParseException {
-		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
-		for (ODocument document : database.browseClass( descriptor.getName())) {
-			String id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
-			if( descriptor.getID().equals( id ))
-				results.add( new DocumentDescriptor( document ));
-		}		
+		Collection<IDescriptor> results = query( "SELECT FROM " + descriptor.getName());
 		return results.toArray( new IDescriptor[ results.size()]);
 	}
 

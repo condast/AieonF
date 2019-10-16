@@ -11,8 +11,6 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 public class OrientDBModel extends OrientDBModelLeaf implements IModelNode<IDescriptor> {
 
-	private transient OrientGraph graph;
-	
 	private Collection<OrientDBModelLeaf> children;
 
 	public OrientDBModel() {
@@ -25,15 +23,16 @@ public class OrientDBModel extends OrientDBModelLeaf implements IModelNode<IDesc
 	
 	public OrientDBModel( OrientDBModel parent, Object id, OrientGraph graph, IDescriptor descriptor ) {
 		super( parent, id, graph, descriptor );
-		this.graph = graph;
 		children = new ArrayList<>();
-		parent.addChild(this);
+		if( parent != null )
+			parent.addChild(this);
 	}
 
 	@Override
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child) {
 		OrientDBModelLeaf leaf = (OrientDBModelLeaf) child;
 		boolean result = false;
+		OrientGraph graph = super.getGraph();
 		try {
 			graph.addEdge(null, getVertex(), leaf.getVertex(), IModelLeaf.Attributes.CHILD.name());
 			graph.commit();
@@ -52,6 +51,7 @@ public class OrientDBModel extends OrientDBModelLeaf implements IModelNode<IDesc
 	public boolean removeChild(IModelLeaf<? extends IDescriptor> child) {
 		OrientDBModelLeaf leaf = (OrientDBModelLeaf) child;
 		Vertex last = leaf.getVertex();
+		OrientGraph graph = super.getGraph();
 		graph.removeVertex(last);
 		children.remove(child);
 		return true;	

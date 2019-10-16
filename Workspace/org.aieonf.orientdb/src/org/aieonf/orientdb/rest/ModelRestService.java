@@ -20,7 +20,6 @@ import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
 import org.aieonf.orientdb.graph.ModelFactory;
-import org.aieonf.orientdb.graph.OrientDBModel;
 import org.aieonf.orientdb.model.Model;
 
 import com.google.gson.Gson;
@@ -40,11 +39,11 @@ public class ModelRestService{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/add")
-	public Response addModel( @QueryParam("id") String id, @QueryParam("token") String token, String data ) {
+	public Response addModel( @QueryParam("id") String domainId, @QueryParam("token") String token, String data ) {
 		CacheService cache = CacheService.getInstance();
 		DatabaseService dbService = DatabaseService.getInstance();
 		try{
- 			if( !dispatcher.isRegistered(id, token))
+ 			if( !dispatcher.isRegistered(domainId, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
  			Gson gson = new Gson();
 			IModelLeaf<IDescriptor> node = gson.fromJson(data, Model.class);

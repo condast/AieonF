@@ -1,5 +1,8 @@
 package org.aieonf.orientdb.core;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.aieonf.commons.security.ILoginListener;
 import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.commons.security.LoginEvent;
@@ -17,13 +20,29 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 	private IActiveDomainProvider provider;
 
 	private ILoginUser user;
+	
+	private Collection<ILoginListener> listeners;
 
 	private Dispatcher() {
-		user = null;		
+		user = null;	
+		listeners = new ArrayList<>();
 	}
 
 	public static Dispatcher getInstance(){
 		return service;
+	}
+
+	public void addListener( ILoginListener listener ) {
+		this.listeners.add(listener);
+	}
+
+	public void removeListener( ILoginListener listener ) {
+		this.listeners.remove(listener);
+	}
+	
+	protected void notifyListeners( LoginEvent event ) {
+		for( ILoginListener listener: this.listeners )
+			listener.notifyLoginEvent(event);
 	}
 
 	@Override
@@ -67,6 +86,7 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 			user = event.getUser();
 		break;
 		}
+		notifyListeners(event);
 	}
 
 }
