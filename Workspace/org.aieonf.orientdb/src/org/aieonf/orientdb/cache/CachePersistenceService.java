@@ -1,7 +1,11 @@
-package org.aieonf.orientdb.core;
+package org.aieonf.orientdb.cache;
 
+import org.aieonf.concept.security.IPasswordAieon;
+import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.orientdb.core.AbstractPersistenceService;
+import org.aieonf.orientdb.core.AbstractPersistenceService.Types;
 
+import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 
 /**
@@ -40,9 +44,18 @@ public class CachePersistenceService extends AbstractPersistenceService {
 	
 	@Override
 	protected boolean onConnect() {
-		String source = super.getSource();
-		database = new ODatabaseDocumentTx( source );
-		return true;
+		boolean result = false;
+		try {
+			String source = super.getSource();
+			IPasswordAieon password = new PasswordAieon( getLoader() );
+			OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , password.getUserName(), password.getPassword() );
+			database = pool.acquire();
+			result = true;
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override

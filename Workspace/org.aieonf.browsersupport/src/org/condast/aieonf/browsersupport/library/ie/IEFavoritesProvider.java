@@ -118,9 +118,9 @@ public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, ID
 	 */
 	protected void setDescription( IDescriptor descriptor ) throws ConceptException
 	{
-		if(( descriptor == null ) || (descriptor.getID() == null ))
+		if(( descriptor == null ) || (descriptor.getID() < 0 ))
 			return;
-		File file = new File( descriptor.getID() );
+		File file = new File( String.valueOf( descriptor.getID() ));
 		if ( file.isDirectory() ){
 			String[] split = file.getName().split( "/" );
 			descriptor.set( IDescriptor.Attributes.DESCRIPTION, split[ split.length - 1 ]);

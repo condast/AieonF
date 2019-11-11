@@ -14,7 +14,6 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.library.ManifestAieon;
 
 public class DefaultCollectionParser<T extends IDescribable<?>> implements
@@ -180,8 +179,8 @@ public class DefaultCollectionParser<T extends IDescribable<?>> implements
   */
   protected void IDFactory( IConcept concept ) throws CollectionException
   {
-    if( !Descriptor.isNull( concept.getID()))
-    		return;
+    if( concept.getID() < 0 )
+    	return;
   	try{
   		BodyFactory.sign( this.manifest, concept );
       String id = IDFactory( concept, this.collection );
@@ -214,7 +213,7 @@ public class DefaultCollectionParser<T extends IDescribable<?>> implements
       newId = ( long )( Math.random() * Long.MAX_VALUE );
       hexStr = Long.toHexString( newId );
       for( IDescribable<?> desc: descriptors ){
-        if( desc.getDescriptor().getID().equals( hexStr )){
+        if( desc.getDescriptor().getID() >= 0 ){
           containsId = true;
           break;
         }

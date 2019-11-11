@@ -20,6 +20,16 @@ import org.aieonf.concept.core.ConceptException;
  */
 public interface IDescriptor extends IDescribable<IDescriptor>, Serializable, Cloneable, Comparable<IDescriptor>
 {
+
+	//The regular expression that splits a string into an string array of
+	//which the first element always contains the correct form for a name
+	public static final String NAME_REGEXP = "[^0-9][A-Za-z_0-9\\-\\.]*";
+	public static final String NOT_NAME_REGEXP = "[^A-Za-z_]*[^A-Za-z0-9_\\-]*";
+
+	public static final String URL_REGEXP = "[^0-9][A-Za-z_0-9\\-]@[a-zA-Z0-9_\\-\\.]";
+
+	public static final String VALID_NAME_REG_EX = "[^A-Za-z0-9_\\-]+";
+
 	/**
 	 * Defines the name
 	 */
@@ -66,7 +76,7 @@ public interface IDescriptor extends IDescribable<IDescriptor>, Serializable, Cl
 	 * Get the id of the changeable object
 	 * @return
 	 */
-	public String getID();
+	public long getID();
 
 	/**
 	 * Get the version of the changeable object

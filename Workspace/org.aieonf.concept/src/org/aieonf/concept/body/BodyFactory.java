@@ -95,7 +95,7 @@ public class BodyFactory<T extends Object>
 	public static String IDFactory( IDescribable<? extends IDescriptor> describable, IDescribableSet<? extends ILoaderAieon> collection )
 	{
 		StringBuffer buffer;
-		if( Descriptor.isNull(describable.getDescriptor().getID() ))
+		if( describable.getDescriptor().getID() < 0 )
 			buffer = new StringBuffer();
 		else
 			buffer = new StringBuffer( describable.getDescriptor().getID() + ":" );
@@ -153,11 +153,6 @@ public class BodyFactory<T extends Object>
 	public final static void saveToXML( IDescriptor descriptor, OutputStream out ) throws IOException
 	{
 		try {
-			if( descriptor instanceof Descriptor ){
-				Descriptor desc = ( Descriptor )descriptor;
-				if(( desc.getID() == null ) && ( Descriptor.isValid( desc ) == false ))
-					desc.set( IDescriptor.Attributes.ID, BodyFactory.IDFactory() );
-			}
 			StoreConcept store = new StoreConcept( descriptor );
 			Document doc = store.createDocument();
 			StoreDocument.sendToStream( doc, out );
@@ -176,7 +171,7 @@ public class BodyFactory<T extends Object>
 	{
 		if( Descriptor.isNull( descriptor.getName() ))
 			throw new ConceptException( S_ERR_INVALID_DESCRIPTOR + descriptor.toString() );
-		if( Descriptor.isNull( descriptor.getID() ))
+		if( descriptor.getID() < 0)
 			descriptor.set( IDescriptor.Attributes.ID, BodyFactory.IDFactory() );
 		if( descriptor.getVersion() < 0 )
 			descriptor.setVersion( 0 );

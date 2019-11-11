@@ -2,7 +2,9 @@ package org.aieonf.template.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.aieonf.concept.IConcept.Scope;
 import org.aieonf.concept.IDescribable;
@@ -317,5 +319,11 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	@Override
 	public Scope getScope() {
 		return model.getScope();
+	}
+
+
+	@Override
+	public Iterator<Entry<String, String>> iterator() {
+		return model.iterator();
 	}
 }

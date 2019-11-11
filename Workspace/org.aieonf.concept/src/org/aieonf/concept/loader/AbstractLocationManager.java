@@ -81,7 +81,7 @@ public abstract class AbstractLocationManager<T extends IDescribable<?>> impleme
   public boolean isCorrectPosition( IDescribable<?> obj, String position )
   	throws ConceptException
   {
-    if( obj.getDescriptor().getID() == null )
+    if( obj.getDescriptor().getID() < 0 )
     	return false;
     
   	String location = this.locate( obj );

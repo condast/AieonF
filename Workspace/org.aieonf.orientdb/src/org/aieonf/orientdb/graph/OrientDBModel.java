@@ -13,8 +13,11 @@ public class OrientDBModel extends OrientDBModelLeaf implements IModelNode<IDesc
 
 	private Collection<OrientDBModelLeaf> children;
 
-	public OrientDBModel() {
-		
+	public OrientDBModel() {		
+	}
+
+	public OrientDBModel( Vertex vertex, IDescriptor descriptor ) {
+		super( vertex, descriptor);
 	}
 
 	public OrientDBModel( Object id, OrientGraph graph, IDescriptor descriptor ) {

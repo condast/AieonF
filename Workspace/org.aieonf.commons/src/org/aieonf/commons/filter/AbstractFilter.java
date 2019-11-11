@@ -59,7 +59,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	 * Create a filter for the given rule
 	 *
 	 */
-	public AbstractFilter()
+	protected AbstractFilter()
 	{
 		this.rejectList = new ArrayList<T>();
 		this.name = AbstractFilter.class.getName();
@@ -72,7 +72,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	 *
 	 * @param rule String
 	 */
-	public AbstractFilter( String rule )
+	protected AbstractFilter( String rule )
 	{
 		this();
 		this.setRule( rule );
@@ -84,7 +84,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	 * @param name String
 	 * @param rule String
 	 */
-	public AbstractFilter( String name, String rule )
+	protected AbstractFilter( String name, String rule )
 	{
 		this( rule );
 		this.name = name;
@@ -96,7 +96,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	 * @param name String
 	 * @param rule String
 	 */
-	public AbstractFilter( String name, String rule, int amount )
+	protected AbstractFilter( String name, String rule, int amount )
 	{
 		this( rule );
 		this.name = name;

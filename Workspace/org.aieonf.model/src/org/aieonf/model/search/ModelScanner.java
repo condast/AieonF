@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
@@ -51,7 +50,7 @@ public class ModelScanner<T extends IDescriptor>{
 	@SuppressWarnings("unchecked")
 	protected void getModel( Collection<IModelLeaf<IDescriptor>> results, IDescriptor descriptor, IModelLeaf<IDescriptor> current ){
 		if( descriptor.getName().equals( current.getDescriptor().getName() )){
-			if( !StringUtils.isEmpty( descriptor.getID() ) || descriptor.getID().equals( current.getDescriptor().getID()) ){
+			if(( descriptor.getID() > 0 ) || ( descriptor.getID() == current.getDescriptor().getID()) ){
 				if( descriptor.getVersion() == current.getDescriptor().getVersion() )
 					results.add( current );
 			}

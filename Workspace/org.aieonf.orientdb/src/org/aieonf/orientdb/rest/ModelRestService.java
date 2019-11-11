@@ -1,5 +1,6 @@
 package org.aieonf.orientdb.rest;
 
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
@@ -16,6 +17,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.filter.ModelFilter;
+import org.aieonf.model.xml.SerialisableModel;
 import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
@@ -39,7 +42,7 @@ public class ModelRestService{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/add")
-	public Response addModel( @QueryParam("id") String domainId, @QueryParam("token") String token, String data ) {
+	public Response addModel( @QueryParam("id") long domainId, @QueryParam("token") String token, String data ) {
 		CacheService cache = CacheService.getInstance();
 		DatabaseService dbService = DatabaseService.getInstance();
 		try{
@@ -53,33 +56,47 @@ public class ModelRestService{
 			dbService.open();
 			ModelFactory factory = new ModelFactory( cache, dbService.getGraph() );
 			IModelLeaf<IDescriptor> result = factory.transform(node);
-			return ( result == null )? Response.status(Status.NOT_IMPLEMENTED).build(): Response.ok().build();
+			return ( result == null )? Response.status(Status.NOT_IMPLEMENTED).build(): 
+				Response.ok().build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
 		}
 		finally {
-			cache.close();
 			dbService.close();
+			cache.close();
 		}
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get")
-	public Response getModel( @QueryParam("id") long id, @QueryParam("token") long token, 
-			@QueryParam("vessel-id") long vesselId) {
+	public Response getModel( @QueryParam("id") long domain, @QueryParam("token") String token, 
+			@QueryParam("name") String name, @QueryParam("version") String version) {
+		CacheService cache = CacheService.getInstance();
+		DatabaseService dbService = DatabaseService.getInstance();
 		try{
- 			if( !dispatcher.isLoggedIn( id, token))
+			if( !dispatcher.isRegistered(domain, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
+ 			cache.open();
+			dbService.open();
+			ModelFactory factory = new ModelFactory( cache, dbService.getGraph() );
+			Collection<IModelLeaf<IDescriptor>> result = factory.get(domain);
+			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
+			result = filter.doFilter(result);
+			SerialisableModel[] sm = SerialisableModel.create(result);
 			Gson gson = new Gson();
-			//String str = gson.toJson(vesselData, VesselData.class);
-			return Response.ok( ).build();
+			String str = gson.toJson(sm, SerialisableModel[].class );
+			return Response.ok( str ).build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+			cache.close();
 		}
 	}
 

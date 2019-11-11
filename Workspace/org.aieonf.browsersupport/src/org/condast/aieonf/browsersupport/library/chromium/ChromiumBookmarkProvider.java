@@ -196,12 +196,12 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 	@Override
 	protected void IDFactory( IConcept concept ) throws ConceptException
 	{
-		String id_def = concept.getID();
+		long id_def = concept.getID();
 		try{
 			BodyFactory.sign( super.getManifest(), concept );
-			String id = IDFactory( concept, super.getModels() );
-			id = (Utils.assertNull( id_def))? id: id + id_def;
-			concept.set( IDescriptor.Attributes.ID, id);
+			long id = IDFactory( concept, super.getModels() );
+			id = ( id_def < 0)? id: id + id_def;
+			concept.set( IDescriptor.Attributes.ID, String.valueOf( id ));
 		}
 		catch( Exception ex ){
 			throw new ConceptException( ex );
@@ -217,7 +217,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 	 * @throws CollectionException
 	 */
 	@Override
-	public String IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors )
+	public long IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors )
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append( super.getManifest().getID() + ":" );
@@ -239,7 +239,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 		while( containsId == true );
 
 		buffer.append( hexStr.toUpperCase());
-		return buffer.toString();
+		return newId;
 	}
 
 	private static class ChromiumAieon extends Concept

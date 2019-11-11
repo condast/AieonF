@@ -46,7 +46,7 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 	}
 
 	@Override
-	public boolean isRegistered(String id, String name) {
+	public boolean isRegistered(long id, String name) {
 		if( this.provider == null )
 			return false;
 		return provider.isRegistered(id, name);

@@ -99,7 +99,7 @@ AbstractPersistence<IModelLeaf<IDescriptor>> implements IFilePersistence<IModelL
 	{
 		try{
 			IConcept concept = (IConcept) model.getDescriptor();
-			concept.set( IConcept.Attributes.SOURCE.name(), manifest.getID() );
+			concept.set( IConcept.Attributes.SOURCE.name(), String.valueOf( manifest.getID() ));
 			concept.setVersion( 1 );
 			BodyFactory.sign( manifest, concept );
 		}

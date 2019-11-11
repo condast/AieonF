@@ -1,6 +1,6 @@
 package org.aieonf.orientdb;
 
-import org.aieonf.orientdb.core.CachePersistenceService;
+import org.aieonf.orientdb.cache.CachePersistenceService;
 import org.aieonf.orientdb.db.DatabasePersistenceService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

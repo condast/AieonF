@@ -8,18 +8,13 @@ import java.util.Iterator;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
-import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.security.IPasswordAieon;
-import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.orientdb.core.CachePersistenceService;
 import org.aieonf.orientdb.core.DocumentConceptBase;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -42,7 +37,6 @@ public class CacheService implements Closeable{
 	
 	protected static final String S_ROOT = "Root";
 	protected static final String S_CACHE = "Cache";
-	protected static final String S_DESCRIPTORS = "Descriptors";
 
 	private Collection<IModelListener<IDescriptor>> listeners;
 	
@@ -50,11 +44,9 @@ public class CacheService implements Closeable{
 	private static CachePersistenceService persistence = CachePersistenceService.getInstance();
 	
 	private ODatabaseDocumentTx database;
-	private boolean connected;
 	
 	private CacheService() {
 		listeners = new ArrayList<IModelListener<IDescriptor>>();
-		this.connected = false;
 	}
 
 	public static CacheService getInstance(){
@@ -69,14 +61,12 @@ public class CacheService implements Closeable{
 	public void open( ){
 		if( !persistence.isConnected() )
 			return;
-		IPasswordAieon password = new PasswordAieon( persistence.getLoader() );
-		try {
-			database = persistence.getDatabase().open(password.getUserName(), password.getPassword() );	
-			this.connected = true;
+		database = persistence.getDatabase();	
+		if (!database.isActiveOnCurrentThread()) {
+			database.activateOnCurrentThread();
 		}
-		catch( Exception ex ) {
-			ex.printStackTrace();
-		}
+		if(! database.existsCluster(S_CACHE))
+			database.addCluster(S_CACHE);
 	}
 	
 	public void addListener(IModelListener<IDescriptor> listener) {
@@ -92,16 +82,6 @@ public class CacheService implements Closeable{
 			listener.notifyChange(event);
 	}
 	
-	public void open( IDomainAieon domain){
-		try{
-			if(!connected )
-				return;
-		}
-		catch( Exception ex ){
-			ex.printStackTrace();
-		}
-	}
-
 	public boolean isOpen(){
 		return !this.database.isClosed();
 	}
@@ -120,11 +100,10 @@ public class CacheService implements Closeable{
 	}
 
 	public void close(){
-		this.connected = false;
-		//database.commit();
 		try {
-			if( database != null )
+			if(( database != null ) && !database.isClosed() ) {
 				database.close();
+			}
 		}
 		catch( Exception ex ) {
 			ex.printStackTrace();
@@ -133,8 +112,8 @@ public class CacheService implements Closeable{
 
 	public boolean contains(IDescriptor descriptor) {
 		for (ODocument document : database.browseClass( descriptor.getName())) {
-			String id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
-			if( descriptor.getID().equals( id ))
+			long id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
+			if( descriptor.getID() ==  id )
 				return true;
 		}		
 		return false;
@@ -157,7 +136,12 @@ public class CacheService implements Closeable{
 			results.add( new DocumentDescriptor( doc ));
 		return results;
 	}
-	
+
+	public IDescriptor[] get( String id) throws ParseException {
+		Collection<IDescriptor> results = query( "SELECT FROM " + S_CACHE + " WHERE ID IS " + id);
+		return results.toArray( new IDescriptor[ results.size()]);
+	}
+
 	public IDescriptor[] get(IDescriptor descriptor) throws ParseException {
 		Collection<IDescriptor> results = query( "SELECT FROM " + descriptor.getName());
 		return results.toArray( new IDescriptor[ results.size()]);
@@ -165,7 +149,7 @@ public class CacheService implements Closeable{
 
 	public Collection<IDescriptor> search(IModelFilter<IDescriptor, IDescriptor> filter) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
-		for (ODocument document : database.browseCluster( S_DESCRIPTORS )) {
+		for (ODocument document : database.browseCluster( S_CACHE )) {
 			IDescriptor descriptor = new DocumentDescriptor(document);    
 			if( filter.accept( descriptor ))
 				results.add( descriptor );
@@ -179,7 +163,7 @@ public class CacheService implements Closeable{
 
 	public IDescriptor add(IDescriptor descriptor) {
 		ODocument odesc= createDocument( descriptor );
-		odesc.save( /*S_DESCRIPTORS*/ );//Add to cluster descriptors
+		odesc.save( S_CACHE );
 		return new DocumentDescriptor( odesc );
 	}
 
@@ -192,10 +176,6 @@ public class CacheService implements Closeable{
 		DocumentDescriptor odesc= (DocumentDescriptor) descriptor;
 		odesc.getDocument().save();
 		return true;
-	}
-
-	public void deactivate() {
-		database.close();
 	}
 
 	public static IDescriptor transform( IDescriptor descriptor ) {
@@ -238,23 +218,5 @@ public class CacheService implements Closeable{
 		private ODocument getDocument() {
 			return document;
 		}	
-	}
-	
-	protected class Transaction extends AbstractTransaction<IDescriptor, IModelProvider<IDomainAieon, IDescriptor>>{
-
-		protected Transaction( IModelProvider<IDomainAieon,IDescriptor> provider) {
-			super( provider );
-		}
-
-		public void close() {
-			super.getProvider().close();
-			if( !super.getProvider().isOpen())
-				super.close();
-		}
-
-		@Override
-		protected boolean onCreate(IModelProvider<IDomainAieon, IDescriptor> provider) {
-			return super.getProvider().isOpen();
-		}
 	}
 }

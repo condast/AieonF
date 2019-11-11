@@ -134,9 +134,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 	{
 		if( this.caseInsensitive == false )
 			return descriptor;
-		String id = descriptor.getDescriptor().getID();
-		if( id != null )
-			id = id.trim().toLowerCase();
+		long id = descriptor.getDescriptor().getID();
 		String name = descriptor.getDescriptor().getName();
 		if( name != null )
 			name = name.trim().toLowerCase();
@@ -188,7 +186,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 					( refDescriptor.getDescriptor().getVersion() == descriptor.getDescriptor().getVersion() ));
 		}
 		if( this.getRule().equals( DescriptorFilter.Rules.IDEquals.name() )){
-			return( refDescriptor.getDescriptor().getID().equals( descriptor.getDescriptor().getID() ));
+			return( refDescriptor.getDescriptor().getID() == descriptor.getDescriptor().getID() );
 		}
 		if( this.getRule().equals( DescriptorFilter.Rules.NameEquals.name() )){
 			return( refDescriptor.getDescriptor().getName().equals( descriptor.getDescriptor().getName() ));

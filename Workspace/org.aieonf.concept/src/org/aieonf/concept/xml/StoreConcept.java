@@ -93,7 +93,7 @@ public class StoreConcept
       Element attr  = doc.createElement( IConcept.ATTRIBUTES );
       doc.appendChild( attr );
       Element el = doc.createElement( IDescriptor.Attributes.ID.toString() );
-      el.setTextContent( descriptor.getID() );
+      el.setTextContent( String.valueOf( descriptor.getID() ));
       attr.appendChild( el );
       el = doc.createElement( IDescriptor.Attributes.NAME.toString() );
       el.setTextContent( descriptor.getName() );

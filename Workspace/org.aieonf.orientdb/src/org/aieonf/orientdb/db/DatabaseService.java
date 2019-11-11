@@ -98,6 +98,7 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 		if( !persistence.isConnected() )
 			return false;
 		graph = persistence.getDatabase();
+		//graph.begin();
 		this.open = true;
 		return true;
 	}
@@ -161,9 +162,7 @@ public class DatabaseService implements IModelDatabase<IDomainAieon, IModelNode<
 	@Override
 	public void close(){
 		this.open = false;
-		//database.commit();
-		if( graph != null )
-			graph.shutdown();
+		//graph.commit();
 	}
 
 	@Override

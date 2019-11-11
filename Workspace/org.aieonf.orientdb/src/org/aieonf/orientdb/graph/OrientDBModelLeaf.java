@@ -18,6 +18,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 public class OrientDBModelLeaf extends VertexConceptBase implements IModelLeaf<IDescriptor> {
 
+	public static final String S_DESCRIPTOR = "DESCRIPTOR";
+	
 	//The concept that is modelled
 	private IDescriptor descriptor;
 	private boolean leaf;
@@ -39,6 +41,7 @@ public class OrientDBModelLeaf extends VertexConceptBase implements IModelLeaf<I
 		this.parent = parent;
 		this.descriptor = descriptor;
 		setIdentifier( descriptor.get( IModelLeaf.Attributes.IDENTIFIER ));
+		super.set(S_DESCRIPTOR, String.valueOf( descriptor.getID()));
 		this.leaf = true;
 	}
 
@@ -69,7 +72,7 @@ public class OrientDBModelLeaf extends VertexConceptBase implements IModelLeaf<I
 	public void init( IDescriptor descriptor ){
 		this.descriptor = descriptor;
 		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
-		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
+		this.set( IDescriptor.Attributes.ID, String.valueOf( descriptor.getID() ));
 		this.set( IDescriptor.Attributes.VERSION, String.valueOf( descriptor.getVersion() ));		
 	}
 

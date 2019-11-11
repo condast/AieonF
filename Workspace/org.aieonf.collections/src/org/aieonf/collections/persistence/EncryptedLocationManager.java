@@ -53,7 +53,7 @@ public class EncryptedLocationManager extends LocationManager
     try{
     	IDescriptor descriptor = super.getDescribable( location );
       String name = getDecryptedFileName( loader, descriptor.getName() );
-      String id = descriptor.getID();
+      long id = descriptor.getID();
     	IDescriptor newDescriptor = new Descriptor( id, name );
       newDescriptor.setVersion( descriptor.getVersion() );
       return newDescriptor;

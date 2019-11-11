@@ -71,6 +71,9 @@ public class DatabasePersistenceService extends AbstractPersistenceService {
 
 	@Override
 	protected boolean onDisconnect() {
+		if( database != null )
+			database.shutdown();
+
 		boolean result = ( factory != null );
 		if( result )
 			factory.close();

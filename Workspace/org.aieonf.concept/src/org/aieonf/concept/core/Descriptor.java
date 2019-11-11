@@ -40,22 +40,13 @@ public class Descriptor implements IDescriptor
 	public static final String S_ERR_INVALID_DESCRIPTOR =
 			"Can not parse a descriptor from the given string: ";
 
-	//The regular expression that splits a string into an string array of
-	//which the first element always contains the correct form for a name
-	public static final String NAME_REGEXP = "[^0-9][A-Za-z_0-9\\-\\.]*";
-	public static final String NOT_NAME_REGEXP = "[^A-Za-z_]*[^A-Za-z0-9_\\-]*";
-
-	public static final String URL_REGEXP = "[^0-9][A-Za-z_0-9\\-]@[a-zA-Z0-9_\\-\\.]";
-
-	public static final String VALID_NAME_REG_EX = "[^A-Za-z0-9_\\-]+";
-
 	private IConceptBase base;
 	
 	public Descriptor() {
 		this( new ConceptBase() );
 	}
 
-	protected Descriptor( IConceptBase base ) {
+	public Descriptor( IConceptBase base ) {
 		this.base = base;
 		this.setClassName( this.getClass().getName());
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
@@ -82,10 +73,10 @@ public class Descriptor implements IDescriptor
 	 * @param id String
 	 * @param name String
 	 */
-	public Descriptor( String id, String name )
+	public Descriptor( long id, String name )
 	{
 		this( name );
-		setValue( IDescriptor.Attributes.ID, id );
+		setValue( IDescriptor.Attributes.ID, String.valueOf( id ));
 	}
 
 	/**
@@ -96,7 +87,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( IDescriptor descriptor )
 	{
 		this( descriptor.getName() );
-		setValue( IDescriptor.Attributes.ID, descriptor.getID() );
+		setValue( IDescriptor.Attributes.ID, String.valueOf( descriptor.getID() ));
 		this.setVersion( descriptor.getVersion() );
 		this.setDescription( descriptor.getDescription() );
 		this.setClassName( descriptor.getClass().getName() );
@@ -133,9 +124,10 @@ public class Descriptor implements IDescriptor
 	 * @return String
 	 */
 	@Override
-	public final String getID()
+	public final long getID()
 	{
-		return this.get( IDescriptor.Attributes.ID );
+		String str = this.get( IDescriptor.Attributes.ID );
+		return Long.parseLong(str);
 	}
 
 	/**
@@ -339,22 +331,16 @@ public class Descriptor implements IDescriptor
 		if(( obj == null ) || (( obj instanceof IDescriptor ) == false ))
 			return false;
 		IDescriptor descriptor = ( IDescriptor )obj;
-		if( this.getID() == null ){
-			String id = descriptor.getID();
-			return ( id == null )? super.equals(obj): false;
+		if( this.getID() == descriptor.getID())
+			return true;
 				
-		}
-		if( descriptor.getID() == null )
-			return false;
 		if( this.getName() == null ){
 			String name = descriptor.getName();
 			return (( name == null ) || ( name.equals( IConceptBase.NULL )));
 		}
 		if( descriptor.getName() == null )
 			return false;
-		if( !descriptor.getName().equals( this.getName() ))
-			return false;
-		return descriptor.getID().equals( this.getID() );
+		return ( descriptor.getName().equals( this.getName() ));
 	}
 
 	/**
@@ -387,17 +373,14 @@ public class Descriptor implements IDescriptor
 			return -1;
 		if( descriptor.getName() == null )
 			return 1;
-		int compareTo = this.getName().compareTo( descriptor.getName() );
+		long compareTo = this.getName().compareTo( descriptor.getName() );
 		if( compareTo != 0 )
-			return compareTo;
-		String id = this.getID();
-		if( id == null )
-			return -1;
-		if( descriptor.getID() == null )
-			return 1;
-		compareTo = id.compareTo( descriptor.getID() );
+			return (int)compareTo;
+		if( descriptor.getID() == getID() )
+			return 0;
+		compareTo = ( descriptor.getID() - getID() );
 		if( compareTo != 0 )
-			return compareTo;
+			return ( compareTo <0)?-1: 1;
 		return ( this.getVersion() - descriptor.getVersion() );
 	}
 
@@ -431,9 +414,7 @@ public class Descriptor implements IDescriptor
 
 		if( name == null )
 			name = "null";
-		String id = this.getID();
-		if( id == null )
-			id = "null";
+		long id = this.getID();
 
 		String versionStr = base.get( IDescriptor.Attributes.VERSION );
 		int version = -1;
@@ -469,9 +450,7 @@ public class Descriptor implements IDescriptor
 		String name = this.getName();
 		if( name == null )
 			name = "null";
-		String id = this.getID();
-		if( id == null )
-			id = "null";
+		long id = this.getID();
 		return "["+ name + "," + id + "," + this.getVersion() + "]";
 	}
 
@@ -554,9 +533,8 @@ public class Descriptor implements IDescriptor
 		String str = descriptor.getName();
 		if( isNull( str ))
 			return false;
-		str = descriptor.getID();
-		if( isNull( str ))
-			return false; 
+		if( descriptor.getID() < 0 )
+			return false;
 		return ( descriptor.getVersion() >= 0 );
 	}
 
@@ -583,7 +561,7 @@ public class Descriptor implements IDescriptor
 		if( split.length > 3 )
 			id = stringArray.substring( name.length() + 1, 
 					stringArray.length() - version.length() - 1 );
-		IDescriptor descriptor = new Descriptor( id, name );
+		IDescriptor descriptor = new Descriptor( Long.parseLong( id ), name );
 		descriptor.setVersion( Integer.parseInt( version ));
 		return descriptor;
 	}

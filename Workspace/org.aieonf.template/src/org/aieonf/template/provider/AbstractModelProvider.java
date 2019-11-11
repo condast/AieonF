@@ -9,7 +9,6 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.sign.SignatureFactory;
 import org.aieonf.model.core.IModelListener;
@@ -204,12 +203,12 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	 */
 	protected void IDFactory( IConcept concept ) throws ConceptException
 	{
-		if( !Descriptor.isNull( concept.getID()))
+		if( concept.getID() < 0 )
 			return;
 		try{
 			signer.sign( concept );
-			String id = IDFactory( concept, models );
-			concept.set( IDescriptor.Attributes.ID.name(), id);
+			long id = IDFactory( concept, models );
+			concept.set( IDescriptor.Attributes.ID.name(), String.valueOf( id ));
 		}
 		catch( Exception ex ){
 			throw new ConceptException( ex );
@@ -224,29 +223,22 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	 * @return String
 	 * @throws CollectionException
 	 */
-	public String IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors )
+	public long IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors )
 	{
-		StringBuffer buffer = new StringBuffer();
-		buffer.append( manifest.getSource() + ":" );
-
 		long newId = descriptor.hashCode();
 		boolean containsId = false;
-		String hexStr;
 		do{
 			containsId = false;
 			newId = ( long )( Math.random() * Long.MAX_VALUE );
-			hexStr = Long.toHexString( newId );
 			for( IDescribable<?> desc: descriptors ){
-				if( desc.getDescriptor().getID().equals( hexStr )){
+				if( desc.getDescriptor().getID() == newId ){
 					containsId = true;
 					break;
 				}
 			}
 		}
 		while( containsId == true );
-
-		buffer.append( hexStr.toUpperCase());
-		return buffer.toString();
+		return newId;
 	}
 
 }

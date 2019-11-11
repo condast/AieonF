@@ -16,7 +16,7 @@ public class Dispatcher implements IActiveDomainProvider{
 	}
 
 	@Override
-	public boolean isRegistered(String id, String name) {
+	public boolean isRegistered(long id, String name) {
 		return provider.isRegistered(id, name);
 	}
 

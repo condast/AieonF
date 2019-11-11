@@ -1,5 +1,7 @@
 package org.aieonf.commons.filter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +34,13 @@ public abstract class AbstractAttributeFilter<T,U extends Object> extends Abstra
 		public String toString()
 		{
 			return StringStyler.prettyString( super.toString() );
+		}
+		
+		public static String[] items() {
+			Collection<String> result = new ArrayList<>();
+			for( Rules rule: Rules.values())
+				result.add(rule.name());
+			return result.toArray(new String[ result.size()]);
 		}
 	}
 

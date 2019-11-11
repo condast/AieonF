@@ -48,7 +48,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	public void init( T descriptor ){
 		this.descriptor = descriptor;
 		this.set( IDescriptor.Attributes.NAME, descriptor.getName() );
-		this.set( IDescriptor.Attributes.ID, descriptor.getID() );
+		this.set( IDescriptor.Attributes.ID, String.valueOf( descriptor.getID() ));
 		this.set( IDescriptor.Attributes.VERSION, String.valueOf( descriptor.getVersion() ));		
 	}
 
