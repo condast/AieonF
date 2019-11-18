@@ -4,7 +4,7 @@
     <context name="Orientdb">
 		<version type="int">1</version>
 		<read-only>true</read-only>
-		<id type="string" regex="[a..z\\.]*[:]//d">org.condast.concept.template:-4914886299605302745</id>
+		<id>4914886299605302745</id>
 		<scope type="enum">Application</scope>
 		<organisation>AieonF</organisation>
 		<website>"www.saight.com"</website>

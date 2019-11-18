@@ -5,8 +5,10 @@ import javax.persistence.EntityManager;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.orientdb.core.AbstractPersistenceService;
 
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 /**
  * Handles the Orient Databae
@@ -59,7 +61,20 @@ public class DatabasePersistenceService extends AbstractPersistenceService {
 			return null;
 		return database; 
 	}
-	
+
+	/**
+	 * Create a cluster for the given domain
+	 * @param domain
+	 */
+	public void createCluster( IDomainAieon domain ) {
+		String source = super.getSource();
+		factory = new OrientGraphFactory(source);
+		OrientGraphNoTx graph = factory.getNoTx();
+		ODatabaseDocumentTx database = graph.getRawGraph();
+		if( !database.existsCluster(domain.getShortName()))
+			database.addCluster(domain.getShortName());
+	}
+
 	@Override
 	protected boolean onConnect() {
 		String source = super.getSource();

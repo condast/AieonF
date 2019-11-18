@@ -3,7 +3,6 @@ package org.aieonf.orientdb.cache;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.concept.security.PasswordAieon;
 import org.aieonf.orientdb.core.AbstractPersistenceService;
-import org.aieonf.orientdb.core.AbstractPersistenceService.Types;
 
 import com.orientechnologies.orient.core.db.OPartitionedDatabasePool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -48,8 +47,11 @@ public class CachePersistenceService extends AbstractPersistenceService {
 		try {
 			String source = super.getSource();
 			IPasswordAieon password = new PasswordAieon( getLoader() );
-			OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , password.getUserName(), password.getPassword() );
-			database = pool.acquire();
+			database = new ODatabaseDocumentTx(source);
+			if( !database.exists())
+				database.create(); 
+			database = database.open(password.getUserName(), password.getPassword());
+			database.activateOnCurrentThread();
 			result = true;
 		}
 		catch( Exception ex ) {
@@ -61,6 +63,30 @@ public class CachePersistenceService extends AbstractPersistenceService {
 	@Override
 	protected boolean onDisconnect() {
 		this.database.close();
-		return true;
+		return false;
+	}
+	
+	public boolean open() {
+		boolean result = false;
+		if(!isConnected())
+			return result;
+		try {
+			String source = super.getSource();
+			IPasswordAieon password = new PasswordAieon( getLoader() );
+			OPartitionedDatabasePool pool =  new OPartitionedDatabasePool(source , password.getUserName(), password.getPassword() );
+			database = pool.acquire();
+			if (!database.isActiveOnCurrentThread()) {
+				database.activateOnCurrentThread();
+			}
+			result = true;
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+	
+	public void close() {
+		database.close();
 	}
 }

@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
@@ -208,7 +209,12 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 		try{
 			logger.fine("Setting value for key: " + interpreter.getKey() );
 			IDescriptor descriptor = current.getDescriptor();
-			descriptor.set( interpreter.getKey(), value);
+			if( StringUtils.isEmpty(value))
+				return;
+			String key = interpreter.getKey();
+			if( StringUtils.isEmpty(key))
+				return;
+			descriptor.set( key, value);
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

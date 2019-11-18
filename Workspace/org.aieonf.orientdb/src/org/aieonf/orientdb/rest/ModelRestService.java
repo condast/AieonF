@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.xml.SerialisableModel;
@@ -48,13 +49,14 @@ public class ModelRestService{
 		try{
  			if( !dispatcher.isRegistered(domainId, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(domainId, token);
  			Gson gson = new Gson();
 			IModelLeaf<IDescriptor> node = gson.fromJson(data, Model.class);
 			if( !dispatcher.isAllowed(node))
 				return Response.status(Status.FORBIDDEN).build();
 			cache.open();
 			dbService.open();
-			ModelFactory factory = new ModelFactory( cache, dbService.getGraph() );
+			ModelFactory factory = new ModelFactory( domain, cache, dbService.getGraph() );
 			IModelLeaf<IDescriptor> result = factory.transform(node);
 			return ( result == null )? Response.status(Status.NOT_IMPLEMENTED).build(): 
 				Response.ok().build();
@@ -72,16 +74,17 @@ public class ModelRestService{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get")
-	public Response getModel( @QueryParam("id") long domain, @QueryParam("token") String token, 
+	public Response getModel( @QueryParam("id") long domainId, @QueryParam("token") String token, 
 			@QueryParam("name") String name, @QueryParam("version") String version) {
 		CacheService cache = CacheService.getInstance();
 		DatabaseService dbService = DatabaseService.getInstance();
 		try{
-			if( !dispatcher.isRegistered(domain, token))
+			if( !dispatcher.isRegistered(domainId, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(domainId, token);
  			cache.open();
 			dbService.open();
-			ModelFactory factory = new ModelFactory( cache, dbService.getGraph() );
+			ModelFactory factory = new ModelFactory( domain, cache, dbService.getGraph() );
 			Collection<IModelLeaf<IDescriptor>> result = factory.get(domain);
 			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);

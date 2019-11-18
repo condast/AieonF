@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -80,7 +81,8 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 		XMLTemplateBuilder<C,ITemplateLeaf<C>> builder = new XMLTemplateBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );
 		builder.build();
 		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.getModel();
-		root.getDescriptor().set( IDescriptor.Attributes.ID, identifier );
+		long id = StringUtils.isEmpty(identifier)?-1:identifier.hashCode();
+		root.getDescriptor().set( IDescriptor.Attributes.ID, String.valueOf(id ));
 		root.getDescriptor().set( IDescriptor.Attributes.VERSION, S_DEFAULT_VERSION );
 		root.getDescriptor().set( IConcept.Attributes.SOURCE, identifier );
 		return root;	

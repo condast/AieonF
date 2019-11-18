@@ -9,7 +9,6 @@ import java.util.Iterator;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
@@ -58,15 +57,15 @@ public class CacheService implements Closeable{
 	 * 
 	 * @param loader
 	 */
-	public void open( ){
-		if( !persistence.isConnected() )
-			return;
-		database = persistence.getDatabase();	
-		if (!database.isActiveOnCurrentThread()) {
-			database.activateOnCurrentThread();
-		}
+	public boolean open( ){
+		boolean result = persistence.open();
+		if(!result )
+			return result;
+		database = persistence.getDatabase();
+		database.activateOnCurrentThread();
 		if(! database.existsCluster(S_CACHE))
 			database.addCluster(S_CACHE);
+		return true;
 	}
 	
 	public void addListener(IModelListener<IDescriptor> listener) {
@@ -123,6 +122,7 @@ public class CacheService implements Closeable{
 	public Collection<IDescriptor> query( String query ){
 		Collection<ODocument> docs = new ArrayList<>();
 		try{
+			this.database.activateOnCurrentThread();
 			docs = (Collection<ODocument>)this.database.query(new OSQLSynchQuery<ODocument>(query));
 		}
 		catch( OQueryParsingException pex ) {
@@ -137,8 +137,8 @@ public class CacheService implements Closeable{
 		return results;
 	}
 
-	public IDescriptor[] get( String id) throws ParseException {
-		Collection<IDescriptor> results = query( "SELECT FROM " + S_CACHE + " WHERE ID IS " + id);
+	public IDescriptor[] get( long id) throws ParseException {
+		Collection<IDescriptor> results = query( "SELECT FROM " + S_CACHE + " WHERE ID = " + id);
 		return results.toArray( new IDescriptor[ results.size()]);
 	}
 
@@ -163,7 +163,7 @@ public class CacheService implements Closeable{
 
 	public IDescriptor add(IDescriptor descriptor) {
 		ODocument odesc= createDocument( descriptor );
-		odesc.save( S_CACHE );
+		odesc.save();
 		return new DocumentDescriptor( odesc );
 	}
 
@@ -199,7 +199,6 @@ public class CacheService implements Closeable{
 			if( !StringUtils.isEmpty( value ))
 				doc.field( attr, value);
 		}
-		BodyFactory.IDFactory( descriptor );
 		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
 		descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
 		return doc;		

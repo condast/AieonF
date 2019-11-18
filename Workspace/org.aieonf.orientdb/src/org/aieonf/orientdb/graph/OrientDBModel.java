@@ -20,12 +20,12 @@ public class OrientDBModel extends OrientDBModelLeaf implements IModelNode<IDesc
 		super( vertex, descriptor);
 	}
 
-	public OrientDBModel( Object id, OrientGraph graph, IDescriptor descriptor ) {
-		this( null, id, graph, descriptor);
+	public OrientDBModel( String domain, OrientGraph graph, IDescriptor descriptor ) {
+		this( null, domain, graph, descriptor);
 	}
 	
-	public OrientDBModel( OrientDBModel parent, Object id, OrientGraph graph, IDescriptor descriptor ) {
-		super( parent, id, graph, descriptor );
+	public OrientDBModel( OrientDBModel parent, String domain, OrientGraph graph, IDescriptor descriptor ) {
+		super( parent, domain, graph, descriptor );
 		children = new ArrayList<>();
 		if( parent != null )
 			parent.addChild(this);

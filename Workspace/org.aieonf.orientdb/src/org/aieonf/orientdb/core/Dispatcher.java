@@ -53,8 +53,20 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 	}
 
 	@Override
+	public IDomainAieon getDomain(long id, String name) {
+		if( this.provider == null )
+			return null;
+		return provider.getDomain(id, name);
+	}
+
+	@Override
 	public IDomainAieon getActiveDomain() {
 		return provider.getActiveDomain();
+	}
+
+	@Override
+	public IDomainAieon[] getDomains() {
+		return provider.getDomains();
 	}
 
 	public boolean isAllowed( IModelLeaf<? extends IDescriptor> model ) {
@@ -88,5 +100,4 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 		}
 		notifyListeners(event);
 	}
-
 }

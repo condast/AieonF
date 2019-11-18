@@ -20,9 +20,20 @@ public class Dispatcher implements IActiveDomainProvider{
 		return provider.isRegistered(id, name);
 	}
 
+	
+	@Override
+	public IDomainAieon getDomain(long id, String name) {
+		return provider.getDomain(id, name);
+	}
+
 	@Override
 	public IDomainAieon getActiveDomain() {
 		return provider.getActiveDomain();
+	}
+
+	@Override
+	public IDomainAieon[] getDomains() {
+		return provider.getDomains();
 	}
 
 	public void setProvider(IActiveDomainProvider provider) {

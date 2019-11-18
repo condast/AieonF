@@ -131,7 +131,9 @@ public abstract class AbstractPersistenceService implements IPersistenceService{
 			loader = new LoaderAieon( search.getDescriptors( ILoaderAieon.Attributes.LOADER.toString())[0]);
 			loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
 			loader.setIdentifier( name);
-			File file = ProjectFolderUtils.getDefaultUserFile( loader, true); 
+			File file = ProjectFolderUtils.getDefaultUserFile( loader, true);
+			file.setReadable(true);
+			file.setWritable(true);
 			source = file.toURI().toString();
 			source = source.replace( S_FILE, S_LOCAL);		
 			connected = onConnect();

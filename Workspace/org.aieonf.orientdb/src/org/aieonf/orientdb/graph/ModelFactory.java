@@ -12,12 +12,14 @@ import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.IConceptBase;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.orientdb.cache.CacheService;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public class ModelFactory {
 
@@ -27,7 +29,10 @@ public class ModelFactory {
 	
 	private CacheService cache;
 	
-	public ModelFactory( CacheService cache, OrientGraph graph ) {
+	private IDomainAieon domain;
+	
+	public ModelFactory( IDomainAieon domain, CacheService cache, OrientGraph graph ) {
+		this.domain = domain;
 		this.graph = graph;
 		this.cache = cache;
 	}
@@ -38,13 +43,20 @@ public class ModelFactory {
 	}
 
 	protected OrientDBModelLeaf transform( OrientDBModel parent, IModelLeaf<? extends IDescriptor> model ) throws ParseException {
+		String type = model.getType();
+		OrientVertexType vt = graph.getVertexType(type);
+		if( vt == null ) {
+			vt = graph.createVertexType(type);
+			vt.addCluster(domain.getShortName());
+		}
+		
 		IDescriptor[] descriptors = cache.get( model.getDescriptor());
 		IDescriptor descriptor = Utils.assertNull(descriptors)? cache.add(model.getDescriptor()): descriptors[0];		
 		OrientDBModelLeaf result = null;
 		if( model.isLeaf()) {
-			result = new OrientDBModelLeaf( parent, model.getID(), graph, descriptor);
+			result = new OrientDBModelLeaf( parent, null, graph, descriptor);
 		}else {
-			OrientDBModel oModel = new OrientDBModel( parent, model.getID(), graph, descriptor);	
+			OrientDBModel oModel = new OrientDBModel( parent, null, graph, descriptor);	
 			result = oModel;
 			IModelNode<? extends IDescriptor> node = (IModelNode<? extends IDescriptor>) model;
 			for( IModelLeaf<? extends IDescriptor> child: node.getChildren())
@@ -67,9 +79,9 @@ public class ModelFactory {
 		return new OrientDBDescriptor( fill( descriptor ));
 	}
 
-	public Collection<IModelLeaf<IDescriptor>> get( long domain ) throws FilterException {
+	public Collection<IModelLeaf<IDescriptor>> get( IDescriptor descriptor ) throws FilterException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
-		Iterator<Vertex> iterator = graph.getVerticesOfClass( String.valueOf( domain )).iterator();
+		Iterator<Vertex> iterator = graph.getVertices().iterator();
 		while( iterator.hasNext()) {
 			Vertex vertex = iterator.next();
 			String id = vertex.getProperty(OrientDBModelLeaf.S_DESCRIPTOR);
@@ -77,7 +89,7 @@ public class ModelFactory {
 				throw new IllegalArgumentException( S_ERR_NULL_ID + vertex.getId());
 			IDescriptor[] descriptors = null;
 			try {
-				descriptors = cache.get( id );
+				descriptors = cache.get( Long.parseLong( id ));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

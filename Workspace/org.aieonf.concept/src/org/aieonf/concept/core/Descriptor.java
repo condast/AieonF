@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
@@ -127,7 +128,7 @@ public class Descriptor implements IDescriptor
 	public final long getID()
 	{
 		String str = this.get( IDescriptor.Attributes.ID );
-		return Long.parseLong(str);
+		return StringUtils.isEmpty(str)?-1:Long.parseLong(str);
 	}
 
 	/**
