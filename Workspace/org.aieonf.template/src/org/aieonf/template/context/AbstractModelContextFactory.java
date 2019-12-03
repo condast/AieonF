@@ -110,7 +110,7 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 		if( leaf.isLeaf())
 			return null;
 		ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) leaf;
-		for( IModelLeaf<? extends IDescriptor> child: node.getChildren() ){
+		for( IModelLeaf<? extends IDescriptor> child: node.getChildren().keySet() ){
 			ITemplateLeaf<C> result = getTemplate( (ITemplateLeaf<? extends IDescriptor>) child, identifier );
 			if( result != null )
 				return result;

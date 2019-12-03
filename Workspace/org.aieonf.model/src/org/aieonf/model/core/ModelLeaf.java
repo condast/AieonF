@@ -1,8 +1,5 @@
 package org.aieonf.model.core;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
@@ -21,7 +18,7 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	/**
 	 * Only used for special models
 	 */
-	protected ModelLeaf(){
+	public ModelLeaf(){
 		this.leaf = true;
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
@@ -40,8 +37,33 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	 * @param concept
 	 */
 	public ModelLeaf( T descriptor, String type ){
+		this( null, descriptor, type );
+ 	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public ModelLeaf( IModelNode<? extends IDescriptor> parent ){
+		this( parent, null );
+	}
+	
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public ModelLeaf( IModelNode<? extends IDescriptor> parent, T descriptor ){
 		this();
+		this.parent = parent;
 		init( descriptor);
+ 	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public ModelLeaf( IModelNode<? extends IDescriptor> parent, T descriptor, String type ){
+		this( parent, descriptor );
 		this.set( IConcept.Attributes.TYPE, type );
  	}
 
@@ -164,6 +186,10 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 		return this.descriptor;
 	}
 
+	public void setDescriptor(T descriptor) {
+		this.descriptor = descriptor;
+	}
+
 	/**
 	 * Get the direction of this model with 
 	 * respect to its children
@@ -241,20 +267,6 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 	}
 	
 	/**
-	 * Get the children of the given model leaf if they exist
-	 * @param model
-	 * @return
-	 */
-	public static Collection<? extends IModelLeaf<? extends IDescriptor>> getChildren( IModelLeaf<? extends IDescriptor> model ){
-		Collection<IModelLeaf<? extends IDescriptor>> children = new ArrayList<IModelLeaf<? extends IDescriptor>>();
-		if(!( model instanceof IModelNode ))
-			return children;
-		IModelNode<? extends IDescriptor> md = 
-			(IModelNode<? extends IDescriptor>) model;
-		return md.getChildren();
-	}
-
-	/**
 	 * Get the first child with the given descriptor, or null if it wasn't found
 	 * @param model
 	 * @return
@@ -273,25 +285,5 @@ public class ModelLeaf<T extends IDescriptor> extends ConceptBase implements IMo
 		IModelNode<? extends IDescriptor> md = 
 			(IModelNode<? extends IDescriptor>) model;
 		return md.hasChildren();		
-	}
-	
-	/**
-	 * Get the model with the given id
-	 */
-	@SuppressWarnings("unchecked")
-	public static IModelLeaf<IDescriptor> getModel( IModelLeaf<? extends IDescriptor> root, String id ){
-		if( Utils.assertNull( id ))
-			return null;
-		if( id.equals( root.getIdentifier() ))
-			return (IModelLeaf<IDescriptor>) root;
-		if(!( root instanceof IModelNode))
-			return null;
-		IModelNode<?> node = (IModelNode<?>) root;
-		for( IModelLeaf<?> child: node.getChildren() ){
-			IModelLeaf<IDescriptor> result = getModel( child, id ); 
-			if( result != null )
-				return result;
-		}
-		return null;
 	}
 }

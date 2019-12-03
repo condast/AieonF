@@ -19,10 +19,10 @@ public class SerialisableModel extends ConceptBase
 	
 	private SerialisableModel parent;
 	
-	private Collection<SerialisableModel> children;
+	private Map<SerialisableModel, String> children;
 
 	public SerialisableModel(){
-		this.children = new ArrayList<>();
+		this.children = new HashMap<>();
 	}
 	
 	public SerialisableModel getParent() {
@@ -47,9 +47,11 @@ public class SerialisableModel extends ConceptBase
 		if(!( leaf instanceof IModelNode))
 			return;
 		IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) leaf;
-		for( IModelLeaf<? extends IDescriptor> child: model.getChildren()) {
-			SerialisableModel smodel = new SerialisableModel( this, child ); 
-			children.add( smodel );
+		Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>, String>> miterator = model.getChildren().entrySet().iterator();
+		while( miterator.hasNext() ) {
+			Map.Entry<IModelLeaf<? extends IDescriptor>,String> entry = miterator.next();
+			SerialisableModel smodel = new SerialisableModel( this, entry.getKey() ); 
+			children.put( smodel, entry.getValue() );
 		}
 	}
 	

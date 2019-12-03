@@ -55,7 +55,7 @@ public class TemplateNode<T extends IDescriptor>
 
 		ITemplateNode<? extends IDescriptor> md = 
 			(org.aieonf.template.def.ITemplateNode<? extends IDescriptor> )model;
-		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren();		
+		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren().keySet();		
 		for( IModelLeaf<? extends IDescriptor> child: children )
 			if( contains( store, child, descr ))
 				return true;

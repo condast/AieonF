@@ -7,6 +7,7 @@ import java.util.List;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.Model;
 import org.aieonf.model.core.ModelException;
 import org.aieonf.model.core.ModelLeaf;
 
@@ -90,7 +91,7 @@ public abstract class AbstractModelParserEngine<T extends IDescriptor, U extends
 	protected void parseBFS() throws ModelException
 	{
 		parseListeners( root );
-		this.parseBFS( root.getChildren() );
+		this.parseBFS( root.getChildren().keySet() );
 	}
 
 	/**
@@ -104,7 +105,7 @@ public abstract class AbstractModelParserEngine<T extends IDescriptor, U extends
 		for( IModelLeaf<?> node: nodes ){
 			parseListeners( node );
 			if( ModelLeaf.hasChildren( node ))
-				children.addAll( ModelLeaf.getChildren( node ));
+				children.addAll( Model.getChildren( node ));
 		}
 		this.parseBFS( children );
 	}
@@ -126,7 +127,7 @@ public abstract class AbstractModelParserEngine<T extends IDescriptor, U extends
 	protected void parseDFS( IModelLeaf<?> node ) throws ModelException
 	{
 		parseListeners( node );
-		for( IModelLeaf<?> child: ModelLeaf.getChildren( node )){
+		for( IModelLeaf<?> child: Model.getChildren( node )){
 			this.parseDFS(child);
 		}
 	}

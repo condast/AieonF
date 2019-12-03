@@ -2,10 +2,14 @@ package org.aieonf.orientdb.cache;
 
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
@@ -62,7 +66,8 @@ public class CacheService implements Closeable{
 		if(!result )
 			return result;
 		database = persistence.getDatabase();
-		database.activateOnCurrentThread();
+		if(!database.isActiveOnCurrentThread())
+			database.activateOnCurrentThread();
 		if(! database.existsCluster(S_CACHE))
 			database.addCluster(S_CACHE);
 		return true;
@@ -138,8 +143,28 @@ public class CacheService implements Closeable{
 	}
 
 	public IDescriptor[] get( long id) throws ParseException {
-		Collection<IDescriptor> results = query( "SELECT FROM " + S_CACHE + " WHERE ID = " + id);
+		Collection<IDescriptor> results = query( "SELECT FROM CLUSTER:" + S_CACHE + " WHERE ID = " + id);
 		return results.toArray( new IDescriptor[ results.size()]);
+	}
+
+	public Map<Long, IDescriptor> get( long[] ids ) throws ParseException {
+		Map<Long,IDescriptor> results = new HashMap<>();
+		for( long id: ids ) {
+			IDescriptor[] temp = get( id );
+			if(!Utils.assertNull(temp))
+				results.put( id, temp[0] );
+		}
+		return results;
+	}
+
+	public Map<Long, IDescriptor> get( Collection<Long> ids ) throws ParseException {
+		Map<Long,IDescriptor> results = new HashMap<>();
+		for( long id: ids ) {
+			IDescriptor[] temp = get( id );
+			if(!Utils.assertNull(temp))
+				results.put( id, temp[0] );
+		}
+		return results;
 	}
 
 	public IDescriptor[] get(IDescriptor descriptor) throws ParseException {

@@ -23,7 +23,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 {
 	private ITemplateLeaf<T> model;
 
-	private Collection<IModelLeaf<? extends IDescriptor>> children;
+	private Map<IModelLeaf<? extends IDescriptor>, String> children;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	TemplateWrapper( ITemplateLeaf<T>model )
@@ -115,16 +115,24 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	 * @param model
 	 * @returns the created model
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child)
 	{
+		return addChild( child, null );
+	}
+
+	
+	@Override
+	public boolean addChild(IModelLeaf<? extends IDescriptor> child, String type) {
 		if( this.model instanceof IModelNode ){
+			@SuppressWarnings("unchecked")
 			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.addChild( child );
 		}
-		return children.add(child );
+		children.put(child, type );
+		return true;
 	}
+
 
 	/**
 	 * Remove a child model from the parent
@@ -138,7 +146,8 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.removeChild( child );
 		}
-		return children.remove(child );
+		children.remove(child );
+		return true;
 	}
 
 	/**
@@ -147,7 +156,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Collection<IModelLeaf<? extends IDescriptor>> getChildren()
+	public Map<IModelLeaf<? extends IDescriptor>, String> getChildren()
 	{
 		if( this.model instanceof ITemplateNode ){
 			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
@@ -160,7 +169,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	@Override
 	public IModelLeaf<? extends IDescriptor>[] getChildren(String name) {
 		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<IModelLeaf<? extends IDescriptor>>();
-		for( IModelLeaf<? extends IDescriptor> model: this.children ){
+		for( IModelLeaf<? extends IDescriptor> model: this.children.keySet() ){
 			if( model.getDescriptor().getName().equals( name ))
 				results.add( model );
 		}
@@ -180,7 +189,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.getChild( descriptor );
 		}
-		for( IModelLeaf<? extends IDescriptor> child: children ){
+		for( IModelLeaf<? extends IDescriptor> child: children.keySet() ){
 			if( child.getDescriptor().equals( descriptor ))
 				return child;
 		}

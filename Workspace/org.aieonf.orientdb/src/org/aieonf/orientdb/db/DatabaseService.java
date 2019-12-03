@@ -12,7 +12,6 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
-import org.aieonf.model.provider.IModelProvider;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
@@ -91,7 +90,7 @@ public class DatabaseService {
 	public boolean open( ){
 		if( !persistence.isConnected() )
 			return false;
-		graph = persistence.getDatabase();
+		graph = persistence.createDatabase();
 		ODatabaseDocumentTx database = graph.getRawGraph();
 		if(!database.isActiveOnCurrentThread())
 			database.activateOnCurrentThread();
@@ -117,7 +116,7 @@ public class DatabaseService {
 	}
 	
 	public boolean isOpen(){
-		return !this.graph.isClosed();
+		return (this.graph != null ) && !this.graph.isClosed();
 	}
 
 	public void sync(){
@@ -140,16 +139,9 @@ public class DatabaseService {
 	}
 
 	public void close(){
-		//graph.commit();
-	}
-
-	public boolean hasFunction(String function) {
-		return IModelProvider.DefaultModels.DESCRIPTOR.equals( function );
-	}
-
-
-	public void deactivate() {
+		graph.commit();
 		graph.shutdown();
+		graph = null;
 	}
 
 	protected class Transaction extends AbstractTransaction<IModelNode<IDescriptor>, DatabaseService>{

@@ -37,8 +37,8 @@ public class OrientDBFactory extends AbstractProviderContextFactory<IContextAieo
 		File file = null;
 		try{
 			IModelNode<IContextAieon> template = (IModelNode<IContextAieon>) createTemplate();
-			IModelNode<? extends IDescriptor> category = (IModelNode<? extends IDescriptor>) template.getChildren().iterator().next();
-			IModelLeaf<? extends IDescriptor> child = category.getChildren().iterator().next();
+			IModelNode<? extends IDescriptor> category = (IModelNode<? extends IDescriptor>) template.getChildren().keySet().iterator().next();
+			IModelLeaf<? extends IDescriptor> child = category.getChildren().keySet().iterator().next();
 			IConcept loader = new ConceptWrapper( child.getDescriptor() );
 			URI uri = ProjectFolderUtils.getDefaultResource( S_BUNDLE_ID, loader.getURIPath());
 			file =  new File( uri.getPath() );

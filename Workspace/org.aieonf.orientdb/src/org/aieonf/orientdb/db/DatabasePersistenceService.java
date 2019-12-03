@@ -23,7 +23,6 @@ public class DatabasePersistenceService extends AbstractPersistenceService {
 	protected static final String S_AIEONF = "AieonF";
 
 	private OrientGraphFactory factory;
-	private OrientGraph database;
 
 	private static DatabasePersistenceService service = new DatabasePersistenceService();
 	
@@ -56,10 +55,10 @@ public class DatabasePersistenceService extends AbstractPersistenceService {
 	 * Create a database
 	 * @return
 	 */
-	public OrientGraph getDatabase() {
+	public OrientGraph createDatabase() {
 		if(!isConnected())
 			return null;
-		return database; 
+		return factory.getTx(); 
 	}
 
 	/**
@@ -80,14 +79,11 @@ public class DatabasePersistenceService extends AbstractPersistenceService {
 		String source = super.getSource();
 		factory = new OrientGraphFactory(source);
 		//factory = new OrientGraphFactory(source, user.getUserName(), String.valueOf(user.getToken() )).setupPool(1, 10);	
-		database = factory.getTx();
 		return true;
 	}
 
 	@Override
 	protected boolean onDisconnect() {
-		if( database != null )
-			database.shutdown();
 
 		boolean result = ( factory != null );
 		if( result )

@@ -14,6 +14,13 @@ public interface IModelNode<T extends IDescriptor> extends IModelLeaf<T>
 	public boolean addChild( IModelLeaf<? extends IDescriptor> child );
 
 	/**
+	 * Add a child model to the model of the given type
+	 * @param child IModelNode<? extends IDescriptor>
+	 * @returns the created model
+	 */
+	public boolean addChild( IModelLeaf<? extends IDescriptor> child, String type );
+
+	/**
 	 * Remove a child model from the parent
 	 * @param child IModelNode<? extends IDescriptor>
 	*/
@@ -23,7 +30,7 @@ public interface IModelNode<T extends IDescriptor> extends IModelLeaf<T>
 	 * Remove a child model from the parent
 	 * @return Collection<IModelNode<? extends IDescriptor>>
 	*/
-	public Collection<IModelLeaf<? extends IDescriptor>> getChildren();
+	public Map<IModelLeaf<? extends IDescriptor>, String> getChildren();
 
 	/**
 	 * Get the child with the given descriptor

@@ -20,7 +20,7 @@ public class PrintModel {
 			return;
 		IModelNode<?> node = (IModelNode<?>) leaf;
 		depth++;
-		for( IModelLeaf<?> child: node.getChildren() )
+		for( IModelLeaf<?> child: node.getChildren().keySet() )
 			printModel( buffer, child, addDescriptor, depth );
 	}
 

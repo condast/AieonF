@@ -46,8 +46,8 @@ public class AieonFServiceProvider extends AbstractAieonFServiceProvider<Composi
 	protected void initSelection() {
 		try{
 			IModelNode<IContextAieon> template = (IModelNode<IContextAieon>) factory.createTemplate();
-			IModelNode<? extends IDescriptor> category = (IModelNode<? extends IDescriptor>) template.getChildren().iterator().next();
-			IModelLeaf<? extends IDescriptor> child = category.getChildren().iterator().next();
+			IModelNode<? extends IDescriptor> category = (IModelNode<? extends IDescriptor>) template.getChildren().keySet().iterator().next();
+			IModelLeaf<? extends IDescriptor> child = category.getChildren().keySet().iterator().next();
 			IConcept loader = new ConceptWrapper( child.getDescriptor() );
 			URI uri = ProjectFolderUtils.getParsedAieonFDir( loader.getURIPath(), Activator.BUNDLE_ID );
 			File file = new File( uri.getPath() );

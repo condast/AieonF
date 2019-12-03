@@ -36,7 +36,7 @@ public class ModelScanner<T extends IDescriptor>{
 		if(!( current instanceof IModelNode ))
 			return;
 		IModelNode<T> node = (IModelNode<T>) current;
-		for( IModelLeaf<?> child: node.getChildren() )
+		for( IModelLeaf<?> child: node.getChildren().keySet() )
 			getDescriptors( results, name, child );
 	}
 
@@ -58,7 +58,7 @@ public class ModelScanner<T extends IDescriptor>{
 		if(!( current instanceof IModelNode ))
 			return;
 		IModelNode<T> node = (IModelNode<T>) current;
-		for( IModelLeaf<?> child: node.getChildren() )
+		for( IModelLeaf<?> child: node.getChildren().keySet() )
 			getModel( results, descriptor, (IModelLeaf<IDescriptor>) child );
 	}
 
@@ -75,7 +75,7 @@ public class ModelScanner<T extends IDescriptor>{
 		if(!( current instanceof IModelNode ))
 			return;
 		IModelNode<T> node = (IModelNode<T>) current;
-		for( IModelLeaf<?> child: node.getChildren() )
+		for( IModelLeaf<?> child: node.getChildren().keySet() )
 			searchModel( results, filter, (IModelLeaf<T>) child );
 	}
 

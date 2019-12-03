@@ -152,7 +152,7 @@ public abstract class AbstractModelController<C extends IContextAieon, D extends
 		if( model.isLeaf() )
 			return null;
 		IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) model;
-		for( IModelLeaf<? extends IDescriptor>child: node.getChildren() ){
+		for( IModelLeaf<? extends IDescriptor>child: node.getChildren().keySet() ){
 			IModelLeaf<IDescriptor>result = this.getSubModel(child, descriptor );
 			if( result != null )
 				return result;
@@ -176,7 +176,7 @@ public abstract class AbstractModelController<C extends IContextAieon, D extends
 		if( leaf.isLeaf())
 			return null;
 		IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) leaf;
-		for( IModelLeaf<? extends IDescriptor> child: node.getChildren()){
+		for( IModelLeaf<? extends IDescriptor> child: node.getChildren().keySet()){
 			IModelLeaf<IDescriptor> result = getModel( child, identifier );
 			if( result != null )
 				return result;

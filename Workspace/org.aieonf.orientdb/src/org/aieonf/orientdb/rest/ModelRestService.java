@@ -18,13 +18,13 @@ import javax.ws.rs.core.Response.Status;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.xml.SerialisableModel;
 import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
 import org.aieonf.orientdb.graph.ModelFactory;
-import org.aieonf.orientdb.model.Model;
 
 import com.google.gson.Gson;
 
@@ -39,6 +39,7 @@ public class ModelRestService{
 	
 	private Dispatcher dispatcher = Dispatcher.getInstance();
 
+	@SuppressWarnings("unchecked")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -56,10 +57,9 @@ public class ModelRestService{
 				return Response.status(Status.FORBIDDEN).build();
 			cache.open();
 			dbService.open();
-			ModelFactory factory = new ModelFactory( domain, cache, dbService.getGraph() );
-			IModelLeaf<IDescriptor> result = factory.transform(node);
-			return ( result == null )? Response.status(Status.NOT_IMPLEMENTED).build(): 
-				Response.ok().build();
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, cache, dbService );
+			factory.transform(node);
+			return Response.ok().build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -84,7 +84,7 @@ public class ModelRestService{
 			IDomainAieon domain = dispatcher.getDomain(domainId, token);
  			cache.open();
 			dbService.open();
-			ModelFactory factory = new ModelFactory( domain, cache, dbService.getGraph() );
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, cache, dbService );
 			Collection<IModelLeaf<IDescriptor>> result = factory.get(domain);
 			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);

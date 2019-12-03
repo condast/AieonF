@@ -169,7 +169,7 @@ public class AbstractModelProcessor<T extends IDescriptor>
 		for( IModelFactory<IModelNode<T>> listener: listeners ){
 			listener.processModelNode( node );
 		}
-		for( IModelLeaf<? extends IDescriptor> child: node.getChildren() ){
+		for( IModelLeaf<? extends IDescriptor> child: node.getChildren().keySet() ){
 			this.process((org.aieonf.model.core.IModelNode<T> )child );
 		}
 	}
@@ -210,12 +210,12 @@ public class AbstractModelProcessor<T extends IDescriptor>
 				return;
 			}
 			IModelNode<T> previous = this.parents.lastElement();
-			children = new ArrayList<IModelLeaf<? extends IDescriptor>>( previous.getChildren() );			
+			children = new ArrayList<IModelLeaf<? extends IDescriptor>>( previous.getChildren().keySet() );			
 			this.index = children.indexOf( parent ) + 1;
 			return;
 		}
 		
-		children = new ArrayList<IModelLeaf<? extends IDescriptor>>( parent.getChildren() );
+		children = new ArrayList<IModelLeaf<? extends IDescriptor>>( parent.getChildren().keySet() );
 		IModelNode<T> node = (org.aieonf.model.core.IModelNode<T> )children.get( index );
 		this.parents.push( node );
 		this.index = 0;

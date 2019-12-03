@@ -99,7 +99,7 @@ public class StoreModel<T extends IDescriptor>
 
 		Element childNode = doc.createElement( S_CHILDREN );
 		Element conceptNode;
-		Collection<? extends IModelLeaf<? extends IDescriptor>>children = md.getChildren();
+		Collection<? extends IModelLeaf<? extends IDescriptor>>children = md.getChildren().keySet();
 		for( IModelLeaf<? extends IDescriptor> child: children ){
 			logger.log( Level.FINE, "Adding child: " + child.getDescriptor().toString() );
 			conceptNode = doc.createElement( IConcept.CONCEPT );
@@ -196,7 +196,7 @@ public class StoreModel<T extends IDescriptor>
 			return;
 		IModelNode<? extends IDescriptor> md = 
 				(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
-		for( IModelLeaf<? extends IDescriptor> child: md.getChildren() )
+		for( IModelLeaf<? extends IDescriptor> child: md.getChildren().keySet() )
 			printModel( buffer, child, depth + 1);
 	}  
 
@@ -219,7 +219,7 @@ public class StoreModel<T extends IDescriptor>
 
 		IModelNode<? extends IDescriptor> md = 
 				(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
-		for( IModelLeaf<? extends IDescriptor> child: md.getChildren() ){
+		for( IModelLeaf<? extends IDescriptor> child: md.getChildren().keySet() ){
 			printExtendedModel( buffer, child, depth + 1);
 		}
 	}  

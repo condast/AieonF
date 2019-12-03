@@ -53,7 +53,7 @@ public class TemplateProcessor<T extends ITemplateAieon>
 			return null;
 		if( split.length == 1)
 			return node;
-    Collection<? extends IModelLeaf<? extends IDescriptor>>children = node.getChildren();
+    Collection<? extends IModelLeaf<? extends IDescriptor>>children = node.getChildren().keySet();
     ITemplateNode<IDescriptor> tn = null;
     for( IModelLeaf<? extends IDescriptor> child: children ){
       tn = findNode( new TemplateNodeWrapper( child ), asp.replace(split[0], ""));

@@ -22,7 +22,7 @@ public abstract class AbstractTemplateNode<T extends IDescriptor> extends Templa
 	 * @return
 	*/
 	public boolean isParent( ITemplateNode<? extends IDescriptor> template ){
-		return template.getChildren().contains( this );
+		return template.getChildren().keySet().contains( this );
 	}
 
 	/**
@@ -31,7 +31,7 @@ public abstract class AbstractTemplateNode<T extends IDescriptor> extends Templa
 	 * @return
 	*/
 	public boolean isChild( ITemplateNode<? extends IDescriptor> template ){
-		return this.getChildren().contains( template );
+		return this.getChildren().keySet().contains( template );
 	}
 
 	/**

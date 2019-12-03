@@ -123,9 +123,9 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 			ITemplate template = parse( doc );
 			switch( specify ){
 			case SKIPROOT:
-				return new TemplateWrapper<IDescriptor>( (ITemplateLeaf<IDescriptor>) template.getChildren().iterator().next() );
+				return new TemplateWrapper<IDescriptor>( (ITemplateLeaf<IDescriptor>) template.getChildren().keySet().iterator().next() );
 			case ASPECT:
-				return new TemplateWrapper<IDescriptor>( (ITemplateLeaf<IDescriptor>) template.getChildren().iterator().next() );
+				return new TemplateWrapper<IDescriptor>( (ITemplateLeaf<IDescriptor>) template.getChildren().keySet().iterator().next() );
 			default:
 				return template;
 			}
@@ -221,7 +221,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 
 		Element childNode = doc.createElement( S_CHILDREN );
 		Element conceptNode = null;
-		Collection<? extends IModelLeaf<? extends IDescriptor>>children = tn.getChildren();
+		Collection<? extends IModelLeaf<? extends IDescriptor>>children = tn.getChildren().keySet();
 		for( IModelLeaf<? extends IDescriptor> child: children ){
 			try{
 				createDocument( child, doc, conceptNode );

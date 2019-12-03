@@ -1,6 +1,10 @@
 package org.aieonf.model.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
@@ -8,7 +12,7 @@ import org.aieonf.concept.core.ConceptException;
 
 public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModelNode<T>
 {	
-	private Vector<IModelLeaf<? extends IDescriptor>>children;
+	private Map<IModelLeaf<? extends IDescriptor>, String> children;
 
 	/**
 	 * Create the model. Use only when parsing data
@@ -16,7 +20,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 */
 	protected Model(){
 		super();
-		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
+		this.children = new HashMap<>();
 	}
 
 	/**
@@ -26,7 +30,22 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	public Model( T descriptor )
 	{
 		super( descriptor );
-		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
+		this.children = new HashMap<>();
+	}
+
+	
+	protected Model(IModelNode<? extends IDescriptor> parent, T descriptor, String type) {
+		super(parent, descriptor, type);
+		this.children = new HashMap<>();
+	}
+
+	public Model(IModelNode<? extends IDescriptor> parent) {
+		this( parent, null );
+	}
+	
+	public Model(IModelNode<? extends IDescriptor> parent, T descriptor) {
+		super(parent, descriptor);
+		this.children = new HashMap<>();
 	}
 
 	/**
@@ -36,7 +55,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	public Model( T descriptor, String type )
 	{
 		super( descriptor, type );
-		this.children = new Vector<IModelLeaf<? extends IDescriptor>>();
+		this.children = new HashMap<>();
 	}
 
 	/**
@@ -44,7 +63,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 * @return
 	 */
 	@Override
-	public Collection<IModelLeaf<? extends IDescriptor>> getChildren()
+	public Map<IModelLeaf<? extends IDescriptor>, String> getChildren()
 	{
 		return this.children;
 	}
@@ -57,7 +76,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	@Override
 	public IModelLeaf<? extends IDescriptor> getChild( IDescriptor descriptor )
 	{
-		for( IModelLeaf<? extends IDescriptor> model: this.children ){
+		for( IModelLeaf<? extends IDescriptor> model: this.children.keySet() ){
 			if( model.getDescriptor().equals( descriptor ))
 				return model;
 		}
@@ -69,7 +88,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	@Override
 	public IModelLeaf<? extends IDescriptor>[] getChildren(String name) {
 		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<IModelLeaf<? extends IDescriptor>>();
-		for( IModelLeaf<? extends IDescriptor> model: this.children ){
+		for( IModelLeaf<? extends IDescriptor> model: this.children.keySet() ){
 			if( model.getDescriptor().getName().equals( name ))
 				results.add( model );
 		}
@@ -101,7 +120,16 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 * @param child IModelNode<? extends IDescriptor>
 	 */
 	@Override
-	public boolean addChild( IModelLeaf<? extends IDescriptor> child )
+	public boolean addChild( IModelLeaf<? extends IDescriptor> child ) {
+		return addChild( child, null );
+	}
+
+	/**
+	 * Add a child concept to the model
+	 * @param child IModelNode<? extends IDescriptor>
+	 */
+	@Override
+	public boolean addChild( IModelLeaf<? extends IDescriptor> child, String type )
 	{
 		child.setParent( this );
 		try {
@@ -111,29 +139,10 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 			return false;
 		}
 		updateDepth( child );
-		super.setChanged( this.children.add( child ));
+		this.children.put( child, type );
+		super.setChanged( true );
 		super.setLeaf( children.isEmpty() );
 		return super.hasChanged();
-	}
-
-	/**
-	 * Insert a child model to the model at the given index location
-	 * @param child IModelNode<? extends IDescriptor>
-	 * @returns the created model
-	 */
-	public boolean insertChild( IModelLeaf<? extends IDescriptor> child, int index ){
-		child.setParent( this );
-		try {
-			child.setDepth( super.getDepth() + 1 );
-		}
-		catch (ConceptException e) {
-			return false;
-		}
-		updateDepth( child );
-		this.children.insertElementAt( child, index );
-		super.setChanged( true);
-		super.setLeaf( children.isEmpty() );
-		return super.hasChanged();		
 	}
 
 	/**
@@ -146,9 +155,9 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 			return;
 		IModelNode<? extends IDescriptor> md = 
 			(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
-		if( Utils.assertNull(md.getChildren()))
+		if( !md.hasChildren())
 			return;
-		for( IModelLeaf<? extends IDescriptor> child: md.getChildren() ){
+		for( IModelLeaf<? extends IDescriptor> child: md.getChildren().keySet() ){
 			try {
 				child.setDepth( model.getDepth() + 1 );
 			}
@@ -166,7 +175,8 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	@Override
 	public boolean removeChild( IModelLeaf<? extends IDescriptor> model )
 	{
-		super.setChanged( this.children.remove( model ));
+		this.children.remove( model );
+		super.setChanged( true);
 		super.setLeaf( children.isEmpty() );
 		model.setParent( null );
 		if( super.hasChanged() )
@@ -209,7 +219,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 
 		IModelNode<? extends IDescriptor> md = 
 			(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
-		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren();		
+		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren().keySet();		
 		for( IModelLeaf<? extends IDescriptor> child: children )
 			if( contains( store, child, descr ))
 				return true;
@@ -231,7 +241,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 		descriptors.add( model.getDescriptor() );		
 		IModelNode<? extends IDescriptor> md = 
 			(org.aieonf.model.core.IModelNode<? extends IDescriptor> )model;
-		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren();		
+		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren().keySet();		
 		for( IModelLeaf<? extends IDescriptor> child: children )
 		  getDescriptors( child, descriptors);
 	}
@@ -246,7 +256,7 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 	 */
 	public static boolean replaceChild( IModelNode<? extends IDescriptor> parent, IModelLeaf<? extends IDescriptor> replace ){
 		boolean retVal = false;
-		for( IModelLeaf<? extends IDescriptor> child: parent.getChildren())
+		for( IModelLeaf<? extends IDescriptor> child: parent.getChildren().keySet())
 			if( child.getDescriptor().equals( replace.getDescriptor() )){
 				parent.removeChild(child);
 				retVal = true;
@@ -268,7 +278,41 @@ public class Model<T extends IDescriptor> extends ModelLeaf<T> implements IModel
 			if( model.getParent() != null )
 				results.add( (IModelLeaf<IDescriptor>) model.getParent() );
 		}
-		return results;
-		
+		return results;	
 	}
+	
+	/**
+	 * Get the children of the given model leaf if they exist
+	 * @param model
+	 * @return
+	 */
+	public static Collection<? extends IModelLeaf<? extends IDescriptor>> getChildren( IModelLeaf<? extends IDescriptor> model ){
+		Collection<IModelLeaf<? extends IDescriptor>> children = new ArrayList<IModelLeaf<? extends IDescriptor>>();
+		if(!( model instanceof IModelNode ))
+			return children;
+		IModelNode<? extends IDescriptor> md = 
+			(IModelNode<? extends IDescriptor>) model;
+		return md.getChildren().keySet();
+	}
+
+	/**
+	 * Get the model with the given id
+	 */
+	@SuppressWarnings("unchecked")
+	public static IModelLeaf<IDescriptor> getModel( IModelLeaf<? extends IDescriptor> root, String id ){
+		if( Utils.assertNull( id ))
+			return null;
+		if( id.equals( root.getIdentifier() ))
+			return (IModelLeaf<IDescriptor>) root;
+		if(!( root instanceof IModelNode))
+			return null;
+		IModelNode<?> node = (IModelNode<?>) root;
+		for( IModelLeaf<?> child: node.getChildren().keySet() ){
+			IModelLeaf<IDescriptor> result = getModel( child, id ); 
+			if( result != null )
+				return result;
+		}
+		return null;
+	}
+
 }
