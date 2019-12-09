@@ -1,86 +1,221 @@
 package org.aieonf.orientdb.graph;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.io.IOUtils;
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.core.ModelLeaf;
-import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.db.DatabaseService;
 
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 
 public class ModelFactory< T extends IDescriptor > {
 
 	public static final String S_ERR_NULL_ID = "The model does not have a descriptor: ";
-	
+
+	public enum Attributes{
+		BASE,
+		CHILDREN,
+		DESCRIPTOR,
+		PROPERTIES;
+
+		public static boolean isAttribute( String str ) {
+			for( Attributes attr: values() ){
+				if( attr.name().equals(str.toUpperCase()))
+					return true;
+			}
+			return false;
+		}
+	}
+
 	private DatabaseService service;
-	
-	private CacheService cache;
 	
 	private IDomainAieon domain;
 	
 	private Map<Long, IDescriptor> descriptors;
+
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public ModelFactory( IDomainAieon domain, CacheService cache, DatabaseService service ) {
+	public ModelFactory( IDomainAieon domain, DatabaseService service ) {
 		this.domain = domain;
 		this.service = service;
-		this.cache = cache;
 		descriptors = new HashMap<>();
 	}
 	
-	public Vertex transform( IModelLeaf<T> model ) throws ParseException {
+	public Map<Long, IDescriptor> getDescriptors() {
+		return descriptors;
+	}
+
+	public Vertex transform( String data ) throws ParseException {
+		JsonReader jsonReader = new JsonReader(new StringReader(data));
 		this.service.open();
 		OrientGraph graph = this.service.getGraph();
 		Vertex result  = null;
 		try {
-			result =  transform( graph, null, model, null);
+		    while(jsonReader.hasNext()){
+		        JsonToken nextToken = jsonReader.peek();
+		        switch( nextToken) {
+		        case BEGIN_OBJECT:
+		        	//OrientVertexType vt = graph.getVertexType(type);
+		    		//if( vt == null ) {
+		    		//	vt = graph.createVertexType(type);
+		    		//	vt.addCluster(domain.getShortName());
+		    		//}
+		        	Vertex vertex = graph.addVertex(null);
+		        	transform ( vertex, jsonReader, nextToken);
+		        	//String label  =  jsonReader.nextString();
+		        	//Edge edge = graph.addEdge(null, result, vertex, label );
+		        	//jsonReader.beginObject();
+		        	result = vertex;
+		        	break;
+		        case NAME:
+		        	String key = jsonReader.nextName().toUpperCase();
+		        	switch( Attributes.valueOf( key )) {
+		        	case CHILDREN:
+		        		break;
+		        	case DESCRIPTOR:
+						IDescriptor descriptor = createDescriptor(jsonReader, nextToken);
+						result.setProperty(IDescriptor.DESCRIPTOR, descriptor.getID());
+						descriptors.put(descriptor.getID(), descriptor);
+		        		break;
+		        	default:
+		        		String value = jsonReader.nextString();
+		        		result.setProperty(key, value);
+		        		break;
+		        	}
+		        	break;
+		        	default:
+		        		jsonReader.skipValue();
+		        	break;
+		        }
+		    }
 		}
 		catch( Exception ex ) {
 			ex.printStackTrace();
 		}
 		finally {
 			service.close();
+			IOUtils.closeQiuetly( jsonReader );
 		}
 		return result;
 	}
 
-	protected Vertex transform( OrientGraph graph, Vertex parent, IModelLeaf<? extends IDescriptor> model, String type ) throws ParseException {
-		OrientVertexType vt = graph.getVertexType(type);
-		if( vt == null ) {
-			vt = graph.createVertexType(type);
-			vt.addCluster(domain.getShortName());
+	public void transform( Vertex parent, JsonReader jsonReader, JsonToken token ) throws ParseException, IOException {
+		logger.info(token.toString());
+		switch( token) {
+		case BEGIN_OBJECT:
+			jsonReader.beginObject();
+			transform( parent, jsonReader, jsonReader.peek());
+			//OrientVertexType vt = graph.getVertexType(type);
+			//if( vt == null ) {
+			//	vt = graph.createVertexType(type);
+			//	vt.addCluster(domain.getShortName());
+			//}
+			//Vertex vertex = graph.addVertex(null);
+			//String label  =  jsonReader.nextString();
+			//Edge edge = graph.addEdge(null, result, vertex, label );
+			//jsonReader.beginObject();
+			//result = vertex;
+			//jsonReader.endObject();
+			break;
+		case NAME:
+			String key = jsonReader.nextName().toUpperCase();
+			switch( Attributes.valueOf( key )) {
+			case CHILDREN:
+				transform( parent, jsonReader, jsonReader.peek());
+				break;
+			case DESCRIPTOR:
+				break;
+			default:
+				jsonReader.skipValue();
+				//String value = jsonReader.nextString();
+				//result.setProperty(key, value);
+				break;
+			}
+			break;
+		case BEGIN_ARRAY:
+			break;
+		case END_ARRAY:
+			break;
+		case END_OBJECT:
+			jsonReader.endObject();
+			break;
+		default:
+			break;
 		}
+	}
+
+	public IDescriptor createDescriptor(JsonReader jsonReader, JsonToken nextToken ) throws ParseException, IOException {
+		ConceptBase conceptBase = new ConceptBase();
+		while( jsonReader.hasNext() ) {
+			JsonToken token = jsonReader.peek();
+			logger.info(token.toString());
+			switch( token) {
+			case BEGIN_OBJECT:
+				jsonReader.beginObject();
+				break;
+			case NAME:
+				String key = jsonReader.nextName().toUpperCase();
+				if(Attributes.isAttribute(key)) {
+					jsonReader.beginObject();
+					break;
+				}
+				String value = jsonReader.nextString();
+				conceptBase.set(key, value);
+				break;
+			case BEGIN_ARRAY:
+				break;
+			case END_ARRAY:
+				break;
+			case END_OBJECT:
+				jsonReader.endObject();
+				break;
+			default:
+				break;
+			}
+		}
+		return new Descriptor( conceptBase );
+	}
+
+	@SuppressWarnings("unchecked")
+	protected Vertex transform( OrientGraph graph, Vertex parent, IModelLeaf<IDescriptor> leaf, String type ) throws ParseException {
 		
-		Vertex result = graph.addVertex(model.getIdentifier(), domain.getDomain());
-		IDescriptor descriptor = model.getDescriptor();	
-		result.setProperty( IDescriptor.DESCRIPTOR, descriptor.getID());
+		Vertex result = graph.addVertex(leaf.getIdentifier(), domain.getDomain());
+		IDescriptor descriptor = leaf.getDescriptor();
+		result.setProperty( IDescriptor.DESCRIPTOR, String.valueOf( descriptor.getID()));
 		if( parent != null ) {
 			graph.addEdge(null, parent, result, type);
 		}
-		if( model.isLeaf())
+		if( leaf.isLeaf())
 			return result;
-		
-		IModelNode<? extends IDescriptor> node = (IModelNode<? extends IDescriptor>) model;
-		Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>, String>> iterator = node.getChildren().entrySet().iterator();
+		IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) leaf;
+		Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>, String>> iterator = model.getChildren().entrySet().iterator();
 		while( iterator.hasNext() ) {
 			Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
-			transform( graph, result, entry.getKey(), entry.getValue() );
+			transform( graph, result, (IModelLeaf<IDescriptor>) entry.getKey(), entry.getValue() );
 		}
 		return result;
 	}
@@ -92,15 +227,15 @@ public class ModelFactory< T extends IDescriptor > {
 	protected IModelLeaf<IDescriptor> transform( Vertex vertex, IModelNode<? extends IDescriptor> parent ) throws ParseException {		
 		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
 		if( !iterator.hasNext()) {
-			IModelLeaf<IDescriptor> result = new ModelLeaf<IDescriptor>( parent );
-			fill( result, vertex );
-			return result;
+			IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( parent );
+			fill( leaf, vertex );
+			return leaf;
 		}
 		IModelNode<IDescriptor> model = new Model<IDescriptor>( parent );
 		fill( model, vertex );
 		while( iterator.hasNext()) {
 			Edge edge = iterator.next();
-			IModelLeaf<? extends IDescriptor> child = transform( edge.getVertex(Direction.OUT), model );
+			IModelLeaf<IDescriptor> child = transform( edge.getVertex(Direction.OUT), model );
 			model.addChild(child, edge.getLabel());
 		}
 		return model;
@@ -114,7 +249,7 @@ public class ModelFactory< T extends IDescriptor > {
 	
 	protected void getDescriptorIds( Vertex vertex, Collection<Long> ids ) throws ParseException {		
 		String idstr = vertex.getProperty(IDescriptor.DESCRIPTOR);
-		long id=  Long.parseLong(idstr);
+		long id=  StringUtils.isEmpty(idstr)?-1:Long.parseLong(idstr);
 		ids.add(id);
 		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
 		if( !iterator.hasNext()) {
@@ -155,19 +290,6 @@ public class ModelFactory< T extends IDescriptor > {
 		finally {
 			service.close();
 		}
-		cache.open();
-		Map<Long, IDescriptor> descriptors = new HashMap<>();
-		try {
-			descriptors = cache.get(ids);
-		}
-		catch( Exception ex ) {
-			ex.printStackTrace();
-		}
-		finally {
-			cache.close();
-		}	
-		for( IModelLeaf<IDescriptor> model: results )
-			fillIds( (ModelLeaf<IDescriptor>)model, descriptors );
 		return results;
 	}
 	

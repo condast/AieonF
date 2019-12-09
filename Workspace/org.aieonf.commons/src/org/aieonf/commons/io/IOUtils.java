@@ -2,6 +2,7 @@ package org.aieonf.commons.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,6 +48,25 @@ public class IOUtils
 	}
 
 	/**
+	 * Close an input  stream
+	 *
+	 * @param stream OutputStream
+	*/
+	public static void closeQiuetly( Closeable closeable )
+	{
+	  Logger logger = Logger.getLogger( IOUtils.class.getName() );
+	  if( closeable == null )
+	    return;
+	
+	  try{
+		  closeable.close();
+	  }
+	  catch( IOException ioex ){
+	    logger.log( Level.SEVERE, ioex.getMessage(), ioex );
+	  }
+	}
+
+	/**
 	 * Close a jar file
 	 * @param jar
 	 */
@@ -66,9 +86,10 @@ public class IOUtils
 
 	/**
 	 * Close an input  stream
-	 *
+	 * @Use closeQuietly
 	 * @param stream OutputStream
 	*/
+	@Deprecated
 	public static void closeInputStream( InputStream stream )
 	{
 	  Logger logger = Logger.getLogger( IOUtils.class.getName() );
@@ -85,9 +106,11 @@ public class IOUtils
 
 	/**
 	 * Close an output  stream
+	 * @Use closeQuietly
 	 *
 	 * @param stream OutputStream
 	*/
+	@Deprecated
 	public static void closeOutputStream( OutputStream stream )
 	{
 	  Logger logger = Logger.getLogger( IOUtils.class.getName() );
@@ -105,9 +128,11 @@ public class IOUtils
 
 	/**
 	 * Close a reader
+	 * @Use closeQuietly
 	 *
 	 * @param stream Reader
 	*/
+	@Deprecated
 	public static void closeReader( Reader reader )
 	{
 	  Logger logger = Logger.getLogger( IOUtils.class.getName() );
@@ -124,9 +149,11 @@ public class IOUtils
 
 	/**
 	 * Close a writer
+	 * @Use closeQuietly
 	 *
 	 * @param stream Writer
 	*/
+	@Deprecated
 	public static void closeWriter( Writer writer )
 	{
 	  Logger logger = Logger.getLogger( IOUtils.class.getName() );
@@ -162,8 +189,8 @@ public class IOUtils
 			logger.severe( e.getMessage() );
 		}
     finally{
-    	IOUtils.closeInputStream(in);
-    	IOUtils.closeOutputStream(bout);
+    	IOUtils.closeQiuetly(in);
+    	IOUtils.closeQiuetly(bout);
     }
     if( bout == null )
     	return in;

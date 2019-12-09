@@ -2,7 +2,6 @@ package org.aieonf.orientdb.cache;
 
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.orientdb.core.DocumentConceptBase;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.exception.OQueryParsingException;
@@ -138,7 +136,7 @@ public class CacheService implements Closeable{
 		}
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for( ODocument doc: docs )
-			results.add( new DocumentDescriptor( doc ));
+			results.add( createDescriptor( doc ));
 		return results;
 	}
 
@@ -175,7 +173,7 @@ public class CacheService implements Closeable{
 	public Collection<IDescriptor> search(IModelFilter<IDescriptor, IDescriptor> filter) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for (ODocument document : database.browseCluster( S_CACHE )) {
-			IDescriptor descriptor = new DocumentDescriptor(document);    
+			IDescriptor descriptor = createDescriptor(document);    
 			if( filter.accept( descriptor ))
 				results.add( descriptor );
 		}		
@@ -185,27 +183,6 @@ public class CacheService implements Closeable{
 	public boolean hasFunction(String function) {
 		return IModelProvider.DefaultModels.DESCRIPTOR.equals( function );
 	}
-
-	public IDescriptor add(IDescriptor descriptor) {
-		ODocument odesc= createDocument( descriptor );
-		odesc.save();
-		return new DocumentDescriptor( odesc );
-	}
-
-	public void remove(IDescriptor descriptor) {
-		DocumentDescriptor odesc= (DocumentDescriptor) descriptor;
-		odesc.getDocument().delete();
-	}
-
-	public boolean update(IDescriptor descriptor ){
-		DocumentDescriptor odesc= (DocumentDescriptor) descriptor;
-		odesc.getDocument().save();
-		return true;
-	}
-
-	public static IDescriptor transform( IDescriptor descriptor ) {
-		return new DocumentDescriptor( createDocument(descriptor));
-	}
 	
 	/**
 	 * Create a descriptor from the given vertex
@@ -213,34 +190,41 @@ public class CacheService implements Closeable{
 	 * @param vertex
 	 * @return
 	 */
-	protected static ODocument createDocument( IDescriptor describable ){
-		IDescriptor descriptor = describable.getDescriptor();
-		ODocument doc = new ODocument( descriptor.getName());
+	protected static void createDocuments( IDescriptor[] descriptors ){
+		for( IDescriptor descriptor: descriptors ) {
+			ODocument doc = new ODocument( descriptor.getName());
+			Iterator<String> iterator = descriptor.keySet();
+			while( iterator.hasNext()) {
+				String attr = iterator.next();
+				attr = attr.replace(".", "@8");
+				String value = descriptor.get( attr );
+				if( !StringUtils.isEmpty( value ))
+					doc.field( attr, value);
+			}
+			String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
+			descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
+		}
+	}
+
+	/**
+	 * Create a descriptor from the given vertex
+	 * @param database
+	 * @param vertex
+	 * @return
+	 */
+	protected static IDescriptor createDescriptor( ODocument document ){
+		long id = document.field(IDescriptor.Attributes.ID.name());
+		IDescriptor descriptor = new Descriptor(id, document.getClassName() );
+		descriptor.setVersion( document.getVersion());
 		Iterator<String> iterator = descriptor.keySet();
 		while( iterator.hasNext()) {
 			String attr = iterator.next();
-			attr = attr.replace(".", "@8");
+			attr = attr.replace("@8", ".");
 			String value = descriptor.get( attr );
 			if( !StringUtils.isEmpty( value ))
-				doc.field( attr, value);
+				descriptor.set( attr, value);
 		}
-		String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
-		descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
-		return doc;		
+		return descriptor;
 	}
 
-	private static class DocumentDescriptor extends Descriptor{
-		private static final long serialVersionUID = -1242830383589783796L;
-		
-		private ODocument document;
-		
-		protected DocumentDescriptor( ODocument document) {
-			super( new DocumentConceptBase( document ));
-			this.document = document;
-		}
-		
-		private ODocument getDocument() {
-			return document;
-		}	
-	}
 }

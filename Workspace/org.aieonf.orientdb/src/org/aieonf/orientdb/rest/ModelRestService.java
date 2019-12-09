@@ -1,7 +1,6 @@
 package org.aieonf.orientdb.rest;
 
 import java.util.Collection;
-import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,9 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
-import org.aieonf.model.xml.SerialisableModel;
 import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
@@ -35,30 +32,35 @@ public class ModelRestService{
 	public static final String S_ERR_UNKNOWN_REQUEST = "An invalid request was retrieved: ";
 	public static final String S_ERR_INVALID_VESSEL = "A request was received from an unknown vessel:";
 	
-	private Logger logger = Logger.getLogger(this.getClass().getName());
-	
 	private Dispatcher dispatcher = Dispatcher.getInstance();
 
-	@SuppressWarnings("unchecked")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/add")
 	public Response addModel( @QueryParam("id") long domainId, @QueryParam("token") String token, String data ) {
-		CacheService cache = CacheService.getInstance();
 		DatabaseService dbService = DatabaseService.getInstance();
 		try{
  			if( !dispatcher.isRegistered(domainId, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(domainId, token);
- 			Gson gson = new Gson();
-			IModelLeaf<IDescriptor> node = gson.fromJson(data, Model.class);
-			if( !dispatcher.isAllowed(node))
-				return Response.status(Status.FORBIDDEN).build();
-			cache.open();
+			//if( !dispatcher.isAllowed(node))
+			//	return Response.status(Status.FORBIDDEN).build();
 			dbService.open();
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, cache, dbService );
-			factory.transform(node);
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
+			factory.transform(data);
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}
+		CacheService cache = CacheService.getInstance();
+		try {
+			cache.open();
+			
 			return Response.ok().build();
 		}
 		catch( Exception ex ){
@@ -84,13 +86,12 @@ public class ModelRestService{
 			IDomainAieon domain = dispatcher.getDomain(domainId, token);
  			cache.open();
 			dbService.open();
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, cache, dbService );
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
 			Collection<IModelLeaf<IDescriptor>> result = factory.get(domain);
 			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
-			SerialisableModel[] sm = SerialisableModel.create(result);
-			Gson gson = new Gson();
-			String str = gson.toJson(sm, SerialisableModel[].class );
+			//Gson gson = new Gson();
+			String str = null;//gson.toJson(sm, SerialisableModel[].class );
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ){
