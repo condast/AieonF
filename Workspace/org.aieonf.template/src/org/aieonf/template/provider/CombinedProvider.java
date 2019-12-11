@@ -11,7 +11,7 @@ import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public class CombinedProvider<D extends IDescribable<IDescriptor>, U extends IDescribable<IDescriptor>> implements IModelProvider<D, U> 
+public class CombinedProvider<D extends IDescribable, U extends IDescribable> implements IModelProvider<D, U> 
 {
 	public final static String S_IDENTIFIER = "Combined";
 	

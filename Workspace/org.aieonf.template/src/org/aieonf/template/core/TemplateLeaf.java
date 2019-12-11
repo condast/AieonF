@@ -25,12 +25,12 @@ public class TemplateLeaf<T extends IDescriptor> extends Model<T> implements ITe
 
 	public TemplateLeaf( T descriptor ){
 		attributes = new HashMap<Enum<?>, TemplateProperty<T,String>>();
-		init( descriptor );
+		setData( descriptor );
 	}
 
 	public TemplateLeaf( T descriptor, org.xml.sax.Attributes attrs ){
 		this( attrs );
-		init( descriptor );
+		setData( descriptor );
 	}
 	
 	@Override
@@ -40,8 +40,8 @@ public class TemplateLeaf<T extends IDescriptor> extends Model<T> implements ITe
 	}
 
 	@Override
-	public void init(T descriptor) {
-		super.init(descriptor);
+	public void setData(T descriptor) {
+		super.setData(descriptor);
 	}
 
 	private void fill( org.xml.sax.Attributes attributes ){

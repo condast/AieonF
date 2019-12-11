@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * @author Kees Pieters
  * @version 1.0
  */
-public abstract class AbstractFileConnector<T extends IDescribable<?>> extends AbstractCollectionConnector<T>
+public abstract class AbstractFileConnector<T extends IDescribable> extends AbstractCollectionConnector<T>
 {
 	//Error messages
 	public static final String S_ERR_CONNECTING = 

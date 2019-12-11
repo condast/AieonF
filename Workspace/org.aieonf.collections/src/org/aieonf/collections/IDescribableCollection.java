@@ -18,7 +18,7 @@ import org.aieonf.concept.*;
  * Defines the base interface to read concepts from the database.
  * The database is identified by a location (URI)
 */
-public interface IDescribableCollection<T extends IDescribable<?>> extends Collection<T>
+public interface IDescribableCollection<T extends IDescribable> extends Collection<T>
 {
   //The error messages
   //The error messages
@@ -94,7 +94,7 @@ public interface IDescribableCollection<T extends IDescribable<?>> extends Colle
    * @param descriptor
    * @return
    */
-  public boolean accept( IDescribable<?> changeable );
+  public boolean accept( IDescribable changeable );
   
   /**
    * Set the concept. Can overwrite equivalent concepts

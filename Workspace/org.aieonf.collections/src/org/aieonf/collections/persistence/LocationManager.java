@@ -41,7 +41,7 @@ public class LocationManager extends AbstractLocationManager<IDescriptor>
 	 * @throws ConceptException
 	*/
 	@Override
-	public String locate( IDescribable<?> describable ) throws ConceptException
+	public String locate( IDescribable describable ) throws ConceptException
 	{
     IDescriptor descriptor = describable.getDescriptor();
 		String name = descriptor.getName().toLowerCase();
@@ -120,7 +120,7 @@ public class LocationManager extends AbstractLocationManager<IDescriptor>
    * @return String
    * @throws Exception 
   */
-  private String getPosition( String position, IDescribable<?> changeable ) throws Exception
+  private String getPosition( String position, IDescribable changeable ) throws Exception
   {
     IDescriptor descriptor = changeable.getDescriptor();
   	String directory = descriptor.getName();

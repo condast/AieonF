@@ -17,7 +17,7 @@ import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>, K extends Object, V extends IDescribable<IDescriptor>> implements IModelProvider<K, V> {
+public abstract class AbstractModelProvider<T extends IDescribable, K extends Object, V extends IDescribable> implements IModelProvider<K, V> {
 
 	private static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
@@ -223,14 +223,14 @@ public abstract class AbstractModelProvider<T extends IDescribable<IDescriptor>,
 	 * @return String
 	 * @throws CollectionException
 	 */
-	public long IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors )
+	public long IDFactory( IDescriptor descriptor, Collection<? extends IDescribable> descriptors )
 	{
 		long newId = descriptor.hashCode();
 		boolean containsId = false;
 		do{
 			containsId = false;
 			newId = ( long )( Math.random() * Long.MAX_VALUE );
-			for( IDescribable<?> desc: descriptors ){
+			for( IDescribable desc: descriptors ){
 				if( desc.getDescriptor().getID() == newId ){
 					containsId = true;
 					break;

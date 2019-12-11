@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * @author Kees Pieters
  * @version 1.0
  */
-public class FileCollectionConnector<T extends IDescribable<?>> extends AbstractCollectionConnector<T>
+public class FileCollectionConnector<T extends IDescribable> extends AbstractCollectionConnector<T>
 {
 	//Error messages
 	public static final String S_ERR_OPENING = 

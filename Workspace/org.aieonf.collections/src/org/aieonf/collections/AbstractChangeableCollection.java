@@ -36,7 +36,7 @@ import org.aieonf.concept.security.AieonFEncryption;
  * @author Kees Pieters
  * @version 1.0
  */
-abstract class AbstractChangeableCollection<T extends IDescribable<?>> implements IAccessible
+abstract class AbstractChangeableCollection<T extends IDescribable> implements IAccessible
 {
 	//Prevents incorrect entries to be logged more than once
 	private List<String> incorrectEntries;
@@ -261,7 +261,7 @@ abstract class AbstractChangeableCollection<T extends IDescribable<?>> implement
 	 * @param descriptor
 	 * @return
 	 */
-	public boolean accept( IDescribable<?> changeable ){
+	public boolean accept( IDescribable changeable ){
 		if( changeable == null )
 			return false;
 		return Descriptor.isValid( changeable.getDescriptor() );

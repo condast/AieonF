@@ -17,7 +17,7 @@ import org.aieonf.concept.core.Descriptor;
  * @author Kees Pieters
  * @version 1.0
  */
-public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<T>
+public class DescriptorFilter<T extends IDescribable> extends AbstractFilter<T>
 {
 	//The supported rule set
 	public enum Rules{
@@ -35,7 +35,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 	/**
 	 * The descriptor used as reference
 	 */
-	public IDescribable<?> refDescriptor;
+	public IDescribable refDescriptor;
 
 	//If true, then the match is not case sensitive
 	public boolean caseInsensitive;
@@ -60,7 +60,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 	 * @param descriptor IDescriptor
 	 * @throws FilterException, ConceptException
 	 */
-	public DescriptorFilter( Rules rule, IDescribable<?> descriptor )
+	public DescriptorFilter( Rules rule, IDescribable descriptor )
 			throws FilterException{
 		this( rule, descriptor, false );
 	}
@@ -72,7 +72,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 	 * @param descriptor IDescriptor
 	 * @throws FilterException, ConceptException
 	 */
-	public DescriptorFilter( Rules rule, IDescribable<?> descriptor, boolean caseInsensitive )
+	public DescriptorFilter( Rules rule, IDescribable descriptor, boolean caseInsensitive )
 			throws FilterException
 	{
 		super( DescriptorFilter.class.getName(), rule.name() );
@@ -98,7 +98,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 	 * @param descriptor IDescriptor
 	 * @throws FilterException, ConceptException
 	 */
-	public DescriptorFilter( String name, Rules rule, IDescribable<?> descriptor, boolean caseInsensitive )
+	public DescriptorFilter( String name, Rules rule, IDescribable descriptor, boolean caseInsensitive )
 			throws FilterException, ConceptException
 	{
 		super( name, rule.name() );
@@ -129,7 +129,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IDescribable<?> caseInsensitiveDescriptor( IDescribable<?> descriptor )
+	protected IDescribable caseInsensitiveDescriptor( IDescribable descriptor )
 			throws ConceptException
 	{
 		if( this.caseInsensitive == false )
@@ -169,7 +169,7 @@ public class DescriptorFilter<T extends IDescribable<?>> extends AbstractFilter<
 		if(!( obj instanceof IDescribable ))
 			return false;    
 		T desc = ( T )obj;
-		IDescribable<?> descriptor = desc.getDescriptor();
+		IDescribable descriptor = desc.getDescriptor();
 		try{
 			if( this.caseInsensitive )
 				descriptor = this.caseInsensitiveDescriptor( desc );

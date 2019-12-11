@@ -21,7 +21,7 @@ import org.aieonf.template.def.ITemplateLeaf;
  * The simple context factory creates a default context and model
  * @author Kees Pieters
  */
-public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable<IDescriptor>> 
+public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable> 
 extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDomainAieon, String, U>
 {
 	private static final String S_MODEL = "Model";
@@ -29,13 +29,13 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	
 	private Collection<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>> functions;
 	
-	private IXMLModelInterpreter<IDescriptor,IDescriptor> creator;
+	private IXMLModelInterpreter<IDescriptor> creator;
 
 	protected AbstractProviderContextFactory( String bundle_id, Class<?> clss ) {
 		this( bundle_id, new TemplateInterpreter(clss));
 	}
 	
-	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor,IDescriptor> creator ) {
+	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor> creator ) {
 		this.bundle_id = bundle_id;
 		functions = new ArrayList<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>>();
 		this.creator = creator;

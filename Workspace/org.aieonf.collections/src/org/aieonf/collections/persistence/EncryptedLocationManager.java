@@ -71,7 +71,7 @@ public class EncryptedLocationManager extends LocationManager
 	 * @throws ConceptException
 	*/
 	@Override
-	public String locate(IDescribable<?> changeable) throws ConceptException
+	public String locate(IDescribable changeable) throws ConceptException
 	{
     IDescriptor descriptor = changeable.getDescriptor();
     try
@@ -159,7 +159,7 @@ public class EncryptedLocationManager extends LocationManager
    * @return String
    * @throws Exception
   */
-  public static String getEncryptedFile( ILoaderAieon loader, String position, IDescribable<?> changeable )
+  public static String getEncryptedFile( ILoaderAieon loader, String position, IDescribable changeable )
     throws Exception
   {
     IDescriptor descriptor = changeable.getDescriptor();

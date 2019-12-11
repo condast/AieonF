@@ -13,7 +13,7 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <T>
  */
-public interface IModelProvider<K extends Object, T extends IDescribable<IDescriptor>> extends IProvider<T>{
+public interface IModelProvider<K extends Object, T extends IDescribable> extends IProvider<T>{
 
 	public static final String S_DESCRIPTOR_PROVIDER_ID = "org.aieonf.descriptor.provider";
 	public static final String S_CONCEPT_PROVIDER_ID    = "org.aieonf.concept.provider";

@@ -4,10 +4,9 @@ import java.net.URL;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescribable;
-import org.aieonf.concept.IDescriptor;
 import org.xml.sax.Attributes;
 
-public interface IXMLModelInterpreter<T extends IDescriptor, U extends IDescribable<T>> {
+public interface IXMLModelInterpreter<U extends IDescribable> {
 
 	/**
 	 * The keys of attributes with special meaning

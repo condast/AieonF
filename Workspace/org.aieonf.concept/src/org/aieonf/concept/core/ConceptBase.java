@@ -253,8 +253,8 @@ public class ConceptBase implements IConceptBase
 	 */
 	public static String getAttributeKey( Enum<?> key )
 	{
-		String str = key.getClass().getCanonicalName()  + "." + key.toString(); 
-		return str;
+		String str = key.getClass().getCanonicalName()  + "." + key.name(); 
+		return str.toUpperCase();
 	}
 
 	/**

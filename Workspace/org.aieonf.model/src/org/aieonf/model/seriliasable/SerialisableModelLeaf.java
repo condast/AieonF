@@ -1,4 +1,4 @@
-package org.aieonf.model.core;
+package org.aieonf.model.seriliasable;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
@@ -7,66 +7,67 @@ import org.aieonf.concept.IConcept.Scope;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 
-public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IModelLeaf<D>
+public class SerialisableModelLeaf extends ConceptBase implements IModelLeaf<IDescriptor>
 {	
 	//The concept that is modelled
-	private D descriptor;
+	private ConceptBase base;
 	private boolean leaf;
-
-	private IModelNode<? extends IDescriptor> parent;
+	
+	private SerialisableModel parent;
 
 	/**
 	 * Only used for special models
 	 */
-	public ModelLeaf(){
+	public SerialisableModelLeaf(){
 		this.leaf = true;
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
-
+	
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( D descriptor ){
+	public SerialisableModelLeaf( Descriptor descriptor ){
 		this();
-	}
+ 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( D descriptor, String type ){
+	public SerialisableModelLeaf( Descriptor descriptor, String type ){
 		this( null, descriptor, type );
-	}
+ 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( IModelNode<? extends IDescriptor> parent ){
+	public SerialisableModelLeaf( SerialisableModel parent ){
 		this();
 		this.parent = parent;
 	}
-
+	
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( IModelNode<? extends IDescriptor> parent, D descriptor ){
+	public SerialisableModelLeaf( SerialisableModel parent, Descriptor descriptor ){
 		this();
 		this.parent = parent;
-	}
+ 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( IModelNode<? extends IDescriptor> parent, D descriptor, String type ){
+	public SerialisableModelLeaf( SerialisableModel parent, Descriptor descriptor, String type ){
 		this( parent, descriptor );
 		this.set( IConcept.Attributes.TYPE, type );
-	}
-
+ 	}
 
 	/**
 	 * Set the leaf with the given value
@@ -97,7 +98,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 		return get( Attributes.ID );
 	}
 
-
+	
 	@Override
 	public String getType() {
 		return get( Attributes.TYPE );
@@ -120,14 +121,14 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	public void setIdentifier( String identifier ){
 		set( Attributes.IDENTIFIER , identifier );
 	}
-
+	
 	@Override
 	public Scope getScope() {
 		String str = get( IConcept.Attributes.SCOPE ); 
 		Scope scope = StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);
 		return scope;
 	}
-
+	
 	public void setScope( Scope scope ) {
 		set( IConcept.Attributes.SCOPE, scope.name() );
 	}
@@ -136,18 +137,15 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * @return the parent
 	 */
 	@Override
-	public IModelNode<? extends IDescriptor> getParent()
+	public SerialisableModel getParent()
 	{
 		return parent;
 	}
 
-	/**
-	 * @param parent the parent to set
-	 */
+
 	@Override
-	public void setParent(IModelNode<? extends IDescriptor> parent)
-	{
-		this.parent = parent;
+	public void setParent(IModelNode<? extends IDescriptor> parent) {
+		this.parent = (SerialisableModel) parent;
 	}
 
 	/**
@@ -158,44 +156,49 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	public boolean isRoot(){
 		return (( this.parent == null ) && ( this.getDepth() ) == 0 );
 	}
-
-	/**
-	 * If true, the values have changed
-	 * @return
-	 */
-	@Override
-	public boolean hasChanged(){
-		if( descriptor.hasChanged() )
-			return true;
-		return super.hasChanged();
-	}
-
 	
+  /**
+   * If true, the values have changed
+   * @return
+  */
 	@Override
-	public IDescriptor getDescriptor() {
-		return new Descriptor( this );
-	}
-
-	/**
+  public boolean hasChanged(){
+  	if( getDescriptor().hasChanged() )
+  		return true;
+  	return super.hasChanged();
+  }
+  
+ 	/**
 	 * Get the descriptor that this tree node represents
 	 * @return
 	 */
 	@Override
-	public D getData()
+	public IDescriptor getDescriptor()
 	{
-		return this.descriptor;
+		return new Descriptor( this );
 	}
 
+
 	@Override
-	public void setData(D descriptor) {
-		this.descriptor = descriptor;
+	public void setData(IDescriptor descriptor) {
+		//NOTHING
+	}
+
+ 	/**
+	 * Get the descriptor that this tree node represents
+	 * @return
+	 */
+	@Override
+	public IDescriptor getData()
+	{
+		return new Descriptor( this.base );
 	}
 
 	/**
 	 * Get the direction of this model with 
 	 * respect to its children
 	 * @return
-	 */
+	*/
 	@Override
 	public Direction getDirection()
 	{
@@ -205,7 +208,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	/**
 	 * Returns true if the model is a leaf ( has no children )
 	 * @return
-	 */
+	*/
 	@Override
 	public boolean isLeaf(){
 		return leaf;
@@ -219,7 +222,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * Get the depth of the model. This is the maximum amount of the
 	 * root to the farthest ancestor in the tree
 	 * @return
-	 */
+	*/
 	@Override
 	public int getDepth()
 	{
@@ -232,7 +235,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	/**
 	 * This support method sets the depth of a model
 	 * @param depth
-	 */
+	*/
 	@Override
 	public void setDepth( int depth ) throws ConceptException{
 		set( IModelLeaf.Attributes.DEPTH, String.valueOf( depth ));
@@ -247,7 +250,8 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public boolean contains( IDescriptor descr )
 	{
-		return descr.equals( this.descriptor );
+		IDescriptor descriptor = getDescriptor();
+		return descr.equals( descriptor );
 	}
 
 	/**
@@ -256,17 +260,18 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public int compareTo( IDescribable node ) 
 	{
-		if( this.descriptor == null )
+		IDescriptor descriptor = getDescriptor();
+		if( descriptor == null )
 			return -1;
-		return this.descriptor.compareTo( node.getDescriptor() );
+		return descriptor.compareTo( node.getDescriptor() );
 	}
 
-
+	
 	@Override
 	public int implies(IDescriptor descriptor) {
 		return 0;//implies.compareTo( descriptor);
 	}
-
+	
 	/**
 	 * Get the first child with the given descriptor, or null if it wasn't found
 	 * @param model
@@ -275,16 +280,16 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	public static IModelLeaf<? extends IDescriptor> getChild( IModelLeaf<? extends IDescriptor> model, IDescriptor descriptor ){
 		if(!( model instanceof IModelNode ))
 			return null;
-		IModelNode<? extends IDescriptor> md = 
-				(IModelNode<? extends IDescriptor>) model;
+		SerialisableModel md = 
+			(SerialisableModel) model;
 		return md.getChild( descriptor );
 	}
 
 	public static boolean hasChildren( IModelLeaf<? extends IDescriptor> model ){
 		if(!( model instanceof IModelNode ))
 			return false;
-		IModelNode<? extends IDescriptor> md = 
-				(IModelNode<? extends IDescriptor>) model;
+		SerialisableModel md = 
+			(SerialisableModel) model;
 		return md.hasChildren();		
 	}
 }

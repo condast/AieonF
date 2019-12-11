@@ -32,7 +32,7 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 	private ITemplateNode<T> root;	
 	private XMLApplication application;
 
-	public XMLTemplateParser( IXMLModelInterpreter<IDescriptor, T> creator) {
+	public XMLTemplateParser( IXMLModelInterpreter<T> creator) {
 		super( creator );
 	}
 	
@@ -63,7 +63,7 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 		super.startElement(uri, localName, qName, attributes);
 		String str = StringStyler.styleToEnum(qName);
 		ModelAttributes ma = null;
-		IXMLModelInterpreter<? extends IDescriptor, T> creator = super.getCreator();
+		IXMLModelInterpreter<T> creator = super.getCreator();
 		if( !ModelAttributes.isModelAttribute( qName ))
 			return;
 		ma = ModelAttributes.valueOf( str );
@@ -75,7 +75,7 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 		case CONTEXT:
 			ContextAieon ca = (ContextAieon)creator.create( qName, attributes);
 			application.extendContext( ca );
-			this.root.init( (T) ca );
+			this.root.setData( (T) ca );
 			this.root.setIdentifier( ModelAttributes.CONTEXT.toString());
 			break;
 		default:

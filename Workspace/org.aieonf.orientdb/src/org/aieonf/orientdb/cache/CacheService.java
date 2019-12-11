@@ -13,8 +13,11 @@ import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
+import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
@@ -38,6 +41,8 @@ public class CacheService implements Closeable{
 	
 	protected static final String S_ROOT = "Root";
 	protected static final String S_CACHE = "Cache";
+
+	public static final String S_ERR_NO_DESCRIPTORS = "No descriptors were found for id: ";
 
 	private Collection<IModelListener<IDescriptor>> listeners;
 	
@@ -121,11 +126,34 @@ public class CacheService implements Closeable{
 		return false;
 	}
 
+	/**
+	 * Create a descriptor from the given vertex
+	 * @param database
+	 * @param vertex
+	 * @return
+	 */
+	public void add( IDescriptor[] descriptors ){
+		for( IDescriptor descriptor: descriptors ) {
+			ODocument doc = new ODocument( );
+			Iterator<String> iterator = descriptor.keySet();
+			while( iterator.hasNext()) {
+				String attr = iterator.next();
+				attr = attr.replace(".", "@8");
+				String value = descriptor.get( attr );
+				if( !StringUtils.isEmpty( value ))
+					doc.field( attr, value);
+			}
+			String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
+			descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
+			doc.save( S_CACHE);
+		}
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public Collection<IDescriptor> query( String query ){
 		Collection<ODocument> docs = new ArrayList<>();
 		try{
-			this.database.activateOnCurrentThread();
 			docs = (Collection<ODocument>)this.database.query(new OSQLSynchQuery<ODocument>(query));
 		}
 		catch( OQueryParsingException pex ) {
@@ -141,7 +169,7 @@ public class CacheService implements Closeable{
 	}
 
 	public IDescriptor[] get( long id) throws ParseException {
-		Collection<IDescriptor> results = query( "SELECT FROM CLUSTER:" + S_CACHE + " WHERE ID = " + id);
+		Collection<IDescriptor> results = query( "SELECT FROM CLUSTER:" + S_CACHE );//+ " WHERE ID = " + id);
 		return results.toArray( new IDescriptor[ results.size()]);
 	}
 
@@ -180,6 +208,28 @@ public class CacheService implements Closeable{
 		return results;
 	}
 
+	@SuppressWarnings("unchecked")
+	public void fill(ModelLeaf<IDescriptor> model) throws ParseException {
+		String id_str = model.get( IDescriptor.DESCRIPTOR);
+		long id = StringUtils.isEmpty(id_str)?-1: Long.parseLong(id_str);
+		IDescriptor[] descriptors = get( id );
+		if( Utils.assertNull(descriptors))
+			throw new NullPointerException( S_ERR_NO_DESCRIPTORS + id);
+		model.setData(descriptors[0]);
+		if( model.isLeaf())
+			return;
+		IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) model;
+		for( IModelLeaf<? extends IDescriptor> child: node.getChildren().keySet()) {
+			fill( (ModelLeaf<IDescriptor>) child );
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void fill(Collection<IModelLeaf<IDescriptor>> models) throws ParseException {
+		for( IModelLeaf<? extends IDescriptor> model: models )
+			fill( (ModelLeaf<IDescriptor>) model);
+	}
+	
 	public boolean hasFunction(String function) {
 		return IModelProvider.DefaultModels.DESCRIPTOR.equals( function );
 	}
@@ -190,31 +240,9 @@ public class CacheService implements Closeable{
 	 * @param vertex
 	 * @return
 	 */
-	protected static void createDocuments( IDescriptor[] descriptors ){
-		for( IDescriptor descriptor: descriptors ) {
-			ODocument doc = new ODocument( descriptor.getName());
-			Iterator<String> iterator = descriptor.keySet();
-			while( iterator.hasNext()) {
-				String attr = iterator.next();
-				attr = attr.replace(".", "@8");
-				String value = descriptor.get( attr );
-				if( !StringUtils.isEmpty( value ))
-					doc.field( attr, value);
-			}
-			String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
-			descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
-		}
-	}
-
-	/**
-	 * Create a descriptor from the given vertex
-	 * @param database
-	 * @param vertex
-	 * @return
-	 */
 	protected static IDescriptor createDescriptor( ODocument document ){
-		long id = document.field(IDescriptor.Attributes.ID.name());
-		IDescriptor descriptor = new Descriptor(id, document.getClassName() );
+		Long id = document.field(IDescriptor.Attributes.ID.name());
+		IDescriptor descriptor = new Descriptor((id == null)?-1:id );
 		descriptor.setVersion( document.getVersion());
 		Iterator<String> iterator = descriptor.keySet();
 		while( iterator.hasNext()) {

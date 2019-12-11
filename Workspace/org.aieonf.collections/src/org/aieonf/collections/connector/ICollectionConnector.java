@@ -3,7 +3,7 @@ package org.aieonf.collections.connector;
 import org.aieonf.collections.IAccessible;
 import org.aieonf.concept.IDescribable;
 
-public interface ICollectionConnector<T extends IDescribable<?>>
+public interface ICollectionConnector<T extends IDescribable>
 {
 	public boolean exists();
 	

@@ -8,7 +8,7 @@ import java.util.Map;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 
-public class DescribableParser<D extends IDescriptor, M extends IDescribable<D>> implements IModelParser<D, M>
+public class DescribableParser<D extends IDescriptor, M extends IDescribable> implements IModelParser<D, M>
 {
 	private String type;
 	

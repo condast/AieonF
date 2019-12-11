@@ -14,9 +14,9 @@ import org.aieonf.template.def.ITemplateLeaf;
 public class GraphContextFactory extends AbstractModelContextFactory<IContextAieon> 
 {
 	private String bundle_id;
-	private IXMLModelInterpreter<IDescriptor, ITemplateLeaf<IDescriptor>> creator;
+	private IXMLModelInterpreter<ITemplateLeaf<IDescriptor>> creator;
 	
-	protected GraphContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor, ITemplateLeaf<IDescriptor>> creator ) {
+	protected GraphContextFactory( String bundle_id, IXMLModelInterpreter<ITemplateLeaf<IDescriptor>> creator ) {
 		this.bundle_id = bundle_id;
 		this.creator = creator;
 	}

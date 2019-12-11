@@ -12,7 +12,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.security.AieonFEncryption;
 
-public class EncryptedStream<T extends IDescribable<?>>
+public class EncryptedStream<T extends IDescribable>
 {
 	public static InputStream getEncryptedInputStream( ILoaderAieon loader, InputStream in ) throws IOException{
 		try{

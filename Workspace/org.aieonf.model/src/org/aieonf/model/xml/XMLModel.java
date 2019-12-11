@@ -50,7 +50,7 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 	}
 	
 	@Override
-	public void init(T descriptor) {
+	public void setData(T descriptor) {
 		String str = properties.get( IModelLeaf.Attributes.IDENTIFIER.name()); 
 		if(!StringUtils.isEmpty(str))
 			descriptor.set( IDescriptor.Attributes.ID, str);
@@ -60,6 +60,6 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 		str = properties.get( IModelLeaf.Attributes.TYPE.name()); 
 		if(!StringUtils.isEmpty(str))
 		descriptor.set( IDescriptor.Attributes.VERSION, properties.get( IModelLeaf.Attributes.NAME.name()) );
-		super.init(descriptor);
+		super.setData(descriptor);
 	}	
 }

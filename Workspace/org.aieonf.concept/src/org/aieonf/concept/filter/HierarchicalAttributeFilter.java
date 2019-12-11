@@ -7,7 +7,7 @@ import org.aieonf.commons.filter.WildcardFilter;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 
-public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescribable<T>> extends HierarchicalFilter<M>
+public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescribable> extends HierarchicalFilter<M>
 {
 	private String defaultParentRefVal;
 	private String defaultChildRefVal;

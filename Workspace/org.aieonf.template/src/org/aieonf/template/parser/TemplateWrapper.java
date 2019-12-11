@@ -61,9 +61,18 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 		return this.model.get(attr);
 	}
 	
+	@Override
+	public String get( String attr) {
+		return this.model.get(attr);
+	}
 	
 	@Override
 	public void set(Enum<?> attr, String value) {
+		this.model.set(attr, value);
+	}
+
+	@Override
+	public void set( String attr, String value) {
 		this.model.set(attr, value);
 	}
 
@@ -98,6 +107,20 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 		TemplateAieon aieon = new TemplateAieon( this );
 		return aieon;
 	}
+
+	
+	@Override
+	public ITemplateAieon getData() {
+		return (ITemplateAieon) this.model.getData();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setData(ITemplateAieon descriptor) {
+		this.model.setData((T) descriptor);
+	}
+
 
 	/**
 	 * Get the direction of this model with 
@@ -308,7 +331,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	}
 
 	@Override
-	public int compareTo(IDescribable<?> o) {
+	public int compareTo(IDescribable o) {
 		return this.model.compareTo(o);
 	}
 
@@ -316,14 +339,6 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	public void setLeaf(boolean choice) {
 		this.model.setLeaf(choice);
 	}
-
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void init(ITemplateAieon descriptor) {
-		this.model.init((T) descriptor);
-	}
-
 
 	@Override
 	public Scope getScope() {

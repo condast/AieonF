@@ -5,7 +5,7 @@ import java.io.File;
 import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 
-public interface IFilePersistence<T extends IDescribable<?>> extends IPersistence<T>
+public interface IFilePersistence<T extends IDescribable> extends IPersistence<T>
 {
 
 	/**

@@ -5,7 +5,7 @@ import org.aieonf.collections.IAccessible;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.loader.ILoaderAieon;
 
-public abstract class AbstractCollectionConnector<T extends IDescribable<?>> implements ICollectionConnector<T>
+public abstract class AbstractCollectionConnector<T extends IDescribable> implements ICollectionConnector<T>
 {
 
 	private boolean create;

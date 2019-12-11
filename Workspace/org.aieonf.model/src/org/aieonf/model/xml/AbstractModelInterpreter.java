@@ -11,7 +11,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.xml.sax.Attributes;
 
-public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends IDescribable<T>> implements IXMLModelInterpreter<T,M> {
+public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends IDescribable> implements IXMLModelInterpreter<M> {
 
 	private boolean active;
 	private String identifier;

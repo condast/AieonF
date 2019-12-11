@@ -16,7 +16,7 @@ import org.aieonf.concept.body.BodyFactory;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.library.ManifestAieon;
 
-public class DefaultCollectionParser<T extends IDescribable<?>> implements
+public class DefaultCollectionParser<T extends IDescribable> implements
 		ICollectionParser<T>
 {
 	public static final String S_ERR_PARSER_NOT_OPEN = "The parser is not open";
@@ -120,7 +120,7 @@ public class DefaultCollectionParser<T extends IDescribable<?>> implements
 	}
 	
 	@Override
-	public void parse( IFilter<? extends IDescribable<?>> filter ) throws ParseException
+	public void parse( IFilter<? extends IDescribable> filter ) throws ParseException
 	{
 		if( !open )
 			throw new ParseException( S_ERR_PARSER_NOT_OPEN );
@@ -200,7 +200,7 @@ public class DefaultCollectionParser<T extends IDescribable<?>> implements
    * @return String
    * @throws CollectionException
   */
-  public String IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors ) throws CollectionException
+  public String IDFactory( IDescriptor descriptor, Collection<? extends IDescribable> descriptors ) throws CollectionException
   {
     StringBuffer buffer = new StringBuffer();
     buffer.append( this.manifest.getID() + ":" );
@@ -212,7 +212,7 @@ public class DefaultCollectionParser<T extends IDescribable<?>> implements
       containsId = false;
       newId = ( long )( Math.random() * Long.MAX_VALUE );
       hexStr = Long.toHexString( newId );
-      for( IDescribable<?> desc: descriptors ){
+      for( IDescribable desc: descriptors ){
         if( desc.getDescriptor().getID() >= 0 ){
           containsId = true;
           break;

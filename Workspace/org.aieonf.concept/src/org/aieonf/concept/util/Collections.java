@@ -1,10 +1,8 @@
 package org.aieonf.concept.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.concept.IDescribable;
-import org.aieonf.concept.IDescriptor;
 
 public class Collections
 {
@@ -16,7 +14,7 @@ public class Collections
 	 * @param results Enumeration
 	 * @return IConcept
 	*/
-	public static IDescribable<? extends IDescriptor> getFirst( Collection<? extends IDescribable<?>> results )
+	public static IDescribable getFirst( Collection<? extends IDescribable> results )
 	{
 	  if(( results == null ) || ( results.size() == 0 ))
 	    return null;

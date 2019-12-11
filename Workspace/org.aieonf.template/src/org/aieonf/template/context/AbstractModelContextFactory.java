@@ -26,16 +26,16 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	
 	private ITemplateLeaf<C> template;
 
-	private Collection<IModelBuilderListener<IDescribable<?>>> listeners;
+	private Collection<IModelBuilderListener<IDescribable>> listeners;
 
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 	
 	protected AbstractModelContextFactory() {
-		listeners = new ArrayList<IModelBuilderListener<IDescribable<?>>>();
+		listeners = new ArrayList<IModelBuilderListener<IDescribable>>();
 	}
 	
-	protected final void notifyListeners( ModelBuilderEvent<IDescribable<?>>  event ){
-		for( IModelBuilderListener<IDescribable<?>>  listener: this.listeners )
+	protected final void notifyListeners( ModelBuilderEvent<IDescribable>  event ){
+		for( IModelBuilderListener<IDescribable>  listener: this.listeners )
 			listener.notifyChange(event);
 	}
 
@@ -70,7 +70,8 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	public IDomainAieon getDomain(){
 		ModelScanner<C> search = new ModelScanner<C>( this.template );
 		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
-		domain.set( IDescriptor.Attributes.ID, String.valueOf( domain.getDomain().hashCode() ) );
+		String str = domain.getDomain();
+		domain.set( IDescriptor.Attributes.ID, String.valueOf( str.hashCode() ) );
 		domain.set( IDescriptor.Attributes.VERSION, S_DEFAULT_VERSION );
 		return domain;
 	}

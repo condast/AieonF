@@ -19,7 +19,7 @@ import org.aieonf.concept.core.ConceptBase;
  * @author Kees Pieters
  * @version 1.0
  */
-public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T>
+public class AttributeFilter<T extends IDescribable> extends AbstractFilter<T>
 {
 	//The supported rule set
 	public enum Rules{
@@ -209,7 +209,7 @@ public class AttributeFilter<T extends IDescribable<?>> extends AbstractFilter<T
 
 		if(!( obj instanceof IDescribable ))
 			return false;    
-		IDescribable<?> desc = ( IDescribable<?> )obj;
+		IDescribable desc = ( IDescribable )obj;
 		String value = desc.getDescriptor().get( this.refKey );
 		boolean contains = ( value != null );
 		logger.log( Level.FINE, "The descriptor " + obj.toString() + " contains " + this.refKey + ": " + contains  + " " + value);

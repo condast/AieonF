@@ -9,14 +9,14 @@ import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 
-public class ModelFilter<T extends IDescriptor, M extends IDescribable<T>> implements
+public class ModelFilter<T extends IDescriptor, M extends IDescribable> implements
 		IModelFilter<T,M> {
 
-	private IFilter<T> filter;
+	private IFilter<IDescriptor> filter;
 	
 	private Collection<M> rejected;
 	
-	public ModelFilter( IFilter<T> filter ) {
+	public ModelFilter( IFilter<IDescriptor> filter ) {
 		super();
 		this.filter = filter;
 		rejected = new ArrayList<M>();
@@ -67,7 +67,7 @@ public class ModelFilter<T extends IDescriptor, M extends IDescribable<T>> imple
 		Collection<M> results = new ArrayList<M>();
 		rejected.clear();
 		for( M model: collection ){
-			if( filter.accept( model.getDescriptor()))
+			if(( filter == null ) || filter.accept( model.getDescriptor()))
 				results.add(model);
 			else
 				rejected.add( model);

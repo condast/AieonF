@@ -4,7 +4,7 @@ import org.aieonf.commons.filter.IFilter;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 
-public interface IModelFilter<T extends IDescriptor, M extends IDescribable<T>> extends IFilter<M> {
+public interface IModelFilter<T extends IDescriptor, M extends IDescribable> extends IFilter<M> {
 
 	/**
 	 * If true, the given child is accepted

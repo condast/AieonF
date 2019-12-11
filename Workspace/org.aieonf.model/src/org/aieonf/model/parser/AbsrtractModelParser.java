@@ -39,7 +39,7 @@ public abstract class AbsrtractModelParser<D extends IDescriptor, M extends IMod
 	
 	private boolean result;
 
-	protected DescribableParser<D, IDescribable<D>> descriptorParser;
+	protected DescribableParser<D, IDescribable> descriptorParser;
 		
 	protected AbsrtractModelParser(){
 		super( ParseTypes.DESCRIPTOR.name());

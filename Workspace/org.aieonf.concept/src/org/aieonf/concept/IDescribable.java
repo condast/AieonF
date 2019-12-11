@@ -5,13 +5,13 @@ package org.aieonf.concept;
  * @author Kees
  *
  */
-public interface IDescribable<T extends IDescriptor>
+public interface IDescribable
 {
   /**
    * Get the name of the descriptor
    * @return
    */
-	public T getDescriptor();
+	public IDescriptor getDescriptor();
 	
 	/**
    * If true, the values have changed

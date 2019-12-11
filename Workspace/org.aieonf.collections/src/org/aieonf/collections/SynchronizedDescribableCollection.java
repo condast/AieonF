@@ -17,7 +17,7 @@ import org.aieonf.concept.*;
  * @author Kees Pieters
  * @version 1.0
  */
-public class SynchronizedDescribableCollection<T extends IDescribable<?>>
+public class SynchronizedDescribableCollection<T extends IDescribable>
   implements IDescribableCollection<T>
 {
   /**
@@ -79,7 +79,7 @@ public class SynchronizedDescribableCollection<T extends IDescribable<?>>
    * @return
    */
   @Override
-  public boolean accept( IDescribable<?> descriptor ){
+  public boolean accept( IDescribable descriptor ){
   	return this.collection.accept( descriptor );
   }
  

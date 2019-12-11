@@ -24,7 +24,7 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 		try{
 			ITemplateLeaf<IContextAieon> template = super.getFactory().createTemplate();
 			IFunctionProvider<String, IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> provider =  
-					new ModelFunctionProvider( template.getDescriptor() );
+					new ModelFunctionProvider( (IContextAieon) template.getDescriptor() );
 			ContextFactory factory = (ContextFactory) super.getFactory();
 			factory.addProvider( provider);
 		}

@@ -11,7 +11,7 @@ import org.aieonf.concept.core.ConceptException;
  * @author Kees
  *
  */
-public interface ILocationManager< T extends IDescribable<?>>
+public interface ILocationManager< T extends IDescribable>
 {	
 	/**
 	 * Get the source of the location manager
@@ -31,7 +31,7 @@ public interface ILocationManager< T extends IDescribable<?>>
 	 * @return
 	 * @throws ConceptException
 	*/
-	public String locate( IDescribable<?> changeable ) throws ConceptException;
+	public String locate( IDescribable changeable ) throws ConceptException;
 	
 	/**
 	 * Get the changeable object corresponding to the given location
@@ -49,7 +49,7 @@ public interface ILocationManager< T extends IDescribable<?>>
    * @return boolean
    * @throws ConceptException
   */
-  public boolean isCorrectPosition( IDescribable<?> changeable, String position )
+  public boolean isCorrectPosition( IDescribable changeable, String position )
   	throws ConceptException;
 
   /**
@@ -58,7 +58,7 @@ public interface ILocationManager< T extends IDescribable<?>>
    * @return
    * @throws ConceptException
    */
-  public String[] getLocations( Collection<? extends IDescribable<?>> descriptors )
+  public String[] getLocations( Collection<? extends IDescribable> descriptors )
   	throws ConceptException;
 	
 }

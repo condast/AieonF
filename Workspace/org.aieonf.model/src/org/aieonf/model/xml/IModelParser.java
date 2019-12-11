@@ -1,10 +1,9 @@
 package org.aieonf.model.xml;
 
 import org.aieonf.concept.IDescribable;
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 
-public interface IModelParser<T extends IDescriptor, M extends IDescribable<T>> {
+public interface IModelParser<M extends IDescribable> {
 	/**
 	 * Add a model builder listener
 	 * @param event

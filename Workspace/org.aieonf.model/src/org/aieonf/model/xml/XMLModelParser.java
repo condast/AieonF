@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> extends DefaultHandler implements IModelParser<T,M>{
+public class XMLModelParser<T extends IDescriptor, M extends IDescribable> extends DefaultHandler implements IModelParser<M>{
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	
@@ -43,12 +43,12 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 	
 	private Stack<ModelAttributes> stack;
 	
-	private IXMLModelInterpreter<? extends IDescriptor,T> interpreter;	
+	private IXMLModelInterpreter<T> interpreter;	
 	private Collection<IModelBuilderListener<M>> listeners;
 
 	private Logger logger = Logger.getLogger( XMLModelParser.class.getName() );
 
-	public XMLModelParser( IXMLModelInterpreter<? extends IDescriptor,T> interpreter) {
+	public XMLModelParser( IXMLModelInterpreter<T> interpreter) {
 		this.stack = new Stack<ModelAttributes>();
 		this.interpreter = interpreter;
 		this.models = new ArrayList<M>();
@@ -59,7 +59,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 		return stack;
 	}
 
-	protected synchronized IXMLModelInterpreter<? extends IDescriptor, T> getCreator() {
+	protected synchronized IXMLModelInterpreter<T> getCreator() {
 		return interpreter;
 	}
 
@@ -163,7 +163,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			switch( index ){
 			case MODEL:
 				ma = ModelAttributes.DESCRIPTOR;
-				this.current.init( interpreter.create( qName, attributes));
+				this.current.setData( interpreter.create( qName, attributes));
 				break;
 			case CONTEXT:
 			case DESCRIPTOR:
@@ -208,7 +208,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable<T>> ex
 			return;
 		try{
 			logger.fine("Setting value for key: " + interpreter.getKey() );
-			IDescriptor descriptor = current.getDescriptor();
+			IDescriptor descriptor = current.getData();
 			if( StringUtils.isEmpty(value))
 				return;
 			String key = interpreter.getKey();

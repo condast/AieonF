@@ -17,7 +17,7 @@ import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.ILocationManager;
 
-public abstract class AbstractJarParser<T extends IDescribable<?>> extends DefaultCollectionParser<T>
+public abstract class AbstractJarParser<T extends IDescribable> extends DefaultCollectionParser<T>
 {
   public static final String S_ERR_TRANSLATION_FAILURE =
       "The names in the collection could not be translated correctly. The encryption may not be correct";
@@ -109,7 +109,7 @@ public abstract class AbstractJarParser<T extends IDescribable<?>> extends Defau
    * @param includeManifest boolean
    * @return boolean
    */
-  protected IDescribable<?> getEntry( JarEntry entry, boolean includeManifest ) throws ParseException
+  protected IDescribable getEntry( JarEntry entry, boolean includeManifest ) throws ParseException
   {
     if(( entry == null ) || ( entry.getSize() == 0 ))
       return null;
@@ -120,8 +120,8 @@ public abstract class AbstractJarParser<T extends IDescribable<?>> extends Defau
     	return null;
     this.logger.fine( "Checking jar entry: " + entry.getName() );
     try{
-      ILocationManager<? extends IDescribable<?>> lm = new LocationManager( super.getManifest() );
-      IDescribable<?> obj = lm.getDescribable( entry.getName() );
+      ILocationManager<? extends IDescribable> lm = new LocationManager( super.getManifest() );
+      IDescribable obj = lm.getDescribable( entry.getName() );
       if( !obj.getDescriptor().getName().equals( ManifestAieon.MANIFEST  ))
         return obj;
       if( includeManifest )

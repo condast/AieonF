@@ -86,7 +86,7 @@ public class ConceptPersistence extends AbstractPersistence<IConcept> implements
     	ex.printStackTrace();
     }
     finally{
-    	IOUtils.closeOutputStream( eout );
+    	IOUtils.closeQuietly( eout );
     }
     return bout.toByteArray();
 	}	

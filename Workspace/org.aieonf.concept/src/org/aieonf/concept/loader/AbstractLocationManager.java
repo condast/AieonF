@@ -8,7 +8,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 
-public abstract class AbstractLocationManager<T extends IDescribable<?>> implements ILocationManager<T>
+public abstract class AbstractLocationManager<T extends IDescribable> implements ILocationManager<T>
 {
 	//Error messages
   public static final String S_ERR_INVALID_NAME = "Invalid name: ";
@@ -67,7 +67,7 @@ public abstract class AbstractLocationManager<T extends IDescribable<?>> impleme
 	 * @throws ConceptException
 	*/
 	@Override
-	public abstract String locate( IDescribable<?> changeable ) throws ConceptException;
+	public abstract String locate( IDescribable changeable ) throws ConceptException;
 
   /**
    * Returns true if the position corresponds with the name
@@ -78,7 +78,7 @@ public abstract class AbstractLocationManager<T extends IDescribable<?>> impleme
    * @throws ConceptException
   */
 	@Override
-  public boolean isCorrectPosition( IDescribable<?> obj, String position )
+  public boolean isCorrectPosition( IDescribable obj, String position )
   	throws ConceptException
   {
     if( obj.getDescriptor().getID() < 0 )
@@ -115,12 +115,12 @@ public abstract class AbstractLocationManager<T extends IDescribable<?>> impleme
    * @throws ConceptException
    */
   @Override
-	public String[] getLocations( Collection<? extends IDescribable<?>> objects )
+	public String[] getLocations( Collection<? extends IDescribable> objects )
   	throws ConceptException
   {
   	String[] results = new String[ objects.size() ];
   	int index = 0;
-  	for( IDescribable<?> obj: objects ){
+  	for( IDescribable obj: objects ){
   		results[ index ] = this.locate( obj );
   		index++;
   	}

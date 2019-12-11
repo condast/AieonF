@@ -52,7 +52,7 @@ public class IOUtils
 	 *
 	 * @param stream OutputStream
 	*/
-	public static void closeQiuetly( Closeable closeable )
+	public static void closeQuietly( Closeable closeable )
 	{
 	  Logger logger = Logger.getLogger( IOUtils.class.getName() );
 	  if( closeable == null )
@@ -189,8 +189,8 @@ public class IOUtils
 			logger.severe( e.getMessage() );
 		}
     finally{
-    	IOUtils.closeQiuetly(in);
-    	IOUtils.closeQiuetly(bout);
+    	IOUtils.closeQuietly(in);
+    	IOUtils.closeQuietly(bout);
     }
     if( bout == null )
     	return in;

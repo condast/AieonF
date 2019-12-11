@@ -48,7 +48,7 @@ import org.aieonf.concept.persist.ILocatedPersistence;
  * @author Kees Pieters
  * @version 1.0
  */
-public class JarCollection<T extends IDescribable<?>> extends AbstractDescribableCollection<T>
+public class JarCollection<T extends IDescribable> extends AbstractDescribableCollection<T>
 {
 	//The error messages
 	public static final String S_ERR_JAR_WRITE_EXCEPTION =
@@ -146,8 +146,8 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 			throw new CollectionException( e );
 		}
 		finally {
-			IOUtils.closeOutputStream( eout );
-			IOUtils.closeOutputStream( jarStream );
+			IOUtils.closeQuietly( eout );
+			IOUtils.closeQuietly( jarStream );
 		}
 			}
 
@@ -176,7 +176,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 			InputStream ein = null;
 			IConcept concept;
 
-			IDescribable<?> descriptor = null;
+			IDescribable descriptor = null;
 			for( Enumeration<JarEntry> list = jar.entries(); list.hasMoreElements(); ){
 				entry = list.nextElement();
 				if( entry.getName().equals( ManifestAieon.LOCATION ) == false )
@@ -211,7 +211,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 							":" + ex.getMessage() );
 				}
 				finally{
-					IOUtils.closeInputStream(ein);
+					IOUtils.closeQuietly(ein);
 				}
 			}
 			throw new CollectionException( S_ERR_MANIFEST_NOT_FOUND );
@@ -410,7 +410,7 @@ public class JarCollection<T extends IDescribable<?>> extends AbstractDescribabl
 			throw new CollectionException( e );
 		}
 		finally {
-			IOUtils.closeOutputStream( jarStream );
+			IOUtils.closeQuietly( jarStream );
 		}
 			}
 

@@ -9,7 +9,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 
-public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable<T>> implements
+public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable> implements
 		IModelFilter<T,M> {
 
 	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";

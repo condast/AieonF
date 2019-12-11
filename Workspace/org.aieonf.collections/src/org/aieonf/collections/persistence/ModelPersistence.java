@@ -88,7 +88,7 @@ public class ModelPersistence extends AbstractPersistence<IModelLeaf<IConcept>> 
     	ex.printStackTrace();
     }
     finally{
-    	IOUtils.closeOutputStream( eout );
+    	IOUtils.closeQuietly( eout );
     }
     return bout.toByteArray();
 	}	

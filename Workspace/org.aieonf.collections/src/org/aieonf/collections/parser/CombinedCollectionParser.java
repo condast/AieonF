@@ -10,7 +10,7 @@ import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.library.ManifestAieon;
 
-public class CombinedCollectionParser<T extends IDescribable<?>> implements
+public class CombinedCollectionParser<T extends IDescribable> implements
 		ICollectionParser<T>
 {
 	private Collection<ICollectionParser<T>> parsers;
@@ -76,7 +76,7 @@ public class CombinedCollectionParser<T extends IDescribable<?>> implements
 	}
 
 	@Override
-	public void parse(IFilter<? extends IDescribable<?>> filter)
+	public void parse(IFilter<? extends IDescribable> filter)
 			throws ParseException
 	{
 		for( ICollectionParser<T> parser: parsers )

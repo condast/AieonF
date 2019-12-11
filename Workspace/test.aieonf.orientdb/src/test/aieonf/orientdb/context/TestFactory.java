@@ -24,12 +24,12 @@ public class TestFactory extends AbstractProviderContextFactory<IContextAieon, I
 
 	private static TestFactory factory;
 
-	private IModelBuilderListener<IDescribable<?>> listener = new IModelBuilderListener<IDescribable<?>>() {
+	private IModelBuilderListener<IDescribable> listener = new IModelBuilderListener<IDescribable>() {
 
 		private IConcept concept;
 		
 		@Override
-		public void notifyChange(ModelBuilderEvent<IDescribable<?>> event) {
+		public void notifyChange(ModelBuilderEvent<IDescribable> event) {
 			switch( event.getAttribute()) {
 			case DESCRIPTOR:
 				concept = new Concept();
@@ -37,6 +37,8 @@ public class TestFactory extends AbstractProviderContextFactory<IContextAieon, I
 				break;
 			case PROPERTIES:
 				//concept.set( event., value);model.getDescriptor().set(key, value);e
+			default:
+				break;
 			}
 		}	
 	};

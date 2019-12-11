@@ -49,7 +49,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	private boolean completed, failed;
 	
 	private String domainId;
-	private IXMLModelInterpreter<IDescriptor, T> interpreter;
+	private IXMLModelInterpreter<T> interpreter;
 
 	private Collection<IModelBuilderListener<M>> listeners;
 	
@@ -67,7 +67,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLModelBuilder( String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
+	public XMLModelBuilder( String domainId, IXMLModelInterpreter<T> interpreter ) {
 		this( new XMLModelParser<T,M>(interpreter), domainId, interpreter );
 	}
 	
@@ -78,7 +78,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLModelBuilder( XMLModelParser<T,M> parser, String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
+	public XMLModelBuilder( XMLModelParser<T,M> parser, String domainId, IXMLModelInterpreter<T> interpreter ) {
 		this.domainId = domainId;
 		this.parser = parser;
 		this.interpreter = interpreter;
@@ -169,7 +169,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 			e.printStackTrace();
 		}
 		finally{
-			IOUtils.closeInputStream(in);
+			IOUtils.closeQuietly(in);
 		}
 		
 		this.completed = true;

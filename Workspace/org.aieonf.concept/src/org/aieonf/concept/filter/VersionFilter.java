@@ -19,7 +19,7 @@ import org.aieonf.concept.filter.AttributeMapFilter.Rules;
  * @author Kees Pieters
  * @version 1.0
  */
-public class VersionFilter<T extends IDescribable<?>> extends AbstractFilter<T>
+public class VersionFilter<T extends IDescribable> extends AbstractFilter<T>
 {
 	//Additional
 	//The options for a strict get
@@ -128,7 +128,7 @@ public class VersionFilter<T extends IDescribable<?>> extends AbstractFilter<T>
 	{
 		if(!( obj instanceof IDescribable ))
 			return false;    
-		IDescribable<?> desc = ( IDescribable<?> )obj;
+		IDescribable desc = ( IDescribable )obj;
 		return this.accept( desc.getDescriptor().get( IDescriptor.Attributes.VERSION.name() ));
 	}
 

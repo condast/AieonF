@@ -92,7 +92,7 @@ public class BodyFactory<T extends Object>
 	 * @param collection IConceptCollection
 	 * @return String
 	 */
-	public static String IDFactory( IDescribable<? extends IDescriptor> describable, IDescribableSet<? extends ILoaderAieon> collection )
+	public static String IDFactory( IDescribable describable, IDescribableSet<? extends ILoaderAieon> collection )
 	{
 		StringBuffer buffer;
 		if( describable.getDescriptor().getID() < 0 )
@@ -111,7 +111,7 @@ public class BodyFactory<T extends Object>
 	 * @param collection IConceptCollection
 	 * @return String
 	 */
-	public static void IDFactory( IDescribable<? extends IDescriptor> describable ){
+	public static void IDFactory( IDescribable describable ){
 		String id = IDFactory( describable, new DescribableSet<Object>( new ArrayList<Object>()));
 		describable.getDescriptor().set( IDescriptor.Attributes.ID, id );
 	}
@@ -416,7 +416,7 @@ public class BodyFactory<T extends Object>
 	 * @param descriptor IDescriptor
 	 * @throws ConceptException, IOException
 	 */
-	public static void sign( ILoaderAieon loader, IDescribable<? extends IDescriptor> descriptor ) 
+	public static void sign( ILoaderAieon loader, IDescribable descriptor ) 
 			throws ConceptException, IOException
 	{
 		int hashCode = BodyFactory.hashCode( loader, loader );

@@ -4,7 +4,7 @@ import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.loader.ILoaderAieon;
 
-public interface ILocatedPersistence<T extends IDescribable<?>> extends
+public interface ILocatedPersistence<T extends IDescribable> extends
 		IPersistence<T>
 {
 	/**

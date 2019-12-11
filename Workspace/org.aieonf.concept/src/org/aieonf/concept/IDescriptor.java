@@ -18,7 +18,7 @@ import org.aieonf.concept.core.ConceptException;
 /**
  * Defines a concept, basically a wrapper around the underlying XML definition
  */
-public interface IDescriptor extends IDescribable<IDescriptor>, Serializable, Cloneable, Comparable<IDescriptor>
+public interface IDescriptor extends IDescribable, Serializable, Cloneable, Comparable<IDescriptor>
 {
 
 	//The regular expression that splits a string into an string array of

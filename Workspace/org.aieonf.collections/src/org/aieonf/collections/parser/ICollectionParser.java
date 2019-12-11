@@ -9,7 +9,7 @@ import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.library.ManifestAieon;
 
-public interface ICollectionParser<T extends IDescribable<?>>
+public interface ICollectionParser<T extends IDescribable>
 {
 	/**
 	 * Initialise the parser
@@ -58,7 +58,7 @@ public interface ICollectionParser<T extends IDescribable<?>>
    * Parse the collection according to the provided filter
    * @throws ParseException
    */
-  public void parse( IFilter<? extends IDescribable<?>> filter ) throws ParseException;
+  public void parse( IFilter<? extends IDescribable> filter ) throws ParseException;
   
   /**
    * Get the results that was parsed

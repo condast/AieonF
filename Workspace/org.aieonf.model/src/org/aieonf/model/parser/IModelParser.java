@@ -4,7 +4,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.ModelException;
 
-public interface IModelParser<D extends IDescriptor, M extends IDescribable<D>> {
+public interface IModelParser<D extends IDescriptor, M extends IDescribable> {
 
 	public enum Status{
 		PREPARE,

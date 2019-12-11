@@ -54,6 +54,16 @@ public class Descriptor implements IDescriptor
 	}
 
 	/**
+	 * Create a descriptor with the given id and name
+	 * @param id String
+	 */
+	public Descriptor( long id )
+	{
+		this();
+		set( IDescriptor.Attributes.ID, String.valueOf( id ));
+	}
+
+	/**
 	 * Create a desc riptor with the given id and name
 	 * @param name String
 	 * @throws ConceptException
@@ -128,7 +138,9 @@ public class Descriptor implements IDescriptor
 	public final long getID()
 	{
 		String str = this.get( IDescriptor.Attributes.ID );
-		return StringUtils.isEmpty(str)?-1:Long.parseLong(str);
+		if(StringUtils.isEmpty(str))
+			str = this.get( IDescriptor.Attributes.ID.name());
+		return StringUtils.isEmpty(str)?-1:Long.parseLong(str); 
 	}
 
 	/**
@@ -574,7 +586,7 @@ public class Descriptor implements IDescriptor
 	 * @param descriptor IDescriptor
 	 * @return Date
 	 */
-	public final static Date getDate( IDescribable<? extends IDescriptor> describable, IDescriptor.Attributes attr )
+	public final static Date getDate( IDescribable describable, IDescriptor.Attributes attr )
 	{
 		IDescriptor descriptor = describable.getDescriptor();
 		String str = descriptor.get( attr );
@@ -619,7 +631,7 @@ public class Descriptor implements IDescriptor
 	 * @param date Date
 	 * @throws ConceptException
 	 */
-	public final static void setCreateDate( IDescribable<? extends IDescriptor> descriptor, Date date )
+	public final static void setCreateDate( IDescribable descriptor, Date date )
 	{
 		setDate( descriptor.getDescriptor(), IDescriptor.Attributes.CREATE_DATE, date );
 		setDate( descriptor.getDescriptor(), IDescriptor.Attributes.UPDATE_DATE, date );
@@ -631,7 +643,7 @@ public class Descriptor implements IDescriptor
 	 * @param descriptor IDescriptor
 	 * @return Date
 	 */
-	public final static Date getUpdateDate( IDescribable<? extends IDescriptor> descriptor )
+	public final static Date getUpdateDate( IDescribable descriptor )
 	{
 		return getDate( descriptor.getDescriptor(), IDescriptor.Attributes.CREATE_DATE );
 	}
@@ -642,7 +654,7 @@ public class Descriptor implements IDescriptor
 	 * @param descriptor IDescriptor
 	 * @param date Date
 	 */
-	public final static void setUpdateDate( IDescribable<? extends IDescriptor> descriptor, Date date )
+	public final static void setUpdateDate( IDescribable descriptor, Date date )
 	{
 		setDate( descriptor.getDescriptor(), IDescriptor.Attributes.UPDATE_DATE, date );
 	}
@@ -707,9 +719,9 @@ public class Descriptor implements IDescriptor
 	 */
 	public static String getText(Object element)
 	{
-		if(!( element instanceof IDescribable<?> ))
+		if(!( element instanceof IDescribable ))
 			return element.toString();
-		IDescribable<?> desc = ( IDescribable<?> )element;
+		IDescribable desc = ( IDescribable )element;
 		String retval = desc.getDescriptor().getDescription();
 		if( Utils.assertNull( retval ))
 			retval = desc.getDescriptor().getName();
@@ -742,12 +754,12 @@ public class Descriptor implements IDescriptor
 
 	@Override
 	public String get(Enum<?> enm) {
-		return base.get(enm.name());
+		return base.get(enm);
 	}
 
 	@Override
 	public void set( Enum<?> enm, String value) {
-		base.set(enm.name(), value);
+		base.set(enm, value);
 	}
 
 	@Override

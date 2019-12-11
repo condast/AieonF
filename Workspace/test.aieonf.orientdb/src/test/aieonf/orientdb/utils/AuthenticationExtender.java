@@ -13,7 +13,7 @@ import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.xml.sax.Attributes;
 
 
-public class AuthenticationExtender implements IXMLModelInterpreter<IDescriptor, IModelLeaf<IDescriptor>> {
+public class AuthenticationExtender implements IXMLModelInterpreter<IModelLeaf<IDescriptor>> {
 
 	public static final String S_IDENTIFIER = "Authentication Model";
 

@@ -217,7 +217,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 	 * @throws CollectionException
 	 */
 	@Override
-	public long IDFactory( IDescriptor descriptor, Collection<? extends IDescribable<?>> descriptors )
+	public long IDFactory( IDescriptor descriptor, Collection<? extends IDescribable> descriptors )
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append( super.getManifest().getID() + ":" );
@@ -229,7 +229,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 			containsId = false;
 			newId = ( long )( Math.random() * Long.MAX_VALUE );
 			hexStr = Long.toHexString( newId );
-			for( IDescribable<?> desc: descriptors ){
+			for( IDescribable desc: descriptors ){
 				if( hexStr.equals( desc.getDescriptor().getID()  )){
 					containsId = true;
 					break;

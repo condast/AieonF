@@ -22,7 +22,7 @@ import org.eclipse.swt.browser.BrowserFunction;
 
 import com.google.gson.Gson;
 
-public class DatabaseController<M extends IDescribable<IDescriptor>> extends AbstractJavascriptController {
+public class DatabaseController<M extends IDescribable> extends AbstractJavascriptController {
 
 	public static final String S_INITIALISTED_ID = "DatabaseInitialisedId";
 	public static final String S_IS_INITIALISTED = "isInitialised";

@@ -39,7 +39,7 @@ import org.aieonf.concept.loader.ILoaderAieon;
  * @author Kees Pieters
  * @version 1.0
 */
-public abstract class AbstractDescribableCollection<T extends IDescribable<?>> extends AbstractChangeableCollection<T> implements IDescribableCollection<T>
+public abstract class AbstractDescribableCollection<T extends IDescribable> extends AbstractChangeableCollection<T> implements IDescribableCollection<T>
 {
   //The error messages
   public static final String S_ERR_JAR_WRITE_EXCEPTION =
@@ -126,7 +126,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
     if( !( changeable instanceof IDescribable ))
     		return false;
     
-  	IFilter<IDescribable<?>> filter = new DescriptorFilter<IDescribable<?>>( DescriptorFilter.Rules.Equals, ( IDescribable<?>)changeable );
+  	IFilter<IDescribable> filter = new DescriptorFilter<IDescribable>( DescriptorFilter.Rules.Equals, ( IDescribable)changeable );
    	filter.setAmount( 1 );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
@@ -150,7 +150,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
     if( descriptors == null )
     	throw new NullPointerException();
 
-  	IFilter<IDescribable<?>> filter = new DescriptorBatchFilter<IDescribable<?>>( DescriptorFilter.Rules.Equals, descriptors );
+  	IFilter<IDescribable> filter = new DescriptorBatchFilter<IDescribable>( DescriptorFilter.Rules.Equals, descriptors );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
   	try {
@@ -170,7 +170,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
   @Override
 	public int size()
   {
-  	IFilter<IDescribable<?>> filter = new AttributeFilter<IDescribable<?>>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
   	try {
@@ -190,7 +190,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
   	if(!( Descriptor.isNull( ID )))
   		return false;
 
-  	IFilter<IDescribable<?>> filter = new AttributeFilter<IDescribable<?>>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.ID.name(), ID );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.ID.name(), ID );
   	filter.setAmount( 1 );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
@@ -254,7 +254,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
 	@Override
 	public boolean isEmpty()
 	{
-  	IFilter<IDescribable<?>> filter = new AttributeFilter<IDescribable<?>>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
   	filter.setAmount( 1 );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
@@ -272,7 +272,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
 	@Override
 	public Iterator<T> iterator()
 	{
-  	IFilter<IDescribable<?>> filter = new AttributeFilter<IDescribable<?>>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
   	filter.setAmount( 1 );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( false );
@@ -407,9 +407,9 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
 	 * @param collection
 	 * @return
 	 */
-	public static Collection<IDescriptor> getDescriptors( Collection<? extends IDescribable<?>> collection ){
+	public static Collection<IDescriptor> getDescriptors( Collection<? extends IDescribable> collection ){
 		Collection<IDescriptor> descriptors = new ArrayList<IDescriptor>();
-		for( IDescribable<?>descriptor: collection )
+		for( IDescribable descriptor: collection )
 			descriptors.add( descriptor.getDescriptor() );
 		return descriptors;
 			
@@ -420,7 +420,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable<?>> e
    * @param loader
    * @param collection
    */
-	public static void prepare( ILoaderAieon loader, IDescribableCollection<? extends IDescribable<?>> collection ){
+	public static void prepare( ILoaderAieon loader, IDescribableCollection<? extends IDescribable> collection ){
   	IAccessible accessible = ( IAccessible )collection;
   	accessible.prepare(loader);
   }

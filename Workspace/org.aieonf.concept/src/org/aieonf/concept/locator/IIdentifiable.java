@@ -3,7 +3,7 @@ package org.aieonf.concept.locator;
 import org.aieonf.concept.IDescribable;
 
 
-public interface IIdentifiable<T extends LocatorAieon> extends IDescribable<T>
+public interface IIdentifiable<T extends LocatorAieon> extends IDescribable
 {
   /**
    * Get the name of the database. This name does not have to be unique.

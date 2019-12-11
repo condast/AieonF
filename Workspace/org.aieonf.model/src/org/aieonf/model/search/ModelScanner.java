@@ -31,8 +31,8 @@ public class ModelScanner<T extends IDescriptor>{
 	
 	@SuppressWarnings("unchecked")
 	protected void getDescriptors( Collection<IDescriptor> results, String name, IModelLeaf<?> current ){
-		if( name.equals( current.getDescriptor().getName() ))
-			results.add( current.getDescriptor() );
+		if( name.equals( current.getData().getName() ))
+			results.add( current.getData() );
 		if(!( current instanceof IModelNode ))
 			return;
 		IModelNode<T> node = (IModelNode<T>) current;
@@ -49,9 +49,9 @@ public class ModelScanner<T extends IDescriptor>{
 
 	@SuppressWarnings("unchecked")
 	protected void getModel( Collection<IModelLeaf<IDescriptor>> results, IDescriptor descriptor, IModelLeaf<IDescriptor> current ){
-		if( descriptor.getName().equals( current.getDescriptor().getName() )){
-			if(( descriptor.getID() > 0 ) || ( descriptor.getID() == current.getDescriptor().getID()) ){
-				if( descriptor.getVersion() == current.getDescriptor().getVersion() )
+		if( descriptor.getName().equals( current.getData().getName() )){
+			if(( descriptor.getID() > 0 ) || ( descriptor.getID() == current.getData().getID()) ){
+				if( descriptor.getVersion() == current.getData().getVersion() )
 					results.add( current );
 			}
 		}

@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.Dispatcher;
@@ -40,27 +41,25 @@ public class ModelRestService{
 	@Path("/add")
 	public Response addModel( @QueryParam("id") long domainId, @QueryParam("token") String token, String data ) {
 		DatabaseService dbService = DatabaseService.getInstance();
+		ModelFactory<IDescriptor> factory = null;
 		try{
  			if( !dispatcher.isRegistered(domainId, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(domainId, token);
 			//if( !dispatcher.isAllowed(node))
 			//	return Response.status(Status.FORBIDDEN).build();
-			dbService.open();
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
+			factory = new ModelFactory<IDescriptor>( domain, dbService );
 			factory.transform(data);
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
 		}
-		finally {
-			dbService.close();
-		}
 		CacheService cache = CacheService.getInstance();
 		try {
 			cache.open();
-			
+			Collection<IDescriptor> descriptors = factory.getDescriptors().values();
+			cache.add( descriptors.toArray( new IDescriptor[ descriptors.size()] ));
 			return Response.ok().build();
 		}
 		catch( Exception ex ){
@@ -78,30 +77,37 @@ public class ModelRestService{
 	@Path("/get")
 	public Response getModel( @QueryParam("id") long domainId, @QueryParam("token") String token, 
 			@QueryParam("name") String name, @QueryParam("version") String version) {
-		CacheService cache = CacheService.getInstance();
 		DatabaseService dbService = DatabaseService.getInstance();
+		Collection<IModelLeaf<IDescriptor>> result = null;
 		try{
 			if( !dispatcher.isRegistered(domainId, token))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(domainId, token);
- 			cache.open();
 			dbService.open();
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
-			Collection<IModelLeaf<IDescriptor>> result = factory.get(domain);
+			result = factory.get(domain);
 			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
-			//Gson gson = new Gson();
-			String str = null;//gson.toJson(sm, SerialisableModel[].class );
-			return Response.ok( str ).build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
 		}
-		finally {
-			dbService.close();
-			cache.close();
+		CacheService cache = CacheService.getInstance();
+		try {
+			cache.open();	
+			cache.fill(result);
+			Gson gson = new Gson();
+			String str = gson.toJson(result.toArray(new IModelLeaf[ result.size()]), Model[].class );
+			return Response.ok( str ).build();
 		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			cache.close();
+		}	
 	}
 
 	@PUT

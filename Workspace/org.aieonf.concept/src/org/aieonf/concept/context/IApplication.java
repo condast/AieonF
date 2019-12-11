@@ -2,7 +2,7 @@ package org.aieonf.concept.context;
 
 import org.aieonf.concept.IDescribable;
 
-public interface IApplication extends IDescribable<IContextAieon>
+public interface IApplication extends IDescribable
 {
 	/**
 	 * Create the application

@@ -9,7 +9,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 
-public class DateFilter<T extends IDescribable<?>> extends AbstractComparableAttributeFilter<T,Date>
+public class DateFilter<T extends IDescribable> extends AbstractComparableAttributeFilter<T,Date>
 {
 
 	public DateFilter() throws FilterException
@@ -49,7 +49,7 @@ public class DateFilter<T extends IDescribable<?>> extends AbstractComparableAtt
 	{
 		if( !( obj instanceof IDescribable ))
 			return -1;
-		IDescriptor descriptor = (( IDescribable<?> )obj).getDescriptor();
+		IDescriptor descriptor = (( IDescribable )obj).getDescriptor();
 		Date comp = Descriptor.getCreateDate( descriptor );
 		if( comp.getTime() < reference.getTime() )
 			return -1;

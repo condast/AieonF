@@ -25,7 +25,7 @@ public class XMLTemplateBuilder<T extends IDescriptor, M extends IModelLeaf<T>> 
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLTemplateBuilder( String domainId, IXMLModelInterpreter<IDescriptor, T> interpreter ) {
+	public XMLTemplateBuilder( String domainId, IXMLModelInterpreter<T> interpreter ) {
 		builder = new XMLModelBuilder<T,M>( new XMLTemplateParser<T,M>( interpreter ), domainId, interpreter );
 		this.completed = false;
 	}

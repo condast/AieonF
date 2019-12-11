@@ -46,7 +46,7 @@ import java.util.logging.Logger;
  * @author Kees Pieters
  * @version 1.0
 */
-public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChangeableCollection<T> implements IDescribableCollection<T>
+public class BasicFileCollection<T extends IDescribable> extends AbstractChangeableCollection<T> implements IDescribableCollection<T>
 {
   //Strings used by the settings
   public static final String MANIFEST_DIR = "META-INF";
@@ -197,8 +197,8 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
       return false;
     
     try{
-      ILocationManager<? extends IDescribable<?>> lm = new LocationManager( super.getLoader() );
-      IDescribable<?> descriptor = lm.getDescribable( file.getAbsolutePath() );
+      ILocationManager<? extends IDescribable> lm = new LocationManager( super.getLoader() );
+      IDescribable descriptor = lm.getDescribable( file.getAbsolutePath() );
     	return descriptor != null;
     }
     catch( Exception ex ){
@@ -288,7 +288,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
     InputStream entryStream;
     T obj;
     IPersistence<T> persist = super.getParser().getPersistence();
-    IDescribable<?> descriptor = null;
+    IDescribable descriptor = null;
     boolean accept = false;
     if( this.isCorrectEntry( file, true ) == false ){
     	if( file.isDirectory() ){
@@ -299,7 +299,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
     }
     
     try{
-      ILocationManager<? extends IDescribable<?>> lm = new LocationManager( super.getLoader() );
+      ILocationManager<? extends IDescribable> lm = new LocationManager( super.getLoader() );
       descriptor = lm.getDescribable( file.getAbsolutePath() );
       accept = filter.accept( (T) descriptor );
       if(( descriptorOnly ) && ( !accept ))
@@ -567,7 +567,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
       //Send the document to the jar file.
       File source = new File( super.getLoader().getURI().getPath() );    
       logger.fine("Writing descriptor " + obj.getDescriptor().toString() );
-      ILocationManager<? extends IDescribable<?>> lm = new LocationManager( super.getLoader() );
+      ILocationManager<? extends IDescribable> lm = new LocationManager( super.getLoader() );
       file = new File( source, lm.locate( obj ));
       file.setWritable( true );
       if( !file.exists() )
@@ -587,8 +587,8 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
       throw new CollectionException( e );
     }
     finally {
-      IOUtils.closeOutputStream( outStream );
-      IOUtils.closeOutputStream( fileStream );
+      IOUtils.closeQuietly( outStream );
+      IOUtils.closeQuietly( fileStream );
       if( file != null )
       	file.setWritable( false );
       this.leave();
@@ -610,7 +610,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
     if(( list == null ) || ( list.isEmpty() ))
     	return new ArrayList<T>();
   	
-    Set<IDescribable<?>> check = new TreeSet<IDescribable<?>>();
+    Set<IDescribable> check = new TreeSet<IDescribable>();
     for( T data: list ){
     	if(( data == null ) || ( !this.accept( data )))
     		throw new CollectionException( S_ERR_INVALID_ENTRY + data.getDescriptor() );
@@ -626,7 +626,7 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
     //Send the document to the jar file.
     File source = new File( super.getLoader().getURI().getPath() );    
     File file = null;
-    ILocationManager<? extends IDescribable<?>> lm = null;
+    ILocationManager<? extends IDescribable> lm = null;
     try{
     	lm = new LocationManager( super.getLoader() );
     }
@@ -654,8 +654,8 @@ public class BasicFileCollection<T extends IDescribable<?>> extends AbstractChan
       	ex.printStackTrace();
       }
       finally {
-        IOUtils.closeOutputStream( outStream );
-        IOUtils.closeOutputStream( fileStream );
+        IOUtils.closeQuietly( outStream );
+        IOUtils.closeQuietly( fileStream );
         if( file != null )
         	file.setWritable( false );
         this.leave();

@@ -9,7 +9,7 @@ import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.concept.IDescribable;
 
-public class DescriptorBatchFilter<T extends IDescribable<?>> extends BatchFilter<T>
+public class DescriptorBatchFilter<T extends IDescribable> extends BatchFilter<T>
 {
 
 	@SuppressWarnings("unchecked")

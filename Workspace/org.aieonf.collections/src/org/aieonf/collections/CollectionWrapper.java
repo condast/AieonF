@@ -29,7 +29,7 @@ import org.aieonf.concept.loader.ILoaderAieon;
  * @author Kees Pieters
  * @version 1.0
 */
-public class CollectionWrapper<T extends IDescribable<?>> implements IDescribableCollection<T>, IAccessible
+public class CollectionWrapper<T extends IDescribable> implements IDescribableCollection<T>, IAccessible
 {
   private IDescribableCollection<T> collection;
 
@@ -57,7 +57,7 @@ public class CollectionWrapper<T extends IDescribable<?>> implements IDescribabl
    * @return
   */
   @Override
-	public boolean accept( IDescribable<?> descriptor ){
+	public boolean accept( IDescribable descriptor ){
   	return this.collection.accept( descriptor );
  }
 

@@ -16,7 +16,7 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <U>
  */
-public interface IModelDelegate<U extends IDescribable<? extends IDescriptor>>{
+public interface IModelDelegate<U extends IDescribable>{
 
 	/**
 	 * Open the delegate

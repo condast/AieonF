@@ -3,12 +3,11 @@ package org.aieonf.template.builder;
 import java.util.Arrays;
 
 import org.aieonf.concept.IDescribable;
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.template.def.ITemplateLeaf;
 
-public class TemplateModelBuilderEvent<C extends IContextAieon, M extends IDescribable<? extends IDescriptor>> extends ModelEvent<M> {
+public class TemplateModelBuilderEvent<C extends IContextAieon, M extends IDescribable> extends ModelEvent<M> {
 	private static final long serialVersionUID = 1L;
 
 	private ITemplateLeaf<C> template;

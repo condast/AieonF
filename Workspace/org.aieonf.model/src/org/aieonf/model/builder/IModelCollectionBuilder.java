@@ -3,9 +3,8 @@ package org.aieonf.model.builder;
 import java.util.Collection;
 
 import org.aieonf.concept.IDescribable;
-import org.aieonf.concept.IDescriptor;
 
-public interface IModelCollectionBuilder<T extends IDescriptor, M extends IDescribable<T>> {
+public interface IModelCollectionBuilder<M extends IDescribable> {
 
 	/**
 	 * Build a model

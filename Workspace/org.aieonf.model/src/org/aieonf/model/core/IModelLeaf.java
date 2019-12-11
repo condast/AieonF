@@ -7,7 +7,7 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 
-public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comparable<IDescribable<?>>
+public interface IModelLeaf<D extends IDescriptor> extends IDescribable, Comparable<IDescribable>
 {
 	//Supported attributes
 	public static final String S_MODEL = "Model";
@@ -60,12 +60,6 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	}
 
 	/**
-	 * allow for initialisation
-	 * @param descriptor
-	 */
-	public void init(T descriptor);
-
-	/**
 	 * Get the (optional) id of the model. 
 	 * @return
 	 */
@@ -115,13 +109,28 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	public String get( Enum<?> attr ); 
 
 	/**
+	 * Get the attribute
+	 * @param attr
+	 * @param value
+	 */
+	public String get( String attr ); 
+
+	/**
 	 * Set a value
 	 * @param attr
 	 * @param value
 	 * @return
 	 */
 	public void set( Enum<?> attr, String value );
-	
+
+	/**
+	 * Set a value
+	 * @param attr
+	 * @param value
+	 * @return
+	 */
+	public void set( String attr, String value );
+
 	/**
 	 * Returns true if the node is a root
 	 * @return
@@ -181,4 +190,16 @@ public interface IModelLeaf<T extends IDescriptor> extends IDescribable<T>, Comp
 	 * @return
 	 */
 	public int implies( IDescriptor descriptor );
+	
+	/**
+	 * Get a data object
+	 * @return
+	 */
+	public D getData();
+	
+	/**
+	 * Set a data object
+	 * @param descriptor
+	 */
+	void setData(D descriptor);
 }

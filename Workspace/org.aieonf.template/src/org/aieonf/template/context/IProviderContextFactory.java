@@ -1,7 +1,6 @@
 package org.aieonf.template.context;
 
 import org.aieonf.concept.IDescribable;
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
@@ -16,7 +15,7 @@ import org.aieonf.model.provider.IModelProvider;
  * @param <D>
  * @param <C>
  */
-public interface IProviderContextFactory<C extends IContextAieon, D extends IDomainAieon, T extends Object, U extends IDescribable<IDescriptor>> extends IModelContextFactory<C,D> {
+public interface IProviderContextFactory<C extends IContextAieon, D extends IDomainAieon, T extends Object, U extends IDescribable> extends IModelContextFactory<C,D> {
 
 	public void addProvider(IFunctionProvider<T, IModelProvider<D, U>> function);
 

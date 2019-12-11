@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.io.IOUtils;
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.commons.strings.StringUtils;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.Descriptor;
@@ -118,7 +116,7 @@ public class ModelFactory< T extends IDescriptor > {
 		}
 		finally {
 			service.close();
-			IOUtils.closeQiuetly( jsonReader );
+			IOUtils.closeQuietly( jsonReader );
 		}
 		return result;
 	}
@@ -248,9 +246,8 @@ public class ModelFactory< T extends IDescriptor > {
 	}
 	
 	protected void getDescriptorIds( Vertex vertex, Collection<Long> ids ) throws ParseException {		
-		String idstr = vertex.getProperty(IDescriptor.DESCRIPTOR);
-		long id=  StringUtils.isEmpty(idstr)?-1:Long.parseLong(idstr);
-		ids.add(id);
+		Long id = vertex.getProperty(IDescriptor.DESCRIPTOR);
+		ids.add((id == null )?-1: id);
 		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
 		if( !iterator.hasNext()) {
 			return;
@@ -261,10 +258,9 @@ public class ModelFactory< T extends IDescriptor > {
 		}
 	}
 
-	protected void fill( IDescribable<?> describable, Vertex vertex ) {
-		IDescriptor descriptor = describable.getDescriptor();
+	protected void fill( IModelLeaf<?> leaf, Vertex vertex ) {
 		for( String key: vertex.getPropertyKeys() ) {
-			descriptor.set(key, (String) vertex.getProperty(key));
+			leaf.set(key, String.valueOf( vertex.getProperty(key)));
 		}
 	}
 
@@ -297,7 +293,7 @@ public class ModelFactory< T extends IDescriptor > {
 	protected void fillIds( ModelLeaf<IDescriptor> leaf,  Map<Long, IDescriptor> ids ) {
 		String idstr = leaf.getDescriptor().get(IDescriptor.DESCRIPTOR);
 		long id = Long.parseLong(idstr);
-		leaf.setDescriptor(ids.get(id));
+		leaf.setData(ids.get(id));
 
 		if( !ModelLeaf.hasChildren(leaf))
 			return;

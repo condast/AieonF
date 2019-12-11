@@ -5,7 +5,7 @@ import java.util.EventObject;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 
-public class ParseEvent<D extends IDescriptor, M extends IDescribable<D>> extends EventObject {
+public class ParseEvent<D extends IDescriptor, M extends IDescribable> extends EventObject {
 	private static final long serialVersionUID = -1266257260044093122L;
 
 	private M model;
