@@ -10,6 +10,7 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IConcept.Scope;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.domain.IDomainListener;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 
@@ -43,6 +44,16 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 	protected void notifyListeners( LoginEvent event ) {
 		for( ILoginListener listener: this.listeners )
 			listener.notifyLoginEvent(event);
+	}
+	
+	@Override
+	public void addDomainListener(IDomainListener listener) {
+		provider.addDomainListener(listener);
+	}
+
+	@Override
+	public void removeDomainListener(IDomainListener listener) {
+		provider.removeDomainListener(listener);
 	}
 
 	@Override

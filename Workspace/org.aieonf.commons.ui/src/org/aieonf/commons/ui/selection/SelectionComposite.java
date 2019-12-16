@@ -7,6 +7,7 @@ import org.aieonf.commons.Utils;
 import org.aieonf.concept.domain.DomainEvent;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
+import org.aieonf.concept.domain.IDomainSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -32,7 +33,9 @@ public class SelectionComposite extends Composite{
 	private IDomainListener listener = new IDomainListener() {
 		
 		@Override
-		public void notifyDomainChange(DomainEvent event) {
+		public void notifyDomainChange( DomainEvent event) {
+			if( IDomainSelection.SelectionEvents.SELECT_DOMAIN.equals(event.getType()))
+				return;
 			getDisplay().asyncExec( new Runnable() {
 
 				@Override
@@ -119,11 +122,11 @@ public class SelectionComposite extends Composite{
 		this.domainSelection = domainSelection;
 		if( this.domainSelection == null )
 			return;
-		domainSelection.addlistener(listener);
+		domainSelection.addListener(listener);
 		setDomain();
 	}
 
-	protected void setDomain( ) {
+	protected void setDomain() {
 		domains = domainSelection.getDomains();
 		list.removeAll();
 		if( Utils.assertNull(domains))

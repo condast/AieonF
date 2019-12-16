@@ -1,6 +1,9 @@
 package org.aieonf.osgi.swt;
 
-public interface IViewFactory<T,U extends Object>
+import org.aieonf.concept.domain.IDomainAieon;
+import org.eclipse.swt.widgets.Control;
+
+public interface IViewFactory<T,U extends Control>
 {
 	public enum Views{
 		ANY,
@@ -9,9 +12,18 @@ public interface IViewFactory<T,U extends Object>
 		GET,
 		ADD,
 		EDIT,
-		OPTIONS;
+		OPTIONS,
+		SELECTION,
+		SPONSOR;
 	}
 
+	/**
+	 * Returns true if the views belong to this domain
+	 * @param domain
+	 * @return
+	 */
+	public boolean isOfDomain( IDomainAieon domain );
+	
 	/**
 	 * Add an identifier for this factory
 	 * @return

@@ -1,6 +1,7 @@
 package org.aieonf.sketch.service;
 
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.osgi.swt.AbstractViewFactory;
 import org.aieonf.osgi.swt.IViewFactory;
 import org.aieonf.sketch.controller.SketchController;
 import org.aieonf.sketch.controller.SketchController.Pages;
@@ -11,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.osgi.service.component.annotations.Component;
 
 @Component( name=ViewFactoryProvider.S_SKETCH_ID, immediate=true)
-public class ViewFactoryProvider implements IViewFactory<Composite, Composite>{
+public class ViewFactoryProvider extends AbstractViewFactory<Composite> implements IViewFactory<Composite, Composite>{
 
 	private SelectedFactory selected = SelectedFactory.getInstance();
 
@@ -23,7 +24,7 @@ public class ViewFactoryProvider implements IViewFactory<Composite, Composite>{
 	
 
 	public ViewFactoryProvider() {
-		super();
+		super( DomainProvider.getDomain());
 	}
 
 	public void activate(){ /* NOTHING */}

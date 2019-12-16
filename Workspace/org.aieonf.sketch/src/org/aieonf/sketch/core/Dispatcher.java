@@ -1,6 +1,7 @@
 package org.aieonf.sketch.core;
 
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.domain.IDomainListener;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 
 public class Dispatcher implements IActiveDomainProvider{
@@ -13,6 +14,16 @@ public class Dispatcher implements IActiveDomainProvider{
 
 	public static Dispatcher getInstance(){
 		return service;
+	}
+
+	@Override
+	public void addDomainListener(IDomainListener listener) {
+		provider.addDomainListener(listener);
+	}
+
+	@Override
+	public void removeDomainListener(IDomainListener listener) {
+		provider.removeDomainListener(listener);
 	}
 
 	@Override

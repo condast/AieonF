@@ -12,6 +12,10 @@ public class DomainProvider implements IDomainProvider {
 		
 	@Override
 	public IDomainAieon getDomain(ILoginUser user) {
+		return getDomain();
+	}
+	
+	public static IDomainAieon getDomain() {
 		IDomainAieon domain = null;
 		try{
 			domain = null;
@@ -19,6 +23,6 @@ public class DomainProvider implements IDomainProvider {
 		catch( Exception e ){
 			e.printStackTrace();
 		}
-		return domain;
+		return domain;		
 	}
 }

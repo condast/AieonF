@@ -1,12 +1,16 @@
-package org.aieonf.commons.ui.selection;
+package org.aieonf.concept.domain;
 
 import org.aieonf.commons.security.ILoginUser;
-import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.domain.IDomainListener;
 
 public interface IDomainSelection {
 
-	void addlistener(IDomainListener listener);
+	public enum SelectionEvents{
+		ADD_PROVIDER,
+		SELECT_DOMAIN,
+		REMOVE_PROVIDER
+	}
+	
+	void addListener(IDomainListener listener);
 
 	IDomainAieon[] getDomains();
 

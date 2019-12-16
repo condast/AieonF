@@ -32,6 +32,7 @@ Import-Package: org.aieonf.commons,
  org.aieonf.commons.hex,
  org.aieonf.commons.implicit,
  org.aieonf.commons.persistence,
+ org.aieonf.commons.security,
  org.aieonf.commons.strings,
  org.aieonf.commons.tree,
  org.aieonf.commons.xml

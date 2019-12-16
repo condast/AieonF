@@ -1,8 +1,13 @@
 package org.aieonf.osgi.selection;
 
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.domain.IDomainListener;
 
 public interface IActiveDomainProvider {
+
+	public void addDomainListener( IDomainListener listener );
+
+	public void removeDomainListener( IDomainListener listener );
 
 	public boolean isRegistered( long id, String name );
 	

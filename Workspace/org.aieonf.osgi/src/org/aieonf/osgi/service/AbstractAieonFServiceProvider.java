@@ -8,8 +8,9 @@ import java.util.logging.Logger;
 
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.osgi.selection.ISelectionBean;
+import org.eclipse.swt.widgets.Control;
 
-public abstract class AbstractAieonFServiceProvider<T extends Object> implements IAieonFService<T>{
+public abstract class AbstractAieonFServiceProvider<T extends Control> implements IAieonFService<T>{
 
 	private IDomainAieon domain;
 	private Collection<ISelectionBean> selections;

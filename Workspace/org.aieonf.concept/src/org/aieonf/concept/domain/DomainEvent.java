@@ -7,9 +7,16 @@ public class DomainEvent extends EventObject {
 	
 	private IDomainAieon domain;
 	
-	public DomainEvent(Object source, IDomainAieon domain) {
+	private IDomainSelection.SelectionEvents type;
+	
+	public DomainEvent(Object source, IDomainSelection.SelectionEvents type, IDomainAieon domain) {
 		super(source);
+		this.type = type;
 		this.domain = domain;
+	}
+
+	public IDomainSelection.SelectionEvents getType() {
+		return type;
 	}
 
 	public IDomainAieon getDomain() {

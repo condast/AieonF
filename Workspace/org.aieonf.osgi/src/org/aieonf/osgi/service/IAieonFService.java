@@ -3,8 +3,9 @@ package org.aieonf.osgi.service;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.osgi.selection.ISelectionBean;
 import org.aieonf.osgi.swt.IViewFactory;
+import org.eclipse.swt.widgets.Control;
 
-public interface IAieonFService<T extends Object> {
+public interface IAieonFService<T extends Control> {
 
 	/**
 	 * Set the active domain
