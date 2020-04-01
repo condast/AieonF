@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Collection;
 
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
@@ -81,7 +82,7 @@ public abstract class AbstractLocationManager<T extends IDescribable> implements
   public boolean isCorrectPosition( IDescribable obj, String position )
   	throws ConceptException
   {
-    if( obj.getDescriptor().getID() < 0 )
+    if( StringUtils.isEmpty(obj.getDescriptor().getID()))
     	return false;
     
   	String location = this.locate( obj );

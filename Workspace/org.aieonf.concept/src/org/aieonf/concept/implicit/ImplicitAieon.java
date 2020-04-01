@@ -233,7 +233,7 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 	 * @param descriptor
 	 * @return
 	 */
-	public static boolean isFamily(IImplicit<?> implicit, String reference, Object desc)
+	public static boolean isFamily(IImplicitAieon<?> implicit, String reference, Object desc)
 	{
 		if( !implicit.isFamily( desc ))
 			return false;

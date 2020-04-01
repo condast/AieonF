@@ -40,7 +40,7 @@ public class ViewFactoryProvider extends AbstractViewFactory<Composite> implemen
 	}
 
 	@Override
-	public Composite createEntry( Views view, Composite parent, int style) {
+	public Composite onCreateEntry( Views view, Composite parent, int style) {
 		Browser browser = null;
 		try{
 		switch( view ){

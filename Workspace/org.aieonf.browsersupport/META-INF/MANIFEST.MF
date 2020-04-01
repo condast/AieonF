@@ -8,7 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Service-Component: OSGI-INF/provider.xml
 Import-Package: org.aieonf.collections,
  org.aieonf.collections.connector,
- org.aieonf.collections.parser,
  org.aieonf.collections.persistence,
  org.aieonf.commons,
  org.aieonf.commons.base64,
@@ -36,9 +35,7 @@ Import-Package: org.aieonf.collections,
  org.aieonf.model.function,
  org.aieonf.model.library,
  org.aieonf.model.provider,
- org.aieonf.model.xml,
  org.aieonf.osgi.service,
- org.aieonf.template,
  org.aieonf.template.context,
  org.aieonf.template.def,
  org.aieonf.template.provider

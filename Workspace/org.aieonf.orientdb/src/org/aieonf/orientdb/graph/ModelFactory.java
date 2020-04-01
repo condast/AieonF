@@ -53,7 +53,7 @@ public class ModelFactory< T extends IDescriptor > {
 	
 	private IDomainAieon domain;
 	
-	private Map<Long, IDescriptor> descriptors;
+	private Map<String, IDescriptor> descriptors;
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -63,7 +63,7 @@ public class ModelFactory< T extends IDescriptor > {
 		descriptors = new HashMap<>();
 	}
 	
-	public Map<Long, IDescriptor> getDescriptors() {
+	public Map<String, IDescriptor> getDescriptors() {
 		return descriptors;
 	}
 
@@ -224,12 +224,13 @@ public class ModelFactory< T extends IDescriptor > {
 	
 	protected IModelLeaf<IDescriptor> transform( Vertex vertex, IModelNode<? extends IDescriptor> parent ) throws ParseException {		
 		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
+		String id = vertex.getId().toString();
 		if( !iterator.hasNext()) {
-			IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( parent );
+			IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( id, parent );
 			fill( leaf, vertex );
 			return leaf;
 		}
-		IModelNode<IDescriptor> model = new Model<IDescriptor>( parent );
+		IModelNode<IDescriptor> model = new Model<IDescriptor>( id, parent );
 		fill( model, vertex );
 		while( iterator.hasNext()) {
 			Edge edge = iterator.next();
@@ -260,7 +261,7 @@ public class ModelFactory< T extends IDescriptor > {
 
 	protected void fill( IModelLeaf<?> leaf, Vertex vertex ) {
 		for( String key: vertex.getPropertyKeys() ) {
-			leaf.set(key, String.valueOf( vertex.getProperty(key)));
+			leaf.set(key, vertex.getProperty(key).toString());
 		}
 	}
 

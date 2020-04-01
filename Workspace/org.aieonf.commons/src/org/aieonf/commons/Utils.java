@@ -8,6 +8,7 @@
 package org.aieonf.commons;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class Utils
 {
@@ -30,6 +31,15 @@ public class Utils
 	 */
 	public static final boolean assertNull( String str ){
 		return (( str == null) || ( str.trim().length() == 0 ));
+	}
+
+	/**
+	 * returns true if the string is null or empty
+	 * @param str
+	 * @return
+	 */
+	public static final boolean assertNull( Map<?,?> map ){
+		return (( map == null) || map.isEmpty());
 	}
 
 	/**

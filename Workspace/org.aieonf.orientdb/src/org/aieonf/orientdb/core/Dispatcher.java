@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.aieonf.commons.security.ILoginListener;
 import org.aieonf.commons.security.ILoginUser;
+import org.aieonf.commons.security.ISecureCall;
 import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IConcept.Scope;
@@ -14,13 +15,17 @@ import org.aieonf.concept.domain.IDomainListener;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 
-public class Dispatcher implements IActiveDomainProvider, ILoginListener{
+public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecureCall{
 
+	public static final String S_ERR_INVALID_CALL = "It is not allowed to have more than one secure call";
+	
 	private static Dispatcher service = new Dispatcher();
 
 	private IActiveDomainProvider provider;
 
 	private ILoginUser user;
+	
+	private ISecureCall secureCall;
 	
 	private Collection<ILoginListener> listeners;
 
@@ -63,6 +68,14 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 		return provider.isRegistered(id, name);
 	}
 
+	public boolean isRegistered(long id, long token, String name) {
+		if(( this.provider == null ) || ( this.secureCall == null ))
+			return false;
+		if( !this.secureCall.isSecure(id, token, name))
+			return false;
+		return provider.isRegistered(id, name);
+	}
+
 	@Override
 	public IDomainAieon getDomain(long id, String name) {
 		if( this.provider == null )
@@ -91,6 +104,21 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener{
 		this.provider = provider;
 	}
 	
+	public ISecureCall getSecureCall() {
+		return secureCall;
+	}
+
+	public void setSecureCall(ISecureCall secureCall) {
+		if( this.secureCall != null )
+			throw new IllegalArgumentException( S_ERR_INVALID_CALL );
+		this.secureCall = secureCall;
+	}
+
+	@Override
+	public boolean isSecure(long id, long token, String domain) {
+		return this.secureCall.isSecure(id, token, domain);
+	}
+
 	public boolean isLoggedIn( long userId, long token ) {
 		return user.isCorrect(userId, String.valueOf( token ));
 	}

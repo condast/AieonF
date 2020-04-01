@@ -101,7 +101,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		TestFactory factory = TestFactory.getInstance();
 		try{
 			database.open( factory.getDomain());
-			IModelLeaf<IDescriptor> model = new Model<IDescriptor>( factory.getDomain(), "TEST");
+			IModelLeaf<IDescriptor> model = new Model<IDescriptor>( factory.getDomain());
 			database.add(model);
 			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME, "*"));
 			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);

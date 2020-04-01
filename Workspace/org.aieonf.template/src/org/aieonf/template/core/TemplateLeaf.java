@@ -19,11 +19,13 @@ public class TemplateLeaf<T extends IDescriptor> extends Model<T> implements ITe
 	private Map<Enum<?>,TemplateProperty<T, String>> attributes;
 
 	protected TemplateLeaf( org.xml.sax.Attributes attrs ){
+		super( new String());
 		attributes = new HashMap<Enum<?>, TemplateProperty<T,String>>();
 		fill( attrs );
 	}
 
 	public TemplateLeaf( T descriptor ){
+		super( new String());
 		attributes = new HashMap<Enum<?>, TemplateProperty<T,String>>();
 		setData( descriptor );
 	}

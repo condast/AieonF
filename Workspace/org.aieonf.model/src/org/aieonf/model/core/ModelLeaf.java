@@ -19,8 +19,9 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	/**
 	 * Only used for special models
 	 */
-	public ModelLeaf(){
+	public ModelLeaf( String id ){
 		this.leaf = true;
+		set( IDescriptor.Attributes.ID, id);
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
 
@@ -28,24 +29,32 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * Create the model
 	 * @param concept
 	 */
+	public ModelLeaf( String id, D descriptor ){
+		this( id );
+	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
 	public ModelLeaf( D descriptor ){
-		this();
+		this( descriptor.getID(), descriptor );
 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( D descriptor, String type ){
-		this( null, descriptor, type );
+	public ModelLeaf( String id, D descriptor, String type ){
+		this( id, null, descriptor, type );
 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( IModelNode<? extends IDescriptor> parent ){
-		this();
+	public ModelLeaf( String id, IModelNode<? extends IDescriptor> parent ){
+		this( id );
 		this.parent = parent;
 	}
 
@@ -53,8 +62,8 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( IModelNode<? extends IDescriptor> parent, D descriptor ){
-		this();
+	public ModelLeaf( String id, IModelNode<? extends IDescriptor> parent, D descriptor ){
+		this( id );
 		this.parent = parent;
 	}
 
@@ -62,8 +71,8 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( IModelNode<? extends IDescriptor> parent, D descriptor, String type ){
-		this( parent, descriptor );
+	public ModelLeaf( String id, IModelNode<? extends IDescriptor> parent, D descriptor, String type ){
+		this( id, parent, descriptor );
 		this.set( IConcept.Attributes.TYPE, type );
 	}
 

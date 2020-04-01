@@ -7,6 +7,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.IConceptBase;
 
 /**
  * In general, a concept can best be wrapped in
@@ -64,7 +65,7 @@ public class DescriptorWrapper implements IDescriptor
 	 * @return String
 	 */
 	@Override
-	public final long getID()
+	public final String getID()
 	{
 		return this.descriptor.getID();
 	}
@@ -293,6 +294,12 @@ public class DescriptorWrapper implements IDescriptor
 	public final int getInteger( String attribute )
 	{
 		return this.descriptor.getInteger( attribute );
+	}
+
+	
+	@Override
+	public IConceptBase getBase() {
+		return this.descriptor.getBase();
 	}
 
 	/**

@@ -2,6 +2,7 @@ package org.aieonf.orientdb.db;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.aieonf.commons.security.ILoginUser;
@@ -17,6 +18,9 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
 import com.orientechnologies.orient.core.metadata.security.OUser;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
@@ -117,6 +121,33 @@ public class DatabaseService {
 	
 	public boolean isOpen(){
 		return (this.graph != null ) && !this.graph.isClosed();
+	}
+
+	public boolean remove( String id ) {
+		Vertex vertex = this.graph.getVertex(id);
+		if( vertex == null )
+			return false;
+		this.graph.removeVertex(vertex);
+		return true;
+	}
+
+	public boolean remove( String parent, String[] children ) {
+		boolean result = false;
+		Vertex vertex = this.graph.getVertex(parent);
+		if( vertex == null )
+			return false;
+		
+		Iterator<Edge> iterator = vertex.getEdges(Direction.BOTH).iterator();
+		while( iterator.hasNext()) {
+			Edge child = iterator.next();
+			for( String childId: children ) {
+				if( child.getVertex( Direction.OUT).getId().equals( childId )) {
+					this.graph.removeEdge(child);
+					result = true;
+				}
+			}
+		}
+		return result;
 	}
 
 	public void sync(){

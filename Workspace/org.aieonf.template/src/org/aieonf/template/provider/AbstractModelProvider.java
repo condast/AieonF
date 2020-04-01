@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -203,7 +204,7 @@ public abstract class AbstractModelProvider<T extends IDescribable, K extends Ob
 	 */
 	protected void IDFactory( IConcept concept ) throws ConceptException
 	{
-		if( concept.getID() < 0 )
+		if( StringUtils.isEmpty(concept.getID()))
 			return;
 		try{
 			signer.sign( concept );
@@ -231,7 +232,7 @@ public abstract class AbstractModelProvider<T extends IDescribable, K extends Ob
 			containsId = false;
 			newId = ( long )( Math.random() * Long.MAX_VALUE );
 			for( IDescribable desc: descriptors ){
-				if( desc.getDescriptor().getID() == newId ){
+				if( desc.getDescriptor().getID().equals( newId )){
 					containsId = true;
 					break;
 				}

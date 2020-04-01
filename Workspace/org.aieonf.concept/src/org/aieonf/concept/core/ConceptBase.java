@@ -22,7 +22,7 @@ public class ConceptBase implements IConceptBase
 	private Map<String, String> properties;
 
 	//If true, something has changed
-	private boolean changed;
+	private transient boolean changed;
 
 	public ConceptBase()
 	{

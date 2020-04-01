@@ -84,10 +84,10 @@ public class Descriptor implements IDescriptor
 	 * @param id String
 	 * @param name String
 	 */
-	public Descriptor( long id, String name )
+	public Descriptor( String id, String name )
 	{
 		this( name );
-		setValue( IDescriptor.Attributes.ID, String.valueOf( id ));
+		setValue( IDescriptor.Attributes.ID, id );
 	}
 
 	/**
@@ -103,9 +103,8 @@ public class Descriptor implements IDescriptor
 		this.setDescription( descriptor.getDescription() );
 		this.setClassName( descriptor.getClass().getName() );
 	}
-
 	
-	protected IConceptBase getBase() {
+	public IConceptBase getBase() {
 		return base;
 	}
 
@@ -135,12 +134,12 @@ public class Descriptor implements IDescriptor
 	 * @return String
 	 */
 	@Override
-	public final long getID()
+	public final String getID()
 	{
 		String str = this.get( IDescriptor.Attributes.ID );
 		if(StringUtils.isEmpty(str))
 			str = this.get( IDescriptor.Attributes.ID.name());
-		return StringUtils.isEmpty(str)?-1:Long.parseLong(str); 
+		return str; 
 	}
 
 	/**
@@ -391,7 +390,7 @@ public class Descriptor implements IDescriptor
 			return (int)compareTo;
 		if( descriptor.getID() == getID() )
 			return 0;
-		compareTo = ( descriptor.getID() - getID() );
+		compareTo = descriptor.getID().compareTo( getID() );
 		if( compareTo != 0 )
 			return ( compareTo <0)?-1: 1;
 		return ( this.getVersion() - descriptor.getVersion() );
@@ -405,7 +404,6 @@ public class Descriptor implements IDescriptor
 		return this;
 	}
 
-	
 	@Override
 	public Iterator<Map.Entry<String, String>> iterator() {
 		return base.iterator();
@@ -427,7 +425,7 @@ public class Descriptor implements IDescriptor
 
 		if( name == null )
 			name = "null";
-		long id = this.getID();
+		String id = this.getID();
 
 		String versionStr = base.get( IDescriptor.Attributes.VERSION );
 		int version = -1;
@@ -463,7 +461,7 @@ public class Descriptor implements IDescriptor
 		String name = this.getName();
 		if( name == null )
 			name = "null";
-		long id = this.getID();
+		String id = this.getID();
 		return "["+ name + "," + id + "," + this.getVersion() + "]";
 	}
 
@@ -541,14 +539,9 @@ public class Descriptor implements IDescriptor
 	 * @param descriptor IDescriptor
 	 * @return boolean
 	 */
-	public final static boolean isValid( IDescriptor descriptor )
-	{
+	public final static boolean isValid( IDescriptor descriptor ){
 		String str = descriptor.getName();
-		if( isNull( str ))
-			return false;
-		if( descriptor.getID() < 0 )
-			return false;
-		return ( descriptor.getVersion() >= 0 );
+		return isNull( str )?false: ( descriptor.getVersion() >= 0 );
 	}
 
 	/**
@@ -574,7 +567,7 @@ public class Descriptor implements IDescriptor
 		if( split.length > 3 )
 			id = stringArray.substring( name.length() + 1, 
 					stringArray.length() - version.length() - 1 );
-		IDescriptor descriptor = new Descriptor( Long.parseLong( id ), name );
+		IDescriptor descriptor = new Descriptor( id, name );
 		descriptor.setVersion( Integer.parseInt( version ));
 		return descriptor;
 	}

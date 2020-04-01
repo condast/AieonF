@@ -141,6 +141,7 @@ public class DatabaseController<M extends IDescribable> extends AbstractJavascri
 	 * @param response
 	 * @throws Exception 
 	 */
+	@SuppressWarnings("unused")
 	public synchronized void search( String choice_str, String wildcard ) throws Exception
 	{
 		if( Descriptor.isNull( wildcard ))

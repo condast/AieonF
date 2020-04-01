@@ -9,6 +9,7 @@ import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.parser.IParserListener;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.persistence.IPersistence;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -179,7 +180,7 @@ public class DefaultCollectionParser<T extends IDescribable> implements
   */
   protected void IDFactory( IConcept concept ) throws CollectionException
   {
-    if( concept.getID() < 0 )
+    if( StringUtils.isEmpty(concept.getID()))
     	return;
   	try{
   		BodyFactory.sign( this.manifest, concept );
@@ -213,7 +214,7 @@ public class DefaultCollectionParser<T extends IDescribable> implements
       newId = ( long )( Math.random() * Long.MAX_VALUE );
       hexStr = Long.toHexString( newId );
       for( IDescribable desc: descriptors ){
-        if( desc.getDescriptor().getID() >= 0 ){
+        if( !StringUtils.isEmpty(desc.getDescriptor().getID())){
           containsId = true;
           break;
         }

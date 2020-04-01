@@ -21,4 +21,19 @@ public abstract class AbstractViewFactory<C extends Control> implements IViewFac
 	public String getIdentifier() {
 		return domain.getShortName();
 	}
+	
+	protected abstract C onCreateEntry(Views view, C parent, int style);
+
+	@Override
+	public final C createEntry(Views view, C parent, int style) {
+		C retval = null;
+		try {
+			retval = onCreateEntry(view, parent, style);
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return retval;
+	}
+
 }

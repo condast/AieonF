@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.concept.core.IConceptBase;
 
 /**
  * Defines a concept, basically a wrapper around the underlying XML definition
@@ -76,7 +77,7 @@ public interface IDescriptor extends IDescribable, Serializable, Cloneable, Comp
 	 * Get the id of the changeable object
 	 * @return
 	 */
-	public long getID();
+	public String getID();
 
 	/**
 	 * Get the version of the changeable object
@@ -222,6 +223,12 @@ public interface IDescriptor extends IDescribable, Serializable, Cloneable, Comp
 	 */
 	public int getInteger( String attribute );
 
+	/**
+	 * Get the base
+	 * @return
+	 */
+	public IConceptBase getBase();
+	
 	/**
 	 * Returns true if the given object is equal to this one
 	 * (is equals at object level)

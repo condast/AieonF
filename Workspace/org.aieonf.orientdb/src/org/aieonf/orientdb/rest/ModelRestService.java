@@ -75,14 +75,14 @@ public class ModelRestService{
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get")
-	public Response getModel( @QueryParam("id") long domainId, @QueryParam("token") String token, 
-			@QueryParam("name") String name, @QueryParam("version") String version) {
+	public Response getModel( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, @QueryParam("name") String name, @QueryParam("version") String version) {
 		DatabaseService dbService = DatabaseService.getInstance();
 		Collection<IModelLeaf<IDescriptor>> result = null;
 		try{
-			if( !dispatcher.isRegistered(domainId, token))
+			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			IDomainAieon domain = dispatcher.getDomain(domainId, token);
+			IDomainAieon domain = dispatcher.getDomain(id, domainstr);
 			dbService.open();
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
 			result = factory.get(domain);
@@ -131,17 +131,22 @@ public class ModelRestService{
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/remove")
 	public Response remove( @QueryParam("id") long id, @QueryParam("token") long token,
-			@QueryParam("vessel-id") long vesselId) {
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") String modelId) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		boolean result = false;
 		try{
- 			if( !dispatcher.isLoggedIn( id, token))
- 				return Response.status( Status.UNAUTHORIZED ).build();
-  			Gson gson = new Gson();
-			//String str = gson.toJson(state, IVesselManager.ConnectionState.class);
-			return Response.ok().build();
+			if( !dispatcher.isRegistered(id, token, domainstr))
+				return Response.status( Status.UNAUTHORIZED ).build();
+			dbService.open();
+			result = dbService.remove(modelId);
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
 		}
+		finally {
+			dbService.close();
+		}
+		return result?Response.ok().build():Response.noContent().build();
 	}
 }

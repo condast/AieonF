@@ -102,7 +102,7 @@ public class LocationManager extends AbstractLocationManager<IDescriptor>
     if( split.length > 3 ){
     	provider = ( split[0] + ":" + split[1] ).hashCode();
     }
-  	IDescriptor descriptor = new Descriptor( Long.parseLong( id ), Descriptor.makeValidName(name) );
+  	IDescriptor descriptor = new Descriptor( id, Descriptor.makeValidName(name) );
     descriptor.setDescription(name);
     descriptor.setVersion( Integer.valueOf( version ));
     if( provider != 0 )

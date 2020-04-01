@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.aieonf.collections.persistence.IFilePersistence;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.domain.IDomainAieon;
@@ -118,7 +119,7 @@ public class IEFavoritesProvider extends AbstractModelProvider<IContextAieon, ID
 	 */
 	protected void setDescription( IDescriptor descriptor ) throws ConceptException
 	{
-		if(( descriptor == null ) || (descriptor.getID() < 0 ))
+		if(( descriptor == null ) || (StringUtils.isEmpty( descriptor.getID())))
 			return;
 		File file = new File( String.valueOf( descriptor.getID() ));
 		if ( file.isDirectory() ){

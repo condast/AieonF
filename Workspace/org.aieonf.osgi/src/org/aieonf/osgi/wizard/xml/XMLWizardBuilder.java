@@ -21,8 +21,6 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.osgi.wizard.IButtonWizardContainer;
 import org.aieonf.osgi.wizard.IHeadlessWizardContainer.ContainerTypes;
-import org.eclipse.rap.rwt.RWT;
-import org.eclipse.rap.rwt.client.service.ClientFileLoader;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
@@ -113,11 +111,6 @@ public class XMLWizardBuilder<T extends Object> {
 	private enum ToolbarOptions{
 		TOP,
 		BOTTOM;
-
-		public String toXmlStyle() {
-			return StringStyler.xmlStyleString( super.toString() );
-		}
-
 	}
 
 	private XmlHandler<T> handler;
@@ -184,7 +177,7 @@ public class XMLWizardBuilder<T extends Object> {
 			e.printStackTrace();
 		}
 		finally{
-			IOUtils.closeInputStream(in);
+			IOUtils.closeQuietly(in);
 		}
 		
 		this.completed = true;
@@ -253,11 +246,6 @@ public class XMLWizardBuilder<T extends Object> {
 			case WIZARD:
 				if( !StringUtils.isEmpty(title ))
 					wizard.setWindowTitle(title);
-				String stylesheet = attributes.getValue( AttributeNames.CSS.toXmlStyle());
-				if( !StringUtils.isEmpty( stylesheet )){
-					ClientFileLoader loader = RWT.getClient().getService( ClientFileLoader.class );
-					//loader.requireCss( stylesheet );
-				}
 				break;
 			case TITLEBAR:
 				if(!StringUtils.isEmpty( titleStyle ))

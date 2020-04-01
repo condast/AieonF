@@ -289,7 +289,7 @@ abstract class AbstractChangeableCollection<T extends IDescribable> implements I
 			int version = Integer.parseInt( split [ split.length - 1] );
 			int endIndex = entryName.length() - split[ 2 ].length() - 1;
 			String id = entryName.substring( split[ 0 ].length() + 1, endIndex );
-			IDescriptor descriptor = new Descriptor( Long.parseLong( id ), split[0] );
+			IDescriptor descriptor = new Descriptor( id, split[0] );
 			descriptor.setVersion( version );
 			return descriptor;
 		}
