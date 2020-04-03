@@ -5,8 +5,8 @@ package org.aieonf.collections;
  * @author Kees
  *
  */
-
-
+import org.aieonf.concept.wrapper.*;
+import org.aieonf.model.*;
 
 @SuppressWarnings("unused")
 public interface IHiddenPackages {

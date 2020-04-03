@@ -77,10 +77,10 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecur
 	}
 
 	@Override
-	public IDomainAieon getDomain(long id, String name) {
+	public IDomainAieon getDomain(long id, long token, String name) {
 		if( this.provider == null )
 			return null;
-		return provider.getDomain(id, name);
+		return provider.getDomain(id, token, name);
 	}
 
 	@Override

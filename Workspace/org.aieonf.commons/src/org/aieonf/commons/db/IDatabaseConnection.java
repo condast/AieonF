@@ -9,6 +9,7 @@ public interface IDatabaseConnection {
 	public enum Requests{
 		ADD,
 		GET,
+		SEARCH,
 		UPDATE,
 		REMOVE;
 

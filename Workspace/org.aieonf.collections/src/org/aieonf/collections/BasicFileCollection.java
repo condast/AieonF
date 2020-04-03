@@ -16,11 +16,11 @@ import org.aieonf.collections.locator.Locator;
 import org.aieonf.collections.parser.ICollectionParser;
 import org.aieonf.collections.persistence.LocationManager;
 import org.aieonf.commons.filter.AbstractFilter;
+import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.io.IOUtils;
 import org.aieonf.commons.persistence.IPersistence;
 import org.aieonf.concept.*;
-import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.ILocationManager;
@@ -689,7 +689,7 @@ public class BasicFileCollection<T extends IDescribable> extends AbstractChangea
 	@Override
 	public boolean containsID(String ID)
 	{
-		AbstractFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.ID.name() );
+		AbstractFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.ID.name() );
 		filter.setAmount( 1 );
 		Collection<T> results = this.search(filter, true );
 		return !results.isEmpty();

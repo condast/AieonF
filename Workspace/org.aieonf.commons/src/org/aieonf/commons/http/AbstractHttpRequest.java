@@ -118,7 +118,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 
 		//add request header
 		String path = this.contextPath;
-		handleResponse( path, null, con, null );
+		handleResponse( path, null, null, con, null );
 	}
 
 	// HTTP GET request
@@ -137,7 +137,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 	protected void sendGet( R request, Map<String, String> parameters, D data) throws Exception {
 		String url = setRequest( request );
 		String path = toAttributerString( url, parameters );
-		send( HTTP.GET, path, request, null, data );
+		send( HTTP.GET, path, request, parameters, null, data );
 	}
 	
 	@Override
@@ -152,7 +152,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 	protected void sendPost( R request, Map<String, String> parameters, String post, D data) throws Exception {
 		String url = setRequest( request );
 		String path = toAttributerString( url, parameters );
-		send( HTTP.POST, path, request, post, data );
+		send( HTTP.POST, path, request, parameters, post, data );
 	}
 
 	@Override
@@ -174,7 +174,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 	public void sendPut( R request, Map<String, String> args, String post, D data) throws Exception {
 		String url = setRequest( request );
 		String path = toAttributerString( url, args );
-		send( HTTP.PUT, path, request, post, data );
+		send( HTTP.PUT, path, request, args, post, data );
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 	protected void sendDelete( R request, Map<String, String> parameters, D data) throws Exception {
 		String url = setRequest( request );
 		String path = toAttributerString( url, parameters );
-		send( HTTP.DELETE, path, request, null, data );
+		send( HTTP.DELETE, path, request, parameters, null, data );
 	}
 
 
@@ -206,10 +206,10 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 	}
 
 	protected void send( HTTP http, String url, Map<String, String> args, String post, D data ) throws Exception {
-		send( http, url, (R)null, post, data );
+		send( http, url, (R)null, args, post, data );
 	}
 
-	protected void send( HTTP http, String url, R request, String post, D data ) throws Exception {
+	protected void send( HTTP http, String url, R request, Map<String, String> args, String post, D data ) throws Exception {
 		String charset = "UTF-8"; 
 		URL obj = new URL(url);
 		HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
@@ -239,7 +239,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 			break;
 			
 		}
-		handleResponse( url, request, conn, data);
+		handleResponse( url, request, args, conn, data);
 		int responseCode = conn.getResponseCode();
 		if( responseCode != IHttpRequest.HttpStatus.OK.getStatus())
 			logger.fine( request + "\n\tResponse Code : " + getHttpStatus( responseCode ).name() + 
@@ -268,7 +268,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 		responseFailMessage(responseCode, event);
 	}
 
-	protected ResponseEvent<R,D> handleResponse( String url, R request, HttpURLConnection con, D data ){
+	protected ResponseEvent<R,D> handleResponse( String url, R request, Map<String, String> params, HttpURLConnection con, D data ){
 		BufferedReader in = null;
 		String str = null;
 		ResponseEvent<R,D> event = null;
@@ -277,10 +277,10 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 			if( responseCode == Response.Status.OK.getStatusCode()) {
 				in = new BufferedReader(
 						new InputStreamReader(con.getInputStream()));
-				event = new ResponseEvent<R,D>( this, url, request, data, in );
+				event = new ResponseEvent<R,D>( this, url, request, params, data, in );
 				str = onHandleResponse( event, data );
 			}else {
-				event = new ResponseEvent<R,D>( this, url, request, data, str, responseCode );
+				event = new ResponseEvent<R,D>( this, url, request, params, data, str, responseCode );
 				onHandleResponseFail( getHttpStatus(responseCode), event );
 			}
 			notifyListeners( event);

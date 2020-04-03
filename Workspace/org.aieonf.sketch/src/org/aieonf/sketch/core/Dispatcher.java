@@ -33,8 +33,8 @@ public class Dispatcher implements IActiveDomainProvider{
 
 	
 	@Override
-	public IDomainAieon getDomain(long id, String name) {
-		return provider.getDomain(id, name);
+	public IDomainAieon getDomain(long id, long token, String name) {
+		return provider.getDomain(id, token, name);
 	}
 
 	@Override

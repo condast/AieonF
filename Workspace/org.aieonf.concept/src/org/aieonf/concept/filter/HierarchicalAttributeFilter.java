@@ -42,9 +42,9 @@ public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescr
 
 	@SuppressWarnings("unchecked")
 	protected void setFiltersForRule(){
-		AttributeFilter<T> parentFilter = ( AttributeFilter<T> )super.getParentFilter();
+		AttributeFilter<T> parentFilter = (org.aieonf.concept.filter.AttributeFilter<T> )super.getParentFilter();
 		this.defaultParentRefVal = parentFilter.refVal;
-		AttributeFilter<T> childFilter = ( AttributeFilter<T> )super.getChildFilter();
+		AttributeFilter<T> childFilter = (org.aieonf.concept.filter.AttributeFilter<T> )super.getChildFilter();
 		this.defaultChildRefVal = childFilter.refVal;
 		switch( super.getHierarchyRule()){
 			case ALLPARENTS:

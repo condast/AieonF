@@ -13,9 +13,11 @@ import java.io.*;
 import java.util.*;
 
 import org.aieonf.collections.parser.ICollectionParser;
-import org.aieonf.commons.filter.*;
+import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.WildcardFilter;
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.concept.*;
+import org.aieonf.concept.IDescribable;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.*;
 import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.filter.DescriptorBatchFilter;
@@ -80,7 +82,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
   @Override
 	public Collection<IDescriptor> getDescriptors() throws CollectionException
   {
-    IFilter<IDescriptor> filter = new AttributeFilter<IDescriptor>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+    IFilter<IDescriptor> filter = new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
   	ICollectionParser<T> parser = super.getParser();
    	parser.setDescriptorOnly( true );
   	try {
@@ -170,7 +172,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
   @Override
 	public int size()
   {
-  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
   	try {
@@ -190,7 +192,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
   	if(!( Descriptor.isNull( ID )))
   		return false;
 
-  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.ID.name(), ID );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.ID.name(), ID );
   	filter.setAmount( 1 );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
@@ -215,7 +217,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public boolean add(T e)
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter, false);
 		if( !this.accept( e ))
 			throw new CollectionException( S_ERR_INVALID_ENTRY + e.getDescriptor() );
@@ -229,7 +231,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public boolean addAll(Collection<? extends T> c)
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter, false);
 		boolean result = true;
     for( T concept: c ){
@@ -254,7 +256,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public boolean isEmpty()
 	{
-  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
   	filter.setAmount( 1 );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( true );
@@ -272,7 +274,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public Iterator<T> iterator()
 	{
-  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.Equals, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+  	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
   	filter.setAmount( 1 );
   	ICollectionParser<T> parser = super.getParser();
   	parser.setDescriptorOnly( false );
@@ -290,7 +292,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public boolean remove(Object o)
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter, false );
 		boolean result = concepts.remove(o);
 		this.write( concepts );
@@ -300,7 +302,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public boolean removeAll(Collection<?> c)
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter, false);
 		boolean result = concepts.removeAll(c);
 		this.write( concepts );
@@ -310,7 +312,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public boolean retainAll(Collection<?> c)
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter, false);
 		boolean result = concepts.retainAll(c);
 		this.write( concepts );
@@ -320,7 +322,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public Object[] toArray()
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter,false);
 		return concepts.toArray();
 	}
@@ -328,7 +330,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public <U> U[] toArray(U[] a)
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter,false);
 		return concepts.toArray(a);
 	}
@@ -336,7 +338,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public boolean set(T concept) throws CollectionException
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter,false);
 		if( !this.accept( concept ))
 			throw new CollectionException( S_ERR_INVALID_ENTRY + concept.getDescriptor() );
@@ -359,7 +361,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
   */
   @Override
 	public boolean setAll( Collection<T> c, ReplaceOptions replace ) throws CollectionException{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), WildcardFilter.S_ALL );
     Collection<T> describables = this.search(filter,false);
 		boolean result = true;
     for( T desc: c ){
@@ -390,7 +392,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
 	@Override
 	public Collection<T> remove(IDescriptor descriptor) throws CollectionException
 	{
-    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+    IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
     Collection<T> concepts = this.search(filter,false);
     Collection<T> results = new ArrayList<T>();
     for( T concept: concepts ){

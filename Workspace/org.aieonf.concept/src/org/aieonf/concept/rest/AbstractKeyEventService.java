@@ -72,6 +72,14 @@ public abstract class AbstractKeyEventService<R,D>
 		client.sendGet(request, parameters);
 	}
 
+	public void add( R request, long id, long token, Map<String, String> parameters, String post, D data ) throws Exception{
+		WebClient client = new WebClient( url);
+		parameters.put( Attributes.ID.toString(), String.valueOf(id));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf(token));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		client.sendPost(request, parameters, post, data);
+	}
+
 	public void delete( R request, long id, long token, Map<String, String> parameters, D data ) throws Exception{
 		WebClient client = new WebClient( url);
 		parameters.put( Attributes.ID.toString(), String.valueOf(id));
@@ -93,6 +101,11 @@ public abstract class AbstractKeyEventService<R,D>
 			super.sendGet(request, parameters);
 		}
 
+		@Override
+		public void sendPost( R request, Map<String, String> parameters, String post, D data) throws Exception {
+			super.sendPost(request, parameters, post, data );
+		}
+
 		public void sendDelete( R request, Map<String, String> parameters, D data) throws Exception {
 			super.sendDelete(request, parameters, data);
 		}
@@ -100,7 +113,7 @@ public abstract class AbstractKeyEventService<R,D>
 		@Override
 		protected String onHandleResponse(ResponseEvent<R,D> response, D data ) throws IOException {
 			D result = onProcessResponse( response );
-			notifyKeyEventChanged( new KeyEvent<R,D>( this, response.getRequest(), result ));
+			notifyKeyEventChanged( new KeyEvent<R,D>( this, response.getRequest(), response.getParameters(), result ));
 			return response.getResponse();
 		}	
 	}

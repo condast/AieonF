@@ -433,7 +433,7 @@ public class JarCollection<T extends IDescribable> extends AbstractDescribableCo
 	@Override
 	public Collection<T> remove(IDescriptor descriptor) throws CollectionException
 	{
-		IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.Wildcard, WildcardFilter.S_ALL );
+		IFilter<T> filter = new AttributeFilter<T>( AttributeFilter.Rules.WILDCARD, WildcardFilter.S_ALL );
 		Collection<T> concepts = this.search(filter, false);
 		Collection<T> results = new ArrayList<T>();
 		for( T concept: concepts ){

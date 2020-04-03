@@ -1,6 +1,7 @@
 package org.aieonf.concept.rest;
 
 import java.util.EventObject;
+import java.util.Map;
 
 public class KeyEvent<R,D> extends EventObject
 {
@@ -10,17 +11,19 @@ public class KeyEvent<R,D> extends EventObject
 	private static final long serialVersionUID = -9124208561015096326L;
 	
 	private R request;
+	private Map<String, String> params;
 	private D data;
 
-	public KeyEvent(Object arg0, R request )
+	public KeyEvent(Object arg0, R request, Map<String, String> params )
 	{
-		this(arg0, request, null);
+		this(arg0, request, params, null);
 	}
 
-	public KeyEvent(Object arg0, R request, D data )
+	public KeyEvent(Object arg0, R request, Map<String, String> params, D data )
 	{
 		super( arg0 );
 		this.request = request;
+		this.params = params;
 		this.data = data;
 	}
 
@@ -29,6 +32,10 @@ public class KeyEvent<R,D> extends EventObject
 	 */
 	public final R getRequest(){
 		return request;
+	}
+
+	public Map<String, String> getParams() {
+		return params;
 	}
 
 	/**

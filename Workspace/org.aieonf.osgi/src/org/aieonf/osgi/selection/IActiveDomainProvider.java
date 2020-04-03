@@ -20,7 +20,7 @@ public interface IActiveDomainProvider {
 	 * @param name
 	 * @return
 	 */
-	public IDomainAieon getDomain(long id, String name);
+	public IDomainAieon getDomain(long id, long token, String name);
 
 	/**
 	 * Get the domains that are provided 

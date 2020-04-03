@@ -19,15 +19,15 @@ import org.aieonf.concept.core.ConceptBase;
  * @author Kees Pieters
  * @version 1.0
  */
-public class AttributeFilter<T extends IDescribable> extends AbstractFilter<T>
+public class AttributeFilter<D extends IDescribable> extends AbstractFilter<D>
 {
 	//The supported rule set
 	public enum Rules{
-		Contains, 
-		ContainsNot, 
-		Equals, 
-		EqualsNot, 
-		Wildcard
+		CONTAINS, 
+		CONTAINS_NOT, 
+		EQUALS, 
+		EQUALS_NOT, 
+		WILDCARD
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class AttributeFilter<T extends IDescribable> extends AbstractFilter<T>
 	 * @throws FilterException
 	 */
 	@Override
-	protected boolean acceptEnabled( T obj ) throws FilterException
+	protected boolean acceptEnabled( D obj ) throws FilterException
 	{
 		if( obj == null )
 			return false;
@@ -214,15 +214,15 @@ public class AttributeFilter<T extends IDescribable> extends AbstractFilter<T>
 		boolean contains = ( value != null );
 		logger.log( Level.FINE, "The descriptor " + obj.toString() + " contains " + this.refKey + ": " + contains  + " " + value);
 		switch( Rules.valueOf( super.getRule() )){
-		case Contains:
+		case CONTAINS:
 			return contains;
 
-		case ContainsNot:
+		case CONTAINS_NOT:
 			return !contains;
 
 			//return true if the attribute is present and equal, or it is not present
 			//and the reference is null
-		case Equals:
+		case EQUALS:
 			if( contains )
 				return( value.equals( this.refVal ));
 			else
@@ -231,7 +231,7 @@ public class AttributeFilter<T extends IDescribable> extends AbstractFilter<T>
 
 			//return true if the attribute is present and not equal, or it is not present
 			//and the reference is null
-		case EqualsNot:
+		case EQUALS_NOT:
 			logger.log( Level.FINE, "Accepting " + this.getRule() );
 			logger.log( Level.FINE, "The descriptor contains " + this.refKey + ": " + contains  + " " + value);
 			if( contains ){

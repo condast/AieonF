@@ -2,15 +2,17 @@ package org.aieonf.model.filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.filter.FilterFactory;
 
-public class ModelFilter<T extends IDescriptor, M extends IDescribable> implements
-		IModelFilter<T,M> {
+public class ModelFilter<D extends IDescriptor, M extends IDescribable> implements
+		IModelFilter<D,M> {
 
 	private IFilter<IDescriptor> filter;
 	
@@ -100,5 +102,10 @@ public class ModelFilter<T extends IDescriptor, M extends IDescribable> implemen
 	@Override
 	public boolean acceptChild(M child) {
 		return filter.accept( child.getDescriptor() );
+	}
+	
+	public static <D extends IDescriptor, M extends IDescribable> ModelFilter<D,M> createFilter( FilterFactory.Filters name, Map<String, String> attributes){
+		IFilter<IDescriptor> filter = FilterFactory.createFilter(name, attributes);
+		return new ModelFilter<D,M>( filter );
 	}
 }

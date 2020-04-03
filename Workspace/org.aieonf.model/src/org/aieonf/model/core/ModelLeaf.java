@@ -31,6 +31,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	public ModelLeaf( String id, D descriptor ){
 		this( id );
+		this.descriptor = descriptor;
 	}
 
 	/**

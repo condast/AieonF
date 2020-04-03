@@ -3,11 +3,9 @@ package test.aieonf.orientdb.suite;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import org.aieonf.commons.security.ILoginListener.LoginEvents;
-import org.aieonf.commons.security.LoginEvent;
+import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.IModelFilter;
@@ -103,7 +101,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			database.open( factory.getDomain());
 			IModelLeaf<IDescriptor> model = new Model<IDescriptor>( factory.getDomain());
 			database.add(model);
-			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.Wildcard, IDescriptor.Attributes.NAME, "*"));
+			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "*"));
 			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );

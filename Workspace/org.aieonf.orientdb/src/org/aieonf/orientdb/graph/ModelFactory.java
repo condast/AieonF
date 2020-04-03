@@ -289,7 +289,28 @@ public class ModelFactory< T extends IDescriptor > {
 		}
 		return results;
 	}
-	
+
+	public Collection<IModelLeaf<IDescriptor>> get( Collection<Vertex> vertices ) throws FilterException {
+		this.service.open();
+		this.descriptors.clear();
+		Collection<Long> ids = new TreeSet<>();
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
+		try {
+			for( Vertex vertex: vertices ) {
+				getDescriptorIds(vertex, ids);
+				IModelLeaf<IDescriptor> result = transform( vertex );
+				results.add(result);
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		finally {
+			service.close();
+		}
+		return results;
+	}
+
 	@SuppressWarnings("unchecked")
 	protected void fillIds( ModelLeaf<IDescriptor> leaf,  Map<Long, IDescriptor> ids ) {
 		String idstr = leaf.getDescriptor().get(IDescriptor.DESCRIPTOR);

@@ -1,6 +1,8 @@
 package org.aieonf.orientdb.rest;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,14 +16,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.filter.FilterFactory;
+import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.orientdb.cache.CacheService;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
+import org.aieonf.orientdb.filter.IGraphFilter;
+import org.aieonf.orientdb.filter.VertexFilterFactory;
 import org.aieonf.orientdb.graph.ModelFactory;
 
 import com.google.gson.Gson;
@@ -39,13 +46,14 @@ public class ModelRestService{
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/add")
-	public Response addModel( @QueryParam("id") long domainId, @QueryParam("token") String token, String data ) {
+	public Response addModel( @QueryParam("id") long domainId, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, String data ) {
 		DatabaseService dbService = DatabaseService.getInstance();
 		ModelFactory<IDescriptor> factory = null;
 		try{
- 			if( !dispatcher.isRegistered(domainId, token))
+ 			if( !dispatcher.isRegistered(domainId, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			IDomainAieon domain = dispatcher.getDomain(domainId, token);
+			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
 			//if( !dispatcher.isAllowed(node))
 			//	return Response.status(Status.FORBIDDEN).build();
 			factory = new ModelFactory<IDescriptor>( domain, dbService );
@@ -82,12 +90,56 @@ public class ModelRestService{
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			IDomainAieon domain = dispatcher.getDomain(id, domainstr);
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open();
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
 			result = factory.get(domain);
 			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		CacheService cache = CacheService.getInstance();
+		try {
+			cache.open();	
+			cache.fill(result);
+			Gson gson = new Gson();
+			String str = gson.toJson(result.toArray(new IModelLeaf[ result.size()]), Model[].class );
+			return Response.ok( str ).build();
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			cache.close();
+		}	
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/search")
+	public Response search( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, @QueryParam("filter") String name, 
+			@QueryParam("rules") String rule, @QueryParam("reference") String attribute, @QueryParam("value") String wildcard) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		Collection<IModelLeaf<IDescriptor>> result = null;
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+ 				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open();
+			VertexFilterFactory ff = new VertexFilterFactory( dbService.getGraph());
+			Filters fname = Filters.valueOf(StringStyler.styleToEnum(name));
+			Map<FilterFactory.Attributes, String> params = new HashMap<>();
+			params.put(FilterFactory.Attributes.RULES, rule);
+			params.put(FilterFactory.Attributes.REFERENCE, attribute);
+			params.put(FilterFactory.Attributes.VALUE, wildcard);
+			IGraphFilter filter = ff.createFilter(fname, params);
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
+			result = factory.get(filter.doFilter());
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
