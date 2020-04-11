@@ -15,7 +15,7 @@ ITemplateNode<T>
 	public TemplateNodeWrapper( IModelLeaf<?> model )
 	{
 		super( (T) model.getDescriptor() );
-		this.fillTemplateNode(model);
+		this.fillTemplateNode((IModelLeaf<? extends IDescriptor>) model);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

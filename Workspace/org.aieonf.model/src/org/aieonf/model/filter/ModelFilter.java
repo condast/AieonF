@@ -108,4 +108,16 @@ public class ModelFilter<D extends IDescriptor, M extends IDescribable> implemen
 		IFilter<IDescriptor> filter = FilterFactory.createFilter(name, attributes);
 		return new ModelFilter<D,M>( filter );
 	}
+
+	@Override
+	public String getReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getAttribute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -70,46 +70,10 @@ public class ModelFactory< T extends IDescriptor > {
 	public Vertex transform( String data ) throws ParseException {
 		JsonReader jsonReader = new JsonReader(new StringReader(data));
 		this.service.open();
-		OrientGraph graph = this.service.getGraph();
 		Vertex result  = null;
+		String key = null;
 		try {
-		    while(jsonReader.hasNext()){
-		        JsonToken nextToken = jsonReader.peek();
-		        switch( nextToken) {
-		        case BEGIN_OBJECT:
-		        	//OrientVertexType vt = graph.getVertexType(type);
-		    		//if( vt == null ) {
-		    		//	vt = graph.createVertexType(type);
-		    		//	vt.addCluster(domain.getShortName());
-		    		//}
-		        	Vertex vertex = graph.addVertex(null);
-		        	transform ( vertex, jsonReader, nextToken);
-		        	//String label  =  jsonReader.nextString();
-		        	//Edge edge = graph.addEdge(null, result, vertex, label );
-		        	//jsonReader.beginObject();
-		        	result = vertex;
-		        	break;
-		        case NAME:
-		        	String key = jsonReader.nextName().toUpperCase();
-		        	switch( Attributes.valueOf( key )) {
-		        	case CHILDREN:
-		        		break;
-		        	case DESCRIPTOR:
-						IDescriptor descriptor = createDescriptor(jsonReader, nextToken);
-						result.setProperty(IDescriptor.DESCRIPTOR, descriptor.getID());
-						descriptors.put(descriptor.getID(), descriptor);
-		        		break;
-		        	default:
-		        		String value = jsonReader.nextString();
-		        		result.setProperty(key, value);
-		        		break;
-		        	}
-		        	break;
-		        	default:
-		        		jsonReader.skipValue();
-		        	break;
-		        }
-		    }
+			key = read( jsonReader, result, key );
 		}
 		catch( Exception ex ) {
 			ex.printStackTrace();
@@ -121,49 +85,60 @@ public class ModelFactory< T extends IDescriptor > {
 		return result;
 	}
 
-	public void transform( Vertex parent, JsonReader jsonReader, JsonToken token ) throws ParseException, IOException {
-		logger.info(token.toString());
-		switch( token) {
-		case BEGIN_OBJECT:
-			jsonReader.beginObject();
-			transform( parent, jsonReader, jsonReader.peek());
-			//OrientVertexType vt = graph.getVertexType(type);
-			//if( vt == null ) {
-			//	vt = graph.createVertexType(type);
-			//	vt.addCluster(domain.getShortName());
-			//}
-			//Vertex vertex = graph.addVertex(null);
-			//String label  =  jsonReader.nextString();
-			//Edge edge = graph.addEdge(null, result, vertex, label );
-			//jsonReader.beginObject();
-			//result = vertex;
-			//jsonReader.endObject();
-			break;
-		case NAME:
-			String key = jsonReader.nextName().toUpperCase();
-			switch( Attributes.valueOf( key )) {
-			case CHILDREN:
-				transform( parent, jsonReader, jsonReader.peek());
+	protected String read( JsonReader jsonReader, Object data, String key ) throws ParseException, IOException {
+		OrientGraph graph = this.service.getGraph();
+		while( jsonReader.hasNext() ) {
+			JsonToken token = jsonReader.peek();
+			logger.info(token.toString());
+
+			switch( token) {
+			case BEGIN_ARRAY:
+				jsonReader.beginArray();
 				break;
-			case DESCRIPTOR:
+			case BEGIN_OBJECT:
+				jsonReader.beginObject();
+				//transform( parent, jsonReader, jsonReader.peek());
+				//OrientVertexType vt = graph.getVertexType(type);
+				//if( vt == null ) {
+				//	vt = graph.createVertexType(type);
+				//	vt.addCluster(domain.getShortName());
+				//}
+				//Vertex vertex = graph.addVertex(null);
+				//String label  =  jsonReader.nextString();
+				//Edge edge = graph.addEdge(null, result, vertex, label );
+				//jsonReader.beginObject();
+				//result = vertex;
+                while (jsonReader.hasNext()) {
+                    read( jsonReader, null, key);
+                }
+                jsonReader.endObject();
+				break;
+			case NAME:
+				key = jsonReader.nextName().toUpperCase();
+				switch( Attributes.valueOf( key )) {
+				case CHILDREN:
+					//transform( parent, jsonReader, jsonReader.peek());
+					break;
+				case DESCRIPTOR:
+					break;
+				default:
+					//jsonReader.skipValue();
+					//String value = jsonReader.nextString();
+					//result.setProperty(key, value);
+					break;
+				}
+				break;
+			case END_ARRAY:
+				jsonReader.endArray();
+				break;
+			case END_OBJECT:
+				jsonReader.endObject();
 				break;
 			default:
-				jsonReader.skipValue();
-				//String value = jsonReader.nextString();
-				//result.setProperty(key, value);
 				break;
 			}
-			break;
-		case BEGIN_ARRAY:
-			break;
-		case END_ARRAY:
-			break;
-		case END_OBJECT:
-			jsonReader.endObject();
-			break;
-		default:
-			break;
 		}
+		return null;
 	}
 
 	public IDescriptor createDescriptor(JsonReader jsonReader, JsonToken nextToken ) throws ParseException, IOException {
@@ -200,7 +175,7 @@ public class ModelFactory< T extends IDescriptor > {
 
 	@SuppressWarnings("unchecked")
 	protected Vertex transform( OrientGraph graph, Vertex parent, IModelLeaf<IDescriptor> leaf, String type ) throws ParseException {
-		
+
 		Vertex result = graph.addVertex(leaf.getIdentifier(), domain.getDomain());
 		IDescriptor descriptor = leaf.getDescriptor();
 		result.setProperty( IDescriptor.DESCRIPTOR, String.valueOf( descriptor.getID()));
@@ -221,7 +196,7 @@ public class ModelFactory< T extends IDescriptor > {
 	protected IModelLeaf<IDescriptor> transform( Vertex vertex ) throws ParseException {		
 		return transform( vertex, null );
 	}
-	
+
 	protected IModelLeaf<IDescriptor> transform( Vertex vertex, IModelNode<? extends IDescriptor> parent ) throws ParseException {		
 		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
 		String id = vertex.getId().toString();
@@ -245,7 +220,7 @@ public class ModelFactory< T extends IDescriptor > {
 		getDescriptorIds(vertex, ids);
 		return ids.toArray( new Long[ ids.size()]);
 	}
-	
+
 	protected void getDescriptorIds( Vertex vertex, Collection<Long> ids ) throws ParseException {		
 		Long id = vertex.getProperty(IDescriptor.DESCRIPTOR);
 		ids.add((id == null )?-1: id);

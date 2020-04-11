@@ -3,11 +3,13 @@ package test.aieonf.orientdb;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-import test.aieonf.orientdb.service.FunctionComponent;
+import test.aieonf.orientdb.suite.TestSuite;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
+
+	private TestSuite suite = TestSuite.getInstance();
 
 	static BundleContext getContext() {
 		return context;
@@ -20,8 +22,7 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		try{
 			Activator.context = bundleContext;
-			FunctionComponent fc = new FunctionComponent();
-			fc.start();
+			suite.performTests();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

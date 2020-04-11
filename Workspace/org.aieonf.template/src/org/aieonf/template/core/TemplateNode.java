@@ -34,8 +34,8 @@ public class TemplateNode<T extends IDescriptor>
 	@Override
 	public boolean contains( IDescriptor descr )
 	{
-		Collection<IModelLeaf<? extends IDescriptor>> store = 
-			new TreeSet<IModelLeaf<? extends IDescriptor>>();
+		Collection<IModelLeaf<?>> store = 
+			new TreeSet<IModelLeaf<?>>();
 		return contains( store, this, descr );
 	}
 	
@@ -45,7 +45,7 @@ public class TemplateNode<T extends IDescriptor>
 	 * @param descriptor
 	 * @return
 	 */
-	protected boolean contains( Collection<IModelLeaf<? extends IDescriptor>> store, IModelLeaf<? extends IDescriptor> model, IDescriptor descr )
+	protected boolean contains( Collection<IModelLeaf<?>> store, IModelLeaf<?> model, IDescriptor descr )
 	{
 		if( store.contains( model ))
 			return false;
@@ -53,8 +53,7 @@ public class TemplateNode<T extends IDescriptor>
 		if( model.getDescriptor().equals( descr ))
 			return true;
 
-		ITemplateNode<? extends IDescriptor> md = 
-			(org.aieonf.template.def.ITemplateNode<? extends IDescriptor> )model;
+		ITemplateNode<?> md = (org.aieonf.template.def.ITemplateNode<?> )model;
 		Collection<? extends IModelLeaf<? extends IDescriptor>> children = md.getChildren().keySet();		
 		for( IModelLeaf<? extends IDescriptor> child: children )
 			if( contains( store, child, descr ))

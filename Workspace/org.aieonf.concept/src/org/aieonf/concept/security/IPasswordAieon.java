@@ -13,7 +13,8 @@ public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 		USER_NAME,
 		PASSWORD,
 		CONFIRMATION,
-		REGISTER;
+		REGISTER,
+		URL;
 		
 		@Override
 		public String toString() {

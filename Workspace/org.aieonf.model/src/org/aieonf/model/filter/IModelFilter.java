@@ -6,6 +6,10 @@ import org.aieonf.concept.IDescriptor;
 
 public interface IModelFilter<T extends IDescriptor, M extends IDescribable> extends IFilter<M> {
 
+	public String getReference();
+	
+	public String getAttribute();
+	
 	/**
 	 * If true, the given child is accepted
 	 * @param child

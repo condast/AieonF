@@ -56,7 +56,7 @@
 		  <scope init="default">private</scope>
 		  <name>Login</name>
 		  <version>1</version>
-		  <user-name init="clear">${UserName}</user-name>
+		  <user-name init="clear">${User}</user-name>
 		  <password init="clear">${Password}</password>
 		</login>
 		<children>

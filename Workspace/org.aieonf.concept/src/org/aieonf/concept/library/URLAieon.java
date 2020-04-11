@@ -77,6 +77,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 		super( new DataURI( uri ), IConcept.Attributes.SOURCE.toString() );
 		super.setSource( uri );
 		super.setDescription(uri);
+	    super.setClassName( this.getClass().getCanonicalName() );
 		DataURI data = (DataURI) super.getDescriptor();
 		data.setDataName(uri);
 	}
@@ -89,6 +90,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	{
 		super( new DataURI( uri ), IConcept.Attributes.SOURCE.toString() );
 		super.setSource( uri );
+	    super.setClassName( this.getClass().getCanonicalName() );
 		super.setDescription(name);
 		DataURI data = (DataURI) super.getDescriptor();
 		data.setDataName(name);
@@ -106,6 +108,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	public URLAieon( IDescriptor descriptor )
 	{
 		super( new DataURI( descriptor ), IConcept.Attributes.SOURCE.toString() );
+	    super.setClassName( this.getClass().getCanonicalName() );
 	}
 
 	/**

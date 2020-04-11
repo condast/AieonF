@@ -82,6 +82,44 @@ public class ModelRestService{
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/contains")
+	public Response contains( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		Collection<IModelLeaf<IDescriptor>> result = null;
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+ 				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open();
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
+			result = factory.get(domain);
+			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
+			result = filter.doFilter(result);
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		CacheService cache = CacheService.getInstance();
+		try {
+			cache.open();	
+			cache.fill(result);
+			Gson gson = new Gson();
+			String str = gson.toJson(result.toArray(new IModelLeaf[ result.size()]), Model[].class );
+			return Response.ok( str ).build();
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			cache.close();
+		}	
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get")
 	public Response getModel( @QueryParam("id") long id, @QueryParam("token") long token, 
 			@QueryParam("domain") String domainstr, @QueryParam("name") String name, @QueryParam("version") String version) {

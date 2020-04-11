@@ -4,7 +4,7 @@ import java.util.*;
 
 import org.aieonf.concept.*;
 
-public interface IModelNode<T extends IDescriptor> extends IModelLeaf<T>
+public interface IModelNode<D extends Object> extends IModelLeaf<D>
 {	
 	/**
 	 * Add a child model to the model
@@ -47,11 +47,11 @@ public interface IModelNode<T extends IDescriptor> extends IModelLeaf<T>
 	public IModelLeaf<? extends IDescriptor>[] getChildren( String name );
 
 	/**
-	 * Returns true if the model is a leaf ( has no children )
-	 * @return
+	 * Get the identifier of the given child. can be null
+	 * @param name
+	 * @return IModelNode<? extends IDescriptor>
 	*/
-	@Override
-	public boolean isLeaf();
+	public String getChildIdentifier( IModelLeaf<? extends IDescriptor> child );
 
 	/**
 	 * Returns true if the model is has children
@@ -64,13 +64,4 @@ public interface IModelNode<T extends IDescriptor> extends IModelLeaf<T>
 	 * @return
 	*/
 	public int nrOfchildren();
-
-	/**
-	 * Returns true if the model, or one of its descendants contains
-	 * the given descriptor
-	 * @param descriptor
-	 * @return
-	*/
-	@Override
-	public boolean contains( IDescriptor descriptor );
 }

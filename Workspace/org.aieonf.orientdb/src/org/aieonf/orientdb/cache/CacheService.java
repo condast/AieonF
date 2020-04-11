@@ -145,6 +145,7 @@ public class CacheService implements Closeable{
 			}
 			String date = String.valueOf( Calendar.getInstance().getTimeInMillis());
 			descriptor.set( IDescriptor.Attributes.CREATE_DATE, date );
+			descriptor.set( IDescriptor.Attributes.ID, doc.getIdentity().toString());
 			doc.save( S_CACHE);
 		}
 	}

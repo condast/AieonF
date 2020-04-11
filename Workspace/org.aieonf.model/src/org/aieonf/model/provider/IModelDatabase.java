@@ -26,7 +26,7 @@ public interface IModelDatabase<K extends Object, V extends IDescribable> extend
 	 * @param descriptor
 	 * @return
 	 */
-	public void remove( V leaf );
+	public boolean remove( V leaf );
 
 	/**
 	 * update a model 

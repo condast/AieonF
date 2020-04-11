@@ -63,7 +63,7 @@ public class CategoryAieon extends ConceptWrapper implements IImplicitAieon<IDes
   {
     this();
     this.setCategory( category );
-    this.setClassName( this.getClass().getCanonicalName() );
+    this.setClassName( CategoryAieon.class.getCanonicalName() );
  }
 
   /**
@@ -75,7 +75,7 @@ public class CategoryAieon extends ConceptWrapper implements IImplicitAieon<IDes
   public CategoryAieon( IDescriptor descriptor, String category )
   {
     super( descriptor );
-		this.set( IDescriptor.Attributes.NAME,  Attributes.CATEGORY.toString() );
+	this.set( IDescriptor.Attributes.NAME,  Attributes.CATEGORY.toString() );
     this.setCategory( category );
     this.setClassName( this.getClass().getCanonicalName() );
     this.setProvider( descriptor.getProvider());

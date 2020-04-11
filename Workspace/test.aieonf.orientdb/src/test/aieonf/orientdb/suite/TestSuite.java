@@ -3,18 +3,31 @@ package test.aieonf.orientdb.suite;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.db.IDatabaseConnection;
+import org.aieonf.commons.security.AbstractSecureProvider;
+import org.aieonf.commons.security.ISecureGenerator;
+import org.aieonf.concept.IConcept;
 import org.aieonf.concept.filter.AttributeFilter;
+import org.aieonf.concept.library.CategoryAieon;
+import org.aieonf.concept.library.URLAieon;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.Model;
+import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
-import org.aieonf.model.provider.IModelDatabase;
+import org.aieonf.model.rest.AbstractRestDatabase;
+import org.aieonf.serialisable.core.ModelTypeAdapter;
+import org.aieonf.serialisable.model.SerialisableModel;
 import org.condast.commons.test.core.AbstractTestSuite;
 import org.condast.commons.test.core.ITestEvent;
 
-import test.aieonf.orientdb.context.TestFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import test.aieonf.orientdb.core.TestFactory;
 import test.aieonf.orientdb.service.LoginDispatcher;
 
 public class TestSuite extends AbstractTestSuite<String, String> {
@@ -27,11 +40,12 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		TEST_OPEN_AND_CLOSE,
 		TEST_ADD_AND_READ,
 		TEST_REGISTER,
-		TEST_MODEL_BUILDER;
+		TEST_MODEL_BUILDER,
+		TEST_REST_ADD;
 	}
 	private static TestSuite suite = new TestSuite();
 	
-	private static IModelDatabase<IDomainAieon,IModelLeaf<IDescriptor>> database;
+	//private static IModelDatabase<IDomainAieon,IModelLeaf<IDescriptor>> database;
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 	
@@ -39,18 +53,12 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		return suite;
 	}
 	
-	public void runTests( IModelDatabase<IDomainAieon,IModelLeaf<IDescriptor>> func ){
-		database = func;
-		suite.performTests();
-	}
-
 	@Override
 	protected void testSuite() throws Exception {
 		Tests test = Tests.TEST_MODEL_BUILDER;
 		try{
 			switch( test ){
 			case TEST_ADD_AND_READ:
-				testAddReadDatabase();
 				break;
 			case TEST_REGISTER:
 				testRegister();
@@ -58,8 +66,10 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			case TEST_MODEL_BUILDER:
 				testModelBuilder();
 				break;
+			case TEST_REST_ADD:
+				testRESTAdd();
+				break;
 			default:
-				testOpenDatabase();
 				break;
 			}
 		}
@@ -67,8 +77,28 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			ex.printStackTrace();
 		}
 		logger.info("Tests completed");
+		//System.exit(0);
 	}
 
+	@SuppressWarnings("unchecked")
+	public void testModelBuilder() {
+		TestFactory factory = TestFactory.getInstance();
+		factory.createTemplate();
+		IModelNode<IDescriptor> model = createModel();
+		
+		Gson gson = new Gson();
+		String result = gson.toJson(model.getDescriptor());
+		logger.info( result );
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapter(model.getClass(), new ModelTypeAdapter());
+		gson = builder.create();
+		result = gson.toJson(model, model.getClass());
+		logger.info( result );
+		IModelNode<IDescriptor> model2 = gson.fromJson(result, model.getClass());
+		logger.info( model2.toString());
+	}
+
+	
 	private final void testRegister() throws Exception{
 		LoginDispatcher dispatcher = LoginDispatcher.getInstance();
 		/*
@@ -83,27 +113,18 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		*/
 	}
 
-	private final void testOpenDatabase() throws Exception{
-		TestFactory factory = TestFactory.getInstance();
-		try{
-			database.open( factory.getDomain());
-		}
-		finally{
-			database.close();
-			database.deactivate();
-		}
-		//GraphModelTreeModel tm = model;
-	}
 
-	private final void testAddReadDatabase() throws Exception{
+	private final void testRESTAdd() throws Exception{
+		IModelNode<IDescriptor> model = createModel();
 		TestFactory factory = TestFactory.getInstance();
-		try{
+		RestDatabase database = new RestDatabase( new SecureGenerator(), factory.getDomain(), IDatabaseConnection.REST_URL );	
+		try{		
 			database.open( factory.getDomain());
-			IModelLeaf<IDescriptor> model = new Model<IDescriptor>( factory.getDomain());
 			database.add(model);
-			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "*"));
-			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
-			for( IModelLeaf<IDescriptor> leaf: results )
+			IModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>> filter = 
+					new ModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
+			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
+			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
 			if( results.isEmpty()){
 				logger.info( "No Results. Stopping");
@@ -112,19 +133,36 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			database.remove( results.iterator().next());
 			results = database.search(filter);
 			logger.info( "Results found: " + results.size() );
+			
+			database.add(model);
 				
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
 		}
 		finally{
 			database.close();
 			database.deactivate();
 		}
-		//GraphModelTreeModel tm = model;
 	}
-	
-	public void testModelBuilder() {
-		TestFactory factory = TestFactory.getInstance();
-		factory.createTemplate();
+
+	private IModelNode<IDescriptor> createModel() {
+		String category = "Test";
+		CategoryAieon cat = new CategoryAieon( category );
+		cat.setVersion(1);
+		
+		URLAieon urlAieon = new URLAieon( "MyURL" );
+		urlAieon.setURI( "http://www.condast.com" );
+		urlAieon.setDescription( "description" );
+		urlAieon.setScope( IConcept.Scope.PUBLIC );
+		urlAieon.setVersion(1);
+		IModelLeaf<IDescriptor> urlModel = new ModelLeaf<IDescriptor>( urlAieon );		
+
+		IModelNode<IDescriptor> model = new Model<IDescriptor>( cat);
+		model.addChild( urlModel );
+		return model;
 	}
+
 
 	@Override
 	protected void onPrepare(ITestEvent<String, String> event) {
@@ -137,4 +175,33 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private class SecureGenerator extends AbstractSecureProvider{
+
+		@Override
+		protected long createId(String domain) {
+			return domain.hashCode();
+		}
+
+		@Override
+		protected long createToken(String domain) {
+			return domain.hashCode();
+		}	
+	}
+	
+	private class RestDatabase extends AbstractRestDatabase{
+
+		protected RestDatabase(ISecureGenerator generator, IDomainAieon domain, String path) {
+			super(generator, domain, path);
+		}
+
+		@Override
+		protected String onSerialise(IModelLeaf<? extends IDescriptor>[] leaf) {
+			Gson gson = new Gson();
+			String str = gson.toJson(leaf, SerialisableModel[].class);
+			return str;
+		}
+		
+	}
+
 }

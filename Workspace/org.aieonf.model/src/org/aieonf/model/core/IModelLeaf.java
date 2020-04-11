@@ -7,7 +7,7 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 
-public interface IModelLeaf<D extends IDescriptor> extends IDescribable, Comparable<IDescribable>
+public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<IDescribable>
 {
 	//Supported attributes
 	public static final String S_MODEL = "Model";
@@ -93,13 +93,13 @@ public interface IModelLeaf<D extends IDescriptor> extends IDescribable, Compara
 	 * Get the parent of this leaf, or null if the leaf is a root
 	 * @return
 	 */
-	public IModelNode<? extends IDescriptor> getParent();
+	public IModelNode<?> getParent();
 
 	/**
 	 * Set the parent
 	 * @param parent
 	 */
-	void setParent( IModelNode<? extends IDescriptor> parent );
+	void setParent( IModelNode<?> parent );
 
 	/**
 	 * Get the attribute

@@ -73,7 +73,7 @@ public abstract class AbstractKeyEventService<R,D>
 	}
 
 	public void add( R request, long id, long token, Map<String, String> parameters, String post, D data ) throws Exception{
-		WebClient client = new WebClient( url);
+		WebClient client = new WebClient( url );
 		parameters.put( Attributes.ID.toString(), String.valueOf(id));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf(token));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());

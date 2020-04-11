@@ -89,4 +89,16 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 		}
 		return retval;
 	}
+
+	@Override
+	public String getReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getAttribute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

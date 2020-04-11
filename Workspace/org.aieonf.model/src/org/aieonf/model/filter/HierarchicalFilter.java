@@ -36,6 +36,7 @@ public class HierarchicalFilter<T extends IModelLeaf<?>> extends AbstractFilter<
 		this.filter = filter;
 	}
 
+	
 	@Override
 	protected String[] getRules() {
 		return Rules.getRules();

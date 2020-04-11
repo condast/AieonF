@@ -119,4 +119,16 @@ public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable> i
 		}
 		return true;
 	}
+
+	@Override
+	public String getReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getAttribute() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -1,4 +1,4 @@
-package test.aieonf.orientdb.context;
+package test.aieonf.orientdb.core;
 
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
@@ -22,7 +22,7 @@ public class TestFactory extends AbstractProviderContextFactory<IContextAieon, I
 	
 	private static final String S_BUNDLE_ID = "org.test.orientdb";
 
-	private static TestFactory factory;
+	private static TestFactory factory = new TestFactory();
 
 	private IModelBuilderListener<IDescribable> listener = new IModelBuilderListener<IDescribable>() {
 
@@ -45,7 +45,6 @@ public class TestFactory extends AbstractProviderContextFactory<IContextAieon, I
 
 	private TestFactory() {
 		super( S_BUNDLE_ID, TestFactory.class );
-		factory = new TestFactory();
 		super.createTemplate();
 	}
 

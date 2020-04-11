@@ -8,13 +8,13 @@ import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 
-public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IModelLeaf<D>
+public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLeaf<D>
 {	
 	//The concept that is modelled
 	private D descriptor;
 	private boolean leaf;
 
-	private IModelNode<? extends IDescriptor> parent;
+	private IModelNode<?> parent;
 
 	/**
 	 * Only used for special models
@@ -23,6 +23,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 		this.leaf = true;
 		set( IDescriptor.Attributes.ID, id);
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
+		set( IDescriptor.Attributes.CLASS, this.getClass().getCanonicalName() );
 	}
 
 	/**
@@ -39,7 +40,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * @param concept
 	 */
 	public ModelLeaf( D descriptor ){
-		this( descriptor.getID(), descriptor );
+		this( descriptor.toString(), descriptor );
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * @return the parent
 	 */
 	@Override
-	public IModelNode<? extends IDescriptor> getParent()
+	public IModelNode<?> getParent()
 	{
 		return parent;
 	}
@@ -155,7 +156,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 * @param parent the parent to set
 	 */
 	@Override
-	public void setParent(IModelNode<? extends IDescriptor> parent)
+	public void setParent(IModelNode<?> parent)
 	{
 		this.parent = parent;
 	}
@@ -168,18 +169,6 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	public boolean isRoot(){
 		return (( this.parent == null ) && ( this.getDepth() ) == 0 );
 	}
-
-	/**
-	 * If true, the values have changed
-	 * @return
-	 */
-	@Override
-	public boolean hasChanged(){
-		if( descriptor.hasChanged() )
-			return true;
-		return super.hasChanged();
-	}
-
 	
 	@Override
 	public IDescriptor getDescriptor() {
@@ -266,9 +255,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public int compareTo( IDescribable node ) 
 	{
-		if( this.descriptor == null )
-			return -1;
-		return this.descriptor.compareTo( node.getDescriptor() );
+		return getDescriptor().compareTo( node.getDescriptor() );
 	}
 
 

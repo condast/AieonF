@@ -8,7 +8,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 
-public abstract class AbsrtractModelParser<D extends IDescriptor, M extends IModelLeaf<D>> extends DescribableParser<D,M> implements IModelParser<D, M>
+public abstract class AbstractModelParser<D extends IDescriptor, M extends IModelLeaf<D>> extends DescribableParser<D,M> implements IModelParser<D, M>
 {	
 	public enum ParseTypes{
 		DESCRIPTOR,
@@ -41,7 +41,7 @@ public abstract class AbsrtractModelParser<D extends IDescriptor, M extends IMod
 
 	protected DescribableParser<D, IDescribable> descriptorParser;
 		
-	protected AbsrtractModelParser(){
+	protected AbstractModelParser(){
 		super( ParseTypes.DESCRIPTOR.name());
 		this.result = false;
 	}

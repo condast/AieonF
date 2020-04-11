@@ -8,6 +8,7 @@ public interface IDatabaseConnection {
 
 	public enum Requests{
 		ADD,
+		CONTAINS,
 		GET,
 		SEARCH,
 		UPDATE,

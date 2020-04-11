@@ -83,11 +83,23 @@ public class HierarchicalModelAttributeFilter<T extends IDescriptor> extends Hie
 			retval = ModelFilterWrapper.acceptDepth( minDepth, maxDepth, child );
 			break;
 		case ALLPARENTS:
-			retval =  ModelFilterWrapper.acceptDepth( minDepth, maxDepth, child ) && super.getChildFilter().accept( (IModelLeaf<T>) child );
+			retval =  ModelFilterWrapper.acceptDepth( minDepth, maxDepth, child ) && super.getChildFilter().accept((IModelLeaf<T>) child );
 			break;
 		case AS_IS:
 			break;
 		}
 		return retval;
+	}
+
+	@Override
+	public String getReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getAttribute() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

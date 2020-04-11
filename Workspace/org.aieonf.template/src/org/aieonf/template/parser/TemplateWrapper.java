@@ -19,14 +19,14 @@ import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.def.ITemplateNode;
 import org.aieonf.template.property.ITemplateProperty;
 
-public class TemplateWrapper<T extends IDescriptor> implements ITemplate
+public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 {
-	private ITemplateLeaf<T> model;
+	private ITemplateLeaf<D> model;
 
 	private Map<IModelLeaf<? extends IDescriptor>, String> children;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	TemplateWrapper( ITemplateLeaf<T>model )
+	TemplateWrapper( ITemplateLeaf<D>model )
 	{
 		this.model = model;
 		if(!(model instanceof ITemplateNode ))
@@ -118,7 +118,7 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setData(ITemplateAieon descriptor) {
-		this.model.setData((T) descriptor);
+		this.model.setData((D) descriptor);
 	}
 
 
@@ -218,6 +218,17 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public String getChildIdentifier(IModelLeaf<? extends IDescriptor> child) {
+		if( this.model instanceof ITemplateNode ){
+			IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) this.model;
+			return node.getChildIdentifier( child );
+		}
+		return null;
+	}
+
 
 	/**
 	 * Returns true if the model is a leaf ( has no children )
@@ -288,13 +299,13 @@ public class TemplateWrapper<T extends IDescriptor> implements ITemplate
 	}
 
 	@Override
-	public ITemplateNode<? extends IDescriptor> getParent()
+	public ITemplateNode<?> getParent()
 	{
-		return (ITemplateNode<? extends IDescriptor>) this.model.getParent();
+		return (ITemplateNode<?>) this.model.getParent();
 	}
 
 	@Override
-	public void setParent(IModelNode<? extends IDescriptor> parent)
+	public void setParent(IModelNode<?> parent)
 	{
 		this.model.setParent(parent);
 	}

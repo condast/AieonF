@@ -31,14 +31,14 @@ public class ModelScanner<T extends IDescriptor>{
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void getDescriptors( Collection<IDescriptor> results, String name, IModelLeaf<?> current ){
+	protected void getDescriptors( Collection<IDescriptor> results, String name, IModelLeaf<? extends IDescriptor> current ){
 		if( name.equals( current.getData().getName() ))
 			results.add( current.getData() );
 		if(!( current instanceof IModelNode ))
 			return;
 		IModelNode<T> node = (IModelNode<T>) current;
 		for( IModelLeaf<?> child: node.getChildren().keySet() )
-			getDescriptors( results, name, child );
+			getDescriptors( results, name, (IModelLeaf<? extends IDescriptor>) child );
 	}
 
 	@SuppressWarnings("unchecked")
