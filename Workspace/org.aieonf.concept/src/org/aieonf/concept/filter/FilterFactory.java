@@ -2,7 +2,7 @@ package org.aieonf.concept.filter;
 
 import java.util.Map;
 
-import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.IAttributeFilter;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 
@@ -36,8 +36,8 @@ public class FilterFactory {
 	 * @param attributes
 	 * @return
 	 */
-	public static <D extends IDescriptor> IFilter<D> createFilter( Filters name, Map<String, String> attributes){
-		IFilter<D> filter = null;
+	public static <D extends IDescriptor> IAttributeFilter<D> createFilter( Filters name, Map<String, String> attributes){
+		IAttributeFilter<D> filter = null;
 		AttributeFilter.Rules rule = AttributeFilter.Rules.valueOf( StringStyler.styleToEnum( attributes.get(Attributes.RULES.toString())));
 		String ref = attributes.get(Attributes.REFERENCE.toString());
 		String value = attributes.get(Attributes.VALUE.toString());

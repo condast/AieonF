@@ -26,7 +26,6 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class OrientModelDatabase implements IModelDatabase<IDescriptor, IModelLeaf<IDescriptor>> {
 
 	private static DatabaseService service = DatabaseService.getInstance();
-	private static CacheService cache = CacheService.getInstance();
 
 	private Collection<IModelListener<IModelLeaf<IDescriptor>>> listeners;
 	
@@ -83,6 +82,7 @@ public class OrientModelDatabase implements IModelDatabase<IDescriptor, IModelLe
 	public boolean add(IModelLeaf<IDescriptor> leaf) {
 		boolean result = false;
 		IModelParser<IDescriptor, IModelLeaf<IDescriptor>> parser = new ModelParser();
+		CacheService cache = service.getCache();
 		try{
 			descriptors.clear();
 			parser.addListener( e->onAddDescriptors(e));

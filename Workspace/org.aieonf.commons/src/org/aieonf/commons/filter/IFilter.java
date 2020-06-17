@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.aieonf.commons.filter.AbstractFilter.Mode;
 
-public interface IFilter<T>
+public interface IFilter<D>
 {
   /**
    * Get the name of the filter
@@ -44,7 +44,7 @@ public interface IFilter<T>
    * @return boolean
    * @throws FilterException
   */
-  public boolean accept( T obj ) throws FilterException;
+  public boolean accept( D obj ) throws FilterException;
   
   /**
    * Returns a filtered list of objects provided by the input list
@@ -53,7 +53,7 @@ public interface IFilter<T>
    * @return Collection
    * @throws FilterException
   */
-  public Collection<T> doFilter( Collection<T> collection ) throws FilterException;  
+  public Collection<D> doFilter( Collection<D> collection ) throws FilterException;  
 
   /**
    * Returns a filtered list of objects provided by the input list. An optional
@@ -65,11 +65,11 @@ public interface IFilter<T>
    * @return List
    * @throws FilterException
   */
-  public Collection<T> doFilter( Collection<T> collection, int amount ) throws FilterException;  
+  public Collection<D> doFilter( Collection<D> collection, int amount ) throws FilterException;  
 
   /**
    * Get the items that were rejected after a doFilter operation. 
    * @return
    */
-  public Collection<T> getRejected();
+  public Collection<D> getRejected();
 }

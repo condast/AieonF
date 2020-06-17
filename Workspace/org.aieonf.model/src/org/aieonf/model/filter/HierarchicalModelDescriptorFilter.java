@@ -4,6 +4,7 @@ import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.HierarchicalFilter;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.DescriptorFilter;
+import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 
 public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends HierarchicalFilter<IModelLeaf<T>> implements IModelFilter<T,IModelLeaf<T>>
@@ -56,6 +57,11 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 	}
 
 	@Override
+	public Filters getType() {
+		return Filters.ATTRIBUTES;
+	}
+
+	@Override
 	public int getMinDepth() {
 		return this.minDepth;
 	}
@@ -97,7 +103,7 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 	}
 
 	@Override
-	public String getAttribute() {
+	public String getValue() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -13,6 +13,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
+import org.aieonf.orientdb.cache.CacheService;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
@@ -39,6 +40,8 @@ public class DatabaseService {
 	protected static final String S_ROOT = "Root";
 	protected static final String S_DESCRIPTORS = "Descriptors";
 
+	private CacheService cache;
+	
 	private Collection<IModelListener<IModelNode<IDescriptor>>> listeners;
 	
 	private static DatabaseService service = new DatabaseService();
@@ -57,6 +60,10 @@ public class DatabaseService {
 	
 	public OrientGraph getGraph() {
 		return graph;
+	}
+
+	public CacheService getCache() {
+		return cache;
 	}
 
 	/**
@@ -95,11 +102,14 @@ public class DatabaseService {
 		if( !persistence.isConnected() )
 			return false;
 		graph = persistence.createDatabase();
+		if( graph.getVertexType(IDescriptor.DESCRIPTORS) == null )
+			graph.createVertexType( IDescriptor.DESCRIPTORS );
+		if( graph.getEdgeType(IDescriptor.DESCRIPTOR) == null )
+			graph.createEdgeType( IDescriptor.DESCRIPTOR );
 		ODatabaseDocumentTx database = graph.getRawGraph();
-		if(!database.isActiveOnCurrentThread())
-			database.activateOnCurrentThread();
+		cache = new CacheService( database );
 		//graph.begin();
-		return true;
+		return cache.open();
 	}
 	
 	public String getIdentifier(){
@@ -171,6 +181,7 @@ public class DatabaseService {
 
 	public void close(){
 		graph.commit();
+		cache.close();
 		graph.shutdown();
 		graph = null;
 	}

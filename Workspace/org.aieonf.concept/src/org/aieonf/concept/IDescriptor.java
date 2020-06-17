@@ -35,6 +35,7 @@ public interface IDescriptor extends IDescribable, Serializable, Cloneable, Comp
 	 * Defines the name
 	 */
 	public static final String DESCRIPTOR  = "Descriptor";
+	public static final String DESCRIPTORS  = "Descriptors";
 
 	/**
 	 * The basic elements of a descriptor

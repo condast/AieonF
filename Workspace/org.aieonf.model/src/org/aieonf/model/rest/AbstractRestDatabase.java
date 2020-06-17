@@ -2,7 +2,6 @@ package org.aieonf.model.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,15 +45,12 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 	
 	private Collection<IModelListener<IModelLeaf<? extends IDescriptor>>> listeners;
 
-	Collection<IModelLeaf<? extends IDescriptor>> results;
-	
 	protected AbstractRestDatabase( ISecureGenerator generator, IDomainAieon domain, String path ) {
 		this.path = path;
 		this.domain = domain;
 		this.generator = generator;
 		this.open = false;
 		this.listeners = new ArrayList<>();
-		results = new ArrayList<>();
 	}
 
 	@Override
@@ -108,6 +104,8 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 			listener.notifyChange(event);
 	}
 
+	protected abstract void getResults( ResponseEvent<IDatabaseConnection.Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results );
+
 	@Override
 	public boolean contains(IModelLeaf<? extends IDescriptor> leaf) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
@@ -119,9 +117,9 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put(Attributes.MODEL_ID.toString(), leaf.getID() );
 		WebClient client = new WebClient( path );
-		results.clear();
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
-			client.addListener( e->onGetResults(e) );
+			client.addListener( e->getResults(e, results ) );
 			client.sendGet(request, parameters);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,9 +138,9 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		WebClient client = new WebClient( path );
-		results.clear();
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
-			client.addListener( e->onGetResults(e) );
+			client.addListener( e->getResults(e, results ) );
 			client.sendGet(request, parameters);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -150,10 +148,6 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		return results;
 	}
 	
-	protected void onGetResults( ResponseEvent<IDatabaseConnection.Requests, IModelLeaf<? extends IDescriptor>[]> event ) {
-		results = Arrays.asList( event.getData());
-	}
-
 	@Override
 	public Collection<IModelLeaf<? extends IDescriptor>> search(IModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>> filter)
 			throws ParseException {
@@ -162,15 +156,15 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
-		parameters.put(FilterFactory.Attributes.FILTER.toString(), filter.getName() );
+		parameters.put(StringStyler.xmlStyleString( IDomainAieon.Attributes.DOMAIN.name()), domain.getDomain());
+		parameters.put(FilterFactory.Attributes.FILTER.toString(), StringStyler.xmlStyleString( filter.getType().name() ));
 		parameters.put(FilterFactory.Attributes.RULES.toString(), filter.getRule() );
 		parameters.put(FilterFactory.Attributes.REFERENCE.toString(), filter.getReference() );
-		parameters.put(FilterFactory.Attributes.VALUE.toString(), filter.getAttribute() );
+		parameters.put(FilterFactory.Attributes.VALUE.toString(), filter.getValue() );
 		WebClient client = new WebClient( path );
-		results.clear();
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
-			client.addListener( e->onGetResults(e) );
+			client.addListener( e->getResults(e, results ) );
 			client.sendGet(request, parameters);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,9 +187,9 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		added[0] = leaf;
 		boolean result = false;
 		WebClient client = new WebClient( path );
-		results.clear();
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
-			client.addListener( e->onGetResults(e) );
+			client.addListener( e->getResults(e, results ));
 			client.sendPost(request, parameters, onSerialise(added), added);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
@@ -218,10 +212,10 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		IModelLeaf<? extends IDescriptor>[] removed = new IModelLeaf[1]; 
 		removed[0] = leaf;
 		WebClient client = new WebClient( path );
-		results.clear();
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		boolean result = false;
 		try {
-			client.addListener( e->onGetResults(e) );
+			client.addListener( e->getResults(e, results ));
 			client.sendDelete(request, parameters, removed);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
@@ -244,10 +238,10 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		IModelLeaf<? extends IDescriptor>[] removed = new IModelLeaf[1]; 
 		removed[0] = leaf;
 		WebClient client = new WebClient( path );
-		results.clear();
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		boolean result = false;
 		try {
-			client.addListener( e->onGetResults(e) );
+			client.addListener( e->getResults(e, results ));
 			client.sendDelete(request, parameters, removed);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {

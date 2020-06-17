@@ -11,7 +11,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 /**
- * Handles the Orient Databae
+ * Handles the Orient Database
  * @See :https://orientdb.com/docs/2.2/documenttx-Database-Tinkerpop.html
  * @author Kees
  *

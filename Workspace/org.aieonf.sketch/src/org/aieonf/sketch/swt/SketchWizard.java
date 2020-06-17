@@ -14,7 +14,7 @@ public class SketchWizard extends AbstractXmlFlowWizard<IModelLeaf<IDescriptor>>
 	
 	private static final String S_WIZARD_DESC = "/AIEONF-INF/wizard.xml";
 
-	//Respons to the 'find' button, which activates a search through the designate controller
+	//Response to the 'find' button, which activates a search through the designate controller
 	
 	private IModelLeaf<?> model;
 	private SketchWizard wizard; 

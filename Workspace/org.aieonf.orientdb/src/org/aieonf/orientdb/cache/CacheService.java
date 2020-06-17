@@ -45,18 +45,12 @@ public class CacheService implements Closeable{
 	public static final String S_ERR_NO_DESCRIPTORS = "No descriptors were found for id: ";
 
 	private Collection<IModelListener<IDescriptor>> listeners;
-	
-	private static CacheService cache = new CacheService();
-	private static CachePersistenceService persistence = CachePersistenceService.getInstance();
-	
+		
 	private ODatabaseDocumentTx database;
 	
-	private CacheService() {
+	public CacheService( ODatabaseDocumentTx database ) {
+		this.database = database;
 		listeners = new ArrayList<IModelListener<IDescriptor>>();
-	}
-
-	public static CacheService getInstance(){
-		return cache;
 	}
 		
 	/**
@@ -65,10 +59,6 @@ public class CacheService implements Closeable{
 	 * @param loader
 	 */
 	public boolean open( ){
-		boolean result = persistence.open();
-		if(!result )
-			return result;
-		database = persistence.getDatabase();
 		if(!database.isActiveOnCurrentThread())
 			database.activateOnCurrentThread();
 		if(! database.existsCluster(S_CACHE))

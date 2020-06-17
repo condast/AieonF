@@ -17,7 +17,7 @@ import org.aieonf.commons.strings.StringStyler;
  * @author Kees Pieters
  * @version 1.0
  */
-public abstract class AbstractAttributeFilter<T,U extends Object> extends AbstractFilter<T>
+public abstract class AbstractAttributeFilter<D,U extends Object> extends AbstractFilter<D> implements IAttributeFilter<D>
 {
 	//The supported rule set
 	public enum Rules{
@@ -121,9 +121,13 @@ public abstract class AbstractAttributeFilter<T,U extends Object> extends Abstra
 	 * Set a new reference key
 	 * @param refKey String
 	 */
-	public void setRefKey( String refKey )
-	{
+	public void setRefKey( String refKey ){
 		this.refKey = refKey;
+	}
+
+	@Override
+	public String getReference() {
+		return this.refKey;
 	}
 
 	/**
@@ -134,6 +138,11 @@ public abstract class AbstractAttributeFilter<T,U extends Object> extends Abstra
 	public void setRefVal( String refVal )
 	{
 		this.refVal = refVal;
+	}
+
+	@Override
+	public String getValue() {
+		return this.getValue();
 	}
 
 	/**

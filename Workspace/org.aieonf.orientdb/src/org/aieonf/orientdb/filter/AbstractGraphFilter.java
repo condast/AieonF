@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import org.aieonf.commons.filter.AbstractAttributeFilter;
 import org.aieonf.commons.filter.AbstractFilter;
+import org.aieonf.concept.IDescriptor;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -43,7 +44,7 @@ public abstract class AbstractGraphFilter extends AbstractFilter<Vertex> impleme
 	}
 
 	protected Iterator<Vertex> getIterator( OrientGraph graph ){
-		return graph.getVertices().iterator();
+		return graph.getVerticesOfClass( IDescriptor.DESCRIPTORS ).iterator();
 	}
 	
 	@Override

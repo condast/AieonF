@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
@@ -15,6 +17,7 @@ import org.aieonf.osgi.eval.IEvaluationListener;
 import org.aieonf.osgi.eval.IEvaluationListener.EvaluationEvents;
 import org.eclipse.rap.rwt.widgets.BrowserCallback;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.BrowserFunction;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.DisposeEvent;
@@ -28,14 +31,17 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 		URL,
 		TEXT;
 	}
-	
-	private Collection<IEvaluationListener<Object[]>> listeners;
+
+	private Collection<IEvaluationListener<Object>> listeners;
 
 	private CommandController controller;
 	private Browser browser;
 	private boolean initialised;
 	private String id;
-
+	private boolean disposed;
+	private boolean warnPending;
+	private Lock lock;
+	
 	private Logger logger = Logger.getLogger( this.getClass().getName());
 	
 	private BrowserCallback getCallBack(){
@@ -45,41 +51,66 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 
 			@Override
 			public void evaluationSucceeded(Object result) {
-				notifyEvaluation( new EvaluationEvent<Object[]>( browser, id, EvaluationEvents.SUCCEEDED ));
-				logger.fine("EXECUTION SUCCEEDED");
-				controller.clear();
+				try {
+					notifyEvaluation( new EvaluationEvent<Object>( browser, id, EvaluationEvents.SUCCEEDED ));
+				}
+				catch( Exception ex ) {
+					ex.printStackTrace();
+				}
+				finally {
+					controller.clearHistory();
+				}
 			}
 			@Override
 			public void evaluationFailed(Exception exception) {
-				notifyEvaluation( new EvaluationEvent<Object[]>( browser, id, EvaluationEvents.FAILED ));
-				StringBuffer buffer = new StringBuffer();
-				buffer.append( "EXECUTION FAILED: \n" );
-				buffer.append( controller.retrieve() );
-				logger.warning(buffer.toString());
-				
-				exception.printStackTrace();
-				controller.clear();
+				try {
+					notifyEvaluation( new EvaluationEvent<Object>( browser, id, EvaluationEvents.FAILED ));
+				}
+				catch( Exception ex ) {
+					logger.warning(ex.getMessage());
+					//ex.printStackTrace();
+				}
+				finally {
+					StringBuffer buffer = new StringBuffer();
+					buffer.append( "EXECUTION FAILED: \n" );
+					buffer.append( controller.retrieve() );
+					logger.warning(buffer.toString());
+					controller.clearHistory();
+				}
 			}
 		};
 		return callback;
 	}
-	
+
 	private DisposeListener dl = new DisposeListener(){
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void widgetDisposed(DisposeEvent event) {
-			listeners.clear();
-		}
-		
+			try {
+				controller.clear();
+				controller.clearHistory();
+				disposed = true;
+				listeners.clear();
+			}
+			catch( Exception ex ) {
+				ex.printStackTrace();
+			}
+		}	
 	};
 
-	protected AbstractJavascriptController( Browser browser, String idn ) {
-		this.id = idn;
+	protected AbstractJavascriptController( Browser browser, String id ) {
+		this( browser, id, false );
+	}
+	
+	protected AbstractJavascriptController( Browser browser, String id, boolean warnPending ) {
+		this.id = id;
 		this.initialised = false;
+		this.disposed = false;
 		this.browser = browser;
 		this.browser.addDisposeListener(dl);
-		listeners = new ArrayList<IEvaluationListener<Object[]>>();
+		listeners = new ArrayList<>();
+		this.lock = new ReentrantLock();
 		this.controller = new CommandController( );
 		browser.addProgressListener( new ProgressListener() {
 			private static final long serialVersionUID = 1L;
@@ -88,14 +119,14 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 			public void completed(ProgressEvent event) {
 				onLoadCompleted();
 				initialised = true;
-				notifyEvaluation( new EvaluationEvent<Object[]>( getBrowser(), id, EvaluationEvents.INITIALISED ));
+				notifyEvaluation( new EvaluationEvent<Object>( getBrowser(), id, EvaluationEvents.INITIALISED ));
 				controller.executeQuery();
 			}
 			
 			@Override
 			public void changed(ProgressEvent event) {
 				onLoadChanged();
-				notifyEvaluation( new EvaluationEvent<Object[]>( getBrowser(), id, EvaluationEvents.CHANGED ));
+				notifyEvaluation( new EvaluationEvent<Object>( getBrowser(), id, EvaluationEvents.CHANGED ));
 			}
 		});
 	}
@@ -117,7 +148,6 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 	protected abstract void onLoadCompleted();
 
 	protected void onLoadChanged(){ /* DEFAULT NOTHING */ }
-
 	
 	/**
 	 * Initialise the composite
@@ -146,15 +176,103 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 		browser.setText( readInput(in));	
 	}
 	
-	protected Browser getBrowser(){
+	@Override
+	public Browser getBrowser(){
 		return browser;
 	}
 	
+	@Override
+	public boolean isBrowserVisible() {
+		return browser.isVisible();
+	}
+
+	@Override
+	public boolean isDisposed() {
+		return disposed;
+	}
+	@Override
+	public void clear() {
+		this.controller.clear();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		lock.lock();
+		try {
+			return this.controller.isEmpty();
+		}
+		finally {
+			lock.unlock();
+		}
+	}
+
+	protected boolean isWarnPending() {
+		return warnPending;
+	}
+	
+	protected void setWarnPending(boolean warnPending) {
+		this.warnPending = warnPending;
+	}
+	
+	protected Collection<String> getParameters(){
+		Collection<String> parameters = new LinkedList<String>();
+		return parameters;
+	}
+
+	@Override
+	public  Object[] evaluate( String query ) {
+		StringBuilder builder = new StringBuilder();
+		builder.append( "return ");
+		builder.append( query );
+		builder.append("();");
+		Object[] results = null;
+		try {
+			logger.fine(query);
+			results = (Object[]) browser.evaluate( builder.toString() );
+		}
+		catch( IllegalStateException ex ) {
+			if( this.warnPending )
+				logger.info(ex.getMessage());
+			else {
+				logger.fine(ex.getMessage());				
+			}
+		}
+		return results;
+	}
+	
+	@Override
+	public  Object[] evaluate( String query, String[] params ) {
+		StringBuilder builder = new StringBuilder();
+		builder.append( "return ");
+		builder.append( query );
+		builder.append("(");
+		for( int i=0; i<params.length; i++ ) {
+			String p = params[i];
+			builder.append(p);
+			if( i < params.length -1)
+				builder.append(",");
+		}
+		builder.append(");");
+		Object[] results = null;
+		try {
+			logger.fine(query);
+			results = (Object[]) browser.evaluate( builder.toString() );
+		}
+		catch( IllegalStateException ex ) {
+			if( this.warnPending )
+				logger.info(ex.getMessage());
+			else {
+				logger.fine(ex.getMessage());				
+			}
+		}
+		return results;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.condast.js.commons.controller.IJavascriptController#addEvaluationListener(org.condast.js.commons.eval.IEvaluationListener)
 	 */
 	@Override
-	public void addEvaluationListener( IEvaluationListener<Object[]> listener ){
+	public void addEvaluationListener( IEvaluationListener<Object> listener ){
 		this.listeners.add(listener);
 	}
 	
@@ -162,48 +280,71 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 	 * @see org.condast.js.commons.controller.IJavascriptController#removeEvaluationListener(org.condast.js.commons.eval.IEvaluationListener)
 	 */
 	@Override
-	public void removeEvaluationListener( IEvaluationListener<Object[]> listener ){
+	public void removeEvaluationListener( IEvaluationListener<Object> listener ){
 		this.listeners.remove(listener);
 	}
 
-	public void notifyEvaluation( EvaluationEvent<Object[]> ee ){
-		for( IEvaluationListener<Object[]> listener: listeners )
+	public void notifyEvaluation( EvaluationEvent<Object> ee ){
+		for( IEvaluationListener<Object> listener: listeners )
 			listener.notifyEvaluation(ee);
 	}
 
-    public synchronized void setQuery( String function, String[] params ){
-    	controller.setQuery(function, params);
-    }
+	@Override
+	public synchronized void setQuery( String function, String[] params ){
+		lock.lock();
+		try {
+			controller.setQuery(function, params);
+		}
+		finally {
+			lock.unlock();
+		}
+	}
 
 	/**
 	 * Set a query. It will be carried out as soon as possible
 	 * @param function
 	 * @param params
 	 */
+    @Override
 	public synchronized void setQuery( String function ){
 		setQuery( function, new String[0]);
 	}
 
-	public synchronized void executeQuery(){
-		controller.executeQuery();
-	}
+    protected synchronized void setQuery( String function, Collection<String> params ){
+    	this.setQuery(function, params.toArray(new String[ params.size()]));
+    }
 
-	public synchronized void performQuery( String function, String[] params ){
-		controller.setQuery(function, params);
-		controller.executeQuery();
-	}
+    protected synchronized void executeQuery(){
+    	if( disposed || browser.isDisposed() || !browser.isVisible() )
+    		return;
+    	lock.lock();
+    	try {
+    		controller.executeQuery();
+    	}
+    	finally {
+    		lock.unlock();
+    	}
+    }
 
-	/* (non-Javadoc)
-	 * @see org.condast.js.commons.controller.IJavascriptController#evaluate(java.lang.String)
-	 */
 	@Override
-	public Object evaluate( final String query ){
-		browser.evaluate( query, getCallBack() );
-		return true;
+	public void synchronize() {
+		if(isDisposed())
+			return;
+		executeQuery();		
 	}
 	
+	/**
+	 * Create a default call back function for javascript handling
+	 * @param id: the type of callback
+	 * @param name: the name of the javascript function
+	 * @return
+	 */
+	protected BrowserFunction createCallBackFunction( String id, String function ){
+		return new JavaScriptCallBack(browser, function, id);
+	}
+
 	protected String readInput( InputStream in ){
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		Scanner scanner = new Scanner( in );
 		try{
 		while( scanner.hasNextLine() )
@@ -227,6 +368,14 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 		}
 
 		private void clear(){
+			this.commands.clear();
+		}
+
+		private boolean isEmpty() {
+			return this.commands.isEmpty();
+		}
+		
+		private void clearHistory(){
 			this.history.clear();
 		}
 		
@@ -260,11 +409,26 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 				}
 			});
 		}	
-		
+
+		/* (non-Javadoc)
+		 * @see org.condast.js.commons.controller.IJavascriptController#evaluate(java.lang.String)
+		 */
+		private Object evaluate( final String query ){
+			try{
+				browser.evaluate( query, getCallBack() );
+				browser.requestLayout();
+			}
+			catch( Exception se ){
+				logger.warning( se.getMessage() + ": " + query );
+				return false;
+			}
+			return true;
+		}
+
 		private final synchronized void executeQuery(){
 			if( commands.isEmpty() )
 				return;
-			StringBuffer buffer = new StringBuffer();
+			StringBuilder buffer = new StringBuilder();
 			while( !commands.isEmpty() ){
 				Map.Entry<String, String[]> command = commands.removeLast();
 				buffer.append( setFunction(command.getKey(), command.getValue()));
@@ -303,8 +467,36 @@ public abstract class AbstractJavascriptController implements IJavascriptControl
 				}
 			}
 			buffer.append(");");
-			logger.info("EXECUTING: " + buffer.toString() );
+			logger.fine("EXECUTING: " + buffer.toString() );
 			return buffer.toString();
 		}
+	}
+	
+	/**
+	 * a default browser function that can be added to javascript code for call back
+	 * @author Kees
+	 *
+	 */
+	private class JavaScriptCallBack extends BrowserFunction{
+		
+		private String id;
+		
+		private JavaScriptCallBack(Browser browser, String functionName, String id ) {
+			super(browser, functionName);
+			this.id = id;
+		}
+
+		@Override
+		public Object function(Object[] arguments) {
+			Object result = null;
+			try {
+				notifyEvaluation( new EvaluationEvent<Object>( this, id, EvaluationEvents.EVENT, arguments ));
+				result = super.function(arguments);
+			}
+			catch( Exception ex ) {
+				ex.printStackTrace();
+			}
+			return result;
+		}	
 	}
 }

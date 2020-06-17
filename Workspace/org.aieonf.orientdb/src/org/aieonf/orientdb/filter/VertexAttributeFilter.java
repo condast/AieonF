@@ -1,7 +1,11 @@
 package org.aieonf.orientdb.filter;
 
+import java.util.Collection;
+
+import org.aieonf.commons.Utils;
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.WildcardFilter;
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.filter.AttributeFilter;
 
@@ -21,15 +25,16 @@ public class VertexAttributeFilter extends AbstractGraphFilter {
 	
 	protected VertexAttributeFilter(OrientGraph graph, String name, AttributeFilter.Rules rule, String key, String refVal) {
 		super(graph, name, rule.toString());
-		this.refKey = key;
+		this.refKey = key.replace(".", "_");
 		this.refVal = refVal;
 	}
 
 	@Override
 	protected boolean acceptEnabled(Vertex vertex) throws FilterException {
-		if( vertex == null )
+		if(( vertex == null ) || ( Utils.assertNull(vertex.getPropertyKeys())))
 			return false;
 		boolean contains = false;
+		Collection<String> keys = vertex.getPropertyKeys();
 		String val = vertex.getProperty(this.refKey);
 		contains = !StringUtils.isEmpty(val);
 		switch( org.aieonf.concept.filter.AttributeFilter.Rules.valueOf( super.getRule() )){
@@ -47,7 +52,9 @@ public class VertexAttributeFilter extends AbstractGraphFilter {
 			break;
 
 		default:
-			WildcardFilter filter = new WildcardFilter( val);
+			if( StringUtils.isEmpty(val))
+				break;
+			WildcardFilter filter = new WildcardFilter( StringStyler.styleToEnum( val ));
 			return filter.accept( this.refVal );
 		}
 		return false;

@@ -3,25 +3,26 @@ package org.aieonf.model.filter;
 import java.util.Collection;
 
 import org.aieonf.commons.filter.FilterException;
-import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.IAttributeFilter;
 import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 
 public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable> implements
 		IModelFilter<T,M> {
 
 	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";
-	private IFilter<M> filter;
+	private IAttributeFilter<M> filter;
 	
 	private int minDepth, maxDepth;
 	
-	public ModelFilterWrapper( IFilter<M> filter ) {
+	public ModelFilterWrapper( IAttributeFilter<M> filter ) {
 		this( filter, 0, -1 );
 	}
 
-	public ModelFilterWrapper( IFilter<M> filter, int minDepth, int maxDepth ) {
+	public ModelFilterWrapper( IAttributeFilter<M> filter, int minDepth, int maxDepth ) {
 		super();
 		this.filter = filter;
 		if( minDepth < 0 )
@@ -30,7 +31,7 @@ public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable> i
 		this.maxDepth = maxDepth;
 	}
 
-	public ModelFilterWrapper( IFilter<M> filter, int maxDepth ) {
+	public ModelFilterWrapper( IAttributeFilter<M> filter, int maxDepth ) {
 		this( filter, 0, maxDepth );
 	}
 
@@ -39,6 +40,11 @@ public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable> i
 		return filter.getName();
 	}
 	
+	@Override
+	public Filters getType() {
+		return Filters.ATTRIBUTES;
+	}
+
 	@Override
 	public int getMinDepth() {
 		return this.minDepth;
@@ -122,13 +128,11 @@ public class ModelFilterWrapper<T extends IDescriptor, M extends IDescribable> i
 
 	@Override
 	public String getReference() {
-		// TODO Auto-generated method stub
-		return null;
+		return filter.getReference();
 	}
 
 	@Override
-	public String getAttribute() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getValue() {
+		return filter.getValue();
 	}
 }

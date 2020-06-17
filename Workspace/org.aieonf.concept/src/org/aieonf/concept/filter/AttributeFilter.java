@@ -19,7 +19,7 @@ import org.aieonf.concept.core.ConceptBase;
  * @author Kees Pieters
  * @version 1.0
  */
-public class AttributeFilter<D extends IDescribable> extends AbstractFilter<D>
+public class AttributeFilter<D extends IDescribable> extends AbstractFilter<D> implements IAttributeFilter<D> 
 {
 	//The supported rule set
 	public enum Rules{
@@ -140,10 +140,14 @@ public class AttributeFilter<D extends IDescribable> extends AbstractFilter<D>
 	 * @throws FilterException
 	 */
 	public AttributeFilter( Rules rule, String name, Enum<?> refKey, String refVal )
-			throws FilterException
-	{
+			throws FilterException{
 		this( rule, name, refKey.toString() );
 		this.refVal = refVal;
+	}
+	
+	@Override
+	public String getReference() {
+		return this.refKey;
 	}
 
 	/**
@@ -153,6 +157,11 @@ public class AttributeFilter<D extends IDescribable> extends AbstractFilter<D>
 	public void setRefKey( String refKey )
 	{
 		this.refKey = refKey;
+	}
+
+	@Override
+	public String getValue() {
+		return this.refVal;
 	}
 
 	/**

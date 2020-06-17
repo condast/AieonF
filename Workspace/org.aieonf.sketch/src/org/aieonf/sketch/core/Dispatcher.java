@@ -30,7 +30,6 @@ public class Dispatcher implements IActiveDomainProvider{
 	public boolean isRegistered(long id, String name) {
 		return provider.isRegistered(id, name);
 	}
-
 	
 	@Override
 	public IDomainAieon getDomain(long id, long token, String name) {

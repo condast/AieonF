@@ -5,20 +5,21 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.aieonf.commons.filter.FilterException;
-import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.IAttributeFilter;
 import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.FilterFactory;
+import org.aieonf.concept.filter.FilterFactory.Filters;
 
 public class ModelFilter<D extends IDescriptor, M extends IDescribable> implements
 		IModelFilter<D,M> {
 
-	private IFilter<IDescriptor> filter;
+	private IAttributeFilter<IDescriptor> filter;
 	
 	private Collection<M> rejected;
 	
-	public ModelFilter( IFilter<IDescriptor> filter ) {
+	public ModelFilter( IAttributeFilter<IDescriptor> filter ) {
 		super();
 		this.filter = filter;
 		rejected = new ArrayList<M>();
@@ -28,7 +29,12 @@ public class ModelFilter<D extends IDescriptor, M extends IDescribable> implemen
 	public String getName() {
 		return filter.getName();
 	}
-	
+
+	@Override
+	public Filters getType() {
+		return Filters.ATTRIBUTES;
+	}
+
 	@Override
 	public int getMinDepth() {
 		return 0;
@@ -105,19 +111,17 @@ public class ModelFilter<D extends IDescriptor, M extends IDescribable> implemen
 	}
 	
 	public static <D extends IDescriptor, M extends IDescribable> ModelFilter<D,M> createFilter( FilterFactory.Filters name, Map<String, String> attributes){
-		IFilter<IDescriptor> filter = FilterFactory.createFilter(name, attributes);
+		IAttributeFilter<IDescriptor> filter = FilterFactory.createFilter(name, attributes);
 		return new ModelFilter<D,M>( filter );
 	}
 
 	@Override
 	public String getReference() {
-		// TODO Auto-generated method stub
-		return null;
+		return filter.getReference();
 	}
 
 	@Override
-	public String getAttribute() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getValue() {
+		return filter.getValue();
 	}
 }

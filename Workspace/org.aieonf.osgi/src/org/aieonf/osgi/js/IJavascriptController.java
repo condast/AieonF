@@ -1,15 +1,75 @@
 package org.aieonf.osgi.js;
 
 import org.aieonf.osgi.eval.IEvaluationListener;
+import org.eclipse.swt.browser.Browser;
 
 public interface IJavascriptController {
 
+	public enum DrawTypes{
+		POINT;
+	}
+
+	public enum DrawEvents{
+		DRAWEND;
+	}
+
 	boolean isInitialised();
 
-	void addEvaluationListener(IEvaluationListener<Object[]> listener);
+	/**
+	 * Returns true if the browser is currently visible
+	 * @return
+	 */
+	public boolean isBrowserVisible();
 
-	void removeEvaluationListener(IEvaluationListener<Object[]> listener);
+	/**
+	 * Returns true if the controller is disposed
+	 * @return
+	 */
+	boolean isDisposed();
 
-	Object evaluate(String query);
+	/**
+	 * Clears the pending commands 
+	 */
+	void clear();
 
+	/**
+	 * Evaluate the given expression
+	 * @param query
+	 * @param params
+	 * @return
+	 */
+	Object[] evaluate(String query);
+
+	/**
+	 * Evaluate the given expression
+	 * @param query
+	 * @param params
+	 * @return
+	 */
+	Object[] evaluate(String query, String[] params);
+
+	void addEvaluationListener(IEvaluationListener<Object> listener);
+
+	void removeEvaluationListener(IEvaluationListener<Object> listener);
+
+	void setQuery(String function);
+
+	void setQuery(String function, String[] params);
+	
+	/**
+	 * Default, when synchronisation between clients is not needed
+	 */
+	void synchronize();
+
+	/**
+	 * returns true if the controller has not pening commands
+	 * @return
+	 */
+	boolean isEmpty();
+
+	/**
+	 * Get the widget
+	 * @return
+	 */
+	Browser getBrowser();
 }

@@ -24,7 +24,7 @@ public class AbstractModel {
 	}
 	
 	protected void notifyEvaluationEvent( EvaluationEvent<Object[]> event ){
-		controller.notifyEvaluation( event );
+		//controller.notifyEvaluation( event );
 	}
 	public void synchronize(){
 		controller.executeQuery();

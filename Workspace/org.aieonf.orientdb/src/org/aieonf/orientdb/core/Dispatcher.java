@@ -68,12 +68,12 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecur
 		return provider.isRegistered(id, name);
 	}
 
-	public boolean isRegistered(long id, long token, String name) {
+	public boolean isRegistered(long id, long token, String domain) {
 		if(( this.provider == null ) || ( this.secureCall == null ))
 			return false;
-		if( !this.secureCall.isSecure(id, token, name))
+		if( !this.secureCall.isSecure(id, token, domain))
 			return false;
-		return provider.isRegistered(id, name);
+		return provider.isRegistered(id, domain);
 	}
 
 	@Override

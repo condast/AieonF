@@ -24,7 +24,7 @@ import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
-import org.aieonf.orientdb.cache.CacheService;
+import org.aieonf.model.serialise.SerialisableModel;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
 import org.aieonf.orientdb.filter.IGraphFilter;
@@ -58,16 +58,6 @@ public class ModelRestService{
 			//	return Response.status(Status.FORBIDDEN).build();
 			factory = new ModelFactory<IDescriptor>( domain, dbService );
 			factory.transform(data);
-		}
-		catch( Exception ex ){
-			ex.printStackTrace();
-			return Response.serverError().build();
-		}
-		CacheService cache = CacheService.getInstance();
-		try {
-			cache.open();
-			Collection<IDescriptor> descriptors = factory.getDescriptors().values();
-			cache.add( descriptors.toArray( new IDescriptor[ descriptors.size()] ));
 			return Response.ok().build();
 		}
 		catch( Exception ex ){
@@ -76,7 +66,6 @@ public class ModelRestService{
 		}
 		finally {
 			dbService.close();
-			cache.close();
 		}
 	}
 
@@ -96,26 +85,14 @@ public class ModelRestService{
 			result = factory.get(domain);
 			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
+			return Response.ok(result).build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
 		}
-		CacheService cache = CacheService.getInstance();
-		try {
-			cache.open();	
-			cache.fill(result);
-			Gson gson = new Gson();
-			String str = gson.toJson(result.toArray(new IModelLeaf[ result.size()]), Model[].class );
-			return Response.ok( str ).build();
-		}
-		catch( Exception ex ) {
-			ex.printStackTrace();
-			return Response.serverError().build();
-		}
-		finally {
-			cache.close();
-		}	
+		//finally {
+		//}	
 	}
 
 	@GET
@@ -134,15 +111,6 @@ public class ModelRestService{
 			result = factory.get(domain);
 			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
-		}
-		catch( Exception ex ){
-			ex.printStackTrace();
-			return Response.serverError().build();
-		}
-		CacheService cache = CacheService.getInstance();
-		try {
-			cache.open();	
-			cache.fill(result);
 			Gson gson = new Gson();
 			String str = gson.toJson(result.toArray(new IModelLeaf[ result.size()]), Model[].class );
 			return Response.ok( str ).build();
@@ -152,7 +120,7 @@ public class ModelRestService{
 			return Response.serverError().build();
 		}
 		finally {
-			cache.close();
+			//cache.close();
 		}	
 	}
 
@@ -163,32 +131,23 @@ public class ModelRestService{
 			@QueryParam("domain") String domainstr, @QueryParam("filter") String name, 
 			@QueryParam("rules") String rule, @QueryParam("reference") String attribute, @QueryParam("value") String wildcard) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		Collection<IModelLeaf<IDescriptor>> result = null;
+		Collection<SerialisableModel> result = null;
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open();
 			VertexFilterFactory ff = new VertexFilterFactory( dbService.getGraph());
-			Filters fname = Filters.valueOf(StringStyler.styleToEnum(name));
+			Filters type = Filters.valueOf(StringStyler.styleToEnum(name));
 			Map<FilterFactory.Attributes, String> params = new HashMap<>();
 			params.put(FilterFactory.Attributes.RULES, rule);
 			params.put(FilterFactory.Attributes.REFERENCE, attribute);
 			params.put(FilterFactory.Attributes.VALUE, wildcard);
-			IGraphFilter filter = ff.createFilter(fname, params);
+			IGraphFilter filter = ff.createFilter(type, params);
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
 			result = factory.get(filter.doFilter());
-		}
-		catch( Exception ex ){
-			ex.printStackTrace();
-			return Response.serverError().build();
-		}
-		CacheService cache = CacheService.getInstance();
-		try {
-			cache.open();	
-			cache.fill(result);
 			Gson gson = new Gson();
-			String str = gson.toJson(result.toArray(new IModelLeaf[ result.size()]), Model[].class );
+			String str = gson.toJson(result.toArray(new SerialisableModel[ result.size()]), SerialisableModel[].class );
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {
@@ -196,7 +155,7 @@ public class ModelRestService{
 			return Response.serverError().build();
 		}
 		finally {
-			cache.close();
+			//cache.close();
 		}	
 	}
 

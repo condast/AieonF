@@ -1,14 +1,13 @@
 package org.aieonf.model.filter;
 
-import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.IAttributeFilter;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.filter.FilterFactory.Filters;
 
-public interface IModelFilter<T extends IDescriptor, M extends IDescribable> extends IFilter<M> {
-
-	public String getReference();
+public interface IModelFilter<T extends IDescriptor, M extends IDescribable> extends IAttributeFilter<M> {
 	
-	public String getAttribute();
+	public Filters getType();
 	
 	/**
 	 * If true, the given child is accepted
