@@ -18,7 +18,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 
-public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>
+public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>
 {
 	public static final String S_IDENTIFER = "FirefoxJsonBookmarks";
 
@@ -32,7 +32,7 @@ public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IContextA
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IModelLeaf<IDescriptor>> filter) {
 		{
 			Collection<IModelLeaf<IDescriptor>> models = new ArrayList<IModelLeaf<IDescriptor>>();
 			URI uri = URI.create( super.getManifest().getSource());

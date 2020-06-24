@@ -1,11 +1,7 @@
 package test.aieonf.orientdb.suite;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 import java.util.logging.Logger;
-
-import javax.xml.ws.Response;
 
 import org.aieonf.commons.db.IDatabaseConnection;
 import org.aieonf.commons.db.IDatabaseConnection.Requests;
@@ -17,7 +13,6 @@ import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.URLAieon;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
@@ -33,7 +28,6 @@ import org.condast.commons.test.core.ITestEvent;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import test.aieonf.orientdb.core.TestFactory;
 import test.aieonf.orientdb.service.LoginDispatcher;
 
@@ -128,8 +122,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		try{		
 			database.open( factory.getDomain());
 			database.add(model);
-			IModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>> filter = 
-					new ModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
+			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
+					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
 			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
@@ -138,9 +132,13 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 				return;
 			}
 			logger.info( "Results found: " + results.size() );
+			for( IModelLeaf<? extends IDescriptor> leaf: results )
+				logger.info("MODEL:\n" + leaf.toString());
 			database.remove( results.iterator().next());
 			results = database.search(filter);
-			logger.info( "Results found: " + results.size() );
+			logger.info( "Results After Remove: " + results.size() );
+			for( IModelLeaf<? extends IDescriptor> leaf: results )
+				logger.info("MODEL:\n" + leaf.toString());
 			
 			database.add(model);
 				
@@ -161,8 +159,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		try{		
 			database.open( factory.getDomain());
 			database.add(model);
-			IModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>> filter = 
-					new ModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
+			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
+					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
 			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
@@ -192,7 +190,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		cat.setVersion(1);
 		
 		URLAieon urlAieon = new URLAieon( "MyURL" );
-		urlAieon.setURI( "http://www.condast.com" );
+		//urlAieon.setURI( "http://www.condast.com" );
 		urlAieon.setDescription( "description" );
 		urlAieon.setScope( IConcept.Scope.PUBLIC );
 		urlAieon.setVersion(1);
@@ -237,22 +235,18 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 		@Override
 		protected String onSerialise(IModelLeaf<? extends IDescriptor>[] leafs) {
-			Gson gson = new Gson();
-			Collection<SerialisableModel> results = new ArrayList<>();
-			for( IModelLeaf<? extends IDescriptor> leaf: leafs )
-				results.add( new SerialisableModel( leaf ));
-			String str = gson.toJson(results.toArray( new SerialisableModel[results.size()]), SerialisableModel[].class);
-			return str;
+			return SerialisableModel.serialise(leafs);
 		}
 
 		@Override
 		protected void getResults(ResponseEvent<Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results ) {
-			Gson gson = new Gson();
-			SerialisableModel[] models = gson.fromJson(event.getResponse(), SerialisableModel[].class); 
-			for( SerialisableModel sm: models ) {
-				IModelLeaf<IDescriptor> leaf = SerialisableModel.createModel(sm);
-				results.add(leaf);
-			}
+			results.addAll( SerialisableModel.deserialise(event.getResponse() )); 
+		}
+
+		@Override
+		public IModelLeaf<? extends IDescriptor> createModel() {
+			// TODO Auto-generated method stub
+			return null;
 		}		
 	}
 }

@@ -23,16 +23,16 @@ import org.aieonf.model.core.ModelLeaf;
  * @param <T>
  * @param <U>
  */
-public abstract class AbstractFunctionProvider<C extends IContextAieon, T extends Object, U extends Object> implements IFunctionProvider<T, U> {
+public abstract class AbstractFunctionProvider<T extends Object, U extends Object> implements IFunctionProvider<T, U> {
 
 	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
 
 	private static final String S_DEFAULT_ENVRYPTION_KEY = "aieonf.encryption";
 
 	private String identifier;
-	private C aieon;
+	private IContextAieon aieon;
 	
-	protected AbstractFunctionProvider( String identifier, C aieon ) {
+	protected AbstractFunctionProvider( String identifier, IContextAieon aieon ) {
 		this.identifier = identifier;
 		this.aieon = aieon;
 	}
@@ -41,7 +41,7 @@ public abstract class AbstractFunctionProvider<C extends IContextAieon, T extend
 		return identifier;
 	}
 
-	protected C getAieon() {
+	protected IContextAieon getAieon() {
 		return aieon;
 	}
 

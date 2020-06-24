@@ -11,7 +11,7 @@ import org.aieonf.template.def.ITemplateLeaf;
 import org.condast.aieonf.browsersupport.context.ContextFactory;
 import org.condast.aieonf.browsersupport.context.ModelFunctionProvider;
 
-public class ServiceComponent extends AbstractServiceComponent<IContextAieon, IDomainAieon, String, IModelLeaf<IDescriptor>>
+public class ServiceComponent extends AbstractServiceComponent<String, IDescriptor, IModelLeaf<IDescriptor>>
 {
 	
 	public ServiceComponent()
@@ -26,7 +26,7 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 			IFunctionProvider<String, IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> provider =  
 					new ModelFunctionProvider( (IContextAieon) template.getDescriptor() );
 			ContextFactory factory = (ContextFactory) super.getFactory();
-			factory.addProvider( provider);
+			//TODO factory.addProvider( provider);
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -40,7 +40,7 @@ public class ServiceComponent extends AbstractServiceComponent<IContextAieon, ID
 	}
 
 	@Override
-	public IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> getFunction(String key) {
+	public IModelProvider<IDescriptor, IModelLeaf<IDescriptor>> getFunction(String key) {
 		ContextFactory factory = (ContextFactory) super.getFactory();
 		return factory.getFunction(key);
 	}

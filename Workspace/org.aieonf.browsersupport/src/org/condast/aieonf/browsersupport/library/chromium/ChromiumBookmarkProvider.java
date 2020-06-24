@@ -38,7 +38,7 @@ import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.template.provider.AbstractModelProvider;
 
-class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>
+class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>
 {
 	private static final String S_CHROMIUM = "Chromiun";
 	private static final String S_ROOTS = "roots";
@@ -61,7 +61,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IModelLeaf<IDescriptor>> filter) {
 		super.getModels().clear();
 		try {
 			parseTree( filter );
@@ -71,7 +71,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 		return super.getModels();
 	}
 
-	private void parseTree( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException{
+	private void parseTree( IModelFilter<IModelLeaf<IDescriptor>> filter) throws ParseException{
 		ObjectMapper m = new ObjectMapper();
 		JsonNode rootNode;
 		URI uri = super.getManifest().getURI();
@@ -89,7 +89,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IContextAieon, IDom
 		}
 	}
 
-	private void parseTree( IModelNode<IDescriptor> leaf, JsonNode node, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ParseException, ConceptException{
+	private void parseTree( IModelNode<IDescriptor> leaf, JsonNode node, IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ParseException, ConceptException{
 		//if(( leaf != null ) && ( filter.accept( leaf )))
 		//	models.add( leaf );
 

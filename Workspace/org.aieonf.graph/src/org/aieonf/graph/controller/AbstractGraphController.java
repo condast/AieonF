@@ -1,9 +1,8 @@
 package org.aieonf.graph.controller;
 
 import org.aieonf.commons.graph.IVertex;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
@@ -11,20 +10,20 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.template.context.IModelContextFactory;
 import org.aieonf.template.controller.AbstractModelController;
 
-public abstract class AbstractGraphController<D extends IDomainAieon, U extends IDescriptor> 
-extends AbstractModelController<IContextAieon,D,U>
+public abstract class AbstractGraphController<D extends IDescriptor, M extends IDescribable> 
+extends AbstractModelController<D,M>
 {
-	private IGraphModelProvider<D, U> provider;
+	private IGraphModelProvider<D, M> provider;
 	
-	protected AbstractGraphController( IModelContextFactory<IContextAieon, D> factory ) {
+	protected AbstractGraphController( IModelContextFactory<M> factory ) {
 		super( factory );
 	}
 	
-	protected IGraphModelProvider<D, U> getProvider() {
+	protected IGraphModelProvider<D, M> getProvider() {
 		return provider;
 	}
 
-	protected void setProvider(IGraphModelProvider<D, U> provider) {
+	protected void setProvider(IGraphModelProvider<D, M> provider) {
 		this.provider = provider;
 	}
 
@@ -37,10 +36,10 @@ extends AbstractModelController<IContextAieon,D,U>
 	@Override
 	public boolean addModel(){
 		try {
-			IModelBuilderListener<U> listener = new IModelBuilderListener<U>(){
+			IModelBuilderListener<M> listener = new IModelBuilderListener<M>(){
 
 				@Override
-				public void notifyChange(ModelBuilderEvent<U> event) {
+				public void notifyChange(ModelBuilderEvent<M> event) {
 					notifyModelChanged(event);					
 				}
 			};
@@ -57,10 +56,10 @@ extends AbstractModelController<IContextAieon,D,U>
 	@Override
 	public boolean removeModel() {
 		try {
-			IModelBuilderListener<U> listener = new IModelBuilderListener<U>(){
+			IModelBuilderListener<M> listener = new IModelBuilderListener<M>(){
 
 				@Override
-				public void notifyChange(ModelBuilderEvent<U> event) {
+				public void notifyChange(ModelBuilderEvent<M> event) {
 					notifyModelChanged(event);			
 				}
 			};
@@ -80,10 +79,10 @@ extends AbstractModelController<IContextAieon,D,U>
 	@Override
 	public void updateModel() {
 		try {
-			IModelBuilderListener<U> listener = new IModelBuilderListener<U>(){
+			IModelBuilderListener<M> listener = new IModelBuilderListener<M>(){
 
 				@Override
-				public void notifyChange(ModelBuilderEvent<U> event) {
+				public void notifyChange(ModelBuilderEvent<M> event) {
 					notifyModelChanged(event);					
 				}
 			};
@@ -95,7 +94,7 @@ extends AbstractModelController<IContextAieon,D,U>
 		}
 	}
 
-	protected IVertex<U> convertFrom( IModelLeaf<U> model ){
+	protected IVertex<M> convertFrom( IModelLeaf<M> model ){
 		return null;
 	}
 }

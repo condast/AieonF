@@ -154,8 +154,8 @@ public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IMod
 				enm = ILocatorAieon.Attributes.valueOf( key );
 			}else if( LocaleAieon.Attributes.isValid(key )){
 				enm = LocaleAieon.Attributes.valueOf( key );
-			} else if( IDomainAieon.Attributes.isValid(key )){
-				enm = IDomainAieon.Attributes.valueOf( key );
+			} else if( IDescriptor.Attributes.isValid(key )){
+				enm = IDescriptor.Attributes.valueOf( key );
 			}else
 				retval = false;
 			break;

@@ -12,8 +12,8 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.FilterFactory;
 import org.aieonf.concept.filter.FilterFactory.Filters;
 
-public class ModelFilter<D extends IDescriptor, M extends IDescribable> implements
-		IModelFilter<D,M> {
+public class ModelFilter<M extends IDescribable> implements
+		IModelFilter<M> {
 
 	private IAttributeFilter<IDescriptor> filter;
 	
@@ -110,9 +110,9 @@ public class ModelFilter<D extends IDescriptor, M extends IDescribable> implemen
 		return filter.accept( child.getDescriptor() );
 	}
 	
-	public static <D extends IDescriptor, M extends IDescribable> ModelFilter<D,M> createFilter( FilterFactory.Filters name, Map<String, String> attributes){
+	public static <M extends IDescribable> ModelFilter<M> createFilter( FilterFactory.Filters name, Map<String, String> attributes){
 		IAttributeFilter<IDescriptor> filter = FilterFactory.createFilter(name, attributes);
-		return new ModelFilter<D,M>( filter );
+		return new ModelFilter<M>( filter );
 	}
 
 	@Override

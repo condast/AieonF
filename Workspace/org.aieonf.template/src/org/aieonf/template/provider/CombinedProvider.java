@@ -130,7 +130,7 @@ public class CombinedProvider<D extends IDescribable, U extends IDescribable> im
 
 	@Override
 	public Collection<U> search(
-			IModelFilter<IDescriptor, U> filter) throws ParseException {
+			IModelFilter<U> filter) throws ParseException {
 		Collection<U> results = new ArrayList<U>();
 		for( IModelProvider<D,U> provider: this.providers ){
 			try{

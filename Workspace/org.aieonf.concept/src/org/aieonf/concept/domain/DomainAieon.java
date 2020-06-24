@@ -159,7 +159,7 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 
 	@Override
 	public boolean equals( Object obj ) {
-		if( !(obj instanceof IDomainAieon ))
+		if( !(obj instanceof IDescriptor ))
 			return false;
 		if(!super.equals(obj))
 			return false;

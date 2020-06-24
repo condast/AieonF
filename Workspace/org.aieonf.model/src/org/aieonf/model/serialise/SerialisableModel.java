@@ -1,8 +1,9 @@
 package org.aieonf.model.serialise;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.aieonf.commons.Utils;
@@ -14,52 +15,30 @@ import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.core.ModelLeaf;
 
-public class SerialisableModel {
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
-	//properties
-	private Map<String, String> p;
-
-	//descriptor
-	private Map<String, String> d;
+public class SerialisableModel extends SerialisableNode{
 
 	//children
-	private Map<SerialisableModel, String> c;
+	private Map<SerialisableNode, String> c;
 
 	protected SerialisableModel() {
-		p = new HashMap<>();
-		d = new HashMap<>();
+		super();
 		c = new HashMap<>();
 	}
 	
 	public SerialisableModel( IModelLeaf<? extends IDescriptor> model ) {
-		this();
-		Iterator<Map.Entry<String, String>> iterator = model.iterator();
-		while( iterator.hasNext() ) {
-			Map.Entry<String, String> entry = iterator.next();
-			if( !StringUtils.isEmpty(entry.getKey()))
-				p.put(entry.getKey(), entry.getValue());
-		}
-		iterator = model.getData().iterator();
-		while( iterator.hasNext() ) {
-			Map.Entry<String, String> entry = iterator.next();
-			if( !StringUtils.isEmpty(entry.getKey()))
-				d.put(entry.getKey(), entry.getValue());
-		}
+		super( model );
 		if( !( model instanceof IModelNode<?> ))
 			return;
+		c = new HashMap<>();
 		IModelNode<?> node=  (IModelNode<?>) model;
 		Collection<Map.Entry<IModelLeaf<? extends IDescriptor>, String>> children = node.getChildren().entrySet();
 		for( Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry: children ) {
 			c.put( new SerialisableModel( entry.getKey()), entry.getValue());
 		}
-	}
-
-	protected void putDescriptor(String key, String property) {
-		d.put(key, property);
-	}
-
-	protected void put(String key, String property) {
-		d.put(key, property);
 	}
 	
 	protected void addChild( SerialisableModel child, String label ) {
@@ -70,15 +49,7 @@ public class SerialisableModel {
 		return Utils.assertNull(c);
 	}
 
-	public Map<String, String> getProperties() {
-		return p;
-	}
-
-	public Map<String, String> getDescriptors() {
-		return d;
-	}
-
-	public Map<SerialisableModel, String> getChildren() {
+	public Map<SerialisableNode, String> getChildren() {
 		return c;
 	}
 	
@@ -97,8 +68,56 @@ public class SerialisableModel {
 		if(sm.isleaf()) 
 			return leaf;
 		IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) leaf;
-		for( Map.Entry<SerialisableModel, String> entry: sm.getChildren().entrySet())
+		for( Map.Entry<SerialisableNode, String> entry: sm.getChildren().entrySet())
 			model.addChild( createModel( entry.getKey() ), entry.getValue());
 		return model;
 	}
+
+	/**
+	 * Serialise the leafs. note the the tree node structure is quite delicate, so 
+	 * changing the settings can have adverse effects, in particular not serialising the child nodes  
+	 * @param leafs
+	 * @return
+	 */
+	public static String serialise(SerialisableModel[] models) {
+		GsonBuilder builder = new GsonBuilder();
+		builder.enableComplexMapKeySerialization();
+		Gson gson = builder.create();
+		Type tsn = new TypeToken<SerialisableModel[]>(){}.getType();
+		String str = gson.toJson(models, tsn);
+		return str;
+	}
+
+	/**
+	 * Serialise the leafs. note the the tree node structure is quite delicate, so 
+	 * changing the settings can have adverse effects, in particular not serialising the child nodes  
+	 * @param leafs
+	 * @return
+	 */
+	public static String serialise(IModelLeaf<? extends IDescriptor>[] leafs) {
+		Collection<SerialisableModel> results = new ArrayList<>();
+		for( IModelLeaf<? extends IDescriptor> leaf: leafs )
+			results.add( new SerialisableModel( leaf ));
+		return serialise( results.toArray( new SerialisableModel[ results.size()]));
+	}
+
+	public static Collection<IModelLeaf<? extends IDescriptor>> deserialise( String str ) {
+		Collection<IModelLeaf<? extends IDescriptor>> results=  new ArrayList<>();
+		if( StringUtils.isEmpty(str))
+			return results;
+		GsonBuilder builder = new GsonBuilder();
+		builder.enableComplexMapKeySerialization();
+		Gson gson = builder.create();
+		Type tsn = new TypeToken<SerialisableModel[]>(){}.getType();
+		
+		SerialisableModel[] models = gson.fromJson(str, SerialisableModel[].class); 
+		if( Utils.assertNull(models))
+			return results;
+		for( SerialisableModel sm: models ) {
+			IModelLeaf<IDescriptor> leaf = SerialisableModel.createModel(sm);
+			results.add(leaf);
+		}
+		return results;
+	}		
+
 }

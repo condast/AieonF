@@ -2,10 +2,9 @@ package org.aieonf.model.filter;
 
 import org.aieonf.commons.filter.IAttributeFilter;
 import org.aieonf.concept.IDescribable;
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.FilterFactory.Filters;
 
-public interface IModelFilter<T extends IDescriptor, M extends IDescribable> extends IAttributeFilter<M> {
+public interface IModelFilter<M extends IDescribable> extends IAttributeFilter<M> {
 	
 	public Filters getType();
 	

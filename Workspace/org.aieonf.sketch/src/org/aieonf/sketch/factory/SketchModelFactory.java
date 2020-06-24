@@ -7,13 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.model.builder.IModelBuilder;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.sketch.Activator;
 import org.aieonf.template.builder.TemplateInterpreter;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
-public class SketchModelFactory extends AbstractProviderContextFactory<IContextAieon,IDescriptor> {
+public class SketchModelFactory extends AbstractProviderContextFactory<IDescriptor, IModelLeaf<IDescriptor>> {
 
 	public static final String S_WEB = "/web/";
 	

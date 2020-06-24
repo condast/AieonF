@@ -13,7 +13,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
-public class IEFavoritesFunction extends AbstractFunctionProvider<IContextAieon, String, 
+public class IEFavoritesFunction extends AbstractFunctionProvider<String, 
 IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 {
 	//Default identifier
@@ -32,8 +32,7 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 	 * Get the default location for the personal database
 	 * @return String
 	 */
-	public static URI getDefaultSource()
-	{
+	public static URI getDefaultSource(){
 		if( System.getProperty( "os.name").toLowerCase().startsWith( "windows" )){
 			File file = new File( System.getProperty( "user.home" ) + DEFAULT_IE_ROOT );
 			return file.toURI();
@@ -49,7 +48,6 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
 		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
-
-		return  new IEFavoritesProvider( super.getAieon());
+		return new IEFavoritesProvider( super.getAieon());
 	}
 }

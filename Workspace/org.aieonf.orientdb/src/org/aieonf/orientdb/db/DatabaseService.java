@@ -1,5 +1,6 @@
 package org.aieonf.orientdb.db;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -13,7 +14,6 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
-import org.aieonf.orientdb.cache.CacheService;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
@@ -32,7 +32,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
  * @param <D>
  * @param <Descriptor>
  */
-public class DatabaseService {
+public class DatabaseService implements Closeable{
 	
 	public static final String S_BUNDLE_ID = "org.aieonf.orientdb";
 	public static final String S_IDENTIFIER = "documenttxModel";
@@ -40,8 +40,6 @@ public class DatabaseService {
 	protected static final String S_ROOT = "Root";
 	protected static final String S_DESCRIPTORS = "Descriptors";
 
-	private CacheService cache;
-	
 	private Collection<IModelListener<IModelNode<IDescriptor>>> listeners;
 	
 	private static DatabaseService service = new DatabaseService();
@@ -60,10 +58,6 @@ public class DatabaseService {
 	
 	public OrientGraph getGraph() {
 		return graph;
-	}
-
-	public CacheService getCache() {
-		return cache;
 	}
 
 	/**
@@ -101,15 +95,12 @@ public class DatabaseService {
 	public boolean open( ){
 		if( !persistence.isConnected() )
 			return false;
-		graph = persistence.createDatabase();
+		this.graph = persistence.createDatabase();
 		if( graph.getVertexType(IDescriptor.DESCRIPTORS) == null )
 			graph.createVertexType( IDescriptor.DESCRIPTORS );
 		if( graph.getEdgeType(IDescriptor.DESCRIPTOR) == null )
 			graph.createEdgeType( IDescriptor.DESCRIPTOR );
-		ODatabaseDocumentTx database = graph.getRawGraph();
-		cache = new CacheService( database );
-		//graph.begin();
-		return cache.open();
+		return true;
 	}
 	
 	public String getIdentifier(){
@@ -133,33 +124,53 @@ public class DatabaseService {
 		return (this.graph != null ) && !this.graph.isClosed();
 	}
 
-	public boolean remove( String id ) {
-		Vertex vertex = this.graph.getVertex(id);
-		if( vertex == null )
-			return false;
-		this.graph.removeVertex(vertex);
-		return true;
+	public int remove( long id ) {
+		int counter = 0;
+		Iterable<Vertex> iterable = this.graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
+		if( iterable == null )
+			return counter;
+		Iterator<Vertex> iterator = iterable.iterator();
+		while( iterator.hasNext() ) {
+			Vertex vertex = iterator.next();			
+			counter += remove( vertex, counter );
+		}		
+		return counter;
 	}
 
-	public boolean remove( String parent, String[] children ) {
-		boolean result = false;
-		Vertex vertex = this.graph.getVertex(parent);
-		if( vertex == null )
-			return false;
-		
-		Iterator<Edge> iterator = vertex.getEdges(Direction.BOTH).iterator();
-		while( iterator.hasNext()) {
-			Edge child = iterator.next();
-			for( String childId: children ) {
-				if( child.getVertex( Direction.OUT).getId().equals( childId )) {
-					this.graph.removeEdge(child);
-					result = true;
-				}
-			}
+	public int remove( long[] ids ) {
+		int counter = 0;
+		for( long id: ids) {
+			counter += remove(id);	
 		}
-		return result;
+		return counter;
 	}
 
+	protected int remove( Vertex vertex, int counter ) {
+		if( vertex == null )
+			return counter;
+		
+		Iterator<Edge> iterator = vertex.getEdges(Direction.IN).iterator();
+		int index=  counter;
+		while( iterator.hasNext()) {
+			Edge edge = iterator.next();
+			Vertex child = edge.getVertex(Direction.OUT);
+			if( countEdges( child,  Direction.OUT) > 0)
+				index += remove( child, index );
+			}
+		this.graph.removeVertex(vertex);
+		return index;
+	}
+
+	protected int countEdges( Vertex vertex, Direction direction ) {
+		int counter = 0;
+		Iterator<Edge> iterator = vertex.getEdges(direction).iterator();
+		while( iterator.hasNext()) {
+			iterator.next();
+			counter++;
+		}
+		return counter;
+	}
+	
 	public void sync(){
 		try{
 			this.graph.commit();
@@ -179,9 +190,8 @@ public class DatabaseService {
 		return transaction;
 	}
 
-	public void close(){
+	public synchronized void close(){
 		graph.commit();
-		cache.close();
 		graph.shutdown();
 		graph = null;
 	}

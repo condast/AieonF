@@ -10,6 +10,7 @@ import org.aieonf.commons.Utils;
 import org.aieonf.commons.db.IDatabaseConnection;
 import org.aieonf.commons.http.AbstractHttpRequest;
 import org.aieonf.commons.http.ResponseEvent;
+import org.aieonf.commons.http.IHttpRequest.HttpStatus;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.security.ISecureGenerator;
 import org.aieonf.commons.strings.StringStyler;
@@ -72,11 +73,9 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 	public void sync() {
 	}
 
-
 	@Override
 	public void deactivate() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
@@ -104,6 +103,12 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 			listener.notifyChange(event);
 	}
 
+	/**
+	 * Create a model
+	 * @return
+	 */
+	public abstract IModelLeaf<? extends IDescriptor> createModel();
+	
 	protected abstract void getResults( ResponseEvent<IDatabaseConnection.Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results );
 
 	@Override
@@ -115,7 +120,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
-		parameters.put(Attributes.MODEL_ID.toString(), leaf.getID() );
+		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( leaf.getID() ));
 		WebClient client = new WebClient( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
@@ -149,7 +154,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 	}
 	
 	@Override
-	public Collection<IModelLeaf<? extends IDescriptor>> search(IModelFilter<IDescriptor, IModelLeaf<? extends IDescriptor>> filter)
+	public Collection<IModelLeaf<? extends IDescriptor>> search(IModelFilter<IModelLeaf<? extends IDescriptor>> filter)
 			throws ParseException {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.SEARCH;
@@ -189,7 +194,13 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		WebClient client = new WebClient( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
-			client.addListener( e->getResults(e, results ));
+			client.addListener( e->{
+				if( HttpStatus.OK.getStatus() != e.getResponseCode())
+					return;
+				String id = e.getResponse();
+				IModelLeaf<? extends IDescriptor>[] models = e.getData();
+				models[0].set(IDescriptor.Attributes.ID.name(), id);
+			});
 			client.sendPost(request, parameters, onSerialise(added), added);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
@@ -205,7 +216,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE;
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
-		parameters.put(Attributes.MODEL_ID.toString(), leaf.getID() );
+		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( leaf.getID() ));
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
@@ -215,7 +226,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		boolean result = false;
 		try {
-			client.addListener( e->getResults(e, results ));
+			//client.addListener( e->getResults(e, results ));
 			client.sendDelete(request, parameters, removed);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
@@ -231,7 +242,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.UPDATE;
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
-		parameters.put(Attributes.MODEL_ID.toString(), leaf.getID() );
+		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf(  leaf.getID() ));
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());

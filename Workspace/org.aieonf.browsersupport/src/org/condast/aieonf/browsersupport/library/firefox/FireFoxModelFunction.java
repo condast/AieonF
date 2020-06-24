@@ -14,7 +14,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
-public class FireFoxModelFunction extends AbstractFunctionProvider<IContextAieon, String, 
+public class FireFoxModelFunction extends AbstractFunctionProvider<String, 
 	IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 {
 	//Default location

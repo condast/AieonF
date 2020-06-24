@@ -18,7 +18,7 @@ import org.aieonf.template.def.ITemplateLeaf;
  * info to create the application
  * @author Kees Pieters
  */
-public class TestFactory extends AbstractProviderContextFactory<IContextAieon, IModelLeaf<IDescriptor>>{
+public class TestFactory extends AbstractProviderContextFactory<IDescriptor, IModelLeaf<IDescriptor>>{
 	
 	private static final String S_BUNDLE_ID = "org.test.orientdb";
 

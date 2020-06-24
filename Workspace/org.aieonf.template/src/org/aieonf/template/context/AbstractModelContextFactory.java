@@ -5,26 +5,32 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.filter.IAttributeFilter;
+import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.filter.IModelFilter;
+import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.search.ModelScanner;
 import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.def.ITemplateNode;
 import org.aieonf.template.xml.XMLTemplateBuilder;
 
-public abstract class AbstractModelContextFactory<C extends IContextAieon> implements IModelContextFactory<C,IDomainAieon> {
+public abstract class AbstractModelContextFactory<D extends IDescriptor, M extends IModelLeaf<D>> implements IModelContextFactory<M> {
 
+	public static final String S_MODEL_ID = "org.aieonf.model";
 	public static final String S_DEFAULT_VERSION = "0.1";
 	
-	private ITemplateLeaf<C> template;
+	private ITemplateLeaf<IContextAieon> template;
 
 	private Collection<IModelBuilderListener<IDescribable>> listeners;
 
@@ -43,14 +49,14 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	 * Create the model
 	 * @return
 	 */
-	protected abstract ITemplateLeaf<C> onCreateTemplate();
+	protected abstract ITemplateLeaf<IContextAieon> onCreateTemplate();
 
 	/**
 	 * Create the model
 	 * @return
 	 */
 	@Override
-	public ITemplateLeaf<C> createTemplate(){
+	public ITemplateLeaf<IContextAieon> createTemplate(){
 		this.template = onCreateTemplate();
 		return template;
 	}
@@ -59,7 +65,7 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	 * @see org.aieonf.template.context.IModelContextFactory#getModel()
 	 */
 	@Override
-	public ITemplateLeaf<C> getTemplate() {
+	public ITemplateLeaf<IContextAieon> getTemplate() {
 		return template;
 	}
 
@@ -68,7 +74,7 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	 */
 	@Override
 	public IDomainAieon getDomain(){
-		ModelScanner<C> search = new ModelScanner<C>( this.template );
+		ModelScanner<IContextAieon> search = new ModelScanner<IContextAieon>( this.template );
 		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
 		String str = domain.getDomain();
 		domain.set( IDescriptor.Attributes.ID, String.valueOf( str.hashCode() ) );
@@ -77,11 +83,12 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected final ITemplateLeaf<C> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
+	protected final ITemplateLeaf<IContextAieon> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
 		logger.info("Parsing model: " + identifier );
-		XMLTemplateBuilder<C,ITemplateLeaf<C>> builder = new XMLTemplateBuilder<C, ITemplateLeaf<C>>( identifier, interpreter );
+		XMLTemplateBuilder<IContextAieon,ITemplateLeaf<IContextAieon>> builder = 
+				new XMLTemplateBuilder<IContextAieon, ITemplateLeaf<IContextAieon>>( identifier, interpreter );
 		builder.build();
-		ITemplateLeaf<C> root = (ITemplateLeaf<C>) builder.getModel();
+		ITemplateLeaf<IContextAieon> root = (ITemplateLeaf<IContextAieon>) builder.getModel();
 		long id = StringUtils.isEmpty(identifier)?-1:identifier.hashCode();
 		root.getDescriptor().set( IDescriptor.Attributes.ID, String.valueOf(id ));
 		root.getDescriptor().set( IDescriptor.Attributes.VERSION, S_DEFAULT_VERSION );
@@ -94,28 +101,46 @@ public abstract class AbstractModelContextFactory<C extends IContextAieon> imple
 	 * @param identifier
 	 * @return
 	 */
-	protected ITemplateLeaf<C> getTemplate( String identifier ){
+	protected ITemplateLeaf<IContextAieon> getTemplate( String identifier ){
 		return getTemplate( this.template, identifier );
 	}
 
 	@SuppressWarnings("unchecked")
-	protected ITemplateLeaf<C> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
+	protected ITemplateLeaf<IContextAieon> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
 		if( Utils.assertNull( identifier ))
 			return null;
 		if( identifier.equals( leaf.getID())){
 			if( Utils.assertNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE ) )){
-				leaf.getDescriptor().set( IConcept.Attributes.SOURCE, template.getID() );
+				leaf.getDescriptor().set( IConcept.Attributes.SOURCE, String.valueOf( template.getID() ));
 			}
-			return (ITemplateLeaf<C>) leaf;
+			return (ITemplateLeaf<IContextAieon>) leaf;
 		}
 		if( leaf.isLeaf())
 			return null;
 		ITemplateNode<IDescriptor> node = (ITemplateNode<IDescriptor>) leaf;
 		for( IModelLeaf<? extends IDescriptor> child: node.getChildren().keySet() ){
-			ITemplateLeaf<C> result = getTemplate( (ITemplateLeaf<? extends IDescriptor>) child, identifier );
+			ITemplateLeaf<IContextAieon> result = getTemplate( (ITemplateLeaf<? extends IDescriptor>) child, identifier );
 			if( result != null )
 				return result;
 		}
 		return null;
 	}
+
+	
+	@Override
+	public M createModel() {
+		ModelScanner<IDescriptor> scanner = new ModelScanner<IDescriptor>( this.template );
+		IAttributeFilter<IDescriptor> filter = new AttributeFilter<>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.NAME, S_MODEL_ID);
+		IModelFilter<IModelLeaf<IDescriptor>> modelFilter = new ModelFilter<>( filter);
+		M model = null;
+		try {
+			Collection<IModelLeaf<IDescriptor>> models = scanner.search(modelFilter);
+			if( !Utils.assertNull(models))
+				model = (M) models.iterator().next(); 
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return model;
+	}
+
 }

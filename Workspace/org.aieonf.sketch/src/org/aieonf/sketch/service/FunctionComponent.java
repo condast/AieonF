@@ -19,11 +19,11 @@ public class FunctionComponent
 	
 	public void deactivate(){};
 
-	public void addProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> function ){
+	public void addProvider( IFunctionProvider<String,IModelProvider<IDescriptor, IModelLeaf<IDescriptor>>> function ){
 		this.factory.addProvider( function );
 	}
 	
-	public void removeProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> function ){
+	public void removeProvider( IFunctionProvider<String,IModelProvider<IDescriptor, IModelLeaf<IDescriptor>>> function ){
 		this.factory.removeProvider(function);
 	}
 

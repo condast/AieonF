@@ -7,7 +7,7 @@ import org.aieonf.concept.filter.DescriptorFilter;
 import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 
-public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends HierarchicalFilter<IModelLeaf<T>> implements IModelFilter<T,IModelLeaf<T>>
+public class HierarchicalModelDescriptorFilter<D extends IDescriptor> extends HierarchicalFilter<IModelLeaf<D>> implements IModelFilter<IModelLeaf<D>>
 {
 	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";
 
@@ -28,8 +28,8 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 	public HierarchicalModelDescriptorFilter(IDescriptor parent, IDescriptor child, int minDepth, int maxDepth )
 			throws FilterException
 	{
-		super( Rules.OrChain, new DescriptorFilter<IModelLeaf<T>>( DescriptorFilter.Rules.Equals, parent ), 
-				new DescriptorFilter<IModelLeaf<T>>( DescriptorFilter.Rules.Equals, child ));
+		super( Rules.OrChain, new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, parent ), 
+				new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, child ));
 		if( minDepth < 0 )
 			throw new IllegalArgumentException( S_ERR_MIN_DEPTH_WRONG);
 		this.minDepth = minDepth;
@@ -38,8 +38,8 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 
 	public HierarchicalModelDescriptorFilter(HierarchyRules rule, IDescriptor parent, IDescriptor child, int minDepth, int maxDepth) throws FilterException
 	{
-		super( Rules.OrChain, new DescriptorFilter<IModelLeaf<T>>( DescriptorFilter.Rules.Equals, parent ), 
-				new DescriptorFilter<IModelLeaf<T>>( DescriptorFilter.Rules.Equals, child ));
+		super( Rules.OrChain, new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, parent ), 
+				new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, child ));
 		if( minDepth < 0 )
 			throw new IllegalArgumentException( S_ERR_MIN_DEPTH_WRONG);
 		this.minDepth = minDepth;
@@ -72,14 +72,14 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 	}
 
 	@Override
-	protected boolean acceptEnabled( IModelLeaf<T> obj) throws FilterException {
+	protected boolean acceptEnabled( IModelLeaf<D> obj) throws FilterException {
 		if( ! ModelFilterWrapper.acceptDepth( minDepth, maxDepth, obj ))
 			return false;
 		return super.acceptEnabled(obj);
 	}
 
 	@Override
-	public boolean acceptChild( IModelLeaf<T> child) {
+	public boolean acceptChild( IModelLeaf<D> child) {
 		if(  ModelFilterWrapper.acceptDepth( minDepth, maxDepth, child ))
 			return false;
 		HierarchyRules rules = super.getHierarchyRule();
@@ -89,7 +89,7 @@ public class HierarchicalModelDescriptorFilter<T extends IDescriptor> extends Hi
 			retval = true;
 			break;
 		case ALLPARENTS:
-			retval = super.getChildFilter().accept( (IModelLeaf<T>) child );
+			retval = super.getChildFilter().accept( (IModelLeaf<D>) child );
 		case AS_IS:
 			break;
 		}

@@ -2,7 +2,7 @@ package org.aieonf.concept.filter;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.HierarchicalFilter;
-import org.aieonf.commons.filter.IFilter;
+import org.aieonf.commons.filter.IAttributeFilter;
 import org.aieonf.commons.filter.WildcardFilter;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -12,20 +12,20 @@ public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescr
 	private String defaultParentRefVal;
 	private String defaultChildRefVal;
 	
-	public HierarchicalAttributeFilter(AttributeFilter<M> parentFilter, AttributeFilter<M> childFilter)
+	public HierarchicalAttributeFilter( IAttributeFilter<M> parentFilter, AttributeFilter<M> childFilter)
 			throws FilterException
 	{
 		this( Rules.OrChain, parentFilter, childFilter);
 	}
 
-	public HierarchicalAttributeFilter(Rules chainRule, IFilter<M> parentFilter,
-			IFilter<M> childFilter) throws FilterException
+	public HierarchicalAttributeFilter(Rules chainRule, IAttributeFilter<M> parentFilter,
+			IAttributeFilter<M> childFilter) throws FilterException
 	{
 		super(chainRule, parentFilter, childFilter);
 	}
 
 	public HierarchicalAttributeFilter(HierarchyRules rule,
-			IFilter<M> parentFilter, IFilter<M> childFilter) throws FilterException
+			IAttributeFilter<M> parentFilter, IAttributeFilter<M> childFilter) throws FilterException
 	{
 		this( Rules.OrChain, parentFilter, childFilter);
 	}

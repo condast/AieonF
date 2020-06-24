@@ -239,12 +239,19 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 			break;
 			
 		}
-		handleResponse( url, request, args, conn, data);
-		int responseCode = conn.getResponseCode();
-		if( responseCode != IHttpRequest.HttpStatus.OK.getStatus())
-			logger.fine( request + "\n\tResponse Code : " + getHttpStatus( responseCode ).name() + 
-				"(" +responseCode + ")");
-		conn.disconnect();
+		try {
+			handleResponse( url, request, args, conn, data);
+			int responseCode = conn.getResponseCode();
+			if( responseCode != IHttpRequest.HttpStatus.OK.getStatus())
+				logger.fine( request + "\n\tResponse Code : " + getHttpStatus( responseCode ).name() + 
+						"(" +responseCode + ")");
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		finally {
+			conn.disconnect();
+		}
 	}
 
 	/**

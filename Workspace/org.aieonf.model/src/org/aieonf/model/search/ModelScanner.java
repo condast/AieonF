@@ -10,11 +10,11 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.filter.IModelFilter;
 
-public class ModelScanner<T extends IDescriptor>{
+public class ModelScanner<D extends IDescriptor>{
 
-	private IModelLeaf<T> model;
+	private IModelLeaf<? extends IDescriptor> model;
 
-	public ModelScanner( IModelLeaf<T> model ) {
+	public ModelScanner( IModelLeaf<? extends IDescriptor> model ) {
 		super();
 		this.model = model;
 	}
@@ -36,7 +36,7 @@ public class ModelScanner<T extends IDescriptor>{
 			results.add( current.getData() );
 		if(!( current instanceof IModelNode ))
 			return;
-		IModelNode<T> node = (IModelNode<T>) current;
+		IModelNode<D> node = (IModelNode<D>) current;
 		for( IModelLeaf<?> child: node.getChildren().keySet() )
 			getDescriptors( results, name, (IModelLeaf<? extends IDescriptor>) child );
 	}
@@ -58,26 +58,27 @@ public class ModelScanner<T extends IDescriptor>{
 		}
 		if(!( current instanceof IModelNode ))
 			return;
-		IModelNode<T> node = (IModelNode<T>) current;
+		IModelNode<D> node = (IModelNode<D>) current;
 		for( IModelLeaf<?> child: node.getChildren().keySet() )
 			getModel( results, descriptor, (IModelLeaf<IDescriptor>) child );
 	}
 
-	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<T, IModelLeaf<T>> filter) throws ParseException {
+	@SuppressWarnings("unchecked")
+	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IModelLeaf<D>> filter) throws ParseException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
-		searchModel( results, filter, model );
+		searchModel( results, filter, (IModelLeaf<D>) model );
 		return results;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void searchModel( Collection<IModelLeaf<IDescriptor>> results, IModelFilter<T, IModelLeaf<T>> filter, IModelLeaf<T> current ){
+	protected void searchModel( Collection<IModelLeaf<IDescriptor>> results, IModelFilter<IModelLeaf<D>> filter, IModelLeaf<D> current ){
 		if( filter.accept( current ))
 			results.add( (IModelLeaf<IDescriptor>) current );
 		if(!( current instanceof IModelNode ))
 			return;
-		IModelNode<T> node = (IModelNode<T>) current;
+		IModelNode<D> node = (IModelNode<D>) current;
 		for( IModelLeaf<?> child: node.getChildren().keySet() )
-			searchModel( results, filter, (IModelLeaf<T>) child );
+			searchModel( results, filter, (IModelLeaf<D>) child );
 	}
 
 }

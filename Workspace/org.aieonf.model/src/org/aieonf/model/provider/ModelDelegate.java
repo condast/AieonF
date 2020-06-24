@@ -5,64 +5,63 @@ import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T> 
+public class ModelDelegate<M extends IDescriptor> implements IModelDelegate<M> 
 {
-	private Collection<IModelProvider<IDomainAieon, T>> providers;
-	private Collection<IModelListener<T>> listeners;
+	private Collection<IModelProvider<IDescriptor, M>> providers;
+	private Collection<IModelListener<M>> listeners;
 	
-	private IModelListener<T> listener = new IModelListener<T>() {
+	private IModelListener<M> listener = new IModelListener<M>() {
 		
 		@Override
-		public void notifyChange(ModelEvent<T> event) {
+		public void notifyChange(ModelEvent<M> event) {
 			notifyEventChange(event);
 		}
 	};
 	
 	public ModelDelegate()
 	{
-		providers = new ArrayList<IModelProvider<IDomainAieon,T>>();
-		listeners = new ArrayList<IModelListener<T>>();
+		providers = new ArrayList<IModelProvider<IDescriptor,M>>();
+		listeners = new ArrayList<IModelListener<M>>();
 	}
 
 	
-	public void addProvider( IModelProvider<IDomainAieon, T> provider ){
+	public void addProvider( IModelProvider<IDescriptor, M> provider ){
 		this.providers.add( provider );
 	}
 
-	public void removeProvider( IModelProvider<IDomainAieon, T> provider ){
+	public void removeProvider( IModelProvider<IDescriptor, M> provider ){
 		this.providers.remove( provider );
 	}
 
 	@Override
-	public void addListener(IModelListener<T> listener) {
+	public void addListener(IModelListener<M> listener) {
 		this.listeners.add( listener );	
 	}
 
 	@Override
-	public void removeListener(IModelListener<T> listener) {
+	public void removeListener(IModelListener<M> listener) {
 		this.listeners.remove( listener );
 	}
 
-	protected void notifyEventChange( ModelEvent<T> event ) {
-		for( IModelListener<T> mbl: listeners )
-			mbl.notifyChange( new ModelEvent<T>( this, event.getModel() ));
+	protected void notifyEventChange( ModelEvent<M> event ) {
+		for( IModelListener<M> mbl: listeners )
+			mbl.notifyChange( new ModelEvent<M>( this, event.getModel() ));
 	}
 
-	public void open( IDomainAieon domain) {
-		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+	public void open( IDescriptor domain) {
+		for( IModelProvider<IDescriptor, M> provider: this.providers ){
 			provider.open( domain );
 		}
 	}
 
 	public boolean isOpen() {
-		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+		for( IModelProvider<IDescriptor, M> provider: this.providers ){
 			if( provider.isOpen())
 				return true;
 		}
@@ -71,52 +70,52 @@ public class ModelDelegate<T extends IDescriptor> implements IModelDelegate<T>
 
 	@Override
 	public void close( ) {
-		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+		for( IModelProvider<IDescriptor, M> provider: this.providers ){
 			provider.close();
 		}
 	}
 
 	@Override
-	public void contains( T descriptor) {
-		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+	public void contains( M descriptor) {
+		for( IModelProvider<IDescriptor, M> provider: this.providers ){
 			if( provider.contains( descriptor )){
-				listener.notifyChange( new ModelEvent<T>( provider, descriptor ));
+				listener.notifyChange( new ModelEvent<M>( provider, descriptor ));
 			}
 		}
-		listener.notifyChange( new ModelEvent<T>( this ));
+		listener.notifyChange( new ModelEvent<M>( this ));
 	}
 
-	protected void onGet( IModelProvider<IDomainAieon, T> provider, IDescriptor descriptor ){
+	protected void onGet( IModelProvider<IDescriptor, M> provider, IDescriptor descriptor ){
 		try {
 			provider.get(descriptor);
-			listener.notifyChange( new ModelEvent<T>( provider, null, true ));
+			listener.notifyChange( new ModelEvent<M>( provider, null, true ));
 		} catch (ParseException e) {
 			e.printStackTrace();
-			listener.notifyChange( new ModelEvent<T>( provider ));
+			listener.notifyChange( new ModelEvent<M>( provider ));
 		}
 	}
 	
 	@Override
 	public synchronized void get(IDescriptor descriptor)
 			throws ParseException {
-		for( IModelProvider<IDomainAieon,T> provider: this.providers ){
+		for( IModelProvider<IDescriptor,M> provider: this.providers ){
 			this.onGet(provider, descriptor);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void onSearch( IModelProvider<IDomainAieon,T> provider, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ){
+	protected void onSearch( IModelProvider<IDescriptor,M> provider, IModelFilter<IModelLeaf<IDescriptor>> filter ){
 		try {
-			provider.search(  (IModelFilter<IDescriptor, T>) filter );
-			listener.notifyChange( new ModelEvent<T>( provider, null, true ));
+			provider.search(  (IModelFilter<M>) filter );
+			listener.notifyChange( new ModelEvent<M>( provider, null, true ));
 		} catch (ParseException e) {
 			e.printStackTrace();
-			listener.notifyChange( new ModelEvent<T>( provider ));
+			listener.notifyChange( new ModelEvent<M>( provider ));
 		}
 	}
 	@Override
-	public synchronized void search( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
-		for( IModelProvider<IDomainAieon, T> provider: this.providers ){
+	public synchronized void search( IModelFilter<IModelLeaf<IDescriptor>> filter) throws ParseException {
+		for( IModelProvider<IDescriptor, M> provider: this.providers ){
 			this.onSearch(provider, filter);
 		}
 	}

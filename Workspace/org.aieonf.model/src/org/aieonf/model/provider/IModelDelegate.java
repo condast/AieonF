@@ -3,7 +3,6 @@ package org.aieonf.model.provider;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.filter.IModelFilter;
@@ -22,7 +21,7 @@ public interface IModelDelegate<U extends IDescribable>{
 	 * Open the delegate
 	 * @param domain
 	 */
-	public void open(IDomainAieon domain );
+	public void open(IDescriptor domain );
 	
 	public boolean isOpen();
 		
@@ -51,7 +50,7 @@ public interface IModelDelegate<U extends IDescribable>{
 	 * @param filter
 	 * @throws ParseException
 	 */
-	public void search( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ParseException;
+	public void search( IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ParseException;
 
 	/**
 	 * Add a change listener

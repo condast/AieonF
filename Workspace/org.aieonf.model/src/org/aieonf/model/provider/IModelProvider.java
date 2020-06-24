@@ -11,9 +11,9 @@ import org.aieonf.model.filter.IModelFilter;
  * A model provider provides a function to get models.
  * @author Kees
  *
- * @param <T>
+ * @param <M>
  */
-public interface IModelProvider<K extends Object, T extends IDescribable> extends IProvider<T>{
+public interface IModelProvider<K extends Object, M extends IDescribable> extends IProvider<M>{
 
 	public static final String S_DESCRIPTOR_PROVIDER_ID = "org.aieonf.descriptor.provider";
 	public static final String S_CONCEPT_PROVIDER_ID    = "org.aieonf.concept.provider";
@@ -120,7 +120,7 @@ public interface IModelProvider<K extends Object, T extends IDescribable> extend
 	 * @param descriptor
 	 * @return
 	 */
-	public boolean contains( T leaf );
+	public boolean contains( M leaf );
 
 	/**
 	 * Get the models conforming to the given descriptor. Use the model builder
@@ -128,7 +128,7 @@ public interface IModelProvider<K extends Object, T extends IDescribable> extend
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<T> get( IDescriptor descriptor ) throws ParseException;
+	public Collection<M> get( IDescriptor descriptor ) throws ParseException;
 
 	/**
 	 * Get the models conforming to the given descriptor. Use the model builder
@@ -136,7 +136,7 @@ public interface IModelProvider<K extends Object, T extends IDescribable> extend
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<T> search( IModelFilter<IDescriptor, T> filter ) throws ParseException;
+	public Collection<M> search( IModelFilter<M> filter ) throws ParseException;
 	
 	/**
 	 * Deactivate the function

@@ -1,5 +1,8 @@
 package org.aieonf.template.controller;
 
+import java.io.Closeable;
+
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.core.IModelLeaf;
@@ -11,7 +14,7 @@ import org.aieonf.model.core.IModelLeaf;
  *
  * @param <U>
  */
-public interface IModelController<U extends IDescriptor> {
+public interface IModelController<U extends IDescribable> extends Closeable{
 
 	/**
 	 * Initialise the controller
@@ -56,18 +59,18 @@ public interface IModelController<U extends IDescriptor> {
 	 * Create a model
 	 * @return
 	 */
-	public IModelLeaf<U> createModel();
+	public U createModel();
 
 	/**
 	 * Get a model which contains the given descriptor
 	 * @return
 	 */
-	public IModelLeaf<U> getModel();
+	public U getModel();
 	
 	/**
 	 *Set the model
 	 */
-	public void setModel( IModelLeaf<U> model );
+	public void setModel( U model );
 
 	/**
 	 * Get a submodel which contains the given descriptor

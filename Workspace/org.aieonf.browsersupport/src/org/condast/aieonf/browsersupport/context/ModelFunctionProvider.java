@@ -17,8 +17,7 @@ import org.condast.aieonf.browsersupport.library.chromium.ChromiumModelFunctionP
 import org.condast.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.condast.aieonf.browsersupport.library.ie.IEFavoritesFunction;
 
-public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, String, 
-	IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>{
+public class ModelFunctionProvider extends AbstractFunctionProvider<String, IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>{
 	
 	private ModelProvider provider;
 	
@@ -42,7 +41,7 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieo
 		return null;
 	}
 	
-	private class ModelProvider extends AbstractModelProvider<IContextAieon, IDomainAieon, IModelLeaf<IDescriptor>>{
+	private class ModelProvider extends AbstractModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>{
 
 		private ChromiumModelFunctionProvider cmf;
 		private FireFoxModelFunction ffmf;
@@ -64,7 +63,7 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieo
 		}
 	
 		@Override
-		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
+		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IModelLeaf<IDescriptor>> filter) throws ParseException {
 			Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 			results.addAll( cmf.getFunction( super.getIdentifier()).search( filter ));
 			results.addAll( ffmf.getFunction( super.getIdentifier()).search( filter ));
@@ -73,7 +72,7 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<IContextAieo
 		}
 
 		@Override
-		protected boolean onOpen(IDomainAieon key) {
+		protected boolean onOpen( IDomainAieon key) {
 			return true;
 		}
 	}

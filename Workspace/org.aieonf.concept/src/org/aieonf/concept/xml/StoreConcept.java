@@ -110,7 +110,7 @@ public class StoreConcept
   
 	/**
 	 * Print the given descriptor
-	 * @param IDescriptor descriptor
+	 * @param IDomainAieon descriptor
 	 * @param includeAttrs
 	 * @return
 	 */

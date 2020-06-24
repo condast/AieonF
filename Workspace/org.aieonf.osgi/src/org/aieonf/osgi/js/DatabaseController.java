@@ -11,7 +11,6 @@ import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
@@ -55,7 +54,7 @@ public class DatabaseController<M extends IDescribable> extends AbstractJavascri
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 
-	private IModelDatabase<IDomainAieon, M> database;
+	private IModelDatabase<IDescriptor, M> database;
 	private Class<M> clss;
 
 	public DatabaseController(Browser browser ) {
@@ -75,7 +74,7 @@ public class DatabaseController<M extends IDescribable> extends AbstractJavascri
 						database.get(descriptor);
 						break;
 					case SEARCH:
-						IModelFilter<IDescriptor, M> filter = gson.fromJson( (String) args[1], IModelFilter.class );
+						IModelFilter<M> filter = gson.fromJson( (String) args[1], IModelFilter.class );
 						database.search(filter);
 						break;
 					case ADD:
@@ -104,19 +103,19 @@ public class DatabaseController<M extends IDescribable> extends AbstractJavascri
 		};	
 	}
 
-	private DatabaseController(Class<M> clss, IModelDatabase<IDomainAieon, M> database, Browser browser, String id, String url) {
+	private DatabaseController(Class<M> clss, IModelDatabase<IDescriptor, M> database, Browser browser, String id, String url) {
 		super(browser, id, url);
 		this.database = database;
 		this.clss = clss;
 	}
 
-	private DatabaseController(Class<M> clss, IModelDatabase<IDomainAieon, M> database, Browser browser, String id, LoadTypes type, String url) {
+	private DatabaseController(Class<M> clss, IModelDatabase<IDescriptor, M> database, Browser browser, String id, LoadTypes type, String url) {
 		super(browser, id, type, url);
 		this.database = database;
 		this.clss = clss;
 	}
 
-	private DatabaseController(Class<M> clss, IModelDatabase<IDomainAieon, M> database, Browser browser, String id, InputStream in) {
+	private DatabaseController(Class<M> clss, IModelDatabase<IDescriptor, M> database, Browser browser, String id, InputStream in) {
 		super(browser, id, in);
 		this.database = database;
 		this.clss = clss;

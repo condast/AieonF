@@ -37,7 +37,7 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 
 
 	@Override
-	public String getID() {
+	public long getID() {
 		return this.model.getID();
 	}
 

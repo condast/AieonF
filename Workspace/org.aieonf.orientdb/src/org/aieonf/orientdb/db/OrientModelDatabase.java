@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
@@ -17,7 +16,6 @@ import org.aieonf.model.parser.AbstractModelParser;
 import org.aieonf.model.parser.IModelParser;
 import org.aieonf.model.parser.ParseEvent;
 import org.aieonf.model.provider.IModelDatabase;
-import org.aieonf.orientdb.cache.CacheService;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
@@ -30,12 +28,12 @@ public class OrientModelDatabase implements IModelDatabase<IDescriptor, IModelLe
 	private Collection<IModelListener<IModelLeaf<IDescriptor>>> listeners;
 	
 	private String identifier;
-	private IDomainAieon domain;
+	private IDescriptor domain;
 	
 	private Collection<IDescriptor> descriptors;
 	private Map<IModelLeaf<IDescriptor>, Vertex> vertices;
 	
-	public OrientModelDatabase( String identifier, IDomainAieon domain ) {
+	public OrientModelDatabase( String identifier, IDescriptor domain ) {
 		this.identifier = identifier;
 		this.domain = domain;
 		listeners = new ArrayList<>();
@@ -82,20 +80,14 @@ public class OrientModelDatabase implements IModelDatabase<IDescriptor, IModelLe
 	public boolean add(IModelLeaf<IDescriptor> leaf) {
 		boolean result = false;
 		IModelParser<IDescriptor, IModelLeaf<IDescriptor>> parser = new ModelParser();
-		CacheService cache = service.getCache();
 		try{
 			descriptors.clear();
 			parser.addListener( e->onAddDescriptors(e));
 			parser.parseModel(leaf);
-			cache.open();
-			cache.add(descriptors.toArray( new IDescriptor[ descriptors.size()]));
 			result = true;
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
-		}
-		finally {
-			cache.close();
 		}
 		if( !result )
 			return false;
@@ -104,7 +96,6 @@ public class OrientModelDatabase implements IModelDatabase<IDescriptor, IModelLe
 			parser.addListener( e->onAddModels(e));
 			parser.parseModel(leaf);
 			service.open();
-			cache.add(descriptors.toArray( new IDescriptor[ descriptors.size()]));
 			result = true;
 		}
 		catch( Exception ex ){
@@ -159,7 +150,7 @@ public class OrientModelDatabase implements IModelDatabase<IDescriptor, IModelLe
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter)
+	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<IModelLeaf<IDescriptor>> filter)
 			throws ParseException {
 		// TODO Auto-generated method stub
 		return null;

@@ -40,7 +40,7 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * @param concept
 	 */
 	public ModelLeaf( D descriptor ){
-		this( descriptor.toString(), descriptor );
+		this( null, descriptor );
 	}
 
 	/**
@@ -104,8 +104,9 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * @return
 	 */
 	@Override
-	public String getID(){
-		return get( Attributes.ID );
+	public long getID(){
+		String str =  get( Attributes.ID );
+		return StringUtils.isEmpty(str)?0: Long.parseLong(str);
 	}
 
 

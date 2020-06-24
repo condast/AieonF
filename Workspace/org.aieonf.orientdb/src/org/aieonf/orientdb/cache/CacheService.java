@@ -189,7 +189,7 @@ public class CacheService implements Closeable{
 		return results.toArray( new IDescriptor[ results.size()]);
 	}
 
-	public Collection<IDescriptor> search(IModelFilter<IDescriptor, IDescriptor> filter) throws ParseException {
+	public Collection<IDescriptor> search(IModelFilter<IDescriptor> filter) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for (ODocument document : database.browseCluster( S_CACHE )) {
 			IDescriptor descriptor = createDescriptor(document);    

@@ -19,7 +19,7 @@ import org.aieonf.template.context.AbstractProviderContextFactory;
  * @author Kees Pieters
  *
  */
-public class ContextFactory extends AbstractProviderContextFactory<IContextAieon, IModelLeaf<IDescriptor>>
+public class ContextFactory extends AbstractProviderContextFactory<IDescriptor, IModelLeaf<IDescriptor>>
 {
 	private static final String S_BUNDLE_ID = "org.condast.aieonf.browsersupport";
 	public static final String S_ERR_NO_CONNECTION = "The connection could not be made!";

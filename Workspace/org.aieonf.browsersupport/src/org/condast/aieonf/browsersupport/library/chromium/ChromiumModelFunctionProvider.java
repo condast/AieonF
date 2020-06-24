@@ -13,8 +13,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<IContextAieon, String, 
-IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> {
+public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<String, IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> {
 
 	//Default location
 	private static final String DEFAULT_CHROMIUM_ROOT =

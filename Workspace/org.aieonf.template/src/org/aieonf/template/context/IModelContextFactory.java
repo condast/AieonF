@@ -1,26 +1,34 @@
 package org.aieonf.template.context;
 
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.template.def.ITemplateLeaf;
 
-public interface IModelContextFactory<C extends IContextAieon, D extends IDomainAieon> {
+public interface IModelContextFactory<M extends IDescribable> {
 
 	/**
 	 * Get the domain for this context
 	 * @return
 	 */
-	public abstract D getDomain();
+	public abstract IDomainAieon getDomain();
 
 	/**
 	 * Create the template
 	 * @return
 	 */
-	public abstract ITemplateLeaf<C> createTemplate();
+	public abstract ITemplateLeaf<IContextAieon> createTemplate();
 
 	/**
 	 * Get the template
 	 * @return
 	 */
-	public abstract ITemplateLeaf<C> getTemplate();
+	public abstract ITemplateLeaf<IContextAieon> getTemplate();
+
+	/**
+	 * Create the template
+	 * @return
+	 */
+	public abstract M createModel();
+
 }

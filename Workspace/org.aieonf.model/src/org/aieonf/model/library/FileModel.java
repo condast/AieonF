@@ -72,10 +72,11 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 	 *
 	 * @return File
 	 */
+	//TODO check this!
 	public File getFile()
 	{
 		if( file == null )
-			this.file = new File( this.getID() );
+			this.file = new File( String.valueOf( this.getID() ));
 		return this.file;
 	}
 

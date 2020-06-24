@@ -6,11 +6,11 @@ import java.util.Collection;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IFunctionProvider;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.template.builder.TemplateInterpreter;
@@ -21,13 +21,13 @@ import org.aieonf.template.def.ITemplateLeaf;
  * The simple context factory creates a default context and model
  * @author Kees Pieters
  */
-public abstract class AbstractProviderContextFactory<C extends IContextAieon, U extends IDescribable> 
-extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDomainAieon, String, U>
+public abstract class AbstractProviderContextFactory<D extends IDescriptor, M extends IModelLeaf<D>> 
+extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<String, IDescriptor, M>
 {
 	private static final String S_MODEL = "Model";
 	private String bundle_id;
 	
-	private Collection<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>> functions;
+	private Collection<IFunctionProvider<String, IModelProvider<IDescriptor, M>>> functions;
 	
 	private IXMLModelInterpreter<IDescriptor> creator;
 
@@ -37,7 +37,7 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	
 	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor> creator ) {
 		this.bundle_id = bundle_id;
-		functions = new ArrayList<IFunctionProvider<String, IModelProvider<IDomainAieon, U>>>();
+		functions = new ArrayList<>();
 		this.creator = creator;
 	}
 
@@ -52,41 +52,41 @@ extends AbstractModelContextFactory<C> implements IProviderContextFactory<C, IDo
 	public boolean hasFunction( String name ){
 		if( Utils.assertNull( name ))
 			return false;
-		for( IFunctionProvider<String, IModelProvider<IDomainAieon, U>> function: functions ){
+		for( IFunctionProvider<String, IModelProvider<IDescriptor, M>> function: functions ){
 			if( function.canProvide( name ))
 				return true;
 		}
 		return false;
-	}
-	
-	@Override
-	public IModelProvider<IDomainAieon, U> getFunction( String name ) {
-		for( IFunctionProvider<String, IModelProvider<IDomainAieon, U>> function: functions ){
-			if( function.canProvide( name ))
-				return function.getFunction(name);
-		}
-		return null;
-	}
-
-	@Override
-	public void addProvider(IFunctionProvider<String, IModelProvider<IDomainAieon, U>> function) {
-		IDomainAieon domain = super.getDomain();
-		if( function.supportsDomain( domain )){
-			this.functions.add( function );
-		}
 	}
 
 	/* (non-Javadoc)
 	 * @see org.aieonf.template.context.IProviderContextFactory#removeProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
 	@Override
-	public void removeProvider( IFunctionProvider<String,IModelProvider<IDomainAieon, U>> function ){
+	public void addProvider(IFunctionProvider<String, IModelProvider<IDescriptor, M>> function) {
+		IDomainAieon domain = super.getDomain();
+		if( function.supportsDomain( domain )){
+			this.functions.add( function );
+		}
+	}
+
+	@Override
+	public IModelProvider<IDescriptor, M> getFunction(String key) {
+		for( IFunctionProvider<String, IModelProvider<IDescriptor, M>> function: functions ){
+			if( function.canProvide( key ))
+				return function.getFunction(key);
+		}
+		return null;
+	}
+
+	@Override
+	public void removeProvider( IFunctionProvider<String,IModelProvider<IDescriptor, M>> function ){
 		this.functions.remove( function );
 	}
-	
+
 	@Override
-	public ITemplateLeaf<C> onCreateTemplate() {
-		ITemplateLeaf<C> template  = this.createDefaultTemplate( bundle_id, this.creator );	
+	public ITemplateLeaf<IContextAieon> onCreateTemplate() {
+		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, this.creator );	
 		IDescriptor descriptor = template.getDescriptor();
 		String source = descriptor.get( IConcept.Attributes.SOURCE );
 		if( Utils.assertNull( source ))

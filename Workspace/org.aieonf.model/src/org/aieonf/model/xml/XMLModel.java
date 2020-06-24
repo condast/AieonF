@@ -27,13 +27,14 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 		if(!Utils.assertNull( name )) {
 			properties.put( IModelLeaf.Attributes.IDENTIFIER.name().toLowerCase(), getName());
 		}
-		set( IDescriptor.Attributes.ID, getID());
+		set( IDescriptor.Attributes.ID, String.valueOf( getID()));
 		set( IDescriptor.Attributes.NAME, getName());
 	}
 
-	public String getID(){
+	public long getID(){
 		String key = StringStyler.xmlStyleString( IDescriptor.Attributes.ID.name().toLowerCase()); 
-		return properties.get( key);
+		String value = properties.get( key);
+		return Long.parseLong(value);
 	}
 
 	public String getName(){
