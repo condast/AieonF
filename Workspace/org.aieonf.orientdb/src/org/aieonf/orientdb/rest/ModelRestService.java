@@ -3,6 +3,7 @@ package org.aieonf.orientdb.rest;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import org.aieonf.commons.io.IOUtils;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.FilterFactory;
 import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
@@ -30,8 +32,9 @@ import org.aieonf.orientdb.db.DatabaseService;
 import org.aieonf.orientdb.filter.IGraphFilter;
 import org.aieonf.orientdb.filter.VertexFilterFactory;
 import org.aieonf.orientdb.graph.ModelFactory;
-
+import org.aieonf.orientdb.serialisable.ModelLeafTypeAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 //Sets the path to base URL + /rest
 @Path("/")
@@ -41,6 +44,8 @@ public class ModelRestService{
 	public static final String S_ERR_INVALID_VESSEL = "A request was received from an unknown vessel:";
 	
 	private Dispatcher dispatcher = Dispatcher.getInstance();
+
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -53,7 +58,42 @@ public class ModelRestService{
 		try{
  			if( !dispatcher.isRegistered(domainId, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			IDescriptor domain = dispatcher.getDomain(domainId, token, domainstr);
+			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
+			//if( !dispatcher.isAllowed(node))
+			//	return Response.status(Status.FORBIDDEN).build();
+			//factory = new ModelFactory<IDescriptor>( domain, dbService );
+			//long id = factory.transform(data);
+			GsonBuilder builder = new GsonBuilder(); 
+			builder.enableComplexMapKeySerialization();
+			dbService.open(domain);
+			ModelLeafTypeAdapter adapter = new ModelLeafTypeAdapter( domain, dbService.getGraph());
+			builder.registerTypeAdapter( IModelLeaf.class, adapter);
+			Gson gson = builder.create();
+			logger.info( data );
+			IModelLeaf<?> results = gson.fromJson(data, IModelLeaf.class);
+			return Response.ok( gson.toJson(results.getID(), Long.class)).build();
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			IOUtils.closeQuietly( dbService);
+		}
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/add-node")
+	public Response addNode( @QueryParam("id") long domainId, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, String data ) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		ModelFactory<IDescriptor> factory = null;
+		try{
+ 			if( !dispatcher.isRegistered(domainId, token, domainstr))
+ 				return Response.status( Status.UNAUTHORIZED ).build();
+ 			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
 			//if( !dispatcher.isAllowed(node))
 			//	return Response.status(Status.FORBIDDEN).build();
 			factory = new ModelFactory<IDescriptor>( domain, dbService );
@@ -80,8 +120,8 @@ public class ModelRestService{
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			IDescriptor domain = dispatcher.getDomain(id, token, domainstr);
-			dbService.open();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
 			result = null;//factory.get(domain);
 			ModelFilter<IModelLeaf<IDescriptor>> filter = new ModelFilter<IModelLeaf<IDescriptor>>(null);
@@ -104,8 +144,8 @@ public class ModelRestService{
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			IDescriptor domain = dispatcher.getDomain(id, token, domainstr);
-			dbService.open();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
 			result = null;//factory.get(domain);
 			ModelFilter<IModelLeaf<IDescriptor>> filter = new ModelFilter<IModelLeaf<IDescriptor>>(null);
@@ -134,8 +174,8 @@ public class ModelRestService{
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			IDescriptor domain = dispatcher.getDomain(id, token, domainstr);
-			dbService.open();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
 			VertexFilterFactory ff = new VertexFilterFactory( dbService.getGraph());
 			Filters type = Filters.valueOf(StringStyler.styleToEnum(name));
 			Map<FilterFactory.Attributes, String> params = new HashMap<>();
@@ -184,7 +224,8 @@ public class ModelRestService{
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
 				return Response.status( Status.UNAUTHORIZED ).build();
-			dbService.open();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
 			counter = dbService.remove(modelId);
 		}
 		catch( Exception ex ){
@@ -196,4 +237,29 @@ public class ModelRestService{
 		}
 		return (counter == 0)?Response.ok( counter ).build():Response.noContent().build();
 	}
+
+	@DELETE
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/remove-all")
+	public synchronized Response removeAll( @QueryParam("id") long id, @QueryParam("token") long token,
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, String data) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		int counter = 0;
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			counter = dbService.remove(modelId);
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}
+		return (counter == 0)?Response.ok( counter ).build():Response.noContent().build();
+	}
+
 }

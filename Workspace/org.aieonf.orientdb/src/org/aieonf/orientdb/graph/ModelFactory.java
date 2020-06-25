@@ -15,6 +15,7 @@ import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.serialise.SerialisableModel;
+import org.aieonf.orientdb.core.ModelLeaf;
 import org.aieonf.orientdb.db.DatabaseService;
 
 import com.google.gson.stream.JsonReader;
@@ -27,8 +28,6 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class ModelFactory< T extends IDescriptor > {
 
 	public static final String S_CLASS = "class:";
-	public static final String IS_CHILD = "isChild";
-	public static final String S_ERR_NULL_ID = "The model does not have a descriptor: ";
 
 	public enum Attributes{
 		P,//Properties of the model
@@ -46,13 +45,13 @@ public class ModelFactory< T extends IDescriptor > {
 
 	private DatabaseService service;
 	
-	private IDescriptor domain;
+	private IDomainAieon domain;
 	
 	private Stack<Vertex> vertices;
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public ModelFactory( IDescriptor domain, DatabaseService service ) {
+	public ModelFactory( IDomainAieon domain, DatabaseService service ) {
 		this.domain = domain;
 		this.service = service;
 		vertices = new Stack<>();
@@ -61,7 +60,7 @@ public class ModelFactory< T extends IDescriptor > {
 	public long transform( String data ) throws ParseException {
 		JsonReader jsonReader = new JsonReader(new StringReader(data));
 		logger.info(data);
-		this.service.open();
+		this.service.open( domain );
 		Vertex result  = null;
 		try {
 			result = read( jsonReader );
@@ -88,7 +87,7 @@ public class ModelFactory< T extends IDescriptor > {
 			case BEGIN_ARRAY:
 				jsonReader.beginArray();
 				jsonReader.beginObject();
-				vertex = graph.addVertex(null);
+				vertex = graph.addVertex( domain.getDomain());
 				vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
 				vertices.push(vertex);
 				//OrientVertexType vt = graph.getVertexType(type);
@@ -110,8 +109,8 @@ public class ModelFactory< T extends IDescriptor > {
 						Vertex child = read( jsonReader );
 						jsonReader.endObject();
 						token = jsonReader.peek();
-						label = ( JsonToken.NULL.equals(token) )? IS_CHILD: jsonReader.nextString();
-						graph.addEdge(null, vertex, child, label);
+						label = ( JsonToken.NULL.equals(token) )? ModelLeaf.IS_CHILD: jsonReader.nextString();
+						graph.addEdge(domain.getDomain(), vertex, child, label);
 						if( JsonToken.NULL.equals(token))
 							jsonReader.nextNull();
 						else
@@ -162,7 +161,7 @@ public class ModelFactory< T extends IDescriptor > {
 	}
 
 	public Collection<SerialisableModel> get( Collection<Vertex> vertices ) throws FilterException {
-		this.service.open();
+		this.service.open( domain );
 		Collection<SerialisableModel> results = new ArrayList<>();
 		try {
 			for( Vertex vertex: vertices ) {

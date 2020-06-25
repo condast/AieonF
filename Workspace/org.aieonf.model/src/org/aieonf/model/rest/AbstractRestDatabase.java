@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.db.IDatabaseConnection;
@@ -108,7 +109,97 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 	 * @return
 	 */
 	public abstract IModelLeaf<? extends IDescriptor> createModel();
-	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean create(IModelLeaf<? extends IDescriptor> leaf) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.CREATE;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		IModelLeaf<? extends IDescriptor>[] added = new IModelLeaf[1]; 
+		added[0] = leaf;
+		boolean result = false;
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
+		try {
+			client.addListener( e->{
+				if( HttpStatus.OK.getStatus() != e.getResponseCode())
+					return;
+				String id = e.getResponse();
+				IModelLeaf<? extends IDescriptor>[] models = e.getData();
+				models[0].set(IDescriptor.Attributes.ID.name(), id);
+			});
+			client.sendPost(request, parameters, onSerialise(added), added);
+			result = Utils.assertNull(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean add(IModelLeaf<? extends IDescriptor> leaf) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.ADD;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		IModelLeaf<? extends IDescriptor>[] added = new IModelLeaf[1]; 
+		added[0] = leaf;
+		boolean result = false;
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
+		try {
+			client.addListener( e->{
+				if( HttpStatus.OK.getStatus() != e.getResponseCode())
+					return;
+				String id = e.getResponse();
+				IModelLeaf<? extends IDescriptor>[] models = e.getData();
+				models[0].set(IDescriptor.Attributes.ID.name(), id);
+			});
+			client.sendPost(request, parameters, onSerialise(added), added);
+			result = Utils.assertNull(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean add(IModelLeaf<? extends IDescriptor> parent, IModelLeaf<? extends IDescriptor> child) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.ADD_NODE;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		IModelLeaf<? extends IDescriptor>[] added = new IModelLeaf[1]; 
+		added[0] = child;
+		boolean result = false;
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
+		try {
+			client.addListener( e->{
+				if( HttpStatus.OK.getStatus() != e.getResponseCode())
+					return;
+				String id = e.getResponse();
+				IModelLeaf<? extends IDescriptor>[] models = e.getData();
+				models[0].set(IDescriptor.Attributes.ID.name(), id);
+			});
+			client.sendPost(request, parameters, onSerialise(added), added);
+			result = Utils.assertNull(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	protected abstract void getResults( ResponseEvent<IDatabaseConnection.Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results );
 
 	@Override
@@ -121,7 +212,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( leaf.getID() ));
-		WebClient client = new WebClient( path );
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
 			client.addListener( e->getResults(e, results ) );
@@ -142,7 +233,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
-		WebClient client = new WebClient( path );
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
 			client.addListener( e->getResults(e, results ) );
@@ -166,7 +257,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put(FilterFactory.Attributes.RULES.toString(), filter.getRule() );
 		parameters.put(FilterFactory.Attributes.REFERENCE.toString(), filter.getReference() );
 		parameters.put(FilterFactory.Attributes.VALUE.toString(), filter.getValue() );
-		WebClient client = new WebClient( path );
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
 			client.addListener( e->getResults(e, results ) );
@@ -179,35 +270,6 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 
 	protected abstract String onSerialise( IModelLeaf<? extends IDescriptor>[] leaf);
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean add(IModelLeaf<? extends IDescriptor> leaf) {
-		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
-		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.ADD;
-		Map<String, String> parameters = new HashMap<>();
-		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
-		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
-		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
-		IModelLeaf<? extends IDescriptor>[] added = new IModelLeaf[1]; 
-		added[0] = leaf;
-		boolean result = false;
-		WebClient client = new WebClient( path );
-		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
-		try {
-			client.addListener( e->{
-				if( HttpStatus.OK.getStatus() != e.getResponseCode())
-					return;
-				String id = e.getResponse();
-				IModelLeaf<? extends IDescriptor>[] models = e.getData();
-				models[0].set(IDescriptor.Attributes.ID.name(), id);
-			});
-			client.sendPost(request, parameters, onSerialise(added), added);
-			result = Utils.assertNull(results);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -222,12 +284,36 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		IModelLeaf<? extends IDescriptor>[] removed = new IModelLeaf[1]; 
 		removed[0] = leaf;
-		WebClient client = new WebClient( path );
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		boolean result = false;
 		try {
 			//client.addListener( e->getResults(e, results ));
 			client.sendDelete(request, parameters, removed);
+			result = Utils.assertNull(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	
+	@Override
+	public boolean remove(Entry<Long, Long[]> ids) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_ALL;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( ids.getKey() ));
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		WebClient<Entry<Long, Long[]>> client = new WebClient<>( path );
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
+		boolean result = false;
+		try {
+			//client.addListener( e->getResults(e, results ));
+			client.sendDelete(request, parameters, ids);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -248,7 +334,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		IModelLeaf<? extends IDescriptor>[] removed = new IModelLeaf[1]; 
 		removed[0] = leaf;
-		WebClient client = new WebClient( path );
+		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		boolean result = false;
 		try {
@@ -261,7 +347,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		return result;
 	}
 
-	private class WebClient extends AbstractHttpRequest<IDatabaseConnection.Requests, IModelLeaf<? extends IDescriptor>[]>{
+	private class WebClient<D extends Object> extends AbstractHttpRequest<IDatabaseConnection.Requests, D>{
 
 		public WebClient(String path) {
 			super(path);
@@ -273,16 +359,17 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		}
 
 		@Override
-		public void sendPost( IDatabaseConnection.Requests request, Map<String, String> parameters, String post, IModelLeaf<? extends IDescriptor>[] data) throws Exception {
+		public void sendPost( IDatabaseConnection.Requests request, Map<String, String> parameters, String post, D data) throws Exception {
 			super.sendPost(request, parameters, post, data );
 		}
 
-		public void sendDelete( IDatabaseConnection.Requests request, Map<String, String> parameters, IModelLeaf<? extends IDescriptor>[] data) throws Exception {
+		public void sendDelete( IDatabaseConnection.Requests request, Map<String, String> parameters, D data) throws Exception {
 			super.sendDelete(request, parameters, data);
 		}
 
+
 		@Override
-		protected String onHandleResponse(ResponseEvent<IDatabaseConnection.Requests, IModelLeaf<? extends IDescriptor>[]> response, IModelLeaf<? extends IDescriptor>[] data ) throws IOException {
+		protected String onHandleResponse(ResponseEvent<IDatabaseConnection.Requests, D> response, D data ) throws IOException {
 			//IModelLeaf<? extends IDescriptor>[] result = onProcessResponse( response );
 			//notifyKeyEventChanged( new KeyEvent<IDatabaseConnection.Requests, IModelLeaf<? extends IDescriptor>[]>( this, response.getRequest(), response.getParameters(), result ));
 			return response.getResponse();

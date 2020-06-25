@@ -11,6 +11,7 @@ import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
@@ -47,6 +48,8 @@ public class DatabaseService implements Closeable{
 	private static DatabasePersistenceService persistence = DatabasePersistenceService.getInstance();
 
 	private OrientGraph graph;
+	
+	private IDomainAieon domain;
 	
 	private DatabaseService() {
 		listeners = new ArrayList<>();
@@ -87,12 +90,16 @@ public class DatabaseService implements Closeable{
 		return false;
 	}
 	
+	protected String getDomainName( IDomainAieon domain  ) {
+		return domain.getDomain().replace("." , "_");
+	}
+	
 	/**
 	 * Connect to the database
 	 * 
 	 * @param loader
 	 */
-	public boolean open( ){
+	public boolean open( IDomainAieon domain ){
 		if( !persistence.isConnected() )
 			return false;
 		this.graph = persistence.createDatabase();
@@ -100,6 +107,9 @@ public class DatabaseService implements Closeable{
 			graph.createVertexType( IDescriptor.DESCRIPTORS );
 		if( graph.getEdgeType(IDescriptor.DESCRIPTOR) == null )
 			graph.createEdgeType( IDescriptor.DESCRIPTOR );
+		String domain_id = domain.getDomain().replace("." , "_");
+		if( graph.getEdgeType( domain_id ) == null )
+			graph.createEdgeType( domain_id );
 		return true;
 	}
 	
@@ -194,6 +204,7 @@ public class DatabaseService implements Closeable{
 		graph.commit();
 		graph.shutdown();
 		graph = null;
+		this.domain = null;
 	}
 
 	protected class Transaction extends AbstractTransaction<IModelNode<IDescriptor>, DatabaseService>{

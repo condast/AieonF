@@ -1,5 +1,6 @@
 package test.aieonf.orientdb.suite;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
 
@@ -21,7 +22,7 @@ import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.rest.AbstractRestDatabase;
-import org.aieonf.model.serialise.SerialisableModel;
+import org.aieonf.serialisable.core.ModelLeafTypeAdapter;
 import org.aieonf.serialisable.core.ModelTypeAdapter;
 import org.condast.commons.test.core.AbstractTestSuite;
 import org.condast.commons.test.core.ITestEvent;
@@ -42,7 +43,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		TEST_ADD_AND_READ,
 		TEST_REGISTER,
 		TEST_MODEL_BUILDER,
-		TEST_REST_ADD;
+		TEST_REST_ADD,
+		TEST_REST_ADD_MODEL;
 	}
 	private static TestSuite suite = new TestSuite();
 	
@@ -56,7 +58,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 	
 	@Override
 	protected void testSuite() throws Exception {
-		Tests test = Tests.TEST_ADD_AND_READ;
+		Tests test = Tests.TEST_REST_ADD_MODEL;
 		try{
 			switch( test ){
 			case TEST_ADD_AND_READ:
@@ -70,6 +72,9 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 				break;
 			case TEST_REST_ADD:
 				testRESTAdd();
+				break;
+			case TEST_REST_ADD_MODEL:
+				testRESTAddModel();
 				break;
 			default:
 				break;
@@ -184,6 +189,38 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		}
 	}
 
+	private final void testRESTAddModel() throws Exception{
+		IModelNode<IDescriptor> model = createModel();
+		TestFactory factory = TestFactory.getInstance();
+		RestDatabase database = new RestDatabase( new SecureGenerator(), factory.getDomain(), IDatabaseConnection.REST_URL );	
+		try{		
+			database.open( factory.getDomain());
+			database.add(model);
+			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
+					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
+			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
+			for( IModelLeaf<? extends IDescriptor> leaf: results )
+				logger.info( leaf.getDescriptor().toString() );
+			if( results.isEmpty()){
+				logger.info( "No Results. Stopping");
+			}
+			logger.info( "Results found: " + results.size() );
+			database.remove( results.iterator().next());
+			results = database.search(filter);
+			logger.info( "Results found: " + results.size() );
+			
+			database.add(model);
+				
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		finally{
+			database.close();
+			database.deactivate();
+		}
+	}
+
 	private IModelNode<IDescriptor> createModel() {
 		String category = "Test";
 		CategoryAieon cat = new CategoryAieon( category );
@@ -235,12 +272,25 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 		@Override
 		protected String onSerialise(IModelLeaf<? extends IDescriptor>[] leafs) {
-			return SerialisableModel.serialise(leafs);
+			GsonBuilder builder = new GsonBuilder();
+			builder.enableComplexMapKeySerialization();
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelLeafTypeAdapter());
+			Gson gson = builder.create();
+			String str = gson.toJson(leafs );
+			//SerialisableModel.serialise(leafs);
+			return str;
 		}
 
 		@Override
 		protected void getResults(ResponseEvent<Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results ) {
-			results.addAll( SerialisableModel.deserialise(event.getResponse() )); 
+			GsonBuilder builder = new GsonBuilder();
+			builder.enableComplexMapKeySerialization();
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelLeafTypeAdapter());
+			Gson gson = builder.create();
+			IModelLeaf<? extends IDescriptor>[] found = gson.fromJson(event.getResponse(), IModelLeaf[].class );
+			//Collection<IModelLeaf<? extends IDescriptor>> found = SerialisableModel.deserialise(event.getResponse() );
+
+			results.addAll( Arrays.asList(found )); 
 		}
 
 		@Override

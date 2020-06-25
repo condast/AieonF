@@ -18,6 +18,15 @@ public class Model<D extends Object> extends ModelLeaf<D> implements IModelNode<
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
+	public Model(){
+		super();
+		this.children = new HashMap<>();
+	}
+
+	/**
+	 * Create the model. Use only when parsing data
+	 * @param concept
+	 */
 	protected Model( String id ){
 		super( id );
 		this.children = new HashMap<>();

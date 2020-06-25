@@ -19,11 +19,18 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	/**
 	 * Only used for special models
 	 */
-	public ModelLeaf( String id ){
+	public ModelLeaf(){
 		this.leaf = true;
-		set( IDescriptor.Attributes.ID, id);
 		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
 		set( IDescriptor.Attributes.CLASS, this.getClass().getCanonicalName() );
+	}
+
+	/**
+	 * Only used for special models
+	 */
+	public ModelLeaf( String id ){
+		this();
+		set( IDescriptor.Attributes.ID, id);
 	}
 
 	/**
@@ -245,8 +252,7 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * @return
 	 */
 	@Override
-	public boolean contains( IDescriptor descr )
-	{
+	public boolean contains( IDescriptor descr ){
 		return descr.equals( this.descriptor );
 	}
 

@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.IConceptBase;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.orientdb.graph.VertexConceptBase;
+import org.aieonf.orientdb.core.VertexConceptBase;
 import org.aieonf.serialisable.core.AbstractModelTypeAdapter;
 
 import com.tinkerpop.blueprints.Vertex;

@@ -53,6 +53,7 @@ Import-Package: com.google.gson;version="2.8.0",
  org.aieonf.model.serialise,
  org.aieonf.model.xml,
  org.aieonf.osgi.selection,
+ org.aieonf.serialisable.adapter,
  org.aieonf.serialisable.core,
  org.aieonf.template.context,
  org.aieonf.template.def,
@@ -68,3 +69,4 @@ Bundle-Activator: org.aieonf.orientdb.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Automatic-Module-Name: org.aieonf.orientdb
+Export-Package: org.aieonf.orientdb.serialisable
