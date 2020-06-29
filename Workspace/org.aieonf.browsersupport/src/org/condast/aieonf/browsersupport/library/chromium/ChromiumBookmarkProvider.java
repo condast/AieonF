@@ -17,7 +17,6 @@ import java.util.Map.Entry;
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringStyler;
-import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -197,11 +196,11 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 	@Override
 	protected void IDFactory( IConcept concept ) throws ConceptException
 	{
-		String id_def = concept.getID();
+		long id_def = concept.getID();
 		try{
 			BodyFactory.sign( super.getManifest(), concept );
 			long id = IDFactory( concept, super.getModels() );
-			id = ( StringUtils.isEmpty(id_def ))? id: id + Long.parseLong( id_def );
+			id = ( id<0 )? id: id + id_def;
 			concept.set( IDescriptor.Attributes.ID, String.valueOf( id ));
 		}
 		catch( Exception ex ){

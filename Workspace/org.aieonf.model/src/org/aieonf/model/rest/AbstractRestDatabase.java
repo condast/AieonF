@@ -229,7 +229,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.GET;
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
-		parameters.put(Attributes.MODEL_ID.toString(), descriptor.getID() );
+		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( descriptor.getID() ));
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());

@@ -134,11 +134,11 @@ public class DescriptorFilter<T extends IDescribable> extends AbstractFilter<T>
 	{
 		if( this.caseInsensitive == false )
 			return descriptor;
-		String id = descriptor.getDescriptor().getID();
+		long id = descriptor.getDescriptor().getID();
 		String name = descriptor.getDescriptor().getName();
 		if( name != null )
 			name = name.trim().toLowerCase();
-		IDescriptor newDescriptor = new Descriptor( id, name );
+		IDescriptor newDescriptor = new Descriptor( id );
 		newDescriptor.setVersion( descriptor.getDescriptor().getVersion() );
 		return newDescriptor;
 	}

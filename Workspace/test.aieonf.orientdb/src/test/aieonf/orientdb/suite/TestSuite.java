@@ -22,8 +22,7 @@ import org.aieonf.model.core.ModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.rest.AbstractRestDatabase;
-import org.aieonf.serialisable.core.ModelLeafTypeAdapter;
-import org.aieonf.serialisable.core.ModelTypeAdapter;
+import org.aieonf.model.serialise.ModelTypeAdapter;
 import org.condast.commons.test.core.AbstractTestSuite;
 import org.condast.commons.test.core.ITestEvent;
 
@@ -197,12 +196,13 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			database.open( factory.getDomain());
 			database.add(model);
 			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
+					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
 			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
 			if( results.isEmpty()){
 				logger.info( "No Results. Stopping");
+				return;
 			}
 			logger.info( "Results found: " + results.size() );
 			database.remove( results.iterator().next());
@@ -274,7 +274,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		protected String onSerialise(IModelLeaf<? extends IDescriptor>[] leafs) {
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
-			builder.registerTypeAdapter(IModelLeaf.class, new ModelLeafTypeAdapter());
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter());
 			Gson gson = builder.create();
 			String str = gson.toJson(leafs );
 			//SerialisableModel.serialise(leafs);
@@ -285,7 +285,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		protected void getResults(ResponseEvent<Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results ) {
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
-			builder.registerTypeAdapter(IModelLeaf.class, new ModelLeafTypeAdapter());
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter());
 			Gson gson = builder.create();
 			IModelLeaf<? extends IDescriptor>[] found = gson.fromJson(event.getResponse(), IModelLeaf[].class );
 			//Collection<IModelLeaf<? extends IDescriptor>> found = SerialisableModel.deserialise(event.getResponse() );

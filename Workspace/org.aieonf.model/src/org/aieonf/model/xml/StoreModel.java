@@ -144,7 +144,7 @@ public class StoreModel<T extends IDescriptor>
 		String str;
 		ConceptParser parser = new ConceptParser();
 		IConcept parent = parser.parseConceptNode( node );
-		IModelNode<IDescriptor> treeNode = new Model<IDescriptor>(null, parent );
+		IModelNode<IDescriptor> treeNode = new Model<IDescriptor>( parent );
 		Node childNode = null;
 		List<Node> children = StoreDocument.getElements( node.getChildNodes(), Node.ELEMENT_NODE );
 		for( Node child: children ){

@@ -134,12 +134,12 @@ public class Descriptor implements IDescriptor
 	 * @return String
 	 */
 	@Override
-	public final String getID()
+	public final long getID()
 	{
 		String str = this.get( IDescriptor.Attributes.ID );
 		if(StringUtils.isEmpty(str))
 			str = this.get( IDescriptor.Attributes.ID.name());
-		return str; 
+		return Long.parseLong( str ); 
 	}
 
 	/**
@@ -388,11 +388,10 @@ public class Descriptor implements IDescriptor
 		long compareTo = this.getName().compareTo( descriptor.getName() );
 		if( compareTo != 0 )
 			return (int)compareTo;
-		if( descriptor.getID() == getID() )
-			return 0;
-		compareTo = descriptor.getID().compareTo( getID() );
-		if( compareTo != 0 )
-			return ( compareTo <0)?-1: 1;
+		if( descriptor.getID() > getID() )
+			return 1;
+		if( descriptor.getID() < getID() )
+			return -1;
 		return ( this.getVersion() - descriptor.getVersion() );
 	}
 
@@ -425,7 +424,7 @@ public class Descriptor implements IDescriptor
 
 		if( name == null )
 			name = "null";
-		String id = this.getID();
+		long id = this.getID();
 
 		String versionStr = base.get( IDescriptor.Attributes.VERSION );
 		int version = -1;
@@ -461,7 +460,7 @@ public class Descriptor implements IDescriptor
 		String name = this.getName();
 		if( name == null )
 			name = "null";
-		String id = this.getID();
+		long id = this.getID();
 		return "["+ name + "," + id + "," + this.getVersion() + "]";
 	}
 
@@ -817,5 +816,7 @@ public class Descriptor implements IDescriptor
 		return ( attr.length() > 0 );
 	}
 
-
+	public static long parseId( String str ) {
+		return StringUtils.isEmpty(str)?-1:Long.parseLong(str);
+	}
 }

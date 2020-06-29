@@ -109,8 +109,9 @@ public class CacheService implements Closeable{
 
 	public boolean contains(IDescriptor descriptor) {
 		for (ODocument document : database.browseClass( descriptor.getName())) {
-			String id = document.field( IDescriptor.Attributes.ID.name().toLowerCase());    
-			if( descriptor.getID().equals( id ))
+			String idstr = document.field( IDescriptor.Attributes.ID.name().toLowerCase());  
+			long id = StringUtils.isEmpty(idstr)?-1:Long.parseLong(idstr);
+			if( descriptor.getID() == id )
 				return true;
 		}		
 		return false;

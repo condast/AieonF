@@ -26,13 +26,12 @@ import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
-import org.aieonf.model.serialise.SerialisableModel;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
 import org.aieonf.orientdb.filter.IGraphFilter;
 import org.aieonf.orientdb.filter.VertexFilterFactory;
 import org.aieonf.orientdb.graph.ModelFactory;
-import org.aieonf.orientdb.serialisable.ModelLeafTypeAdapter;
+import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -66,7 +65,7 @@ public class ModelRestService{
 			GsonBuilder builder = new GsonBuilder(); 
 			builder.enableComplexMapKeySerialization();
 			dbService.open(domain);
-			ModelLeafTypeAdapter adapter = new ModelLeafTypeAdapter( domain, dbService.getGraph());
+			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();
 			logger.info( data );
@@ -97,7 +96,7 @@ public class ModelRestService{
 			//if( !dispatcher.isAllowed(node))
 			//	return Response.status(Status.FORBIDDEN).build();
 			factory = new ModelFactory<IDescriptor>( domain, dbService );
-			long id = factory.transform(data);
+			long id = -1;//factory.transform(data);
 			Gson gson = new Gson();
 			return Response.ok( gson.toJson(id, Long.class)).build();
 		}
@@ -170,7 +169,7 @@ public class ModelRestService{
 			@QueryParam("domain") String domainstr, @QueryParam("filter") String name, 
 			@QueryParam("rules") String rule, @QueryParam("reference") String attribute, @QueryParam("value") String wildcard) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		Collection<SerialisableModel> result = null;
+		Collection<IModelLeaf<IDescriptor>> result = null;
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
@@ -185,7 +184,11 @@ public class ModelRestService{
 			IGraphFilter filter = ff.createFilter(type, params);
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
 			result = factory.get(filter.doFilter());
-			String str = SerialisableModel.serialise(result.toArray( new SerialisableModel[ result.size()]));
+			GsonBuilder builder = new GsonBuilder();
+			builder.enableComplexMapKeySerialization();
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+			Gson gson = builder.create();
+			String str = gson.toJson(result);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {

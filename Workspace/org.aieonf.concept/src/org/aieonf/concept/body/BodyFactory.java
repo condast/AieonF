@@ -16,7 +16,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.aieonf.commons.encryption.IEncryption;
 import org.aieonf.commons.encryption.IEncryption.Algorithms;
 import org.aieonf.commons.hex.HexConvertor;
-import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.xml.StoreDocument;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
@@ -96,7 +95,7 @@ public class BodyFactory<T extends Object>
 	public static String IDFactory( IDescribable describable, IDescribableSet<? extends ILoaderAieon> collection )
 	{
 		StringBuffer buffer;
-		if( StringUtils.isEmpty( describable.getDescriptor().getID()))
+		if( describable.getDescriptor().getID()<0)
 			buffer = new StringBuffer();
 		else
 			buffer = new StringBuffer( describable.getDescriptor().getID() + ":" );
@@ -172,7 +171,7 @@ public class BodyFactory<T extends Object>
 	{
 		if( Descriptor.isNull( descriptor.getName() ))
 			throw new ConceptException( S_ERR_INVALID_DESCRIPTOR + descriptor.toString() );
-		if( StringUtils.isEmpty(descriptor.getID()))
+		if( descriptor.getID() < 0)
 			descriptor.set( IDescriptor.Attributes.ID, BodyFactory.IDFactory() );
 		if( descriptor.getVersion() < 0 )
 			descriptor.setVersion( 0 );

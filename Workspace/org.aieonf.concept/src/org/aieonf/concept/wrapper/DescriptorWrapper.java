@@ -65,7 +65,7 @@ public class DescriptorWrapper implements IDescriptor
 	 * @return String
 	 */
 	@Override
-	public final String getID()
+	public final long getID()
 	{
 		return this.descriptor.getID();
 	}

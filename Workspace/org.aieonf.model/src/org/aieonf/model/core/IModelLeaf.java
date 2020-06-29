@@ -12,6 +12,7 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	//Supported attributes
 	public static final String S_MODEL = "Model";
 	public static final String CHILDREN = "Children";
+	public static final String IS_CHILD = "isChild";
 
 	//Error messages
 	public static final String S_ERR_NO_DESCRIPTOR = 

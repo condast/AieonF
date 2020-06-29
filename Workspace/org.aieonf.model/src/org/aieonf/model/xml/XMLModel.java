@@ -15,7 +15,7 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 	private Map<String, String> properties;
 
 	public XMLModel( org.xml.sax.Attributes attributes) {
-		super( new String());
+		super( -1);
 		properties = new HashMap<String, String>();
 		fill( attributes );
 		super.setLeaf(true);

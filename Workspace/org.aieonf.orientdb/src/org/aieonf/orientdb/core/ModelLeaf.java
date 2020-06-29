@@ -20,10 +20,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescriptor> {
 
-	public static final String IS_CHILD = "isChild";
 	public static final String S_ERR_NULL_ID = "The model does not have a descriptor: ";
-	
-	private Vertex vertex;
 	
 	private IDescriptor descriptor;
 	
@@ -34,6 +31,12 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	public ModelLeaf( OrientGraph graph, IDomainAieon domain, Vertex vertex ) {
 		this( graph, domain, null, vertex );
+		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
+		parent = null;
+		while(edges.hasNext()) {
+			Edge edge = edges.next();
+			parent = new ModelNode( graph, domain, edge.getVertex(com.tinkerpop.blueprints.Direction.OUT)); 
+		}
 	}
 	
 	public ModelLeaf( OrientGraph graph, IDomainAieon domain, IModelNode<?> parent, Vertex vertex ) {
@@ -45,21 +48,15 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 		for( String key: vertex.getPropertyKeys())
 			super.set( key, (String)vertex.getProperty(key));
 		
-		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT, IDescriptor.DESCRIPTOR).iterator();
-		if(!edges.hasNext())
-			throw new NullPointerException( S_ERR_NULL_ID );
-		
-		//Create the descriptor
-		Vertex dvertex = edges.next().getVertex(com.tinkerpop.blueprints.Direction.IN);
-		this.descriptor = new Descriptor();
-		for( String key: dvertex.getPropertyKeys())
-			descriptor.set( key, (String)dvertex.getProperty(key));
+		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IDescriptor.DESCRIPTOR).iterator();
+		if(edges.hasNext()) {
+			//throw new NullPointerException( S_ERR_NULL_ID );
 
-		edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN).iterator();
-		parent = null;
-		while(edges.hasNext()) {
-			Edge edge = edges.next();
-			parent = new ModelNode( graph, domain, edge.getVertex(com.tinkerpop.blueprints.Direction.IN)); 
+			//Create the descriptor
+			Vertex dvertex = edges.next().getVertex(com.tinkerpop.blueprints.Direction.OUT);
+			this.descriptor = new Descriptor();
+			for( String key: dvertex.getPropertyKeys())
+				descriptor.set( key, (String)dvertex.getProperty(key));
 		}
 	}
 
@@ -80,21 +77,26 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public long getID() {
-		return vertex.getProperty(IDescriptor.Attributes.ID.name());
+		Vertex vertex = getVertex();
+		String str = vertex.getProperty(IDescriptor.Attributes.ID.name()); 
+		return Long.parseLong( str );
 	}
 
 	@Override
 	public String getType() {
+		Vertex vertex = getVertex();
 		return vertex.getProperty(IConcept.Attributes.TYPE.name());
 	}
 
 	@Override
 	public String getIdentifier() {
+		Vertex vertex = getVertex();
 		return vertex.getProperty(IModelLeaf.Attributes.IDENTIFIER.name());
 	}
 
 	@Override
 	public void setIdentifier(String identifier) {
+		Vertex vertex = getVertex();
 		vertex.setProperty(IModelLeaf.Attributes.IDENTIFIER.name(), identifier);
 	}
 
@@ -116,6 +118,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public void set(Enum<?> attr, String value) {
+		Vertex vertex = getVertex();
 		vertex.setProperty(attr.name(), value);
 	}
 
@@ -169,8 +172,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public void setData(IDescriptor descriptor) {
-		// TODO Auto-generated method stub
-		
+		this.descriptor = descriptor;
 	}
 
 }

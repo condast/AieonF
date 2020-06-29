@@ -18,7 +18,7 @@ import com.tinkerpop.blueprints.Vertex;
 public class VertexConceptBase implements IConceptBase {
 
 	//The properties collection that contains the data
-	private Vertex vertex;
+	private transient Vertex vertex;
 
 	//If true, something has changed
 	private transient boolean changed;

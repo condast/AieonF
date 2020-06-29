@@ -28,16 +28,16 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	/**
 	 * Only used for special models
 	 */
-	public ModelLeaf( String id ){
+	public ModelLeaf( long id ){
 		this();
-		set( IDescriptor.Attributes.ID, id);
+		set( IDescriptor.Attributes.ID, String.valueOf( id ));
 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( String id, D descriptor ){
+	public ModelLeaf( long id, D descriptor ){
 		this( id );
 		this.descriptor = descriptor;
 	}
@@ -47,14 +47,14 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * @param concept
 	 */
 	public ModelLeaf( D descriptor ){
-		this( null, descriptor );
+		this( -1, descriptor );
 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( String id, D descriptor, String type ){
+	public ModelLeaf( long id, D descriptor, String type ){
 		this( id, null, descriptor, type );
 	}
 
@@ -62,7 +62,7 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( String id, IModelNode<? extends IDescriptor> parent ){
+	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent ){
 		this( id );
 		this.parent = parent;
 	}
@@ -71,7 +71,7 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( String id, IModelNode<? extends IDescriptor> parent, D descriptor ){
+	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D descriptor ){
 		this( id );
 		this.parent = parent;
 	}
@@ -80,7 +80,7 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( String id, IModelNode<? extends IDescriptor> parent, D descriptor, String type ){
+	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D descriptor, String type ){
 		this( id, parent, descriptor );
 		this.set( IConcept.Attributes.TYPE, type );
 	}

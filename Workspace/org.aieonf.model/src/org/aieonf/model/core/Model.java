@@ -27,7 +27,7 @@ public class Model<D extends Object> extends ModelLeaf<D> implements IModelNode<
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
-	protected Model( String id ){
+	public Model( long id ){
 		super( id );
 		this.children = new HashMap<>();
 	}
@@ -36,7 +36,7 @@ public class Model<D extends Object> extends ModelLeaf<D> implements IModelNode<
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
-	public Model( String id, D descriptor ){
+	public Model( long id, D descriptor ){
 		super( id, descriptor );
 		this.children = new HashMap<>();
 	}
@@ -46,19 +46,19 @@ public class Model<D extends Object> extends ModelLeaf<D> implements IModelNode<
 	 * @param concept
 	 */
 	public Model( D descriptor ){
-		this( null, descriptor );
+		this( -1, descriptor );
 	}
 	
-	protected Model(String id, IModelNode<? extends IDescriptor> parent, D descriptor, String type) {
+	protected Model(long id, IModelNode<? extends IDescriptor> parent, D descriptor, String type) {
 		super(id, parent, descriptor, type);
 		this.children = new HashMap<>();
 	}
 
-	public Model(String id, IModelNode<? extends IDescriptor> parent) {
+	public Model(long id, IModelNode<? extends IDescriptor> parent) {
 		this( id, parent, null );
 	}
 	
-	public Model( String id, IModelNode<? extends IDescriptor> parent, D descriptor) {
+	public Model( long id, IModelNode<? extends IDescriptor> parent, D descriptor) {
 		super(id, parent, descriptor);
 		this.children = new HashMap<>();
 	}
@@ -67,7 +67,7 @@ public class Model<D extends Object> extends ModelLeaf<D> implements IModelNode<
 	 * Create the model. Use only when parsing data
 	 * @param concept
 	 */
-	public Model( String id, D descriptor, String type )
+	public Model( long id, D descriptor, String type )
 	{
 		super( id, descriptor, type );
 		this.children = new HashMap<>();

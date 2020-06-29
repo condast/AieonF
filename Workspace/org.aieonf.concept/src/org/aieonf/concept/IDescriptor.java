@@ -78,7 +78,7 @@ public interface IDescriptor extends IDescribable, Serializable, Cloneable, Comp
 	 * Get the id of the changeable object
 	 * @return
 	 */
-	public String getID();
+	public long getID();
 
 	/**
 	 * Get the version of the changeable object
