@@ -79,7 +79,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	public long getID() {
 		Vertex vertex = getVertex();
 		String str = vertex.getProperty(IDescriptor.Attributes.ID.name()); 
-		return Long.parseLong( str );
+		return StringUtils.isEmpty(str)?-1: Long.parseLong( str );
 	}
 
 	@Override

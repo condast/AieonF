@@ -1,5 +1,6 @@
 package org.aieonf.orientdb.serialisable;
 
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.strings.StringUtils;
@@ -35,7 +36,8 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	@Override
 	protected Vertex onCreateNode(long id, boolean leaf) {
 		Vertex vertex = graph.addVertex( domain.getDomain());
-		vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
+		long newid = (id<0)?graph.countVertices(): id;
+		vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(newid));
 		return vertex;
 	}
 
@@ -48,6 +50,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	@Override
 	protected Vertex onSetDescriptor(Vertex node) {
 		Vertex descriptor = graph.addVertex( ModelFactory.S_CLASS + IDescriptor.DESCRIPTORS);
+		descriptor.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
 		node.addEdge(IDescriptor.DESCRIPTOR, descriptor);
 		return descriptor;
 	}

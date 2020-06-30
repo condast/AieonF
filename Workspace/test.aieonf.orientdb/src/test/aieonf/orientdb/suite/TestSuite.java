@@ -2,6 +2,7 @@ package test.aieonf.orientdb.suite;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.db.IDatabaseConnection;
@@ -194,6 +195,9 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		RestDatabase database = new RestDatabase( new SecureGenerator(), factory.getDomain(), IDatabaseConnection.REST_URL );	
 		try{		
 			database.open( factory.getDomain());
+			logger.info("WAIT");
+			TimeUnit.SECONDS.sleep(15);
+			logger.info("START TEST");
 			database.add(model);
 			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
 					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
@@ -281,12 +285,14 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			return str;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void getResults(ResponseEvent<Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results ) {
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter());
 			Gson gson = builder.create();
+			logger.info("\n\n" + event.getResponse());
 			IModelLeaf<? extends IDescriptor>[] found = gson.fromJson(event.getResponse(), IModelLeaf[].class );
 			//Collection<IModelLeaf<? extends IDescriptor>> found = SerialisableModel.deserialise(event.getResponse() );
 

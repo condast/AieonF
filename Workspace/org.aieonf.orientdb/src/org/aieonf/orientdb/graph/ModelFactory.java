@@ -3,8 +3,6 @@ package org.aieonf.orientdb.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Stack;
-import java.util.logging.Logger;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.concept.IDescriptor;
@@ -40,15 +38,10 @@ public class ModelFactory< T extends IDescriptor > {
 	private DatabaseService service;
 	
 	private IDomainAieon domain;
-	
-	private Stack<Vertex> vertices;
-	
-	private Logger logger = Logger.getLogger(this.getClass().getName());
-	
+		
 	public ModelFactory( IDomainAieon domain, DatabaseService service ) {
 		this.domain = domain;
 		this.service = service;
-		vertices = new Stack<>();
 	}
 	
 
@@ -76,7 +69,7 @@ public class ModelFactory< T extends IDescriptor > {
 		return results;
 	}
 	
-	private class SerialisableNode extends SerialisableModel{
+	protected class SerialisableNode extends SerialisableModel{
 
 		public SerialisableNode( Vertex descriptor ) {
 			super();

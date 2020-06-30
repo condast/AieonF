@@ -17,10 +17,6 @@ public class Activator implements BundleActivator {
 		return context;
 	}
 
-	public static CachePersistenceService getCacheService() {
-		return cache;
-	}
-
 	public static DatabasePersistenceService getGraphService() {
 		return graph;
 	}
@@ -32,7 +28,6 @@ public class Activator implements BundleActivator {
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-		cache.connect();
 		graph.connect();
 	}
 
@@ -44,6 +39,5 @@ public class Activator implements BundleActivator {
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
 		graph.disconnect();
-		cache.disconnect();
 	}
 }

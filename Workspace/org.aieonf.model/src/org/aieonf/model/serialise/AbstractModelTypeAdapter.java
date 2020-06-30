@@ -54,6 +54,10 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		IModelLeaf<IDescriptor>  result = null;
 		try {
 			result= onTransform( readModelLeaf(reader));
+			token = reader.peek();
+			if( JsonToken.END_OBJECT.equals(token))
+				reader.endObject();
+			token = reader.peek();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +82,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		String key = null;
 		while(!complete && jsonReader.hasNext() ) {
 			JsonToken token = jsonReader.peek();
-			logger.info(token.toString());
+			logger.fine(token.toString());
 			N node = null;
 			switch( token) {
 			case BEGIN_ARRAY:
@@ -97,7 +101,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 				break;
 			case NAME:
 				key = jsonReader.nextName().toUpperCase();
-				logger.info(key);
+				logger.fine(key);
 				if( Attributes.isAttribute( key )) {
 					node = nodes.peek();
 					switch( Attributes.valueOf( key )) {
@@ -138,6 +142,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 							token = jsonReader.peek();
 						}
 						jsonReader.endArray();
+						token = jsonReader.peek();
 						break;
 					case LEAF:
 						jsonReader.nextBoolean();
@@ -212,7 +217,10 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 			IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) arg1;
 			for( Map.Entry<IModelLeaf<? extends IDescriptor>, String> child: model.getChildren().entrySet() ) {
 				write( arg0, (IModelLeaf<IDescriptor>) child.getKey());
-				arg0.value(child.getValue());
+				if( child.getValue() == null)
+					arg0.value( IModelLeaf.IS_CHILD);
+				else
+					arg0.value(child.getValue());
 			}
 			arg0.endArray();
 		}

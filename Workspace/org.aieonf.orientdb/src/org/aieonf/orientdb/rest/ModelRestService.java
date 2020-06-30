@@ -188,7 +188,7 @@ public class ModelRestService{
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
-			String str = gson.toJson(result);
+			String str = gson.toJson(result.toArray( new IModelLeaf[ result.size() ]), IModelLeaf[].class);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {

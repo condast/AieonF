@@ -1,7 +1,5 @@
 package org.aieonf.orientdb.filter;
 
-import java.util.Collection;
-
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.WildcardFilter;
@@ -34,7 +32,6 @@ public class VertexAttributeFilter extends AbstractGraphFilter {
 		if(( vertex == null ) || ( Utils.assertNull(vertex.getPropertyKeys())))
 			return false;
 		boolean contains = false;
-		Collection<String> keys = vertex.getPropertyKeys();
 		String val = vertex.getProperty(this.refKey);
 		contains = !StringUtils.isEmpty(val);
 		switch( org.aieonf.concept.filter.AttributeFilter.Rules.valueOf( super.getRule() )){

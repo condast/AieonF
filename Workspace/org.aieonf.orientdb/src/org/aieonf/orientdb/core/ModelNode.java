@@ -20,9 +20,9 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 
 	public static final String S_ERR_NO_DESCRIPTOR_FOUND = "The descriptor was not found for this model";
 		
-	private OrientGraph graph;
+	private transient OrientGraph graph;
 	
-	private IDomainAieon domain; 
+	private transient IDomainAieon domain; 
 
 	public ModelNode( OrientGraph graph, IDomainAieon domain, Vertex vertex ) {
 		this( graph, domain, null, vertex );
