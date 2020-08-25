@@ -5,19 +5,19 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.provider.IModelFunctionProvider;
-import org.aieonf.template.context.IModelContextFactory;
+import org.aieonf.template.context.ITemplateContextFactory;
 import org.aieonf.template.context.IProviderContextFactory;
 import org.aieonf.template.def.ITemplateLeaf;
 
 public abstract class AbstractServiceComponent<K extends Object, D extends IDescriptor, M extends IDescribable> implements IModelFunctionProvider<K, D, M>
 {
-	private IModelContextFactory<M> factory;
+	private ITemplateContextFactory<M> factory;
 	
 	protected  AbstractServiceComponent( IProviderContextFactory<K,D, M> factory ){
 		this.factory = factory;
 	}
 
-	protected IModelContextFactory<M> getFactory() {
+	protected ITemplateContextFactory<M> getFactory() {
 		return factory;
 	}
 

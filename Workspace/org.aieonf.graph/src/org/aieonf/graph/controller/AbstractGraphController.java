@@ -7,7 +7,7 @@ import org.aieonf.graph.IGraphModelProvider;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.template.context.IModelContextFactory;
+import org.aieonf.template.context.ITemplateContextFactory;
 import org.aieonf.template.controller.AbstractModelController;
 
 public abstract class AbstractGraphController<D extends IDescriptor, M extends IDescribable> 
@@ -15,7 +15,7 @@ extends AbstractModelController<D,M>
 {
 	private IGraphModelProvider<D, M> provider;
 	
-	protected AbstractGraphController( IModelContextFactory<M> factory ) {
+	protected AbstractGraphController( ITemplateContextFactory<M> factory ) {
 		super( factory );
 	}
 	

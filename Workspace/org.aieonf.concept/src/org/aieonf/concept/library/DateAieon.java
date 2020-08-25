@@ -251,7 +251,7 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
   */
   public boolean implies(IDescriptor descriptor)
   {
-  	return this.implicit.implies( descriptor );
+  	return this.implicit.test( descriptor );
   }
 
   /**

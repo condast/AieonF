@@ -169,7 +169,7 @@ public class FileCollectionConnector<T extends IDescribable> extends AbstractCol
   	ILoaderAieon loader=  super.getLoader();
    	logger.log( Level.FINE, "Checking source: " + manifest.getURI() + 
 				" with " + loader.getURI() );
-  	if( manifest.implies( loader ) == false )
+  	if( manifest.test( loader ) == false )
     	return false;
     logger.log( Level.FINE, "Checking manifest with password " );
 		if( PasswordAieon.isPasswordAieon( manifest ) == false )
@@ -180,7 +180,7 @@ public class FileCollectionConnector<T extends IDescribable> extends AbstractCol
 			aieon = ( PasswordAieon )loader;
 		else
 			aieon = new PasswordAieon( loader );
-		return aieon.implies( manifest );
+		return aieon.test( manifest );
   }
   
   /**

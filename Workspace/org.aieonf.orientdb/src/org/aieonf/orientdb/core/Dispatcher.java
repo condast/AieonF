@@ -12,6 +12,7 @@ import org.aieonf.concept.IConcept.Scope;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
+import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 
@@ -93,6 +94,11 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecur
 		return provider.getDomains();
 	}
 
+	@Override
+	public IDescribablePredicate<IDescriptor> getPredicates() {
+		return provider.getPredicates();
+	}
+
 	public boolean isAllowed( IModelLeaf<? extends IDescriptor> model ) {
 		IConcept.Scope scope = model.getScope();
 		if( Scope.PUBLIC.equals(scope))
@@ -100,6 +106,10 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecur
 		return ( user != null );
 	}
 	
+	public IActiveDomainProvider getProvider() {
+		return provider;
+	}
+
 	public void setProvider(IActiveDomainProvider provider) {
 		this.provider = provider;
 	}

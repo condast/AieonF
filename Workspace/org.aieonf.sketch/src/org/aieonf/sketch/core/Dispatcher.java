@@ -1,7 +1,9 @@
 package org.aieonf.sketch.core;
 
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
+import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 
 public class Dispatcher implements IActiveDomainProvider{
@@ -48,6 +50,15 @@ public class Dispatcher implements IActiveDomainProvider{
 
 	public void setProvider(IActiveDomainProvider provider) {
 		this.provider = provider;
+	}
+
+	/**
+	 * Get the predicates that have been registered
+	 * @return
+	 */
+	@Override
+	public IDescribablePredicate<IDescriptor> getPredicates(){
+		return provider.getPredicates();
 	}	
 
 }

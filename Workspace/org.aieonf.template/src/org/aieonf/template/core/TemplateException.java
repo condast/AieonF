@@ -6,7 +6,7 @@
  * @author Kees Pieters
  * @version 1.0
 */
-package org.aieonf.template.impl;
+package org.aieonf.template.core;
 
 public class TemplateException extends Exception
 {

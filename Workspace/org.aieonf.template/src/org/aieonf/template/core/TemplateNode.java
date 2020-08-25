@@ -18,12 +18,9 @@ public class TemplateNode<T extends IDescriptor>
 		super(attrs);
 	}
 
-	public TemplateNode( T descriptor, org.xml.sax.Attributes attributes )
-	{
+	public TemplateNode( T descriptor, org.xml.sax.Attributes attributes ){
 		super( descriptor, attributes );
 	}
-
-
 
 	/**
 	 * Returns true if the model, or one of its descendants contains
@@ -32,8 +29,7 @@ public class TemplateNode<T extends IDescriptor>
 	 * @return
 	 */
 	@Override
-	public boolean contains( IDescriptor descr )
-	{
+	public boolean contains( IDescriptor descr ){
 		Collection<IModelLeaf<?>> store = 
 			new TreeSet<IModelLeaf<?>>();
 		return contains( store, this, descr );
@@ -45,8 +41,7 @@ public class TemplateNode<T extends IDescriptor>
 	 * @param descriptor
 	 * @return
 	 */
-	protected boolean contains( Collection<IModelLeaf<?>> store, IModelLeaf<?> model, IDescriptor descr )
-	{
+	protected boolean contains( Collection<IModelLeaf<?>> store, IModelLeaf<?> model, IDescriptor descr ){
 		if( store.contains( model ))
 			return false;
 		store.add( model );

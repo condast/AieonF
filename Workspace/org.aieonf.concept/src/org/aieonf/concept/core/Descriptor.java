@@ -340,17 +340,17 @@ public class Descriptor implements IDescriptor
 	{
 		if( super.equals( obj ))
 			return true;
-		if(( obj == null ) || (( obj instanceof IDescriptor ) == false ))
+		if(( obj == null ) || !( obj instanceof IDescriptor ))
 			return false;
 		IDescriptor descriptor = ( IDescriptor )obj;
-		if( this.getID() == descriptor.getID())
-			return true;
+		if( this.getID() != descriptor.getID())
+			return false;
 				
+		String name = descriptor.getName();
 		if( this.getName() == null ){
-			String name = descriptor.getName();
 			return (( name == null ) || ( name.equals( IConceptBase.NULL )));
 		}
-		if( descriptor.getName() == null )
+		if( StringUtils.isEmpty(name))
 			return false;
 		return ( descriptor.getName().equals( this.getName() ));
 	}

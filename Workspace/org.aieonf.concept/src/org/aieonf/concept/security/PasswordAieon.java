@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
@@ -244,9 +243,9 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	 * @return boolean
 	 */
 	@Override
-	public boolean implies( IDescriptor descriptor )
+	public boolean test( IDescriptor descriptor )
 	{
-		if( super.implies( descriptor ) == false )
+		if( super.test( descriptor ) == false )
 			return false;
 
 		String attr = ConceptBase.getAttributeKey( IPasswordAieon.Attributes.USER_NAME );
@@ -268,7 +267,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	public boolean accept( IDescriptor descriptor ) {
 		if( super.accept( descriptor ) == false )
 			return false; 
-		if( this.implies( descriptor ) == false )
+		if( this.test( descriptor ) == false )
 			return false;
 		String attr = super.getEncryptionKey();
 		return ( descriptor.get( attr ) != null );
@@ -330,17 +329,6 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	}
 
 	
-	@Override
-	public boolean implies(Object obj) {
-		if( !( obj instanceof IDescriptor ))
-				return false;
-		IDescriptor descriptor = (IDescriptor) obj;
-		String userName = PasswordAieon.getUserName( descriptor);
-		if( Utils.assertNull( userName ) || ( !userName.equals( this.getUserName() )))
-			return false;
-		String password = PasswordAieon.getPassword( descriptor );
-		return (!Utils.assertNull( password ) && ( password.equals( this.getPassword() )));
-	}
 
 	/**
 	 * Get the user name of the given concept, or null if none was found

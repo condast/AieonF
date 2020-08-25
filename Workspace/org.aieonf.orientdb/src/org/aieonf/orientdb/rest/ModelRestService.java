@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.aieonf.commons.io.IOUtils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.FilterFactory;
@@ -65,7 +66,7 @@ public class ModelRestService{
 			GsonBuilder builder = new GsonBuilder(); 
 			builder.enableComplexMapKeySerialization();
 			dbService.open(domain);
-			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
+			ModelTypeAdapter adapter = new ModelTypeAdapter( dispatcher.getProvider(), dbService.getGraph());
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();
 			logger.info( data );
@@ -158,7 +159,7 @@ public class ModelRestService{
 			return Response.serverError().build();
 		}
 		finally {
-			//cache.close();
+			dbService.close();
 		}	
 	}
 
@@ -176,7 +177,7 @@ public class ModelRestService{
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
 			VertexFilterFactory ff = new VertexFilterFactory( dbService.getGraph());
-			Filters type = Filters.valueOf(StringStyler.styleToEnum(name));
+			Filters type = StringUtils.isEmpty(name)? Filters.ATTRIBUTES: Filters.valueOf(StringStyler.styleToEnum(name));
 			Map<FilterFactory.Attributes, String> params = new HashMap<>();
 			params.put(FilterFactory.Attributes.RULES, rule);
 			params.put(FilterFactory.Attributes.REFERENCE, attribute);
@@ -186,7 +187,7 @@ public class ModelRestService{
 			result = factory.get(filter.doFilter());
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
-			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( dispatcher.getProvider(), dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(result.toArray( new IModelLeaf[ result.size() ]), IModelLeaf[].class);
 			return Response.ok( str ).build();
@@ -196,7 +197,7 @@ public class ModelRestService{
 			return Response.serverError().build();
 		}
 		finally {
-			//cache.close();
+			dbService.close();
 		}	
 	}
 

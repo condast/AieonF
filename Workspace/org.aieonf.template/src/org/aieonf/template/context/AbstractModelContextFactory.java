@@ -25,7 +25,7 @@ import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.def.ITemplateNode;
 import org.aieonf.template.xml.XMLTemplateBuilder;
 
-public abstract class AbstractModelContextFactory<D extends IDescriptor, M extends IModelLeaf<D>> implements IModelContextFactory<M> {
+public abstract class AbstractModelContextFactory<D extends IDescriptor, M extends IModelLeaf<D>> implements ITemplateContextFactory<M> {
 
 	public static final String S_MODEL_ID = "org.aieonf.model";
 	public static final String S_DEFAULT_VERSION = "0.1";
@@ -109,7 +109,7 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 	protected ITemplateLeaf<IContextAieon> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
 		if( Utils.assertNull( identifier ))
 			return null;
-		if( identifier.equals( leaf.getID())){
+		if( identifier.equals( String.valueOf( leaf.getID()))){
 			if( Utils.assertNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE ) )){
 				leaf.getDescriptor().set( IConcept.Attributes.SOURCE, String.valueOf( template.getID() ));
 			}
@@ -130,7 +130,7 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 	@Override
 	public M createModel() {
 		ModelScanner<IDescriptor> scanner = new ModelScanner<IDescriptor>( this.template );
-		IAttributeFilter<IDescriptor> filter = new AttributeFilter<>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.NAME, S_MODEL_ID);
+		IAttributeFilter<IDescriptor> filter = new AttributeFilter<>( AttributeFilter.Rules.EQUALS, IModelLeaf.Attributes.IDENTIFIER.name(), S_MODEL_ID);
 		IModelFilter<IModelLeaf<IDescriptor>> modelFilter = new ModelFilter<>( filter);
 		M model = null;
 		try {

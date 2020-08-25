@@ -105,7 +105,6 @@ public class AuthenticationExtender implements IXMLModelInterpreter<IModelLeaf<I
 		return true;
 	}
 
-	@Override
 	public boolean setValue(String value) {
 		IDescriptor descriptor = this.model.getDescriptor();
 		descriptor.set( key, value);

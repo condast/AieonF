@@ -122,7 +122,7 @@ public class LocaleAieon extends ImplicitAieon
 	}
 
 	@Override
-	public boolean implies( Object descriptor)
+	public boolean test( IDescriptor descriptor)
 	{
 		if( !( descriptor instanceof IDescriptor ))
 			return false;

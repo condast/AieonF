@@ -87,7 +87,7 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 	 * @return boolean
 	 */
 	@Override
-	public boolean implies( Object descriptor)
+	public boolean test( IDescriptor descriptor)
 	{
 		if( descriptor == null )
 			return false;

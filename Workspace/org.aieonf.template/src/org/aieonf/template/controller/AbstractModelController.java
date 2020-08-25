@@ -11,7 +11,7 @@ import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.template.builder.IModelBuilder;
-import org.aieonf.template.context.IModelContextFactory;
+import org.aieonf.template.context.ITemplateContextFactory;
 import org.aieonf.template.def.ITemplateLeaf;
 
 public abstract class AbstractModelController<D extends IDescriptor, M extends IDescribable> implements IModelController<M> {
@@ -21,11 +21,11 @@ public abstract class AbstractModelController<D extends IDescriptor, M extends I
 	private ITemplateLeaf<IContextAieon> template;
 	private boolean open;
 	
-	private IModelContextFactory<M> factory;	
+	private ITemplateContextFactory<M> factory;	
 
 	private Collection<IModelBuilderListener<M>> listeners;
 	
-	protected AbstractModelController( IModelContextFactory<M> factory ) {
+	protected AbstractModelController( ITemplateContextFactory<M> factory ) {
 		super();
 		this.open = false;
 		this.factory = factory;
@@ -67,7 +67,7 @@ public abstract class AbstractModelController<D extends IDescriptor, M extends I
 		return listeners;
 	}
 
-	protected IModelContextFactory<M> getFactory() {
+	protected ITemplateContextFactory<M> getFactory() {
 		return factory;
 	}
 

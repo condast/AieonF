@@ -211,10 +211,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			logger.info( "Results found: " + results.size() );
 			database.remove( results.iterator().next());
 			results = database.search(filter);
-			logger.info( "Results found: " + results.size() );
-			
-			database.add(model);
-				
+			logger.info( "Results found: " + results.size() );				
 		}
 		catch( Exception ex ) {
 			ex.printStackTrace();

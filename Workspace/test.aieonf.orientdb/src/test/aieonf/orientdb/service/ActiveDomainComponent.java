@@ -1,7 +1,9 @@
 package test.aieonf.orientdb.service;
 
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
+import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 import org.osgi.service.component.annotations.Component;
 
@@ -45,5 +47,9 @@ public class ActiveDomainComponent implements IActiveDomainProvider {
 	@Override
 	public IDomainAieon[] getDomains() {
 		return dispatcher.getDomains();
+	}
+	@Override
+	public IDescribablePredicate<IDescriptor> getPredicates() {
+		return dispatcher.getPredicates();
 	}
 }

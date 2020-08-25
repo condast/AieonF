@@ -132,7 +132,7 @@ abstract class AbstractChangeableCollection<T extends IDescribable> implements I
 				if( !loader.isCreatable() )
 					throw new CollectionException( S_ERR_NO_MANIFEST_CREATED );
 			}
-			if( manifest.implies( loader ) == false )
+			if( manifest.test( loader ) == false )
 				throw new CollectionException( S_ERR_SECURITY_LOADER_EXCEPTION + source );
 			this.leave();
 		}

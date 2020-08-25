@@ -71,7 +71,7 @@ public class Aspect extends ImplicitAieon implements IAspect
 	}
 
 	@Override
-	public boolean implies(Object desc)
+	public boolean test( IDescriptor desc)
 	{
 		if( desc == null )
 			return false;
@@ -94,7 +94,7 @@ public class Aspect extends ImplicitAieon implements IAspect
 			return true;
 		if( !isFamily( descriptor ))
 			return false;
-		return this.implies( descriptor );
+		return this.test( descriptor );
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package org.aieonf.commons.implicit;
 
+import java.util.function.Predicate;
+
 import org.aieonf.commons.strings.StringStyler;
 
 /**
@@ -9,7 +11,7 @@ import org.aieonf.commons.strings.StringStyler;
  *
  */
 @FunctionalInterface
-public interface IImplicit<T extends Object>
+public interface IImplicit<D extends Object> extends Predicate<D>
 {
 	/**
 	 * Get the rules when two descriptors are considered the same. By default, it is 'equals',
@@ -27,14 +29,4 @@ public interface IImplicit<T extends Object>
 			return StringStyler.prettyString( super.toString());
 		}
 	}
-
- /**
-   * If implies is true, the given implicit object is considered to be equal to this one,
-   * even though the form and structure may be different.
-   *
-   * @param implicit
-   * @return boolean
-  */
-  public boolean implies( Object implicit );
-
 }

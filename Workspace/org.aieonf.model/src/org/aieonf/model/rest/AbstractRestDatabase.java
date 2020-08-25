@@ -76,7 +76,7 @@ public abstract class AbstractRestDatabase implements IModelDatabase<IDescriptor
 
 	@Override
 	public void deactivate() {
-		// TODO Auto-generated method stub		
+		this.open = false;
 	}
 
 	@Override

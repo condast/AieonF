@@ -17,7 +17,6 @@ import org.aieonf.template.def.ITemplate;
 import org.aieonf.template.def.ITemplateAieon;
 import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.def.ITemplateNode;
-import org.aieonf.template.property.ITemplateProperty;
 
 public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 {
@@ -309,32 +308,6 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 	{
 		this.model.setParent(parent);
 	}
-
-	@Override
-	public ITemplateProperty.Attributes[] attributes(Enum<?> key) {
-		return model.attributes(key);
-	}
-
-
-	@Override
-	public void addAttribute(Enum<?> key,
-			ITemplateProperty.Attributes attr,
-			String value) {
-		this.model.addAttribute(key, attr, value);
-	}
-
-
-	@Override
-	public void addAttributes( Enum<?> key, Map<org.aieonf.template.property.ITemplateProperty.Attributes, String> attrs) {
-		this.model.addAttributes(key, attrs);
-	}
-
-
-	@Override
-	public void removeAttribute(Enum<?> key, ITemplateProperty.Attributes attr) {
-		this.model.removeAttribute(key, attr);
-	}
-
 
 	@Override
 	public int implies(IDescriptor descriptor) {

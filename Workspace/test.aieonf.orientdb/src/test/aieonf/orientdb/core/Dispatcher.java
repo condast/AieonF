@@ -3,8 +3,10 @@ package test.aieonf.orientdb.core;
 import java.util.Map.Entry;
 
 import org.aieonf.commons.security.ISecureGenerator;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
+import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 
 public class Dispatcher implements ISecureGenerator, IActiveDomainProvider
@@ -74,4 +76,11 @@ public class Dispatcher implements ISecureGenerator, IActiveDomainProvider
 		domains[0] = getActiveDomain();
 		return domains;
 	}
+
+	@Override
+	public IDescribablePredicate<IDescriptor> getPredicates() {
+		return factory.createPredicates();
+	}
+
+	
 }

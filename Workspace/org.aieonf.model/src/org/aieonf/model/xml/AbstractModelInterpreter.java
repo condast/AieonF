@@ -85,7 +85,7 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	}
 
 	/**
-	 * Create a descriptor from the given nae and attributes.
+	 * Create a descriptor from the given name and attributes.
 	 * @param name
 	 * @param attributes
 	 * @return
@@ -140,8 +140,7 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 		return true;
 	}
 
-	@Override
-	public boolean setValue(String value) {
+	protected boolean setValue(String value) {
 		this.model.getDescriptor().set(key, value);
 		return true;
 	}

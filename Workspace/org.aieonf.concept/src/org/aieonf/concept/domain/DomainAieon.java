@@ -143,13 +143,13 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	
 	
 	@Override
-	public boolean implies(Object descriptor) {
+	public boolean test( IDescriptor descriptor) {
 		if( !(descriptor instanceof IDescriptor ))
 			return false;
 		IDomainAieon check = new DomainAieon((IDescriptor) descriptor);
 		if( getDomain().equals(check.getDomain()))
 			return true;
-		return super.implies(descriptor);
+		return super.test(check);
 	}
 
 	@Override

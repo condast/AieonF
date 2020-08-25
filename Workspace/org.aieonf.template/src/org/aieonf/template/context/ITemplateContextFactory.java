@@ -1,11 +1,13 @@
 package org.aieonf.template.context;
 
 import org.aieonf.concept.IDescribable;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.template.def.ITemplateLeaf;
 
-public interface IModelContextFactory<M extends IDescribable> {
+public interface ITemplateContextFactory<M extends IDescribable> {
 
 	/**
 	 * Get the domain for this context
@@ -30,5 +32,11 @@ public interface IModelContextFactory<M extends IDescribable> {
 	 * @return
 	 */
 	public abstract M createModel();
+
+	/**
+	 * Create the predicates for this model
+	 * @return
+	 */
+	public IDescribablePredicate<IDescriptor> createPredicates();
 
 }

@@ -1,7 +1,9 @@
 package org.aieonf.osgi.selection;
 
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
+import org.aieonf.concept.function.IDescribablePredicate;
 
 public interface IActiveDomainProvider {
 
@@ -12,6 +14,12 @@ public interface IActiveDomainProvider {
 	public boolean isRegistered( long id, String name );
 	
 	public IDomainAieon getActiveDomain();
+	
+	/**
+	 * Get the predicates that have been registered
+	 * @return
+	 */
+	public IDescribablePredicate<IDescriptor> getPredicates();
 
 	/**
 	 * Get the domain with the given id and domain name. Returns null

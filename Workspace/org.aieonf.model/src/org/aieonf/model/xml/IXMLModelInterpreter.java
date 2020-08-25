@@ -85,7 +85,7 @@ public interface IXMLModelInterpreter<U extends IDescribable> {
 	 * @param key
 	 * @return
 	 */
-	public boolean setValue( String value );
+	//public boolean setValue( String value );
 
 	/**
 	 * When the property is parsed, this method is called to clean up the code

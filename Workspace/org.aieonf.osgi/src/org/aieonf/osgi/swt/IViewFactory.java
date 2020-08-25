@@ -12,6 +12,7 @@ public interface IViewFactory<T,U extends Control>
 		GET,
 		ADD,
 		EDIT,
+		AUTHENTICATION,
 		OPTIONS,
 		SELECTION,
 		SPONSOR;

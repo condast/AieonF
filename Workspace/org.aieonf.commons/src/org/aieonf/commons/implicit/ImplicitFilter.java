@@ -75,14 +75,14 @@ public class ImplicitFilter<T extends Object> extends AbstractFilter<T>
 	 * @throws FilterException
 	 */
 	@Override
-	protected boolean acceptEnabled( Object descriptor ) throws FilterException
+	protected boolean acceptEnabled( T descriptor ) throws FilterException
 	{
 		Rules rule = Rules.valueOf( StringStyler.styleToEnum( super.getRule() ));
 		switch( rule ){
 		case IMPLIES:
-			return implicit.implies( descriptor );
+			return implicit.test( descriptor );
 		case DOES_NOT_IMPLY:
-			return !implicit.implies( descriptor );
+			return !implicit.test( descriptor );
 		}
 		return false;
 	}

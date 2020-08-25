@@ -8,7 +8,7 @@ import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 
-public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLeaf<D>
+public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IModelLeaf<D>
 {	
 	//The concept that is modelled
 	private D descriptor;
@@ -188,8 +188,7 @@ public class ModelLeaf<D extends Object> extends ConceptBase implements IModelLe
 	 * @return
 	 */
 	@Override
-	public D getData()
-	{
+	public D getData(){
 		return this.descriptor;
 	}
 

@@ -9,6 +9,8 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.function.DescribableCollectionPredicate;
+import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
@@ -30,6 +32,8 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	private Collection<IFunctionProvider<String, IModelProvider<IDescriptor, M>>> functions;
 	
 	private IXMLModelInterpreter<IDescriptor> creator;
+	
+	private DescribableCollectionPredicate<IDescriptor> predicates;
 
 	protected AbstractProviderContextFactory( String bundle_id, Class<?> clss ) {
 		this( bundle_id, new TemplateInterpreter(clss));
@@ -39,6 +43,7 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 		this.bundle_id = bundle_id;
 		functions = new ArrayList<>();
 		this.creator = creator;
+		predicates = new DescribableCollectionPredicate<>(); 
 	}
 
 	protected String getBundleId() {
@@ -93,27 +98,17 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 			descriptor.set( IConcept.Attributes.SOURCE, template.getID()+ File.separator + S_MODEL );
 		return template;
 	}
-	
-	/*
-	public void get(IDescriptor descriptor) throws ParseException {
-		IModelLeaf<IDescriptor> leaf = super.getTemplate( provider_id );
-		IDomainAieon domain = (IDomainAieon) leaf.getDescriptor();
-		for( IModelFunctionProvider<IModelLeaf<T>> delegate: providers ){
-			delegate.open( domain);
-			delegate.get(descriptor);
-			delegate.close( domain);
-		}
+
+	public void addPredicate( IDescribablePredicate<IDescriptor> predicate ) {
+		this.predicates.addPredicate(predicate);
 	}
 
-	public void search(IModelFilter<IDescriptor> filter) throws ParseException {
-		IModelLeaf<IDescriptor> leaf = super.getTemplate( provider_id );
-		IDomainAieon domain = (IDomainAieon) leaf.getDescriptor();
-		for( IModelFunctionProvider<IModelLeaf<T>> delegate: providers ){
-			delegate.open( domain );
-			delegate.search( filter );
-			delegate.close( domain );
-		}
+	public void removePredicate( IDescribablePredicate<IDescriptor> predicate ) {
+		this.predicates.removePredicate(predicate);
 	}
-	*/
 
+	@Override
+	public IDescribablePredicate<IDescriptor> createPredicates(){
+		return predicates;
+	}
 }

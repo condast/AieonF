@@ -10,7 +10,7 @@ import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 
-public class Model<D extends Object> extends ModelLeaf<D> implements IModelNode<D>
+public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModelNode<D>
 {	
 	private Map<IModelLeaf<? extends IDescriptor>, String> children;
 
