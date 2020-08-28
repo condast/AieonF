@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IAttributeFilter;
-import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
@@ -133,5 +132,15 @@ public class ModelFilterWrapper<M extends IDescribable> implements
 	@Override
 	public String getValue() {
 		return filter.getValue();
+	}
+
+	@Override
+	public void setValue(String value) {
+		filter.setValue(value);
+	}
+
+	@Override
+	public void setMode(Mode mode) {
+		filter.setMode(mode);
 	}
 }

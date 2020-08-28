@@ -3,9 +3,6 @@ package org.aieonf.commons.filter;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.aieonf.commons.filter.AbstractFilter.Mode;
-
-
 public class BatchFilter<T extends Object> implements IFilter<T>
 {
 	public static final String S_BATCH = "Batch:";
@@ -49,6 +46,11 @@ public class BatchFilter<T extends Object> implements IFilter<T>
 	}
 
 	
+	@Override
+	public void setMode(Mode mode) {
+		filter.setMode(mode);
+	}
+
 	/**
 	 * @return the batch
 	 */

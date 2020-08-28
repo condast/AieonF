@@ -28,7 +28,7 @@ public class HierarchicalModelDescriptorFilter<D extends IDescriptor> extends Hi
 	public HierarchicalModelDescriptorFilter(IDescriptor parent, IDescriptor child, int minDepth, int maxDepth )
 			throws FilterException
 	{
-		super( Rules.OrChain, new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, parent ), 
+		super( Rules.OR_CHAIN, new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, parent ), 
 				new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, child ));
 		if( minDepth < 0 )
 			throw new IllegalArgumentException( S_ERR_MIN_DEPTH_WRONG);
@@ -38,7 +38,7 @@ public class HierarchicalModelDescriptorFilter<D extends IDescriptor> extends Hi
 
 	public HierarchicalModelDescriptorFilter(HierarchyRules rule, IDescriptor parent, IDescriptor child, int minDepth, int maxDepth) throws FilterException
 	{
-		super( Rules.OrChain, new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, parent ), 
+		super( Rules.OR_CHAIN, new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, parent ), 
 				new DescriptorFilter<IModelLeaf<D>>( DescriptorFilter.Rules.Equals, child ));
 		if( minDepth < 0 )
 			throw new IllegalArgumentException( S_ERR_MIN_DEPTH_WRONG);
@@ -106,5 +106,11 @@ public class HierarchicalModelDescriptorFilter<D extends IDescriptor> extends Hi
 	public String getValue() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setValue(String value) {
+		// TODO Auto-generated method stub
+		
 	}
 }

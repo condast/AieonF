@@ -29,7 +29,7 @@ public class HierarchicalModelAttributeFilter<D extends IDescriptor> extends Hie
 	public HierarchicalModelAttributeFilter( IAttributeFilter<IModelLeaf<D>> parentFilter, AttributeFilter<IModelLeaf<D>> childFilter, int minDepth, int maxDepth)
 			throws FilterException
 	{
-		super( Rules.OrChain, parentFilter, childFilter);
+		super( Rules.OR_CHAIN, parentFilter, childFilter);
 		if( minDepth < 0 )
 			throw new IllegalArgumentException( S_ERR_MIN_DEPTH_WRONG);
 		this.minDepth = minDepth;
@@ -39,7 +39,7 @@ public class HierarchicalModelAttributeFilter<D extends IDescriptor> extends Hie
 	public HierarchicalModelAttributeFilter(HierarchyRules rule,
 			IAttributeFilter<IModelLeaf<D>> parentFilter, IAttributeFilter<IModelLeaf<D>> childFilter, int minDepth, int maxDepth ) throws FilterException
 	{
-		super( Rules.OrChain, parentFilter, childFilter);
+		super( Rules.OR_CHAIN, parentFilter, childFilter);
 		if( minDepth < 0 )
 			throw new IllegalArgumentException( S_ERR_MIN_DEPTH_WRONG);
 		this.minDepth = minDepth;
@@ -107,5 +107,11 @@ public class HierarchicalModelAttributeFilter<D extends IDescriptor> extends Hie
 	public String getValue() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setValue(String value) {
+		// TODO Auto-generated method stub
+		
 	}
 }

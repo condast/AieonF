@@ -46,7 +46,6 @@ public class ModelFactory< T extends IDescriptor > {
 	
 
 	public Collection<IModelLeaf<IDescriptor>> get( Collection<Vertex> vertices ) throws FilterException {
-		this.service.open( domain );
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
 		try {
 			OrientGraph graph = this.service.getGraph();
@@ -62,9 +61,6 @@ public class ModelFactory< T extends IDescriptor > {
 		}
 		catch( Exception ex ) {
 			ex.printStackTrace();
-		}
-		finally {
-			service.close();
 		}
 		return results;
 	}

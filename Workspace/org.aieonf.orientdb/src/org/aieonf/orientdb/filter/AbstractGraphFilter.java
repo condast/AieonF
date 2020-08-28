@@ -38,8 +38,7 @@ public abstract class AbstractGraphFilter extends AbstractFilter<Vertex> impleme
 	 * @return boolean
 	 */
 	@Override
-	protected boolean acceptRule( String rule )
-	{
+	protected boolean acceptRule( String rule ){
 		return org.aieonf.concept.filter.AttributeFilter.checkRule( rule );
 	}
 

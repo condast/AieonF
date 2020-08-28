@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.commons.io.IOUtils;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
@@ -59,6 +60,7 @@ public class ModelRestService{
  			if( !dispatcher.isRegistered(domainId, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
+			Response response = Response.serverError().build();
 			//if( !dispatcher.isAllowed(node))
 			//	return Response.status(Status.FORBIDDEN).build();
 			//factory = new ModelFactory<IDescriptor>( domain, dbService );
@@ -70,8 +72,10 @@ public class ModelRestService{
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();
 			logger.info( data );
-			IModelLeaf<?> results = gson.fromJson(data, IModelLeaf.class);
-			return Response.ok( gson.toJson(results.getID(), Long.class)).build();
+			IModelLeaf<?>[] results = gson.fromJson(data, IModelLeaf[].class);
+			response = ( Utils.assertNull(results))? Response.noContent().build(): 
+				Response.ok( gson.toJson(results[0].getID(), Long.class)).build();
+			return response;
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -197,7 +201,7 @@ public class ModelRestService{
 			return Response.serverError().build();
 		}
 		finally {
-			dbService.close();
+			IOUtils.closeQuietly( dbService );
 		}	
 	}
 

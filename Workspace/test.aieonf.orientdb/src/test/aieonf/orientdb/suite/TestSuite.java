@@ -40,6 +40,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 	public enum Tests{
 		TEST_OPEN_AND_CLOSE,
+		TEST_SERIALSE,
+		TEST_DESERIALSE,
 		TEST_ADD_AND_READ,
 		TEST_REGISTER,
 		TEST_MODEL_BUILDER,
@@ -58,11 +60,17 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 	
 	@Override
 	protected void testSuite() throws Exception {
-		Tests test = Tests.TEST_REST_ADD_MODEL;
+		Tests test = Tests.TEST_SERIALSE;
 		try{
 			switch( test ){
 			case TEST_ADD_AND_READ:
 				testAddAndGet();
+				break;
+			case TEST_SERIALSE:
+				testSerialise();
+				break;
+			case TEST_DESERIALSE:
+				testDeserialise();
 				break;
 			case TEST_REGISTER:
 				testRegister();
@@ -105,7 +113,51 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		logger.info( model2.toString());
 	}
 
-	
+	private final void testSerialise() throws Exception{
+		TestFactory factory = TestFactory.getInstance();
+		IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) factory.createModel();
+		URLAieon urlAieon = new URLAieon();
+		urlAieon.setURI( "http://www.condast.com" );
+		urlAieon.setDescription( "description" );
+		urlAieon.setScope( IConcept.Scope.PUBLIC );
+		urlAieon.setVersion(1);
+		IModelLeaf<URLAieon> urlModel = new ModelLeaf<URLAieon>( urlAieon );
+		urlModel.setIdentifier("identifier");
+		model.addChild( urlModel);
+
+		
+		IModelLeaf<IDescriptor>[] arr = new IModelLeaf[1];
+		arr[0] = model;
+		GsonBuilder builder = new GsonBuilder(); 
+		builder.enableComplexMapKeySerialization();
+		builder.registerTypeAdapter( IModelLeaf.class, new ModelTypeAdapter());
+		Gson gson = builder.create();
+		String data = gson.toJson(arr, IModelLeaf[].class);
+		logger.info( "\n\n" + data + "\n\n" );
+		IModelLeaf<?>[] results = gson.fromJson(data, IModelLeaf[].class);
+	}
+
+	private final void testDeserialise() throws Exception{
+		String data = "[{\"children\":[[{},null],[{},null]]," +
+				"\"descriptor\":{\"implicit\":{},\"attribute\":\"LogEntry\","+ 
+				"\"descriptor\":{\"base\":{\"properties\":{\"Locale\":\"en\"," + 
+				"\"ORG.AIEONF.CONCEPT.LIBRARY.LOCALEAIEON.ATTRIBUTES.COUNTRY\":\"GB\"," + 
+				"\"DESCRIPTION\":\"{Description}\",\"SCOPE\":\"{Scope}\",\"ORG.AIEONF.CONCEPT.IDESCRIPTOR.ATTRIBUTES.CLASS\":\"org.aieonf.concept.implicit.ImplicitAieon\"," +
+				"\"Title\":\"{Title}\",\"ORG.AIEONF.CONCEPT.IDESCRIPTOR.ATTRIBUTES.VERSION\":\"0\"," + 
+				"\"ORG.AIEONF.CONCEPT.IDESCRIPTOR.ATTRIBUTES.NAME\":\"LogEntry\",\"class\":\"org.aieonf.concept.core.Concept\"," + 
+				"\"version\":\"1\",\"NAME\":\"LogEntry\"}}}},\"leaf\":false,\"parent\":{}," + 
+				"\"properties\":{\"CREATE_DATE\":\"2020-08-27:10-04-50\",\"VERSION\":\"0\","+ 
+				"\"CLASS\":\"org.aieonf.template.core.TemplateNode\",\"ID\":\"-1\",\"IDENTIFIER\":\"org.aieonf.model\"," + 
+				"\"DEPTH\":\"1\",\"class\":\"org.aieonf.concept.core.Descriptor\"}}]";
+		GsonBuilder builder = new GsonBuilder(); 
+		builder.enableComplexMapKeySerialization();
+		builder.registerTypeAdapter( IModelLeaf.class, new ModelTypeAdapter());
+		Gson gson = builder.create();
+		logger.info( data );
+		IModelLeaf<?> results = gson.fromJson(data, IModelLeaf.class);
+
+	}
+
 	private final void testRegister() throws Exception{
 		LoginDispatcher dispatcher = LoginDispatcher.getInstance();
 		/*
@@ -127,9 +179,9 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		try{		
 			database.open( factory.getDomain());
 			database.add(model);
-			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
-			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
+			IModelFilter<IModelLeaf<IDescriptor>> filter = 
+					new ModelFilter<IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
+			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
 			if( results.isEmpty()){
@@ -164,9 +216,9 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		try{		
 			database.open( factory.getDomain());
 			database.add(model);
-			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
-			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
+			IModelFilter<IModelLeaf<IDescriptor>> filter = 
+					new ModelFilter<IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
+			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
 			if( results.isEmpty()){
@@ -199,9 +251,9 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			TimeUnit.SECONDS.sleep(15);
 			logger.info("START TEST");
 			database.add(model);
-			IModelFilter<IModelLeaf<? extends IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<? extends IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
-			Collection<IModelLeaf<? extends IDescriptor>> results = database.search(filter);
+			IModelFilter<IModelLeaf<IDescriptor>> filter = 
+					new ModelFilter<IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
+			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
 			if( results.isEmpty()){
@@ -265,7 +317,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		}	
 	}
 	
-	private class RestDatabase extends AbstractRestDatabase{
+	private class RestDatabase extends AbstractRestDatabase<IDescriptor, IModelLeaf<IDescriptor>>{
 
 		protected RestDatabase(ISecureGenerator generator, IDomainAieon domain, String path) {
 			super(generator, domain, path);
@@ -284,20 +336,20 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		protected void getResults(ResponseEvent<Requests, IModelLeaf<? extends IDescriptor>[]> event, Collection<IModelLeaf<? extends IDescriptor>> results ) {
+		protected void getResults(ResponseEvent<Requests, IModelLeaf<IDescriptor>[]> event, Collection<IModelLeaf<IDescriptor>> results ) {
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter());
 			Gson gson = builder.create();
 			logger.info("\n\n" + event.getResponse());
-			IModelLeaf<? extends IDescriptor>[] found = gson.fromJson(event.getResponse(), IModelLeaf[].class );
+			IModelLeaf<IDescriptor>[] found = gson.fromJson(event.getResponse(), IModelLeaf[].class );
 			//Collection<IModelLeaf<? extends IDescriptor>> found = SerialisableModel.deserialise(event.getResponse() );
 
 			results.addAll( Arrays.asList(found )); 
 		}
 
 		@Override
-		public IModelLeaf<? extends IDescriptor> createModel() {
+		public IModelLeaf<? extends IDescriptor> onCreateModel() {
 			// TODO Auto-generated method stub
 			return null;
 		}		

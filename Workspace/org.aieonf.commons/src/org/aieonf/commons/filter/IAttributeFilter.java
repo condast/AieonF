@@ -6,4 +6,6 @@ public interface IAttributeFilter<D extends Object> extends IFilter<D> {
 	
 	public String getValue();
 	
+	public void setValue( String value );
+	
 }

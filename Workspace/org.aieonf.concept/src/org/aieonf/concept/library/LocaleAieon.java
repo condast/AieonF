@@ -170,21 +170,18 @@ public class LocaleAieon extends ImplicitAieon
 	 * @param descriptor
 	 * @return
 	 */
-	@SuppressWarnings("unused")
 	public Locale getLocale( IDescriptor descriptor ) 
 	{
 		String attribute = super.getKeyName( Attributes.COUNTRY );
 		String country = descriptor.get( attribute );
 		if( country == null )
-			throw new NullPointerException( S_ERR_NO_COUNTRY + descriptor.toString() );
+			country = Locale.getDefault().getCountry();
 		attribute = super.getKeyName( Attributes.LANGUAGE );
 		String language = descriptor.get( attribute );
 		if( language == null )
 			return new Locale( country );
 		attribute = super.getKeyName( Attributes.VARIANT );
 		String variant = descriptor.get( attribute );
-		if( language == null )
-			return new Locale( country, language );
 		return new Locale( country, language, variant );
 	}
 }

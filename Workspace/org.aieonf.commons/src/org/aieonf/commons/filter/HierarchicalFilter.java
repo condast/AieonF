@@ -26,7 +26,7 @@ public class HierarchicalFilter<T extends Object> extends FilterChain<T>
 	
 	public HierarchicalFilter( IFilter<T> parentFilter, IFilter<T> childFilter) throws FilterException
 	{
-		this( Rules.OrChain, parentFilter, childFilter );
+		this( Rules.OR_CHAIN, parentFilter, childFilter );
 		rule = HierarchyRules.AS_IS;
 	}
 

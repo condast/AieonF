@@ -2,8 +2,6 @@ package org.aieonf.commons.filter;
 
 import java.util.Collection;
 
-import org.aieonf.commons.filter.AbstractFilter.Mode;
-
 public class NotFilter<T extends Object> implements IFilter<T>
 {
 	public static final String S_NOT = "Not";
@@ -44,6 +42,11 @@ public class NotFilter<T extends Object> implements IFilter<T>
 	public void setAmount(int amount)
 	{
 		this.filter.setAmount(amount);
+	}
+
+	@Override
+	public void setMode(Mode mode) {
+		filter.setMode(mode);
 	}
 
 	@Override

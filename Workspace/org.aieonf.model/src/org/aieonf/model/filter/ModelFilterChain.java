@@ -26,4 +26,10 @@ public class ModelFilterChain<D extends Object> extends FilterChain<D> implement
 		return null;
 	}
 
+	@Override
+	public void setValue(String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

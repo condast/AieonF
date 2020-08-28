@@ -31,37 +31,31 @@ public class LogEntryAieon extends DateAieon
 	 */
 	private static final long serialVersionUID = -3112475589933520018L;
 
-	public LogEntryAieon()
-	{
+	public LogEntryAieon(){
 		super( Attributes.LOG_ENTRY.toString() );
 	}
 
-	public LogEntryAieon(String title)
-	{
+	public LogEntryAieon(String title){
 		this( title, Calendar.getInstance());
 	}
 
-	public LogEntryAieon(String title, Calendar calendar)
-	{
+	public LogEntryAieon(String title, Calendar calendar){
 		super( Attributes.LOG_ENTRY.toString(), calendar);
 		this.setTitle(title);
 	}
 
-	public LogEntryAieon( String title, Locale locale, Calendar calendar)
-	{
+	public LogEntryAieon( String title, Locale locale, Calendar calendar){
 		super( Attributes.LOG_ENTRY.toString(), locale, calendar);
 		this.setTitle(title);
 	}
 
-	public LogEntryAieon(String id, String title, Locale locale, Calendar calendar)
-	{
+	public LogEntryAieon(String id, String title, Locale locale, Calendar calendar){
 		super(id, locale, calendar);
 		this.setTitle(title);
 		super.setName( Attributes.LOG_ENTRY.toString() );
 	}
 
-	public LogEntryAieon(IDescriptor descriptor)
-	{
+	public LogEntryAieon(IDescriptor descriptor){
 		super(descriptor);
 	}
 

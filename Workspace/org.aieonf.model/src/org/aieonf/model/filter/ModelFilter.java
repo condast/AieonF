@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IAttributeFilter;
-import org.aieonf.commons.filter.AbstractFilter.Mode;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.FilterFactory;
@@ -63,6 +62,19 @@ public class ModelFilter<M extends IDescribable> implements
 	@Override
 	public void setAmount(int amount) {
 		filter.setAmount(amount);
+	}
+
+	
+	@Override
+	public void setValue(String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMode(Mode mode) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

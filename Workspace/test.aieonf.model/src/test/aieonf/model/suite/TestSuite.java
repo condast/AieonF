@@ -3,8 +3,10 @@ package test.aieonf.model.suite;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.filter.IFilter;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.filter.FilterBuilder;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.utils.PrintModel;
 import org.aieonf.model.xml.XMLModelBuilder;
@@ -23,7 +25,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 	public enum Tests{
 		TEST_FACTORY,
-		TEST_MODEL_BUILDER;
+		TEST_MODEL_BUILDER,
+		TEST_FILTER_CONFIG;
 	}
 	private static TestSuite suite = new TestSuite();
 	
@@ -39,7 +42,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 	@Override
 	protected void testSuite() throws Exception {
-		Tests test = Tests.TEST_MODEL_BUILDER;
+		Tests test = Tests.TEST_FILTER_CONFIG;
 		try{
 			switch( test ){
 			case TEST_FACTORY:
@@ -47,6 +50,9 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 				break;
 			case TEST_MODEL_BUILDER:
 				testModelBuilder();
+				break;
+			case TEST_FILTER_CONFIG:
+				testFilterConfig();
 				break;
 			default:
 				break;
@@ -56,6 +62,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			ex.printStackTrace();
 		}
 		logger.info("Tests completed");
+		System.exit(0);
 	}
 
 	private void testFactory() {
@@ -80,7 +87,19 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			String print = PrintModel.printModel(leaf, false );
 			logger.info( print );
 		}
+	}
 
+	private final void testFilterConfig() { 
+		FilterBuilder<IModelLeaf<IDescriptor>> builder = new FilterBuilder<IModelLeaf<IDescriptor>>( this.getClass(), "test","/test/filter.xml");
+		try {
+			builder.build();
+			IFilter<IModelLeaf<IDescriptor>>[] filters = builder.getUnits();
+			logger.info(filters.toString());
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		logger.info("TEST COMPLETE");
 	}
 
 	@Override

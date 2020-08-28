@@ -15,19 +15,19 @@ import java.util.Collection;
  * @author Kees Pieters
  * @version 1.0
 */
-public class FilterChain<T> extends AbstractFilter<T>
+public class FilterChain<D> extends AbstractFilter<D>
 {
   //Supported chain rules
   public enum Rules
   { 
-  	AndChain, 
-  	OrChain
+  	AND_CHAIN, 
+  	OR_CHAIN
   }
 
   /**
    * Create the filter chain
    */
-  private Collection<IFilter<T>> filterChain;
+  private Collection<IFilter<D>> filterChain;
 
   /**
    * Create the filter chain
@@ -37,7 +37,7 @@ public class FilterChain<T> extends AbstractFilter<T>
   public FilterChain() throws FilterException
   {
     super.setName( FilterChain.class.getName() );
-    this.filterChain = new ArrayList<IFilter<T>>();
+    this.filterChain = new ArrayList<IFilter<D>>();
   }
 
   /**
@@ -49,7 +49,7 @@ public class FilterChain<T> extends AbstractFilter<T>
   public FilterChain( Rules chainRule ) throws FilterException
   {
     super( FilterChain.class.getName(), chainRule.name() );
-    this.filterChain = new ArrayList<IFilter<T>>();
+    this.filterChain = new ArrayList<IFilter<D>>();
   }
 
   /**
@@ -61,10 +61,10 @@ public class FilterChain<T> extends AbstractFilter<T>
    * @return List
    * @throws FilterException
   */
-  private Collection<T> andFilter( Collection<T> list ) throws FilterException
+  private Collection<D> andFilter( Collection<D> list ) throws FilterException
   {
-  	Collection<T> results = list;
-    for( IFilter<T> filter: this.filterChain ){
+  	Collection<D> results = list;
+    for( IFilter<D> filter: this.filterChain ){
     	if( results.size() == 0 )
     		break;
     	results = filter.doFilter( results );
@@ -81,13 +81,13 @@ public class FilterChain<T> extends AbstractFilter<T>
    * @return List
    * @throws FilterException
   */
-  private Collection<T> orFilter( Collection<T> list ) throws FilterException
+  private Collection<D> orFilter( Collection<D> list ) throws FilterException
   {
-    Collection<T> results = new ArrayList<T>();
-    Collection<T> tempList; //temporary list
-    for( IFilter<T> filter: this.filterChain ){
+    Collection<D> results = new ArrayList<D>();
+    Collection<D> tempList; //temporary list
+    for( IFilter<D> filter: this.filterChain ){
       tempList = filter.doFilter( list );
-      for( T t: tempList ){
+      for( D t: tempList ){
         if( results.contains( t ) == false )
           results.add( t );
       }
@@ -128,7 +128,7 @@ public class FilterChain<T> extends AbstractFilter<T>
    *
    * @param filter Filter
    */
-  public void addFilter( IFilter<T> filter )
+  public void addFilter( IFilter<D> filter )
   {
     this.filterChain.add( filter );
   }
@@ -138,7 +138,7 @@ public class FilterChain<T> extends AbstractFilter<T>
    *
    * @param filter Filter
   */
-  public void removeFilter( IFilter<T> filter )
+  public void removeFilter( IFilter<D> filter )
   {
     this.filterChain.remove( filter );
   }
@@ -152,16 +152,16 @@ public class FilterChain<T> extends AbstractFilter<T>
    * @throws FilterException
    */
   @Override
-  protected boolean acceptEnabled(T obj ) throws FilterException
+  protected boolean acceptEnabled(D obj ) throws FilterException
   {
-	  Collection<T> list = new ArrayList<T>();
+	  Collection<D> list = new ArrayList<D>();
 	  try{
 		  list.add(obj );
 	  }
 	  catch( ClassCastException ex ){
 		  return false;
 	  }
-	  Collection<T> result = this.doFilter( list );
+	  Collection<D> result = this.doFilter( list );
 	  return (( result != null ) && ( result.size() > 0 ));
   }
 
@@ -173,22 +173,22 @@ public class FilterChain<T> extends AbstractFilter<T>
    * @throws FilterException
   */
   @Override
-  public Collection<T> doFilter( Collection<T> list )  throws FilterException
+  public Collection<D> doFilter( Collection<D> list )  throws FilterException
   {
   	super.prepareFilter();
-  	Collection<T> results = list;
+  	Collection<D> results = list;
     switch( super.getMode() ){
-    	case Disabled:
+    	case DISABLED:
     		results.addAll( list );
     		break;
-    	case Block:
+    	case BLOCK:
     		break;
-    	case Enabled:
-    		if( this.getRule().equals( Rules.AndChain.name() )){
+    	case ENABLED:
+    		if( this.getRule().equals( Rules.AND_CHAIN.name() )){
     			results =  this.andFilter( list );
     			break;
     		}
-    		if( this.getRule().equals( Rules.OrChain.name() )){
+    		if( this.getRule().equals( Rules.OR_CHAIN.name() )){
     			results = this.orFilter( list );
     			break;
     		}
@@ -214,18 +214,18 @@ public class FilterChain<T> extends AbstractFilter<T>
   }
 
 	@Override
-	public Collection<T> getRejected()
+	public Collection<D> getRejected()
 	{
-    Collection<T> results = new ArrayList<T>();
-    Collection<T> rejected, temp;
-    for( IFilter<T> filter: this.filterChain ){
+    Collection<D> results = new ArrayList<D>();
+    Collection<D> rejected, temp;
+    for( IFilter<D> filter: this.filterChain ){
     	rejected = filter.getRejected();
       if( results.isEmpty() && !rejected.isEmpty() ){
       	results.addAll( filter.getRejected() );
       	continue;
       }
-      temp = new ArrayList<T>();
-      for( T reject: rejected ){
+      temp = new ArrayList<D>();
+      for( D reject: rejected ){
       	if( results.contains( reject ))
       		temp.add( reject );
       }

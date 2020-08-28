@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filters>
+	<filter-chain id="test.condast.commons.filter" rule="and-chain">
+		<filter type="attribute" name="test" rule="equals" key="category">"*"</filter>
+		<filter type="attribute" key="date">"now"</filter>
+	</filter-chain>
+</filters>

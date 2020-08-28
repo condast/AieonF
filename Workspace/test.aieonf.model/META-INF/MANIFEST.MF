@@ -5,11 +5,14 @@ Bundle-SymbolicName: test.aieonf.model
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.aieonf.commons.strings,
+Import-Package: org.aieonf.commons.filter,
+ org.aieonf.commons.strings,
+ org.aieonf.commons.xml,
  org.aieonf.concept,
  org.aieonf.concept.context,
  org.aieonf.concept.core,
  org.aieonf.concept.domain,
+ org.aieonf.concept.filter,
  org.aieonf.model.builder,
  org.aieonf.model.core,
  org.aieonf.model.utils,

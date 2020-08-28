@@ -12,10 +12,10 @@ public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescr
 	private String defaultParentRefVal;
 	private String defaultChildRefVal;
 	
-	public HierarchicalAttributeFilter( IAttributeFilter<M> parentFilter, AttributeFilter<M> childFilter)
+	public HierarchicalAttributeFilter( IAttributeFilter<M> parentFilter, IAttributeFilter<M> childFilter)
 			throws FilterException
 	{
-		this( Rules.OrChain, parentFilter, childFilter);
+		this( Rules.OR_CHAIN, parentFilter, childFilter);
 	}
 
 	public HierarchicalAttributeFilter(Rules chainRule, IAttributeFilter<M> parentFilter,
@@ -27,7 +27,7 @@ public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescr
 	public HierarchicalAttributeFilter(HierarchyRules rule,
 			IAttributeFilter<M> parentFilter, IAttributeFilter<M> childFilter) throws FilterException
 	{
-		this( Rules.OrChain, parentFilter, childFilter);
+		this( Rules.OR_CHAIN, parentFilter, childFilter);
 	}
 
 	/**
@@ -48,16 +48,16 @@ public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescr
 		this.defaultChildRefVal = childFilter.refVal;
 		switch( super.getHierarchyRule()){
 			case ALLPARENTS:
-				parentFilter.setRefVal( WildcardFilter.S_ALL );
+				parentFilter.setValue( WildcardFilter.S_ALL );
 				break;
 			case ALLCHILDREN:
-				childFilter.setRefVal( WildcardFilter.S_ALL );
+				childFilter.setValue( WildcardFilter.S_ALL );
 				break;
 			default:
 			  if(( this.defaultParentRefVal != null ) && ( parentFilter.refVal.equals( WildcardFilter.S_ALL )))
-			  		parentFilter.setRefVal( this.defaultParentRefVal );
+			  		parentFilter.setValue( this.defaultParentRefVal );
 			  if(( this.defaultChildRefVal != null ) && ( childFilter.refVal.equals( WildcardFilter.S_ALL )))
-		  		childFilter.setRefVal( this.defaultChildRefVal );
+		  		childFilter.setValue( this.defaultChildRefVal );
 				break;
 		}		
 	}
@@ -71,4 +71,6 @@ public class HierarchicalAttributeFilter<T extends IDescriptor, M extends IDescr
 		super.prepareFilter();
 		this.setFiltersForRule();
 	}
+	
+	
 }

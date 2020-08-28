@@ -21,21 +21,6 @@ import java.util.Set;
 public abstract class AbstractFilter<T> implements IFilter<T>
 {
 	/**
-	 * Define the various modes of operation:
-	 * Disabled: allow all objects
-	 * Enabled: filter objects
-	 * Blocked: block all objects
-	 * @author Kees
-	 *
-	 */
-	public enum Mode
-	{
-		Disabled,
-		Enabled,
-		Block
-	}
-
-	/**
 	 * The name of the filter
 	 */
 	private String name;
@@ -63,7 +48,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	{
 		this.rejectList = new ArrayList<T>();
 		this.name = AbstractFilter.class.getName();
-		this.mode = Mode.Enabled;
+		this.mode = Mode.ENABLED;
 		this.amount = -1;
 	}
 
@@ -146,6 +131,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	 * Set the mode of operation
 	 * @param mode
 	 */
+	@Override
 	public void setMode( Mode mode )
 	{
 		this.mode = mode;
@@ -197,6 +183,7 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 		return false;
 	}
 
+	
 	/**
 	 * Get a list of accepted rules
 	 *
@@ -232,11 +219,11 @@ public abstract class AbstractFilter<T> implements IFilter<T>
 	{
 		switch( this.mode )
 		{
-		case Disabled:
+		case DISABLED:
 			return true;
-		case Block:
+		case BLOCK:
 			return false;
-		case Enabled:
+		case ENABLED:
 			return this.acceptEnabled( obj );
 		}
 		return false;

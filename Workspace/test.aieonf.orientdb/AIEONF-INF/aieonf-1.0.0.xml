@@ -31,15 +31,12 @@
               <password>test</password>
             </loader>
           </model>
-		  <model id="org.aieonf.model.provider">
-		    <category>
-		      <category init="clear" use="mandatory">{Category}</category>
-		    </category>
-		    <loader>
-              <user-name>keesp</user-name>
-              <password>test</password>
-	          <source>test.aieonf.orientdb</source>
-		    </loader>
+		  <model id="org.aieonf.model">
+		    <log-entry>
+		      <title init="clear" use="mandatory">{Title}</title>
+		      <description init="clear" use="mandatory">{Description}</description>
+              <scope type="enum" use="mandatory">{Scope}</scope>
+		    </log-entry>
 		    <children>
 		       <model>
 				 <url id="descriptor">

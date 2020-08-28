@@ -169,8 +169,8 @@ public class AttributeFilter<D extends IDescribable> extends AbstractFilter<D> i
 	 *
 	 * @param refVal String
 	 */
-	public void setRefVal( String refVal )
-	{
+	@Override
+	public void setValue( String refVal ){
 		this.refVal = refVal;
 	}
 

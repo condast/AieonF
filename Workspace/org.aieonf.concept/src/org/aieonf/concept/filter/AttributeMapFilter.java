@@ -154,7 +154,7 @@ public class AttributeMapFilter<T extends IDescriptor> extends AbstractFilter<T>
       key = map.getKey();
       value = map.getValue();
       filter.setRefKey( key );
-      filter.setRefVal( value );
+      filter.setValue( value );
       if( filter.accept( descriptor ) == false ){
         if( this.getRule().equals( AttributeMapFilter.Rules.WildcardAnd.name() ) == true )
           continue;
