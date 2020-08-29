@@ -1,8 +1,5 @@
 package org.aieonf.commons.ui.selection;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.domain.DomainEvent;
 import org.aieonf.concept.domain.IDomainAieon;
@@ -131,14 +128,17 @@ public class SelectionComposite extends Composite{
 		list.removeAll();
 		if( Utils.assertNull(domains))
 			return;
-		Collection<String> names=  new ArrayList<>();
-		for( IDomainAieon domain: domains )
-			names.add(domain.getShortName());
-		list.setItems(names.toArray( new String[ names.size()]));	
+		String[] names=  new String[ domains.length ];
+		int index = 0;
+		for( int i=0; i<domains.length; i++ ) {
+			names[i] = domains[i].getShortName();
+			if( domains[i].equals( domainSelection.getActiveDomain()))
+				index = i;
+		}
+		list.setItems(names );	
 		list.select(0);
-		item.setText(list.getSelection()[0]);
+		item.setText( names[index]);
 		item.setExpanded( false );
-		domainSelection.setActiveDomain(null, domains[0].getDomain());
 	}
 	
 	@Override

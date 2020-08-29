@@ -39,9 +39,11 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 	}
 	private FireFoxVersion version;
 
-
+	private IContextAieon context;
+	
 	public FireFoxModelFunction(IContextAieon context ) {
-		super( S_FUNCTION_PROVIDER_ID, context );
+		super( S_FUNCTION_PROVIDER_ID );
+		this.context = context;
 		version = FireFoxVersion.firefox3;
 	}
 
@@ -60,9 +62,9 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 	
 	@Override
 	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
-		ILoaderAieon baseLoader = getDefaultLoader( super.getAieon());
+		ILoaderAieon baseLoader = getDefaultLoader( context);
 		baseLoader.setDescription( DEFAULT_FIREFOX_PROVIDER_NAME );
-		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, super.getAieon() );
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context );
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_FIREFOX_IDENTIFIER );
 		URI uri = AbstractFileConnector.getDefaultSource( DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
@@ -70,9 +72,9 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 
 		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> provider;
 		if( version == FireFoxVersion.firefox3 )
-			provider = new FireFoxSQLiteBookmarkProvider( super.getAieon(), model );
+			provider = new FireFoxSQLiteBookmarkProvider( context, model );
 		else
-			provider = new FireFoxHTMLBookmarkProvider( super.getAieon() );
+			provider = new FireFoxHTMLBookmarkProvider( context );
 		return provider;
 	}
 }

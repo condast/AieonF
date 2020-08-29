@@ -22,7 +22,7 @@ public class ModelFunctionProvider extends AbstractFunctionProvider<String, IMod
 	private ModelProvider provider;
 	
 	public ModelFunctionProvider( IContextAieon context ) {
-		super( S_FUNCTION_PROVIDER_ID, context );
+		super( S_FUNCTION_PROVIDER_ID );
 		provider = new ModelProvider( S_FUNCTION_PROVIDER_ID, context );
 	}
 

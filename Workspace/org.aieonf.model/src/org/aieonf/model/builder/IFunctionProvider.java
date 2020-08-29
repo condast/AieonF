@@ -2,7 +2,7 @@ package org.aieonf.model.builder;
 
 import org.aieonf.concept.domain.IDomainAieon;
 
-public interface IFunctionProvider<T extends Object, U extends Object> {
+public interface IFunctionProvider<K extends Object, F extends Object> {
 
 	/**
 	 * A function can be restricted to a certain domain. Returns true if the given domain
@@ -17,12 +17,12 @@ public interface IFunctionProvider<T extends Object, U extends Object> {
 	 * @param data
 	 * @return
 	 */
-	public boolean canProvide( T key );
+	public boolean canProvide( K key );
 
 	/**
 	 * Get the function belonging to the given model leaf
 	 * @param data
 	 * @return
 	 */
-	public U getFunction( T key );
+	public F getFunction( K key );
 }

@@ -24,8 +24,11 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 
 	private static final String DEFAULT_EXPLORER_PROVIDER_NAME ="Explorer";
 
+	private IContextAieon context;
+
 	public IEFavoritesFunction( IContextAieon context ) {
-		super( S_FUNCTION_PROVIDER_ID, context );
+		super( S_FUNCTION_PROVIDER_ID );
+		this.context = context;
 	}
 
 	/**
@@ -42,12 +45,12 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 
 	@Override
 	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String aieon ) {
-		ILoaderAieon baseLoader = getDefaultLoader(super.getAieon());
+		ILoaderAieon baseLoader = getDefaultLoader(context);
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
-		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, super.getAieon() );
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context );
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
 		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
-		return new IEFavoritesProvider( super.getAieon());
+		return new IEFavoritesProvider( context );
 	}
 }

@@ -26,8 +26,11 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<Stri
 
 	private static final String DEFAULT_BOOKMARKS_FILE ="Bookmarks";
 
+	private IContextAieon context;
+	
 	public ChromiumModelFunctionProvider( IContextAieon context ) {
-		super( S_FUNCTION_PROVIDER_ID, context );
+		super( S_FUNCTION_PROVIDER_ID );
+		this.context = context;
 	}
 
 	@Override
@@ -40,15 +43,15 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<Stri
 	
 	@Override
 	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
-		ILoaderAieon baseLoader = getDefaultLoader( super.getAieon());
+		ILoaderAieon baseLoader = getDefaultLoader( context);
 		URI uri = ProjectFolderUtils.appendToUserDir(DEFAULT_CHROMIUM_ROOT + "//" + DEFAULT_BOOKMARKS_FILE, false );
 		baseLoader.set( IConcept.Attributes.SOURCE, uri.toString() );
 		baseLoader.setURI( uri );
 		baseLoader.setDescription( DEFAULT_CHROMIUM_PROVIDER_NAME );
-		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, super.getAieon());
+		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context);
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
-		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( super.getAieon() );
+		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( context);
 		return gdb;
 	}
 }

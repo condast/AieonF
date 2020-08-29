@@ -20,29 +20,23 @@ import org.aieonf.model.core.ModelLeaf;
  * A function provider always provides functions for a certain domain. 
  * @author Kees
  *
- * @param <T>
- * @param <U>
+ * @param <K>
+ * @param <F>
  */
-public abstract class AbstractFunctionProvider<T extends Object, U extends Object> implements IFunctionProvider<T, U> {
+public abstract class AbstractFunctionProvider<K extends Object, F extends Object> implements IFunctionProvider<K, F> {
 
 	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
 
 	private static final String S_DEFAULT_ENVRYPTION_KEY = "aieonf.encryption";
 
 	private String identifier;
-	private IContextAieon aieon;
 	
-	protected AbstractFunctionProvider( String identifier, IContextAieon aieon ) {
+	protected AbstractFunctionProvider( String identifier ) {
 		this.identifier = identifier;
-		this.aieon = aieon;
 	}
 
 	protected String getIdentifier() {
 		return identifier;
-	}
-
-	protected IContextAieon getAieon() {
-		return aieon;
 	}
 
 	/**
@@ -59,12 +53,12 @@ public abstract class AbstractFunctionProvider<T extends Object, U extends Objec
 	 * @param leaf
 	 * @return
 	 */
-	public boolean canProvide( T identifier ) {
+	public boolean canProvide( K identifier ) {
 		return S_FUNCTION_PROVIDER_ID.equals(identifier);
 	}
 
 	@Override
-	public U getFunction(T descriptor) {
+	public F getFunction(K descriptor) {
 		if( !canProvide(descriptor))
 			return null;
 		return onCreateFunction(descriptor );
@@ -74,7 +68,7 @@ public abstract class AbstractFunctionProvider<T extends Object, U extends Objec
 	 * Create the access
 	 * @return
 	 */
-	protected abstract U onCreateFunction( T describable); 
+	protected abstract F onCreateFunction( K describable); 
 
 	/**
 	 * Create a default loader for the given leaf
