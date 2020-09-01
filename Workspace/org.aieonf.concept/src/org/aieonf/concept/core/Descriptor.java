@@ -84,10 +84,10 @@ public class Descriptor implements IDescriptor
 	 * @param id String
 	 * @param name String
 	 */
-	public Descriptor( String id, String name )
+	public Descriptor( long id, String name )
 	{
 		this( name );
-		setValue( IDescriptor.Attributes.ID, id );
+		set( IDescriptor.Attributes.ID, String.valueOf( id ));
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class Descriptor implements IDescriptor
 		String str = this.get( IDescriptor.Attributes.ID );
 		if(StringUtils.isEmpty(str))
 			str = this.get( IDescriptor.Attributes.ID.name());
-		return Long.parseLong( str ); 
+		return StringUtils.isEmpty(str)?-1:Long.parseLong( str ); 
 	}
 
 	/**
@@ -268,7 +268,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getClassName()
 	{
-		return this.get( Attributes.CLASS );
+		return this.get( Attributes.CLASS.name() );
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class Descriptor implements IDescriptor
 	}
 
 	protected void setValue( Attributes attr, String value ) {
-		set(attr.name().toLowerCase(), value);
+		set(attr.name(), value);
 	}
 	
 	protected void remove( Enum<?> key ){
@@ -566,7 +566,7 @@ public class Descriptor implements IDescriptor
 		if( split.length > 3 )
 			id = stringArray.substring( name.length() + 1, 
 					stringArray.length() - version.length() - 1 );
-		IDescriptor descriptor = new Descriptor( id, name );
+		IDescriptor descriptor = new Descriptor( Long.parseLong( id ), name );
 		descriptor.setVersion( Integer.parseInt( version ));
 		return descriptor;
 	}

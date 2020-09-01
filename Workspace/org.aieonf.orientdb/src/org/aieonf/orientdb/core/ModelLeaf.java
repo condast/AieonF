@@ -117,6 +117,17 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	}
 
 	@Override
+	public boolean isReverse() {
+		String str = super.get(IModelLeaf.Attributes.REVERSE.name());
+		return StringUtils.isEmpty(str)? false: Boolean.parseBoolean(str);
+	}
+
+	@Override
+	public void setReverse( boolean choice ) {
+		super.set( IModelLeaf.Attributes.REVERSE.name(), String.valueOf(choice));
+	}
+
+	@Override
 	public void set(Enum<?> attr, String value) {
 		Vertex vertex = getVertex();
 		vertex.setProperty(attr.name(), value);
@@ -125,11 +136,6 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	@Override
 	public boolean isRoot() {
 		return (this.parent == null);
-	}
-
-	@Override
-	public Direction getDirection() {
-		return Direction.valueOf( get( IModelLeaf.Attributes.DIRECTION ));
 	}
 
 	@Override

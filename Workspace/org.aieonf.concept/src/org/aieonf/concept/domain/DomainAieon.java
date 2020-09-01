@@ -2,8 +2,7 @@ package org.aieonf.concept.domain;
 
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.core.Concept
-;
+
 import org.aieonf.concept.implicit.ImplicitAieon;
 
 public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
@@ -13,10 +12,8 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	/**
 	 * Create a default domain aieon
 	*/
-	public DomainAieon() 
-	{
-	  super( new Concept( IDomainAieon.Attributes.DOMAIN.toString() ), IDomainAieon.Attributes.DOMAIN.name() );
-	  super.getDescriptor().set( IDescriptor.Attributes.CLASS, this.getClass().getName() );
+	public DomainAieon() {
+	  super( );
 	}
 
 	/**
@@ -25,7 +22,7 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	*/
 	public DomainAieon( String shortName )
 	{
-	  this( IDomainAieon.Attributes.DOMAIN.toString(), shortName );
+	  this( IDomainAieon.Attributes.DOMAIN.name(), shortName );
 	}
 
 	/**
@@ -34,16 +31,11 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	*/
 	public DomainAieon( String domain, String shortName )
 	{
-	  super( new Concept( domain ),IDomainAieon.Attributes.DOMAIN.toString());
-	  super.set(IDomainAieon.Attributes.DOMAIN.toString(), shortName );
-	  super.set(IDomainAieon.Attributes.SHORT_NAME.toString(), shortName );
-	  super.getDescriptor().set( IDescriptor.Attributes.CLASS, this.getClass().getName() );
+	  super( IDomainAieon.Attributes.DOMAIN.name());
+	  super.set(IDomainAieon.Attributes.DOMAIN.name(), shortName );
+	  super.set(IDomainAieon.Attributes.SHORT_NAME.name(), shortName );
 	}
 	
-	public DomainAieon(IDescriptor descriptor) {
-		super(descriptor, IDomainAieon.Attributes.DOMAIN.toString());
-	}
-
 	/**
 	 * Get the short name for this domain
 	 */
@@ -141,17 +133,6 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 		return ( this.getParent() == null );
 	}	
 	
-	
-	@Override
-	public boolean test( IDescriptor descriptor) {
-		if( !(descriptor instanceof IDescriptor ))
-			return false;
-		IDomainAieon check = new DomainAieon((IDescriptor) descriptor);
-		if( getDomain().equals(check.getDomain()))
-			return true;
-		return super.test(check);
-	}
-
 	@Override
 	public int hashCode() {
 		return getDomain().hashCode();

@@ -9,6 +9,7 @@ import org.aieonf.concept.IDescriptor;
 public class FilterFactory {
 
 	public enum Filters{
+		ATTRIBUTE_LIST,
 		ATTRIBUTES;
 
 		@Override
@@ -42,6 +43,9 @@ public class FilterFactory {
 		String ref = attributes.get(Attributes.REFERENCE.toString());
 		String value = attributes.get(Attributes.VALUE.toString());
 		switch( name) {
+		case ATTRIBUTE_LIST:
+			filter = new AttributeFilter<D>( rule, ref, value );
+			break;
 		default:
 			filter = new AttributeFilter<D>( rule, ref, value );
 			break;

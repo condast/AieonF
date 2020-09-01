@@ -54,10 +54,13 @@ public class LogEntryAieon extends DateAieon
 		this.setTitle(title);
 		super.setName( Attributes.LOG_ENTRY.toString() );
 	}
-
-	public LogEntryAieon(IDescriptor descriptor){
-		super(descriptor);
+	
+	public LogEntryAieon( IDescriptor descriptor ) {
+		super( descriptor );
+		setClassName(this.getClass().getCanonicalName());
+		super.setName( Attributes.LOG_ENTRY.toString() );
 	}
+
 
 	public String getTitle(){
 		return super.get(Attributes.TITLE );

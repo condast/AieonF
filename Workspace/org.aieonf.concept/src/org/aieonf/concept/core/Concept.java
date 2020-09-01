@@ -41,8 +41,7 @@ public class Concept extends Descriptor implements IConcept
 	/**
 	 * Create a minimal concept
 	 */
-	protected Concept( IConceptBase base )
-	{
+	protected Concept( IConceptBase base ){
 		super( base );
 	}
 
@@ -62,10 +61,9 @@ public class Concept extends Descriptor implements IConcept
 	 * @param id String
 	 * @param name String
 	 */
-	public Concept( String id, String name )
+	public Concept( long id, String name )
 	{
-		this( name );
-		super.set( IDescriptor.Attributes.ID, id );
+		super( id, name );
 	}
 
 

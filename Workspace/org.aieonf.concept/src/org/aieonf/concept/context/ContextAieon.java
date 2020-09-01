@@ -15,7 +15,6 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.Universe;
 import org.aieonf.concept.body.IBodyAieon;
-import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.loader.ILoaderAieon;
@@ -71,7 +70,7 @@ public class ContextAieon extends Concept implements IContextAieon
 	 * @param applicationID String
 	 * @param secretKey String
 	 */
-	protected ContextAieon( String id, String source, String applicationName,
+	protected ContextAieon( long id, String source, String applicationName,
 			String applicationID,
 			String secretKey )
 	{

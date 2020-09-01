@@ -121,15 +121,35 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 	}
 
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean isReverse() {
+		if( this.model instanceof IModelNode ){
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
+			return node.isReverse();
+		}
+		return false;
+	}
+
+	@Override
+	public void setReverse( boolean choice ) {
+		this.model.set( IModelLeaf.Attributes.REVERSE.name(), String.valueOf(choice));
+	}
+
 	/**
 	 * Get the direction of this model with 
 	 * respect to its children
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Direction getDirection()
 	{
-		return this.model.getDirection();
+		if( this.model instanceof IModelNode ){
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
+			return node.getDirection();
+		}
+		return Direction.UNI_DIRECTIONAL;
 	}
 
 	/**
@@ -145,9 +165,9 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child, String type) {
 		if( this.model instanceof IModelNode ){
-			@SuppressWarnings("unchecked")
 			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
 			return node.addChild( child );
 		}

@@ -39,7 +39,6 @@ public class DatabaseService implements Closeable{
 	public static final String S_IDENTIFIER = "documenttxModel";
 	
 	protected static final String S_ROOT = "Root";
-	protected static final String S_DESCRIPTORS = "Descriptors";
 
 	private Collection<IModelListener<IModelNode<IDescriptor>>> listeners;
 	
@@ -48,8 +47,6 @@ public class DatabaseService implements Closeable{
 	private static DatabasePersistenceService persistence = DatabasePersistenceService.getInstance();
 
 	private OrientGraph graph;
-	
-	private IDomainAieon domain;
 	
 	private DatabaseService() {
 		listeners = new ArrayList<>();
@@ -204,7 +201,6 @@ public class DatabaseService implements Closeable{
 		graph.commit();
 		graph.shutdown();
 		graph = null;
-		this.domain = null;
 	}
 
 	protected class Transaction extends AbstractTransaction<IModelNode<IDescriptor>, DatabaseService>{

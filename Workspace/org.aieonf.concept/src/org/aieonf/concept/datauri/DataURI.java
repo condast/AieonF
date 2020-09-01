@@ -1,11 +1,10 @@
 package org.aieonf.concept.datauri;
 
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Concept;
-import org.aieonf.concept.wrapper.ConceptWrapper;
 
-public class DataURI extends ConceptWrapper implements IDataURI
+public class DataURI extends Concept implements IDataURI
 {
 	public static final String S_ICON = "icon";
 	
@@ -32,29 +31,29 @@ public class DataURI extends ConceptWrapper implements IDataURI
 	
 	private String datauri;
 
-	public DataURI()
-	{
-		super( new Concept());
+	public DataURI(){
+		super( );
 	}
 
 	public DataURI( String name )
 	{
-		super( new Concept( S_DATA_URI ));
+		super( S_DATA_URI );
 		super.setSource(name);
 		super.setDescription(name);
 	}
 
-	public DataURI( String id, String name )
+	public DataURI( long id, String name )
 	{
-		super( new Concept( id, S_DATA_URI ));
+		super( id, S_DATA_URI );
 		super.setSource(name);
 		super.setDescription(name);
 	}
 
-	public DataURI( IDescriptor descriptor ){
-		super( descriptor );
+	public DataURI( IDescriptor descriptor ) {
+		super( descriptor.getBase() );
+		setClassName(this.getClass().getCanonicalName());
 	}
-	
+
 	public String getDataName(){
 		return super.get( S_DATA );
 	}
@@ -67,7 +66,6 @@ public class DataURI extends ConceptWrapper implements IDataURI
 	 * Fill the Data URI with the given datauri string
 	 * @param datauri
 	 */
-	@Override
 	public void fill( String datauri ){
 		String[] split = datauri.split("[=]");
 		if( split.length < 2 )
@@ -79,7 +77,6 @@ public class DataURI extends ConceptWrapper implements IDataURI
 	 * Fill the Data URI with the given datauri string
 	 * @param datauri
 	 */
-	@Override
 	public void fill( String key, String datauri ){
 		super.set( IDataResource.Attribute.Type, key);
 		String str = datauri.replace("\"", "").trim();

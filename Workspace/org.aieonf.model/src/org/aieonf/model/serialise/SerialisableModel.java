@@ -108,7 +108,7 @@ public class SerialisableModel extends SerialisableNode{
 		GsonBuilder builder = new GsonBuilder();
 		builder.enableComplexMapKeySerialization();
 		Gson gson = builder.create();
-		Type tsn = new TypeToken<SerialisableModel[]>(){}.getType();
+		//Type tsn = new TypeToken<SerialisableModel[]>(){}.getType();
 		
 		SerialisableModel[] models = gson.fromJson(str, SerialisableModel[].class); 
 		if( Utils.assertNull(models))

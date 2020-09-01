@@ -56,7 +56,7 @@ public class ConceptBody<T extends IDescriptor>
 			conceptClass = Class.forName( className );
 			T newConcept = ( T )conceptClass.newInstance();
 			BodyFactory.transfer( newConcept, descriptor, true );
-			newConcept.set( IDescriptor.Attributes.CLASS.toString(), newConcept.getClass().getName() );
+			newConcept.set( IDescriptor.Attributes.CLASS.name(), newConcept.getClass().getName() );
 			if( newConcept instanceof IConcept ){
 				IConcept concept = ( IConcept )newConcept;
 				if( concept.isA( descriptor ) == false )

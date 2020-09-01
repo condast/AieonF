@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
@@ -32,11 +33,25 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		super( graph, domain, parent, vertex );
 		this.graph = graph;
 		this.domain = domain;
-		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
+		Map<IModelLeaf<? extends IDescriptor>, String> children = null;	
+		boolean reverse = isReverse(); 
+		if( reverse ) {
+			Iterator<Edge> iterator = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
+			while( iterator.hasNext() ) {
+				Edge edge = iterator.next();
+				addChild( new ModelNode( graph, domain, edge.getVertex(com.tinkerpop.blueprints.Direction.IN)));							
+			}
+		}else	
+			getChildren();
 		super.setLeaf(Utils.assertNull(children));
 	}
-
 	
+	@Override
+	public IModelNode.Direction getDirection() {
+		String str = super.get(IModelNode.Attributes.DIRECTION.name());
+		return StringUtils.isEmpty(str)? Direction.UNI_DIRECTIONAL: Direction.valueOf(str);
+	}
+
 	@Override
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child) {
 		return addChild(child, IS_CHILD);
@@ -46,7 +61,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child, String type) {
 		Vertex vertex = getVertex();
 		ModelLeaf leaf = (ModelLeaf) child;
-		graph.addEdge(domain.getDomain(), vertex, leaf.getVertex(), type);
+		addChild(domain, graph, vertex, leaf.getVertex(), type);
 		super.setLeaf(false);
 		return true;
 	}
@@ -65,6 +80,9 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 				continue;
 			if( !leaf.getVertex().equals( edge.getVertex(com.tinkerpop.blueprints.Direction.IN)))
 				continue;
+			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.OUT);
+			Iterator<Edge> vedges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IModelNode.IS_PARENT).iterator();
+			while( vedges.hasNext())
 			graph.removeEdge(edge);
 			return true;
 		}
@@ -130,7 +148,16 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
 		return children.size();
 	}
-
-
-
+	
+	public static void addChild( IDomainAieon domain, OrientGraph graph, Vertex parent, Vertex child, String label ) {
+		String rev = parent.getProperty(IModelLeaf.Attributes.REVERSE.name());
+		boolean reverse = StringUtils.isEmpty(rev)?false: Boolean.parseBoolean(rev);
+		if( reverse ) {
+			graph.addEdge(domain.getDomain(), child, parent, label);
+			graph.addEdge(domain.getDomain(), parent, child, IModelNode.IS_PARENT);
+		}else {
+			graph.addEdge(domain.getDomain(), parent, child, label);
+			graph.addEdge(domain.getDomain(), child, parent, IModelNode.IS_PARENT);
+		}
+	}
 }

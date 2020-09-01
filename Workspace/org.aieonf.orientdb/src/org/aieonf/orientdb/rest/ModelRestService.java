@@ -55,16 +55,11 @@ public class ModelRestService{
 	public Response addModel( @QueryParam("id") long domainId, @QueryParam("token") long token, 
 			@QueryParam("domain") String domainstr, String data ) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		ModelFactory<IDescriptor> factory = null;
 		try{
  			if( !dispatcher.isRegistered(domainId, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
 			Response response = Response.serverError().build();
-			//if( !dispatcher.isAllowed(node))
-			//	return Response.status(Status.FORBIDDEN).build();
-			//factory = new ModelFactory<IDescriptor>( domain, dbService );
-			//long id = factory.transform(data);
 			GsonBuilder builder = new GsonBuilder(); 
 			builder.enableComplexMapKeySerialization();
 			dbService.open(domain);
@@ -98,8 +93,6 @@ public class ModelRestService{
  			if( !dispatcher.isRegistered(domainId, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
  			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
-			//if( !dispatcher.isAllowed(node))
-			//	return Response.status(Status.FORBIDDEN).build();
 			factory = new ModelFactory<IDescriptor>( domain, dbService );
 			long id = -1;//factory.transform(data);
 			Gson gson = new Gson();

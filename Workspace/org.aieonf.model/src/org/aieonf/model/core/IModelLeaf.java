@@ -13,6 +13,7 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	public static final String S_MODEL = "Model";
 	public static final String CHILDREN = "Children";
 	public static final String IS_CHILD = "isChild";
+	public static final String IS_PARENT = "isParent";
 
 	//Error messages
 	public static final String S_ERR_NO_DESCRIPTOR = 
@@ -37,27 +38,12 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 		LEAF,
 		CHILD,
 		DEPTH,
-		DIRECTION;
+		REVERSE;
 
 		@Override
 		public String toString() {
 			return StringStyler.prettyString( super.toString() );
 		}	
-	}
-
-	/**
-	 * Get the possible directions for the model
-	 * @author Kees Pieters
-	 */
-	public enum Direction
-	{
-		UNI_DIRECTIONAL,
-		BI_DIRECTIONAL;
-
-		@Override
-		public String toString() {
-			return StringStyler.prettyString( super.toString());
-		}
 	}
 
 	/**
@@ -103,6 +89,16 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	void setParent( IModelNode<?> parent );
 
 	/**
+	 * Sometimes the parent-child hierarchy can be reversed. This boolean can then 
+	 * tell the database to look for in- rather than out edges 
+	 * respect to its children
+	 * @return
+	 */
+	public boolean isReverse();
+	
+	public void setReverse( boolean choice );
+
+	/**
 	 * Get the attribute
 	 * @param attr
 	 * @param value
@@ -137,13 +133,6 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	 * @return
 	 */
 	public boolean isRoot();
-
-	/**
-	 * Get the direction of this model with 
-	 * respect to its children
-	 * @return
-	 */
-	public Direction getDirection();
 
 	/**
 	 * Returns true if the model is a leaf ( has no children )

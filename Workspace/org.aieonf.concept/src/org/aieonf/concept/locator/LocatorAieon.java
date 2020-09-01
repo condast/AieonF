@@ -72,14 +72,12 @@ implements ILocatorAieon
 		EmbeddedAieon.setEmbedded( this );
 	}
 
-	/**
-	 * Create a locator aieon from the given concept
-	 * @param descriptor
-	 */
-	public LocatorAieon( IDescriptor descriptor )
-	{
-		super( descriptor, ILocatorAieon.Attributes.URI.name() );
-		EmbeddedAieon.setEmbedded( this );
+	public LocatorAieon( IDescriptor descriptor ) {
+		super( descriptor.getBase());
+		super.setScope( Scope.APPLICATION );
+		this.setName( ILocatorAieon.Attributes.LOCATOR.toString() );
+		this.set( ILocatorAieon.Attributes.LOCATOR, Boolean.TRUE.toString() );
+		EmbeddedAieon.setEmbedded( this );		
 	}
 
 	/**

@@ -248,7 +248,7 @@ public class BodyFactory<T extends Object>
 			throw new ConceptException( ex.getMessage(), ex );
 		}
 		BodyFactory.transfer( result, descriptor, true );
-		result.set( IDescriptor.Attributes.CLASS.toString(), result.getClass().getName() );
+		result.set( IDescriptor.Attributes.CLASS.name(), result.getClass().getName() );
 		return result;
 	}
 

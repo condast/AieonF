@@ -72,6 +72,11 @@ public class LocaleAieon extends ImplicitAieon
 		super.set( Attributes.COUNTRY, locale.getCountry() );
 		super.set( Attributes.VARIANT, locale.getVariant() );
 	}
+	
+	public LocaleAieon( IDescriptor descriptor ) {
+		super( descriptor.getBase());
+		super.setClassName(this.getClass().getCanonicalName());
+	}
 
 	/**
 	 * Create an aieon for the given locale
@@ -85,16 +90,6 @@ public class LocaleAieon extends ImplicitAieon
 		super.set( Attributes.COUNTRY, locale.getCountry() );
 		super.set( Attributes.VARIANT, locale.getVariant() );
 	}
-
-	/**
-	 * Create a locale from the given concept
-	 * @param concept
-	 */
-	public LocaleAieon( IDescriptor descriptor )
-	{
-		super( descriptor, S_LOCALE );
-	}
-
 
 	@Override
 	public int compareTo( IDescriptor descriptor )
@@ -172,16 +167,13 @@ public class LocaleAieon extends ImplicitAieon
 	 */
 	public Locale getLocale( IDescriptor descriptor ) 
 	{
-		String attribute = super.getKeyName( Attributes.COUNTRY );
-		String country = descriptor.get( attribute );
+		String country = descriptor.get( Attributes.COUNTRY );
 		if( country == null )
 			country = Locale.getDefault().getCountry();
-		attribute = super.getKeyName( Attributes.LANGUAGE );
-		String language = descriptor.get( attribute );
+		String language = descriptor.get( Attributes.LANGUAGE );
 		if( language == null )
 			return new Locale( country );
-		attribute = super.getKeyName( Attributes.VARIANT );
-		String variant = descriptor.get( attribute );
+		String variant = descriptor.get( Attributes.VARIANT );
 		return new Locale( country, language, variant );
 	}
 }

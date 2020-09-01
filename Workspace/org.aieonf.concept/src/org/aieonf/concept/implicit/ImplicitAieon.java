@@ -1,82 +1,56 @@
 package org.aieonf.concept.implicit;
 
 import org.aieonf.commons.implicit.IImplicit;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.*;
-import org.aieonf.concept.wrapper.ConceptWrapper;
 
-public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDescriptor>
-{
-	/**
-	 * for serialisation purposes
-	 */
+public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor>{
 	private static final long serialVersionUID = 1L;
 
-	private String attribute;
 
-	/**
-	 * Create a default implicit aieon
-	 * @throws ConceptException
-	 */
-	public ImplicitAieon()
-	{
-		super( new Concept() );
-		this.setClassName( this.getClass().getName() );
+	public ImplicitAieon() {
+		super();
 	}
 
-	/**
-	 * Create an implicit aieon for the given name
-	 * @param attribute
-	 * @throws ConceptException
-	 */
-	protected ImplicitAieon( String name )
-	{
-		this( new Concept( name ), name );
+	public ImplicitAieon(IConceptBase base, String implicit) {
+		super(base);
+		super.set(IImplicit.Attributes.IMPLICIT.name(), implicit);
 	}
 
-	/**
-	 * Create an implicit aieon for the given attribute
-	 * @param attribute
-	 * @throws ConceptException
-	 */
-	public ImplicitAieon( String name, String attribute )
-	{
-		this( new Concept( name ), attribute );
+	public ImplicitAieon(long id, String name, String implicit) {
+		super(id, name);
+		super.set(IImplicit.Attributes.IMPLICIT.name(), implicit);
 	}
 
-	/**
-	 * Create an implicit aieon for the given attribute and value
-	 * @param attribute
-	 * @param value
-	 * @throws ConceptException
-	 */
-	public ImplicitAieon( String name, String attribute, String value )
-	{
-		this( name, attribute );
-		this.set( attribute.trim(), value );
+	public ImplicitAieon(String name, String implicit) {
+		super(name);
+		super.set(IImplicit.Attributes.IMPLICIT.name(), implicit);
 	}
 
-	/**
-	 * Create an implicit aieon for the given concept and using the attribute
-	 * @param concept
-	 * @param attribute
-	 * @throws ConceptException
-	 */
-	public ImplicitAieon( IDescriptor descriptor, String attribute )
-	{
-		super( descriptor );
-		this.setClassName( this.getClass().getName() );
-		this.attribute = attribute.trim();
+	public ImplicitAieon(IConceptBase base) {
+		super(base);
 	}
 
-	/**
-	 * Set the attribute
-	 * @param attribute String
-	 */
-	public final void setAttribute( String attribute )
-	{
-		this.attribute = attribute;
+	protected ImplicitAieon(long id, String name) {
+		super(id, name);
+	}
+
+	public ImplicitAieon(String name) {
+		this(name, name);
+	}
+
+	public String getImplicit() {
+		return super.get(IImplicit.Attributes.IMPLICIT.name());
+	}
+	
+	protected void setImplicit( String implicit ) {
+		super.set(IImplicit.Attributes.IMPLICIT.name(), implicit);
+	}
+
+	protected void setImplicit( Enum<?> implicit ) {
+		super.set(IImplicit.Attributes.IMPLICIT.name(), ConceptBase.getAttributeKey( implicit ));
 	}
 
 	/**
@@ -97,8 +71,9 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 		if(( descriptor instanceof IConcept ) == false )
 			return false;
 		IConcept concept = ( IConcept )descriptor;
-		return ( concept.get( attribute ) != null ) &&
-				concept.get( attribute ).equals( this.get( attribute ));
+		String implicit = getImplicit();
+		return ( concept.get( implicit ) != null ) &&
+				concept.get( implicit ).equals( this.get( implicit ));
 	}
 
 	/**
@@ -114,71 +89,20 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 	@Override
 	public boolean accept( IDescriptor descriptor)
 	{
-		if( this.objEquals( descriptor ))
+		if( this.objEquals( descriptor ) || this.equals( descriptor ))
 			return true;
 
-		if( this.equals( descriptor ) == false )
+		String implicit = getImplicit();
+		if( StringUtils.isEmpty(implicit))
 			return false;
-
-		String source = descriptor.get( this.attribute );
-		if(( source == null ) && ( this.getAttributeValue() == null ))
+		String reference = get( implicit );
+		String source = descriptor.get( implicit );
+		if(( source == null ) && ( reference == null ))
 			return true;
-		if(( source == null ) || ( this.getAttributeValue() == null ))
+		if(( source == null ) || ( reference == null ))
 			return false;
 
-		return ( this.getAttributeValue().equals( source ));
-	}
-
-	/**
-	 * Every implicit descriptor should reserve one attribute for
-	 * a class identification. A none-null value for this attribute implies
-	 * that a concept is implicit to this descriptor
-	 * @return String
-	 */
-	@Override
-	public String getClassAttribute()
-	{
-		return this.attribute;
-	}
-
-	/**
-	 * Every implicit descriptor should reserve on attribute that uniquely
-	 * identifies the implicit (normally the value of the class attribute).
-	 * If different values
-	 * @return String
-	 */
-	@Override
-	public String getAttributeValue()
-	{
-		return this.get( this.attribute );
-	}
-
-	/**
-	 * Get the key identifying value for the given descriptor
-	 * @param descriptor IDescriptor
-	 * @return String
-	 */
-	@Override
-	public String getAttributeValue(IDescriptor descriptor)
-	{
-		return descriptor.get( this.attribute );
-	}
-
-	/**
-	 * Returns true if the given descriptor is of the same class as this one
-	 * This usually means that the name is equal and that they share the same
-	 * attributes
-	 *
-	 * @param descriptor IDescriptor
-	 * @return boolean
-	 */
-	public boolean isImplicitClass( IDescriptor descriptor )
-	{
-		if( this.getName().equals( descriptor.getName()) == false )
-			return false;
-
-		return ( this.get( this.attribute ) != null ) &&
-				( descriptor.get( this.attribute ) != null );
+		return ( reference.equals( source ));
 	}
 
 	/**
@@ -195,11 +119,11 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 		if(( descriptor instanceof IImplicitAieon ) == false  )
 			return -descriptor.compareTo( this );
 		IImplicitAieon<?> implicit = ( IImplicitAieon<?> )descriptor;
-		if( this.getAttributeValue() == null )
+		if( this.getImplicit() == null )
 			return -1;
-		if( implicit.getAttributeValue() == null )
+		if( implicit.getImplicit() == null )
 			return 1;
-		return this.getAttributeValue().compareTo( implicit.getAttributeValue() );
+		return this.getImplicit().compareTo( implicit.getImplicit() );
 	}
 
 	@Override
@@ -208,7 +132,28 @@ public class ImplicitAieon extends ConceptWrapper implements IImplicitAieon<IDes
 		if( !( descriptor instanceof IDescriptor ))
 			return false;
 		IDescriptor desc = ( IDescriptor )descriptor;
-		return isFamily( this, attribute, desc );
+		String implicit = getImplicit();
+		return isFamily( this, implicit, desc );
+	}
+
+	/**
+	 * returns true if the given concept base contains an implicit directive
+	 * @param base
+	 * @return
+	 */
+	public static boolean isImplicit( IConceptBase base ) {
+		String implicit = base.get(IImplicit.Attributes.IMPLICIT.name());
+		return !StringUtils.isEmpty(implicit);
+	}
+
+	/**
+	 * returns true if the given concept base contains an implicit directive
+	 * @param base
+	 * @return
+	 */
+	public static boolean isImplicit( IDescriptor descriptor ) {
+		String implicit = descriptor.get(IImplicit.Attributes.IMPLICIT.name());
+		return !StringUtils.isEmpty(implicit);
 	}
 
 	/**

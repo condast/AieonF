@@ -108,21 +108,15 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		this.setScope( Scope.APPLICATION );
 		this.setAieonCreatorClass( this.getClass() );
 		super.setName( IPasswordAieon.Attributes.PASSWORD.name() );
-		super.setClassName( this.getClass().getName() );
 		super.setSource( S_DEFAULT_URI );
 		super.setExtendedKey( IPasswordAieon.Attributes.class.getName() );
-					}
-
-	/**
-	 * Get the password descriptor
-	 * 
-	 * @param concept
-	 */
-	public PasswordAieon( IDescriptor descriptor )
-	{
-		super( descriptor );
 	}
-
+	
+	public PasswordAieon( IDescriptor descriptor ) {
+		super( descriptor);
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.condast.concept.database.security.IPasswordAieon#getUserName()
 	 */

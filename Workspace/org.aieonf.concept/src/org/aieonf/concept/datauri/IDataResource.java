@@ -10,12 +10,6 @@ public interface IDataResource
 	public static final String S_ICON = "ICON";
 	
 	/**
-	 * Fill the Data URI with the given datauri string
-	 * @param datauri
-	 */
-	public void fill( String type, String resource );
-
-	/**
 	 * Get the type of this Data URI (e.g. ICON)
 	 * @return
 	 */
@@ -25,5 +19,12 @@ public interface IDataResource
 	 * Get the resource
 	 * @return
 	 */
-	public String getResource();	
+	public String getResource();
+
+	/**
+	 * Fill the Data URI with the given datauri string
+	 * @param type
+	 * @param resource
+	 */
+	void fill(String type, String resource);	
 }

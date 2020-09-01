@@ -2,10 +2,43 @@ package org.aieonf.model.core;
 
 import java.util.*;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.*;
 
 public interface IModelNode<D extends Object> extends IModelLeaf<D>
 {	
+
+	public enum Attributes{
+		DIRECTION;
+
+		@Override
+		public String toString() {
+			return StringStyler.prettyString( super.toString() );
+		}	
+	}
+
+	/**
+	 * Get the possible directions for the model
+	 * @author Kees Pieters
+	 */
+	public enum Direction
+	{
+		UNI_DIRECTIONAL,
+		BI_DIRECTIONAL;
+
+		@Override
+		public String toString() {
+			return StringStyler.prettyString( super.toString());
+		}
+	}
+
+	/**
+	 * Get the direction of this model with 
+	 * respect to its children
+	 * @return
+	 */
+	public IModelNode.Direction getDirection();
+
 	/**
 	 * Add a child model to the model
 	 * @param child IModelNode<? extends IDescriptor>

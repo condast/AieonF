@@ -2,9 +2,6 @@ package org.aieonf.commons.security;
 
 import java.util.Map;
 
-import org.aieonf.commons.security.ISecureCall;
-import org.aieonf.commons.security.ISecureGenerator;
-
 public abstract class AbstractSecureProvider implements ISecureCall, ISecureGenerator {
 
 	protected AbstractSecureProvider() {}

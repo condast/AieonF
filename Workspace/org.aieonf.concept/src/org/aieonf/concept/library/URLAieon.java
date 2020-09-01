@@ -2,12 +2,13 @@ package org.aieonf.concept.library;
 
 import java.net.URL;
 
+import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.xml.URICompletion;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.datauri.DataURI;
-import org.aieonf.concept.datauri.IDataURI;
+import org.aieonf.concept.implicit.IImplicitAieon;
 import org.aieonf.concept.implicit.ImplicitAieon;
 
 /**
@@ -15,7 +16,7 @@ import org.aieonf.concept.implicit.ImplicitAieon;
  * @author Kees
  *
  */
-public class URLAieon extends ImplicitAieon implements IDataURI
+public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 {
 	/**
 	 * For serialisation
@@ -65,7 +66,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	 */
 	public URLAieon()
 	{
-		super( new DataURI( IConcept.Attributes.SOURCE.toString() ), IConcept.Attributes.SOURCE.toString() );
+		super(  );
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	 */
 	public URLAieon( String uri ) 
 	{
-		super( new DataURI( uri ), IConcept.Attributes.SOURCE.toString() );
+		super( IConcept.Attributes.SOURCE.name() );
 		super.setSource( uri );
 		super.setDescription(uri);
 	    super.setClassName( this.getClass().getCanonicalName() );
@@ -88,7 +89,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	 */
 	public URLAieon( String name, String uri ) 
 	{
-		super( new DataURI( uri ), IConcept.Attributes.SOURCE.toString() );
+		super( IConcept.Attributes.SOURCE.name() );
 		super.setSource( uri );
 	    super.setClassName( this.getClass().getCanonicalName() );
 		super.setDescription(name);
@@ -100,17 +101,11 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 		this( url.toExternalForm() );
 	}
 	
-	/**
-	 * Create a domain aieon with the given id and name
-	 * @param id
-	 * @param domain
-	 */
-	public URLAieon( IDescriptor descriptor )
-	{
-		super( new DataURI( descriptor ), IConcept.Attributes.SOURCE.toString() );
-	    super.setClassName( this.getClass().getCanonicalName() );
+	public URLAieon( IDescriptor descriptor ) {
+		super( descriptor );
+		setClassName(this.getClass().getCanonicalName());
 	}
-
+	
 	/**
 	 * Get the type of the url
 	 * @return
@@ -138,7 +133,7 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	 */
 	public Boolean isOnServer()
 	{
-		return super.getBoolean( super.getKeyName( Attributes.SERVER ));
+		return super.getBoolean( super.get( Attributes.SERVER ));
 	}
 
 	/**
@@ -170,70 +165,30 @@ public class URLAieon extends ImplicitAieon implements IDataURI
 	}
 
 	@Override
-	public void fill(String type, String resource)
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		data.fill(type, resource);
-	}
-
-	@Override
-	public String getResource()
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		return data.getResource();
-	}
-
-	@Override
-	public void fill(String datauri)
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		data.fill( datauri);
-	}
-
-	@Override
-	public String getMimeType()
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		return data.getMimeType();
-	}
-
-	@Override
-	public String getMimeTypeExtension()
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		return data.getMimeTypeExtension();
-	}
-
-	@Override
-	public String getCharset()
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		return data.getCharset();
-	}
-
-	@Override
-	public String getEncoding()
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		return data.getEncoding();
-	}
-
-	@Override
-	public boolean isBase64Encoded()
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		return data.isBase64Encoded();
-	}
-
-	@Override
-	public String getType()
-	{
-		IDataURI data = ( IDataURI )super.getStoredDescriptor(); 
-		return data.getType();
-	}
-
-	@Override
 	public void setURI(String uri) {
 		super.setSource( uri );
+	}
+
+	@Override
+	public boolean test(IDescriptor descriptor) {
+		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( IConcept.Attributes.SOURCE.name() );
+		return implicit.test(descriptor);
+	}
+
+	@Override
+	public boolean accept(IDescriptor descriptor) {
+		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( IConcept.Attributes.SOURCE.name() );
+		return implicit.accept(descriptor);
+	}
+
+	@Override
+	public boolean isFamily(Object arg0) {
+		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( IConcept.Attributes.SOURCE.name() );
+		return implicit.isFamily(arg0);
+	}
+
+	@Override
+	public String getImplicit() {
+		return get( IImplicit.Attributes.IMPLICIT.name());
 	}
 }

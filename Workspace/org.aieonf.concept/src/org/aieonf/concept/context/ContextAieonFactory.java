@@ -1,6 +1,5 @@
 package org.aieonf.concept.context;
 
-import org.aieonf.concept.context.IContextAieonFactory;
 import org.aieonf.concept.core.ConceptException;
 
 /**

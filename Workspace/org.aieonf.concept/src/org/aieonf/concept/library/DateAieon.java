@@ -8,7 +8,6 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.implicit.IImplicitAieon;
-import org.aieonf.concept.implicit.ImplicitAieon;
 
 public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor>
 {
@@ -77,11 +76,6 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	}
 	
 	/**
-	 * Delegate the implicit functionality
-	 */
-	private IImplicitAieon<IDescriptor> implicit;
-	
-	/**
 	 * Create a default date aieon 
 	*/
 	public DateAieon() 
@@ -94,8 +88,8 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	*/
 	protected DateAieon( String name ) 
 	{
-		super( name );
-		implicit = new ImplicitAieon( this, super.getKeyName( Attributes.TIME_IN_MILLIS ));
+		super( name);
+		super.setImplicit( Attributes.TIME_IN_MILLIS.name() );
 	}
 
 	/**
@@ -105,7 +99,7 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	public DateAieon( Calendar calendar )
 	{
 		super( DATE);
-		implicit = new ImplicitAieon( this, super.getKeyName( Attributes.TIME_IN_MILLIS ));
+		super.setImplicit( Attributes.TIME_IN_MILLIS.name() );
 		this.setTimeInMillis( calendar.getTimeInMillis() );
 	}
 
@@ -116,7 +110,7 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	protected DateAieon( String name, Calendar calendar )
 	{
 		super( name );
-		implicit = new ImplicitAieon( this, super.getKeyName( Attributes.TIME_IN_MILLIS ));
+		super.setImplicit( Attributes.TIME_IN_MILLIS.name() );
 		this.setTimeInMillis( calendar.getTimeInMillis() );
 	}
 
@@ -128,9 +122,7 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	public DateAieon(Locale locale, Calendar calendar )
 	{
 		super(DATE, locale);
-		implicit = 
-			new ImplicitAieon( super.getKeyName( Attributes.TIME_IN_MILLIS ), 
-					String.valueOf( calendar.getTimeInMillis() ));
+		super.setImplicit( Attributes.TIME_IN_MILLIS.name() );
 		this.setTimeInMillis( calendar.getTimeInMillis() );
 	}
 
@@ -143,24 +135,15 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	public DateAieon(String id, Locale locale, Calendar calendar )
 	{
 		super(id, locale);
-		implicit = 
-			new ImplicitAieon( super.getKeyName( Attributes.TIME_IN_MILLIS ), 
-					String.valueOf( calendar.getTimeInMillis() ));
+		super.setImplicit( Attributes.TIME_IN_MILLIS.name() );
 		this.setTimeInMillis( calendar.getTimeInMillis() );
 	}
 
-	/**
-	 * Create a date aieon from the given concept
-	 * @param concept
-	 */
-	public DateAieon( IDescriptor descriptor )
-	{
+	public DateAieon( IDescriptor descriptor ) {
 		super( descriptor );
-		String time = descriptor.get( Attributes.TIME_IN_MILLIS );
-		if( time == null )
-			time = String.valueOf( Descriptor.getCreateDate(descriptor).getTime());
-		this.setTimeInMillis( Long.parseLong( time ));
-		implicit = new ImplicitAieon( descriptor.getName(), super.getKeyName( Attributes.TIME_IN_MILLIS ), time );
+		setClassName(this.getClass().getCanonicalName());
+		super.setName( DATE );
+		super.setImplicit( Attributes.TIME_IN_MILLIS.name() );
 	}
 	
 	/**
@@ -206,69 +189,6 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 	{
 		super.set( Attributes.TIME_IN_MILLIS, String.valueOf( time ) );
 	}
-
-  /**
-   * Every implicit descriptor should reserve one attribute for
-   * a class identification. A none-null value for this attribute implies
-   * that a concept is implicit to this descriptor
-   * @return String
-  */
-  @Override
-	public String getClassAttribute()
-  {
-    return this.implicit.getClassAttribute();
-  }
-
-  /**
-   * Every implicit descriptor should reserve on attribute that uniquely
-   * identifies the implicit (normally the value of the class attribute).
-   * If different values
-   * @return String
-   */
-  @Override
-	public String getAttributeValue()
-  {
-    return this.implicit.getAttributeValue();
-  }
-
-  /**
-   * Get the key identifying value for the given descriptor
-   * @param descriptor IDescriptor
-   * @return String
-   */
-  @Override
-	public String getAttributeValue(IDescriptor descriptor)
-  {
-    return this.implicit.getAttributeValue( descriptor );
-  }
-
-  /**
-   * If implies is true, the given descriptor is considered to be equal to this one,
-   * even though the form and structure (descriptor!) may be different.
-   *
-   * @param descriptor IDescriptor
-   * @return boolean
-  */
-  public boolean implies(IDescriptor descriptor)
-  {
-  	return this.implicit.test( descriptor );
-  }
-
-  /**
-   * An accept is basically an extension to equals. Depending on the structure
-   * and the requirements, additional restrictions or freedom may be granted to
-   * the default equals. This is especially true for, for instance, versioning.
-   * Accept differs from implies that it usually is reserved for similar concepts,
-   * so the descriptors must be the same
-   *
-   * @param descriptor IDescriptor
-   * @return boolean
-  */
-  @Override
-  public boolean accept( IDescriptor descriptor)
-  {
-    return this.implicit.accept( descriptor );
-  } 
   
 	/**
 	 * Returns true if the given descriptor is a town aieon

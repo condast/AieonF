@@ -3,16 +3,15 @@ package org.aieonf.orientdb.serialisable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
-import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.IConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.function.IDescribablePredicate;
+import org.aieonf.concept.implicit.IImplicitAieon;
+import org.aieonf.concept.implicit.ImplicitAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.serialise.AbstractModelTypeAdapter;
 import org.aieonf.orientdb.core.ModelNode;
@@ -31,8 +30,6 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	
 	private IActiveDomainProvider provider;
 	
-	private Logger logger = Logger.getLogger(this.getClass().getName());
-
 	public ModelTypeAdapter( IActiveDomainProvider provider, OrientGraph graph) {
 		super();
 		this.graph = graph;
@@ -55,64 +52,42 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	@Override
 	protected boolean onAddChild(Vertex model, Vertex child, String label) {
 		IDomainAieon domain = this.provider.getActiveDomain();
-		graph.addEdge(domain.getDomain(), model, child, label);
+		ModelNode.addChild(domain, graph, model, child, label);
 		return true;
 	}
 
 	@Override
-	protected Vertex onSetDescriptor(Vertex node) {
-		IDomainAieon domain = this.provider.getActiveDomain();
+	protected Vertex onSetDescriptor(Vertex node, IConceptBase base) {
 		Iterator<Edge> edges = node.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
 		Vertex descriptor = null;
 		while(( descriptor == null ) &&  edges.hasNext()) {
 			Edge edge = edges.next();
 			descriptor = edge.getVertex(Direction.IN);
-			IConceptBase base = new VertexConceptBase( descriptor );
-			//Collection<Vertex> implicit = 
 		}
-		if( descriptor == null )
+		if( descriptor == null ) {
+			if( ImplicitAieon.isImplicit(base)) {
+				IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( base );
+				Iterator<Vertex> iterator = graph.getVerticesOfClass(IDescriptor.DESCRIPTORS ).iterator();
+				while(( descriptor == null ) && iterator.hasNext()) {
+					Vertex test=  iterator.next();
+					IDescriptor concept = new Descriptor( new VertexConceptBase( test ));
+					if( implicit.accept(concept) )
+						descriptor = test;
+				}
+			}
+		}
+		if( descriptor == null ) {
 			descriptor = graph.addVertex( ModelFactory.S_CLASS + IDescriptor.DESCRIPTORS);
-		descriptor.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
+			descriptor.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
+		}
 		node.addEdge(IDescriptor.DESCRIPTOR, descriptor);
 		return descriptor;
 	}
 	
 	@Override
-	protected boolean onFillDescriptor(Vertex descriptor, String key, String value) {
-		if( StringUtils.isEmpty(value))
-			return false;
-		String name = key.replace(".", "_");
-		descriptor.setProperty(name, value);
-		return true;
-	}
-
-	@Override
 	protected boolean onAddProperty(Vertex node, String key, String value) {
 		node.setProperty(key, value);
 		return true;
-	}
-
-	/**
-	 * Find the vertieces that are implicit to the given descriptor
-	 * @param graph
-	 * @param domain
-	 * @param desrciptor
-	 * @return
-	 */
-	protected static Collection<Vertex> findImplicit( OrientGraph graph, String domain, IActiveDomainProvider provider, IDescriptor reference ){
-		Collection<Vertex> results = new ArrayList<>();
-		IDescribablePredicate<IDescriptor> predicate = provider.getPredicates();
-		if( !predicate.test(reference))
-			return results;
-		Iterator<Vertex> iterator = graph.getVerticesOfClass(domain).iterator();
-		while( iterator.hasNext() ) {
-			Vertex vertex = iterator.next();
-			IDescriptor descriptor = new Descriptor(new VertexConceptBase( vertex ));
-			int compare = predicate.compare(reference, descriptor);
-			if( compare == 0)
-				results.add(vertex);
-		}
-		return results;
 	}
 
 	protected static Collection<Vertex> findVertices( OrientGraph graph, long id ){

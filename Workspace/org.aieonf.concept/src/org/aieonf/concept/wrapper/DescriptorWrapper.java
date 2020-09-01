@@ -154,7 +154,7 @@ public class DescriptorWrapper implements IDescriptor
 	 */
 	protected final void setClassName( String className )
 	{
-		set( IDescriptor.Attributes.CLASS, className );
+		set( IDescriptor.Attributes.CLASS.name(), className );
 	}
 
 	/**

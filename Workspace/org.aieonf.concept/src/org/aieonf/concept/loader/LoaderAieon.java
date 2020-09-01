@@ -76,16 +76,14 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 		this.setAieonCreatorClass( ILoaderAieon.class );
 	}
 
-	/**
-	 * Create a loader aieon from the given concept
-	 * @param descriptor
-	 * @throws ConceptException
-	 */
-	public LoaderAieon( IDescriptor descriptor )
-	{
-		super( descriptor );
+	public LoaderAieon( IDescriptor descriptor ) {
+		super( descriptor);		
+		super.setName( ILoaderAieon.Attributes.LOADER.name() );
+		super.setScope( IConcept.Scope.APPLICATION );
 		this.set( ILoaderAieon.Attributes.INTERNAL, Boolean.TRUE.toString() );
 		this.set( ILoaderAieon.Attributes.CREATABLE, Boolean.FALSE.toString() );
+		this.setReadOnly( Boolean.TRUE );
+		this.setAieonCreatorClass( ILoaderAieon.class );
 	}
 
 	/**

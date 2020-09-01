@@ -9,7 +9,9 @@ import java.util.logging.Logger;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.IConceptBase;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 
@@ -70,9 +72,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 
 	protected abstract boolean onAddChild( N model, N child, String label );
 
-	protected abstract D onSetDescriptor( N node );
-
-	protected abstract boolean onFillDescriptor( D descriptor, String key, String value );
+	protected abstract D onSetDescriptor( N node, IConceptBase properties );
 
 	protected abstract boolean onAddProperty( N node, String key, String value );
 
@@ -126,7 +126,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 						break;
 					case DESCRIPTOR:
 						jsonReader.beginArray();
-						D descriptor = onSetDescriptor(node);
+						IConceptBase base = new ConceptBase();
 						while( !JsonToken.END_ARRAY.equals( token )){
 							jsonReader.beginObject();
 							String name = jsonReader.nextName();
@@ -134,12 +134,14 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 							if( !JsonToken.NULL.equals(token)) {
 								String value = jsonReader.nextString();
 								if( !StringUtils.isEmpty(value))
-									onFillDescriptor(descriptor, name, value);
+									name = name.replace(".", "_");
+									base.set( name, value);
 							}else
 								jsonReader.nextNull();
 							jsonReader.endObject();
 							token = jsonReader.peek();
 						}
+						onSetDescriptor(node, base);
 						jsonReader.endArray();
 						token = jsonReader.peek();
 						break;
@@ -151,10 +153,12 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 						jsonReader.beginArray();
 						while( !JsonToken.END_ARRAY.equals( token )){
 							jsonReader.beginObject();
-							String name = jsonReader.nextName();
-							String value = jsonReader.nextString();
-							if( !Attributes.ID.name().equals(name))
-								onAddProperty(node, name, value);
+							if( jsonReader.peek().equals(JsonToken.NAME)) {
+								String name = jsonReader.nextName();
+								String value = jsonReader.nextString();
+								if( !Attributes.ID.name().equals(name))
+									onAddProperty(node, name, value);
+							}
 							jsonReader.endObject();
 							token = jsonReader.peek();
 						}

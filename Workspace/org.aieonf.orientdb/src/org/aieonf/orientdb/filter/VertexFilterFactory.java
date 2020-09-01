@@ -31,6 +31,10 @@ public class VertexFilterFactory {
 		String ref = attributes.get(FilterFactory.Attributes.REFERENCE);
 		String value = attributes.get(FilterFactory.Attributes.VALUE);
 		switch( name) {
+		case ATTRIBUTE_LIST:
+			String[] split = value.split("[\\s]");
+			filter = new VertexAttributeListFilter( graph, VertexAttributeListFilter.class.getName(), rule, ref, split );
+			break;
 		default:
 			filter = new VertexAttributeFilter( graph, VertexAttributeFilter.class.getName(), rule, ref, value );
 			break;

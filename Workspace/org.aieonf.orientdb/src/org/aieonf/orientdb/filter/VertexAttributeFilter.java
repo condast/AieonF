@@ -12,8 +12,6 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 public class VertexAttributeFilter extends AbstractGraphFilter {
 
-	public String SQL_BASE = "SELECT FROM ";
-
 	private String refKey;
 	private String refVal;
 

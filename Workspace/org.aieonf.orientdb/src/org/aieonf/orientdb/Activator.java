@@ -1,6 +1,5 @@
 package org.aieonf.orientdb;
 
-import org.aieonf.orientdb.cache.CachePersistenceService;
 import org.aieonf.orientdb.db.DatabasePersistenceService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -8,8 +7,6 @@ import org.osgi.framework.BundleContext;
 public class Activator implements BundleActivator {
 	
 	private static BundleContext context;
-
-	private static CachePersistenceService cache = CachePersistenceService.getInstance();
 
 	private static DatabasePersistenceService graph = DatabasePersistenceService.getInstance();
 

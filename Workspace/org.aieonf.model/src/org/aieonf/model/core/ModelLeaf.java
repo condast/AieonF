@@ -169,6 +169,17 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 		this.parent = parent;
 	}
 
+	@Override
+	public boolean isReverse() {
+		String str = super.get(IModelLeaf.Attributes.REVERSE.name());
+		return StringUtils.isEmpty(str)? false: Boolean.parseBoolean(str);
+	}
+
+	@Override
+	public void setReverse( boolean choice ) {
+		super.set( IModelLeaf.Attributes.REVERSE.name(), String.valueOf(choice));
+	}
+
 	/**
 	 * Returns true if the node is a root
 	 * @return
@@ -195,17 +206,6 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public void setData(D descriptor) {
 		this.descriptor = descriptor;
-	}
-
-	/**
-	 * Get the direction of this model with 
-	 * respect to its children
-	 * @return
-	 */
-	@Override
-	public Direction getDirection()
-	{
-		return Direction.valueOf( get( IModelLeaf.Attributes.DIRECTION ));
 	}
 
 	/**

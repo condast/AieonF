@@ -72,12 +72,17 @@ public class ManifestAieon extends LoaderAieon
 
   public ManifestAieon( IDescriptor descriptor )
   {
-  	super( descriptor );
+  	super();
+  	fill( descriptor );
     super.setName( MANIFEST );
   }
 
-  public void fill( IDescriptor descriptor ) throws ConceptException{
-  	BodyFactory.transfer(this, descriptor, false);
+  public void fill( IDescriptor descriptor ){
+  	try {
+		BodyFactory.transfer(this, descriptor, false);
+	} catch (ConceptException e) {
+		e.printStackTrace();
+	}
     super.setName( MANIFEST );
   }
   

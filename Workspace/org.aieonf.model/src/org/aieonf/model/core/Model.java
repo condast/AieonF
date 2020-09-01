@@ -72,6 +72,17 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 		super( id, descriptor, type );
 		this.children = new HashMap<>();
 	}
+	
+	/**
+	 * Get the direction of this model with 
+	 * respect to its children
+	 * @return
+	 */
+	@Override
+	public Direction getDirection()
+	{
+		return Direction.valueOf( get( IModelNode.Attributes.DIRECTION ));
+	}
 
 	/**
 	 * Get a list with child data

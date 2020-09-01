@@ -2,11 +2,8 @@ package org.aieonf.concept.datauri;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
-import org.aieonf.concept.core.ConceptException;
 
-
-public interface IDataURI extends IDataResource, IConcept
-{
+public interface IDataURI extends IDataResource, IConcept{
 	public enum Attribute{
 		MIME_TYPE,
 		CHARSET,
@@ -17,13 +14,6 @@ public interface IDataURI extends IDataResource, IConcept
 			return StringStyler.prettyString( super.toString());
 		}
 	}
-
-	/**
-	 * Fill the Data URI with the given datauri string
-	 * @param datauri
-	 * @throws ConceptException
-	 */
-	public void fill( String datauri );
 
 	/**
 	 * Set the uri
@@ -61,4 +51,6 @@ public interface IDataURI extends IDataResource, IConcept
 	 * @return
 	 */
 	public boolean isBase64Encoded();
+
+	public void fill(String string, String resource);
 }
