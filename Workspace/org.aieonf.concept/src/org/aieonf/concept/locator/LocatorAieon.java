@@ -108,7 +108,7 @@ implements ILocatorAieon
 	@Override
 	public URI getURI()
 	{
-		String str = super.get( ILocatorAieon.Attributes.URI );
+		String str = super.get( ILocatorAieon.Attributes.URI.name() );
 		if( Utils.assertNull(str))
 			return null;
 		return URI.create( str );
@@ -122,7 +122,7 @@ implements ILocatorAieon
 	@Override
 	public void setURI( URI source )
 	{
-		super.set( ILocatorAieon.Attributes.URI, getStringFromURI( source ));
+		super.set( ILocatorAieon.Attributes.URI.name(), getStringFromURI( source ));
 	}
 
 	@Override

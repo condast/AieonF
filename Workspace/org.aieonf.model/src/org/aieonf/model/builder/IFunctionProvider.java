@@ -4,6 +4,8 @@ import org.aieonf.concept.domain.IDomainAieon;
 
 public interface IFunctionProvider<K extends Object, F extends Object> {
 
+	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
+
 	/**
 	 * A function can be restricted to a certain domain. Returns true if the given domain
 	 * is provided

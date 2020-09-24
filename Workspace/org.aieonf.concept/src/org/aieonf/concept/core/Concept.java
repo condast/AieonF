@@ -57,6 +57,14 @@ public class Concept extends Descriptor implements IConcept
 
 	/**
 	 * Create a minimal concept with the given name
+	 * @param name String
+	 */
+	public Concept( IDescriptor descriptor ){
+		this( descriptor.getBase());
+	}
+
+	/**
+	 * Create a minimal concept with the given name
 	 *
 	 * @param id String
 	 * @param name String

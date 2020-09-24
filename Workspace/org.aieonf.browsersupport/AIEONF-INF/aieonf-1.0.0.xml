@@ -9,6 +9,7 @@
 		<scope type="enum">Application</scope>
 		<organisation>Condast</organisation>
 		<website>"www.saight.com"</website>
+		<uri>"file://"www.saight.com""</uri>
 		<author>Kees Pieters</author>
 		<copyright>2004-2014 condast.com</copyright>
 		<license>Apache 2.0</license>

@@ -21,7 +21,6 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
-import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
@@ -43,7 +42,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 	private static final String S_ROOTS = "roots";
 
 
-	ChromiumBookmarkProvider( IContextAieon context )
+	ChromiumBookmarkProvider( IDescriptor context )
 	{
 		super( S_CHROMIUM, context );
 	}

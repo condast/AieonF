@@ -51,6 +51,6 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
 		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
-		return new IEFavoritesProvider( context );
+		return new IEFavoritesProvider( baseLoader );
 	}
 }

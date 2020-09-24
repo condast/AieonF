@@ -6,5 +6,5 @@ public interface IKeyEventDataProvider<R,D> {
 
 	public void removeKeyEventDataListener( IKeyEventDataListener<R,D> listener );
 
-	public void registerKeyEvent( KeyEvent<R> event );
+	public void handleKeyEvent( KeyEvent<R> event );
 }

@@ -82,7 +82,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		String key = null;
 		while(!complete && jsonReader.hasNext() ) {
 			JsonToken token = jsonReader.peek();
-			logger.info(token.toString());
+			logger.fine(token.toString());
 			N node = null;
 			switch( token) {
 			case BEGIN_ARRAY:

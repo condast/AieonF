@@ -12,7 +12,6 @@ import org.aieonf.commons.base64.Base64Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.BodyFactory;
-import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.datauri.DataURI;
@@ -38,7 +37,7 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 	private FireFoxReference currentURL;
 	private Stack<IModelNode<IDescriptor>> stack;
 
-	public FireFoxHTMLBookmarkProvider( IContextAieon context )
+	public FireFoxHTMLBookmarkProvider( IDescriptor context )
 	{
 		super( S_IDENTIFER, context );
 	}

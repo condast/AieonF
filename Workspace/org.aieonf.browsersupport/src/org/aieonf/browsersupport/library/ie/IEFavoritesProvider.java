@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.aieonf.collections.persistence.IFilePersistence;
-import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
@@ -41,7 +41,7 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 	
 	private Logger logger;
 
-	public IEFavoritesProvider( IContextAieon context )
+	public IEFavoritesProvider( IDescriptor context )
 	{
 		super( S_IDENTIFER, context );
 		logger = Logger.getLogger( this.getClass().getName() );
@@ -93,7 +93,7 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 	 */
 	protected void setFileEon( FileModel model ) throws Exception
 	{
-		IConcept fileEon = (IConcept) model.getDescriptor();
+		IConcept fileEon = new Concept( model.getData());
 		logger.fine( "Concept found: " + fileEon.getName() );
 		fileEon.setVersion(1);
 		fileEon.setReadOnly( true );

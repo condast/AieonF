@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.aieonf.browsersupport
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Service-Component: OSGI-INF/provider.xml,
- OSGI-INF/org.aieonf.browsersupport.key.data.service.xml
+Service-Component: OSGI-INF/org.aieonf.browsersupport.key.data.service.xml
 Import-Package: org.aieonf.collections,
  org.aieonf.collections.connector,
  org.aieonf.collections.persistence,
@@ -26,6 +25,7 @@ Import-Package: org.aieonf.collections,
  org.aieonf.concept.datauri,
  org.aieonf.concept.domain,
  org.aieonf.concept.file,
+ org.aieonf.concept.filter,
  org.aieonf.concept.library,
  org.aieonf.concept.loader,
  org.aieonf.concept.locator,
@@ -38,7 +38,8 @@ Import-Package: org.aieonf.collections,
  org.aieonf.model.function,
  org.aieonf.model.library,
  org.aieonf.model.provider,
- org.aieonf.osgi.service,
+ org.aieonf.model.xml,
+ org.aieonf.template.builder,
  org.aieonf.template.context,
  org.aieonf.template.def,
  org.aieonf.template.provider,

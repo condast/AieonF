@@ -72,9 +72,9 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 
 		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> provider;
 		if( version == FireFoxVersion.firefox3 )
-			provider = new FireFoxSQLiteBookmarkProvider( context, model );
+			provider = new FireFoxSQLiteBookmarkProvider( baseLoader, model );
 		else
-			provider = new FireFoxHTMLBookmarkProvider( context );
+			provider = new FireFoxHTMLBookmarkProvider( baseLoader );
 		return provider;
 	}
 }

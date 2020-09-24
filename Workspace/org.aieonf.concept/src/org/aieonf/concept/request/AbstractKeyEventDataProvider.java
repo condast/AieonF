@@ -24,7 +24,7 @@ public abstract class AbstractKeyEventDataProvider<R, D> implements IKeyEventDat
 	protected abstract D onProcesskeyEvent( KeyEvent<R> event );
 	
 	@Override
-	public void registerKeyEvent(KeyEvent<R> event) {
+	public void handleKeyEvent(KeyEvent<R> event) {
 		D data = onProcesskeyEvent(event);
 		if( data == null )
 			return;

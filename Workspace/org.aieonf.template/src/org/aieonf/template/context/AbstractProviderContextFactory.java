@@ -16,7 +16,6 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
 import org.aieonf.model.xml.IXMLModelInterpreter;
 import org.aieonf.template.builder.TemplateInterpreter;
-import org.aieonf.template.context.AbstractModelContextFactory;
 import org.aieonf.template.def.ITemplateLeaf;
 
 /**

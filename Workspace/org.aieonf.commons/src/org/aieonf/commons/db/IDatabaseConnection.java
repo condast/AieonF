@@ -7,6 +7,7 @@ public interface IDatabaseConnection {
 	public static String REST_URL = "http://localhost:10080/aieonf/orientdb";
 
 	public enum Requests{
+		PREPARE,
 		CREATE,
 		ADD,
 		ADD_NODE,

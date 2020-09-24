@@ -45,13 +45,13 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<Stri
 	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
 		ILoaderAieon baseLoader = getDefaultLoader( context);
 		URI uri = ProjectFolderUtils.appendToUserDir(DEFAULT_CHROMIUM_ROOT + "//" + DEFAULT_BOOKMARKS_FILE, false );
-		baseLoader.set( IConcept.Attributes.SOURCE, uri.toString() );
+		baseLoader.set( IConcept.Attributes.SOURCE.name(), uri.toString() );
 		baseLoader.setURI( uri );
 		baseLoader.setDescription( DEFAULT_CHROMIUM_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context);
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
-		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( context);
+		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( baseLoader );
 		return gdb;
 	}
 }

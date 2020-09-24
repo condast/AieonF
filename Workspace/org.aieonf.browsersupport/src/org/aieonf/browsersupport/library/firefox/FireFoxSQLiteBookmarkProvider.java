@@ -19,7 +19,6 @@ import org.aieonf.browsersupport.library.firefox.BookmarkAieon.BookmarkAttribute
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
@@ -45,7 +44,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			Executors.newFixedThreadPool(3);
 
 
-	FireFoxSQLiteBookmarkProvider( IContextAieon template, IModelLeaf<IDescriptor> model )
+	FireFoxSQLiteBookmarkProvider( IDescriptor template, IModelLeaf<IDescriptor> model )
 	{
 		super( S_IDENTIFER, template );
 	}

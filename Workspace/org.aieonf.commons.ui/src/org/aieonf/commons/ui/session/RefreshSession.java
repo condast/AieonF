@@ -98,8 +98,10 @@ public class RefreshSession<T extends Object> {
 		Runnable bgRunnable = new Runnable() {
 			@Override
 			public void run() {
-				if( disposed )
+				if( disposed ) {
+					refresh = false;
 					return;
+				}
 				display.asyncExec( new Runnable() {
 					@Override
 					public void run() {
@@ -113,11 +115,11 @@ public class RefreshSession<T extends Object> {
 								notifyListeners(event);
 							}
 							notifyListeners( new SessionEvent<T>( this, ISessionListener.EventTypes.COMPLETED, null ));
-							refresh = false;
 						}
 						catch( Exception ex ) {
 							ex.printStackTrace();
 						}
+						refresh = false;
 						start();
 					}
 				});

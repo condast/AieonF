@@ -25,9 +25,7 @@ import org.aieonf.model.core.ModelLeaf;
  */
 public abstract class AbstractFunctionProvider<K extends Object, F extends Object> implements IFunctionProvider<K, F> {
 
-	public static final String S_FUNCTION_PROVIDER_ID = "org.aieonf.function.provider";
-
-	private static final String S_DEFAULT_ENVRYPTION_KEY = "aieonf.encryption";
+	private static final String S_DEFAULT_ENCRYPTION_KEY = "aieonf.encryption";
 
 	private String identifier;
 	
@@ -84,7 +82,7 @@ public abstract class AbstractFunctionProvider<K extends Object, F extends Objec
 		loader.set( IDescriptor.Attributes.NAME, context.get( IConcept.Attributes.SOURCE ));
 		loader.setVersion(1);
 		loader.setEncryptionAlgorithm( Algorithms.AES );
-		loader.setEncryptionKey( S_DEFAULT_ENVRYPTION_KEY );
+		loader.setEncryptionKey( S_DEFAULT_ENCRYPTION_KEY );
 		return loader;
 	}
 

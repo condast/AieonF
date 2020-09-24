@@ -17,7 +17,6 @@ Import-Package: org.aieonf.commons,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets
 Export-Package: org.aieonf.commons.ui.language,
- org.aieonf.commons.ui.selection,
  org.aieonf.commons.ui.session,
  org.aieonf.commons.ui.swt,
  org.aieonf.commons.ui.verification

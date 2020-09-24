@@ -3,16 +3,10 @@
  */
 package org.aieonf.browsersupport.context;
 
-import java.util.logging.Logger;
-
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.body.BodyFactory;
-import org.aieonf.concept.context.*;
 import org.aieonf.concept.core.ConceptException;
-import org.aieonf.concept.library.ManifestAieon;
-import org.aieonf.concept.loader.ILoaderAieon;
-import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.template.builder.TemplateInterpreter;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 /**
@@ -26,33 +20,18 @@ public class ContextFactory extends AbstractProviderContextFactory<IDescriptor, 
 
 	public static final String S_USER_HOME_PROPERTY = "user.home";
 
-	//Get the logger
-	  private Logger logger = Logger.getLogger( this.getClass().getName());
-
+	private static ContextFactory factory = new ContextFactory();
+	
 	/**
 	 * Create the application
 	 * @param aieon
 	 * @throws ConceptException
 	 */
-	public ContextFactory()
-	{
-		super( S_BUNDLE_ID, ContextFactory.class );
+	private ContextFactory(){
+		super( S_BUNDLE_ID, new TemplateInterpreter( ContextFactory.class )  );
 	}
 	
-	/**
-	 * Create a loader for this context
-	 * @param context
-	 * @return
-	 * @throws ConceptException
-	 */
-	protected ILoaderAieon createLoader( IContextAieon context ) throws ConceptException{
-		LoaderAieon loader = new LoaderAieon();
-		BodyFactory.transfer( loader, context, false );
-		loader.setAieonCreatorClass( ILoaderAieon.class );
-		loader.setReadOnly( false );
-		loader.setStoreInternal( false );
-		loader.setCreatable(false);
-		logger.info( "Getting source " + loader.getSource() );	
-		return new ManifestAieon( loader );
+	public static ContextFactory getInstance() {
+		return factory;
 	}
 }
