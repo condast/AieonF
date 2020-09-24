@@ -1,6 +1,7 @@
 package org.aieonf.sketch.swt;
 
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
@@ -41,6 +42,9 @@ public class SketchWizard extends AbstractXmlFlowWizard<IModelLeaf<IDescriptor>>
 				try {
 					controller.setBrowser( page );
 				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

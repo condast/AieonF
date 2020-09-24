@@ -3,6 +3,7 @@ package org.aieonf.sketch.controller;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.logging.Logger;
 
 import org.aieonf.concept.filter.AttributeFilter;
@@ -13,7 +14,7 @@ import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
 import org.aieonf.osgi.js.AbstractJavascriptController;
-import org.aieonf.sketch.factory.SelectedFactory;
+import org.aieonf.sketch.factory.SketchFactory;
 import org.aieonf.sketch.factory.SketchModelFactory;
 import org.aieonf.sketch.preferences.SketchPreferences;
 import org.eclipse.swt.browser.Browser;
@@ -54,7 +55,7 @@ public class SketchController extends AbstractJavascriptController {
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 
-	private SelectedFactory selected = SelectedFactory.getInstance();
+	private SketchFactory selected = SketchFactory.getInstance();
 	
 	private BrowserFunction barfunction;
 
@@ -85,7 +86,7 @@ public class SketchController extends AbstractJavascriptController {
 		super(browser, id, in);
 	}
 
-	public void setBrowser( Pages page ) throws FileNotFoundException {
+	public void setBrowser( Pages page ) throws FileNotFoundException, MalformedURLException {
 		SketchModelFactory smf = selected.getFactory();
 		if( smf == null )
 			return;

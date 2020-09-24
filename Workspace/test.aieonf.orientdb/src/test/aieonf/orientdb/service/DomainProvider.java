@@ -17,8 +17,10 @@ public class DomainProvider implements IDomainProvider {
 	}
 		
 	@Override
-	public IDomainAieon getDomain( ILoginUser user) {
-		return getDomain();
+	public IDomainAieon[] getDomains( ILoginUser user) {
+		IDomainAieon[] domains = new IDomainAieon[1];
+		domains[0] = getDomain();
+		return domains;
 	}
 
 	public static IDomainAieon getDomain() {

@@ -1,12 +1,18 @@
 package org.aieonf.sketch.factory;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.sketch.Activator;
@@ -15,11 +21,16 @@ import org.aieonf.template.context.AbstractProviderContextFactory;
 
 public class SketchModelFactory extends AbstractProviderContextFactory<IDescriptor, IModelLeaf<IDescriptor>> {
 
+	public static final String S_AIEONF_INF = "AIEONF-INF";
+	public static final String S_AIEONF = "aieonf-";
+	public static final String S_XML = ".xml";
+	public static final String S_REGEX = "^" + S_AIEONF + ".*\\" + S_XML + "$";
+	
 	public static final String S_WEB = "/web/";
 	
 	private File root;
 	
-	public SketchModelFactory(File root ) throws MalformedURLException {
+	public SketchModelFactory( File root ) throws MalformedURLException {
 		super( Activator.BUNDLE_ID, new TemplateInterpreter( SketchModelFactory.class, getAieonFURL( root ) ));
 		this.root = root;
 	}
@@ -50,4 +61,71 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IDescript
 		return false;
 	}
 
+	public static SketchModelFactory getFactory( String root, IDomainAieon domain ) throws MalformedURLException {
+		File file = new File( root );
+		if( !file.exists() || !file.isDirectory())
+			return null;
+		for( File child: file.listFiles()) {
+			if( !child.isDirectory())
+				continue;
+			File[] aieonf = child.listFiles( new FilenameFilter() {
+
+				@Override
+				public boolean accept(File dir, String name) {
+					return S_AIEONF_INF.equals(name);
+				}	
+			});
+			if( Utils.assertNull( aieonf ))
+				continue;
+			File aieonfdir = aieonf[0];
+			aieonf = aieonfdir.listFiles( new FileFilter());
+			if( Utils.assertNull( aieonf ))
+				continue;
+			
+			SketchModelFactory factory = new SketchModelFactory( child );
+			factory.createTemplate();
+			IDomainAieon check = factory.getDomain();
+			if( check.equals(domain))
+				return factory;
+		}
+		return null;
+	}
+	
+	public static Map<IDomainAieon, SketchModelFactory> getFactories( String root ) throws MalformedURLException {
+		Map<IDomainAieon, SketchModelFactory> results = new HashMap<>();
+		File file = new File( root );
+		if( !file.exists() || !file.isDirectory())
+			return null;
+		for( File child: file.listFiles()) {
+			if( !child.isDirectory())
+				continue;
+			File[] aieonf = child.listFiles( new FilenameFilter() {
+
+				@Override
+				public boolean accept(File dir, String name) {
+					return S_AIEONF_INF.equals(name);
+				}	
+			});
+			if( Utils.assertNull( aieonf ))
+				continue;
+			File aieonfdir = aieonf[0];
+			aieonf = aieonfdir.listFiles( new FileFilter());
+			if( Utils.assertNull( aieonf ))
+				continue;
+			
+			SketchModelFactory factory = new SketchModelFactory( child );
+			factory.createTemplate();
+			IDomainAieon domain = factory.getDomain();
+			results.put(domain,  factory);
+		}
+		return results;
+	}
+
+	private static class FileFilter implements FilenameFilter{
+
+		@Override
+		public boolean accept(File dir, String name) {
+			return ( StringUtils.isEmpty(name)? false: name.toLowerCase().matches( S_REGEX ));
+		}			
+	}
 }

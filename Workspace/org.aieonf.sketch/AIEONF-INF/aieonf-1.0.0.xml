@@ -27,20 +27,13 @@
               <password>admin</password>
             </loader>
           </model>
-		  <model id="org.aieonf.model.provider">
-		    <category>
-		      <category init="clear" use="mandatory">{Category}</category>
-		    </category>
-		    <children>
-		       <model>
-				 <url id="descriptor">
-		 		   <version type="int" use="mandatory" create="auto">1</version>
-			 	   <description type="string" use="optional">{Description}</description>
-				   <uri type="uri" use="mandatory">file://${user.home}/saight/sketch</uri>
-                   <scope type="enum" use="mandatory">{Scope}</scope>
- 		         </url>
- 		       </model>
- 		     </children>  
+		  <model id="org.aieonf.model">
+			<url id="descriptor">
+		 		<version type="int" use="mandatory" create="auto">1</version>
+				<description type="string" use="optional">{Description}</description>
+				<uri type="uri" use="mandatory">file://${user.home}/saight/sketch</uri>
+                <scope type="enum" use="mandatory">{Scope}</scope>
+ 		    </url>
 		 </model>
 	 </children>
   </model>

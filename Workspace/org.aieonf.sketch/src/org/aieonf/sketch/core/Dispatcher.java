@@ -1,5 +1,6 @@
 package org.aieonf.sketch.core;
 
+import org.aieonf.commons.security.ISecureGenerator;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
@@ -12,10 +13,20 @@ public class Dispatcher implements IActiveDomainProvider{
 
 	private IActiveDomainProvider provider;
 
+	private ISecureGenerator generator;
+
 	private Dispatcher() {}
 
 	public static Dispatcher getInstance(){
 		return service;
+	}
+
+	public ISecureGenerator getGenerator() {
+		return generator;
+	}
+
+	public void setGenerator(ISecureGenerator generator) {
+		this.generator = generator;
 	}
 
 	@Override

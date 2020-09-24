@@ -3,5 +3,5 @@
    <service>
       <provide interface="org.aieonf.osgi.swt.IViewFactory"/>
    </service>
-   <implementation class="org.aieonf.sketch.service.ViewFactoryProvider"/>
+   <implementation class="org.aieonf.sketch.service.SketchViewProvider"/>
 </scr:component>

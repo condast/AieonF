@@ -127,6 +127,7 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public M createModel() {
 		ModelScanner<IDescriptor> scanner = new ModelScanner<IDescriptor>( this.template );
