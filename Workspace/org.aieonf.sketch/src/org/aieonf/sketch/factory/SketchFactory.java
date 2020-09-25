@@ -11,18 +11,21 @@ import org.aieonf.concept.library.URLAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.sketch.Activator;
+import org.aieonf.sketch.core.Dispatcher;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
 public class SketchFactory extends AbstractProviderContextFactory<IDescriptor, IModelLeaf<IDescriptor>>{
 
-	private static SketchFactory selected = new SketchFactory();
+	private Dispatcher dispatcher = Dispatcher.getInstance();
+	
+	private static SketchFactory factory = new SketchFactory();
 	
 	private SketchFactory() {
 		super( Activator.BUNDLE_ID,  SketchFactory.class );
 	}
 	
 	public static SketchFactory getInstance(){
-		return selected;
+		return factory;
 	}
 
 	/**
@@ -35,7 +38,7 @@ public class SketchFactory extends AbstractProviderContextFactory<IDescriptor, I
 		IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) createModel();
 		URLAieon urlAieon = new URLAieon( model.getData());
 		URI path = ProjectFolderUtils.getParsedAieonFDir( urlAieon.getURIPath(), Activator.BUNDLE_ID);
-		SketchModelFactory factory = SketchModelFactory.getFactory( path.getRawPath(), getDomain() );
+		SketchModelFactory factory = SketchModelFactory.getFactory( path.getRawPath(), dispatcher.getActiveDomain() );
 		return factory;
 	}
 

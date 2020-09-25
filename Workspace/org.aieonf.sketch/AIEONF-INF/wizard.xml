@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wizards>
-  <wizard title="Forum" css="resources/css/forum.css">
+  <wizard title="Sketch" css="resources/css/sketch.css">
     <titlebar></titlebar>
     <buttonbar style="buttonBar"/>
   	<pages previous-next="false">
-  		<page id="intro" title="Forum home page" on-finish="true">
+  		<page id="intro" title="Sketch Home Page" on-finish="true">
   			<composite class="org.eclipse.swt.browser.Browser" url="http://www.condast.com"></composite>
   			<message>The Message is love</message>
   		</page>
-  		<page id="search" title="Search Forum" on-cancel="true">
- 			<composite class="org.saight.forum.composite.ForumBodyComposite"></composite>
+  		<page id="search" title="Search Sketch" on-cancel="true">
+ 			<composite class="org.saight.Sketch.composite.SketchBodyComposite"></composite>
   			<message>The Message is love</message>
   		</page>
-  		<page id="show" title="Show Forum" message="show-link-msg" type="head">
- 			<composite class="org.saight.forum.composite.ShowEntriesComposite"></composite>
+  		<page id="show" title="Show Sketch" message="show-link-msg" type="head">
+ 			<composite class="org.saight.Sketch.composite.ShowEntriesComposite"></composite>
   		</page>
-  		<page id="edit" title="Edit Forum" type="head">
-  			<composite class="org.saight.forum.composite.AddForumComposite"></composite>
+  		<page id="edit" title="Edit Sketch" type="head">
+  			<composite class="org.saight.Sketch.composite.AddSketchComposite"></composite>
   			<buttons>
   				<button type="PREVIOUS"></button>
   				<button type="FINISH"></button>

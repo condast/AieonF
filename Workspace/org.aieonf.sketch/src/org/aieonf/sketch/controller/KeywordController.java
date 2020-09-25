@@ -3,7 +3,6 @@ package org.aieonf.sketch.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.aieonf.model.provider.IModelDatabase;
 import org.aieonf.osgi.js.AbstractJavascriptController;
 import org.aieonf.sketch.core.IKeywordListener;
 import org.aieonf.sketch.core.KeywordEvent;

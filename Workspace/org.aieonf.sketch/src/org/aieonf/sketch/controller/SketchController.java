@@ -4,9 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.aieonf.concept.filter.AttributeFilter;
+import org.aieonf.commons.db.IDatabaseConnection.Requests;
 import org.aieonf.commons.filter.WildcardFilter;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
@@ -25,10 +28,11 @@ public class SketchController extends AbstractJavascriptController {
 	public static final String S_INITIALISTED_ID = "SketchInitialisedId";
 	public static final String S_IS_INITIALISTED = "isInitialised";
 	
-	public static final String S_BAR_CLICKED = "barclicked";
+	public static final String S_BAR_CLICKED = "barClicked";
 
 	public enum Pages{
 		BAR,
+		HOME,
 		INTRO,
 		SEARCH,
 		SHOW,
@@ -55,20 +59,30 @@ public class SketchController extends AbstractJavascriptController {
 	
 	private Logger logger = Logger.getLogger( this.getClass().getName() );
 
-	private SketchFactory selected = SketchFactory.getInstance();
-	
-	private BrowserFunction barfunction;
+	private SketchFactory factory = SketchFactory.getInstance();
+
+	private BarController controller = BarController.getInstance();
 
 	public SketchController(Browser browser ) {
 		super(browser, S_INITIALISTED_ID);
-		barfunction = new BrowserFunction(browser, S_BAR_CLICKED){
+		new BrowserFunction(browser, S_BAR_CLICKED){
 
+			/**
+			 * TODO CP:We need to add the correct parameters  
+			 */
 			@Override
 			public Object function(Object[] arguments) {
-				prefs.setSearchType( arguments[0].toString());
-				prefs.setWildcard( arguments[1].toString());
-				prefs.setCleared(false);
-				logger.info( arguments.toString() );
+				controller.prepare();
+				Map<String, String> parameters = new HashMap<>();
+				try {
+					//prefs.setSearchType( arguments[0].toString());
+					//prefs.setWildcard( arguments[1].toString());
+					prefs.setCleared(false);
+					logger.info( arguments.toString() );
+					controller.setEvent(Requests.SEARCH, parameters);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				return super.function(arguments);
 			}
 		};	
@@ -87,7 +101,7 @@ public class SketchController extends AbstractJavascriptController {
 	}
 
 	public void setBrowser( Pages page ) throws FileNotFoundException, MalformedURLException {
-		SketchModelFactory smf = selected.getFactory();
+		SketchModelFactory smf = factory.getFactory();
 		if( smf == null )
 			return;
 		try {
@@ -128,12 +142,11 @@ public class SketchController extends AbstractJavascriptController {
 			break;
 		}
 		*/
-		SketchModelFactory factory = selected.getFactory();
+		SketchModelFactory modelFactory = factory.getFactory();
 		if( factory == null )
 			return;
 		//factory.getFunction( IModelProvider.S_MODEL_PROVIDER_ID).search(filter);
 		SketchPreferences preferences = SketchPreferences.getInstance();
 		preferences.setGetDate();
 	}
-
 }

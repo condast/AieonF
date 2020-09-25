@@ -1,7 +1,6 @@
 package org.aieonf.osgi.swt;
 
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.osgi.swt.IViewFactory;
 import org.eclipse.swt.widgets.Control;
 
 public abstract class AbstractViewFactory<C extends Control> implements IViewFactory<C, C> {

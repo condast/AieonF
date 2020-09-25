@@ -1,31 +1,59 @@
 package org.aieonf.sketch.swt;
 
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
 
-import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.osgi.wizard.xml.AbstractXmlFlowWizard;
-import org.aieonf.sketch.controller.SketchController;
+import org.aieonf.commons.db.IDatabaseConnection;
+import org.aieonf.commons.ui.wizard.ButtonEvent;
+import org.aieonf.commons.ui.wizard.IButtonWizardContainer;
+import org.aieonf.commons.ui.wizard.xml.AbstractXmlFlowWizard;
+import org.aieonf.concept.request.IKeyEventListener;
+import org.aieonf.concept.request.KeyEvent;
+import org.aieonf.sketch.controller.BarController;
 import org.aieonf.sketch.controller.SketchController.Pages;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
-public class SketchWizard extends AbstractXmlFlowWizard<IModelLeaf<IDescriptor>> {
+
+public class SketchWizard extends AbstractXmlFlowWizard<KeyEvent<IDatabaseConnection.Requests>> {
 	
 	private static final String S_WIZARD_DESC = "/AIEONF-INF/wizard.xml";
 
 	//Response to the 'find' button, which activates a search through the designate controller
 	
-	private IModelLeaf<?> model;
 	private SketchWizard wizard; 
 	
-	private SketchController controller; 
+	private BarController service = BarController.getInstance();	
+	private IKeyEventListener<IDatabaseConnection.Requests> listener = new IKeyEventListener<IDatabaseConnection.Requests>(){
+
+		@Override
+		public void notifyKeyEventReceived(final KeyEvent<IDatabaseConnection.Requests> event)
+		{
+			//setData(event.getData());
+			switch( event.getRequest() ){
+			case PREPARE:
+				int index = getFlowControl().getIndex();
+				Pages page = Pages.values()[ index ];
+				switch( page ){
+				case HOME:
+					injectButtonEvent( new ButtonEvent<KeyEvent<IDatabaseConnection.Requests> >( wizard,  IButtonWizardContainer.Buttons.NEXT ));
+					break;
+				case EDIT:
+					injectButtonEvent( new ButtonEvent<KeyEvent<IDatabaseConnection.Requests> >( wizard,  IButtonWizardContainer.Buttons.CANCEL ));
+					break;
+				default:
+					break;
+				}
+				setData(event);
+				break;
+			default:
+				break;
+			}
+		}	
+	};
 
 	public SketchWizard( Composite parent, int style ) {
-		super( SketchWizard.class.getResourceAsStream( S_WIZARD_DESC ), SketchWizard.class );
-		controller = new SketchController( new Browser( parent, style ));
+		super( SketchWizard.class.getResourceAsStream( S_WIZARD_DESC ), SketchWizard.class, null );
+		//controller = new SketchController( new Browser( parent, style ));
 		wizard = this;
+		service.addListener(listener);
 	}
 
 	
@@ -39,15 +67,15 @@ public class SketchWizard extends AbstractXmlFlowWizard<IModelLeaf<IDescriptor>>
 			@Override
 			protected void onControlCreated(int index, Composite composite) {
 				Pages page = Pages.values()[ index ];
+				/**
 				try {
 					controller.setBrowser( page );
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				*/
 				switch( page ){
 				case SEARCH:
 					break;
@@ -66,8 +94,6 @@ public class SketchWizard extends AbstractXmlFlowWizard<IModelLeaf<IDescriptor>>
 
 			@Override
 			public void onCreateIcon(Composite iconbar) {
-				// TODO Auto-generated method stub
-				
 			}	
 		};
 		return wizard;

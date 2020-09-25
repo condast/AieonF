@@ -70,6 +70,5 @@ public class Dispatcher implements IActiveDomainProvider{
 	@Override
 	public IDescribablePredicate<IDescriptor> getPredicates(){
 		return provider.getPredicates();
-	}	
-
+	}
 }

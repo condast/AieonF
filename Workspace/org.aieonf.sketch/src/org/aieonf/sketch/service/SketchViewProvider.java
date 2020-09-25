@@ -1,6 +1,8 @@
 package org.aieonf.sketch.service;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.osgi.swt.AbstractViewFactory;
@@ -8,6 +10,7 @@ import org.aieonf.osgi.swt.IViewFactory;
 import org.aieonf.sketch.controller.SketchController;
 import org.aieonf.sketch.controller.SketchController.Pages;
 import org.aieonf.sketch.factory.SketchFactory;
+import org.aieonf.sketch.factory.SketchModelFactory;
 import org.aieonf.sketch.swt.SketchWizard;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
@@ -21,9 +24,7 @@ public class SketchViewProvider extends AbstractViewFactory<Composite> implement
 	private SketchController barController;
 	private SketchWizard wizard;
 
-	public static final String S_SKETCH_ID = "org.aieonf.sketch.view";
-	private static final String S_SKETCH = "SKETCH";
-	
+	public static final String S_SKETCH_ID = "org.aieonf.sketch.view";	
 
 	public SketchViewProvider() {
 		super( DomainProvider.getDomain());
@@ -34,6 +35,17 @@ public class SketchViewProvider extends AbstractViewFactory<Composite> implement
 	public void deactivate(){/* NOTHING */}
 	
 	@Override
+	public boolean isOfDomain(IDomainAieon domain) {
+		Map<IDomainAieon, SketchModelFactory> factories = new HashMap<>();
+		try {
+			factories = SketchFactory.getInstance().getFactories();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return factories.keySet().contains(domain);
+	}
+
+	@Override
 	public String getIdentifier() {
 		try {
 			if( selected.getFactory() == null )
@@ -41,7 +53,6 @@ public class SketchViewProvider extends AbstractViewFactory<Composite> implement
 			IDomainAieon domain = selected.getFactory().getDomain();
 			return domain.getShortName().toLowerCase();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -54,6 +65,7 @@ public class SketchViewProvider extends AbstractViewFactory<Composite> implement
 		switch( view ){
 		case BAR:
 			browser = new Browser( parent, style );
+			//browser.setUrl("http://www.condast.com");
 			barController = new SketchController( browser );
 			barController.setBrowser( Pages.BAR );
 			break;

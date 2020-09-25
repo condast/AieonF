@@ -7,17 +7,29 @@ Bundle-Vendor: AieonF.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.aieonf.commons,
  org.aieonf.commons.i8n,
+ org.aieonf.commons.io,
  org.aieonf.commons.strings,
  org.aieonf.commons.ui.swt,
- org.aieonf.concept.domain,
+ org.eclipse.core.runtime;version="3.5.0",
+ org.eclipse.jface.dialogs,
+ org.eclipse.jface.operation,
+ org.eclipse.jface.resource,
+ org.eclipse.jface.wizard,
+ org.eclipse.rap.rwt;version="3.8.0",
  org.eclipse.rap.rwt.service;version="3.8.0",
  org.eclipse.swt,
+ org.eclipse.swt.browser,
  org.eclipse.swt.events,
  org.eclipse.swt.graphics,
  org.eclipse.swt.layout,
- org.eclipse.swt.widgets
-Export-Package: org.aieonf.commons.ui.language,
+ org.eclipse.swt.widgets,
+ org.osgi.framework;version="1.9.0"
+Export-Package: org.aieonf.commons.ui.controller,
+ org.aieonf.commons.ui.flow,
+ org.aieonf.commons.ui.language,
  org.aieonf.commons.ui.session,
  org.aieonf.commons.ui.swt,
- org.aieonf.commons.ui.verification
+ org.aieonf.commons.ui.verification,
+ org.aieonf.commons.ui.wizard,
+ org.aieonf.commons.ui.wizard.xml
 Automatic-Module-Name: org.aieonf.commons.ui
