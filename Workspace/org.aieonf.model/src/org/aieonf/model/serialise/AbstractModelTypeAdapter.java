@@ -82,7 +82,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		String key = null;
 		while(!complete && jsonReader.hasNext() ) {
 			JsonToken token = jsonReader.peek();
-			logger.fine(token.toString());
+			logger.info(token.toString());
 			N node = null;
 			switch( token) {
 			case BEGIN_ARRAY:
@@ -101,7 +101,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 				break;
 			case NAME:
 				key = jsonReader.nextName().toUpperCase();
-				logger.fine(key);
+				logger.info(key);
 				if( Attributes.isAttribute( key )) {
 					node = nodes.peek();
 					switch( Attributes.valueOf( key )) {
@@ -184,14 +184,14 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void write(JsonWriter arg0, IModelLeaf<IDescriptor> arg1) throws IOException {
+	public void write(JsonWriter arg0, IModelLeaf<IDescriptor> leaf) throws IOException {
 		arg0.beginObject();
 		arg0.name(Attributes.ID.name());
-		arg0.value(arg1.getID());
+		arg0.value(leaf.getID());
 		arg0.name(Attributes.LEAF.name());
-		arg0.value(arg1.isLeaf());
+		arg0.value(leaf.isLeaf());
 		arg0.name(Attributes.PROPERTIES.name());
-		Iterator<Map.Entry<String, String>> iterator = arg1.iterator();
+		Iterator<Map.Entry<String, String>> iterator = leaf.iterator();
 		arg0.beginArray();
 		while(iterator.hasNext() ) {
 			Map.Entry<String, String> entry = iterator.next();
@@ -203,21 +203,23 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 			arg0.endObject();
 		}
 		arg0.endArray();
-		arg0.name(Attributes.DESCRIPTOR.name());
-		iterator = arg1.getData().iterator();
-		arg0.beginArray();
-		while(iterator.hasNext() ) {
-			Map.Entry<String, String> entry = iterator.next();
-			arg0.beginObject();
-			arg0.name(entry.getKey());
-			arg0.value(entry.getValue());
-			arg0.endObject();
+		if( leaf.getData() != null ) {
+			arg0.name(Attributes.DESCRIPTOR.name());
+			iterator = leaf.getData().iterator();
+			arg0.beginArray();
+			while(iterator.hasNext() ) {
+				Map.Entry<String, String> entry = iterator.next();
+				arg0.beginObject();
+				arg0.name(entry.getKey());
+				arg0.value(entry.getValue());
+				arg0.endObject();
+			}
+			arg0.endArray();
 		}
-		arg0.endArray();
-		if( !arg1.isLeaf()) {
+		if( !leaf.isLeaf()) {
 			arg0.name(Attributes.CHILDREN.name());
 			arg0.beginArray();
-			IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) arg1;
+			IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) leaf;
 			for( Map.Entry<IModelLeaf<? extends IDescriptor>, String> child: model.getChildren().entrySet() ) {
 				write( arg0, (IModelLeaf<IDescriptor>) child.getKey());
 				if( child.getValue() == null)

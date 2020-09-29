@@ -164,7 +164,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	 * @throws ConceptException
 	 */
 	protected Map<Integer, FireFoxReference> getResources() throws ConceptException{
-		String query_favicons = "SELECT * FROM moz_favicons";
+		String query_favicons = "SELECT * FROM favicons.sqlite";
 		Map<Integer, FireFoxReference>resources = new HashMap<Integer, FireFoxReference>();
 		try{
 			//Find all the stored urls, and match them with the bookmarks

@@ -54,6 +54,7 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 			for( File child: file.listFiles() )
 				super.addChild( new FileModel( child ));
 		}
+		super.setData(new FileAieon( file ));
 	}
 
 	/**

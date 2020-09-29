@@ -103,7 +103,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 			Edge edge = edges.next();
 			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
 				continue;
-			Vertex child = edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
+			Vertex child = edge.getVertex(com.tinkerpop.blueprints.Direction.OUT);
 			children.put(new ModelNode( graph, domain, this, child), edge.getLabel());
 		}
 		return children;
