@@ -3,10 +3,12 @@ package org.aieonf.orientdb.filter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.aieonf.commons.filter.AbstractAttributeFilter;
 import org.aieonf.commons.filter.AbstractFilter;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.orientdb.core.VertexConceptBase;
 
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -16,6 +18,8 @@ public abstract class AbstractGraphFilter extends AbstractFilter<Vertex> impleme
 	public String SQL_BASE = "SELECT FROM ";
 
 	private OrientGraph graph;
+	
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	protected AbstractGraphFilter(OrientGraph graph, String name, String rule) {
 		super(name, rule);
@@ -52,6 +56,7 @@ public abstract class AbstractGraphFilter extends AbstractFilter<Vertex> impleme
 		Collection<Vertex> results = new ArrayList<>();
 		while( iterator.hasNext() ) {
 			Vertex vertex = iterator.next();
+			logger.info( new VertexConceptBase( vertex ).toString());
 			if( acceptEnabled(vertex))
 				results.add(vertex);
 		}

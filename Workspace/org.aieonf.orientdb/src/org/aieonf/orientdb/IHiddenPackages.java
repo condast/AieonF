@@ -19,6 +19,8 @@ import com.orientechnologies.orient.core.*;
 import com.orientechnologies.orient.core.metadata.*;
 import com.orientechnologies.orient.core.record.*;
 
+import org.eclipse.equinox.http.registry.*;
+
 @SuppressWarnings("unused")
 public interface IHiddenPackages {
 

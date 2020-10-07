@@ -37,7 +37,7 @@ public class DescriptorWrapper implements IDescriptor
 	protected DescriptorWrapper( String id, IDescriptor descriptor ) throws ConceptException
 	{
 		this( descriptor );
-		set( IDescriptor.Attributes.ID, id );
+		set( IDescriptor.Attributes.ID.name(), id );
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class DescriptorWrapper implements IDescriptor
 	@Override
 	public final void setDescription( String description )
 	{
-		set( IDescriptor.Attributes.DESCRIPTION, description );
+		set( IDescriptor.Attributes.DESCRIPTION.name(), description );
 	}
 
 	/**

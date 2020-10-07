@@ -55,7 +55,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		}
 		IModelLeaf<IDescriptor>  result = null;
 		try {
-			result= onTransform( readModelLeaf(reader));
+			result= onTransform( readNode(reader));
 			token = reader.peek();
 			if( JsonToken.END_OBJECT.equals(token))
 				reader.endObject();
@@ -76,13 +76,13 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 
 	protected abstract boolean onAddProperty( N node, String key, String value );
 
-	protected N readModelLeaf( JsonReader jsonReader ) throws ParseException, IOException {
+	protected N readNode( JsonReader jsonReader ) throws ParseException, IOException {
 		String label;
 		boolean complete = false;
 		String key = null;
 		while(!complete && jsonReader.hasNext() ) {
 			JsonToken token = jsonReader.peek();
-			logger.info(token.toString());
+			logger.fine(token.toString());
 			N node = null;
 			switch( token) {
 			case BEGIN_ARRAY:
@@ -101,14 +101,14 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 				break;
 			case NAME:
 				key = jsonReader.nextName().toUpperCase();
-				logger.info(key);
+				logger.fine(key);
 				if( Attributes.isAttribute( key )) {
 					node = nodes.peek();
 					switch( Attributes.valueOf( key )) {
 					case CHILDREN:
 						jsonReader.beginArray();
 						while( !JsonToken.END_ARRAY.equals(token )) {
-							N child = readModelLeaf( jsonReader );
+							N child = readNode( jsonReader );
 							token = jsonReader.peek();
 							jsonReader.endObject();
 							token = jsonReader.peek();

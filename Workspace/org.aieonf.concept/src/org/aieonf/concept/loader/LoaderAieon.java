@@ -218,7 +218,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	public void verify() throws NullPointerException
 	{
 		String error = IBodyAieon.S_ERR_INVALID_LOADER +  this.getClass().getName() + ": ";
-		String source = IConcept.Attributes.SOURCE.toString();
+		String source = IConcept.Attributes.SOURCE.name();
 		if( super.get( source ) == null )
 			throw new NullPointerException( error + source );
 

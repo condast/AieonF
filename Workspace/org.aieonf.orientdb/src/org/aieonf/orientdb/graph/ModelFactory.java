@@ -2,17 +2,13 @@ package org.aieonf.orientdb.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.db.DatabaseService;
 
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
@@ -36,10 +32,7 @@ public class ModelFactory< T extends IDescriptor > {
 
 	private DatabaseService service;
 	
-	private IDomainAieon domain;
-		
-	public ModelFactory( IDomainAieon domain, DatabaseService service ) {
-		this.domain = domain;
+	public ModelFactory( DatabaseService service ) {
 		this.service = service;
 	}
 	
@@ -51,7 +44,7 @@ public class ModelFactory< T extends IDescriptor > {
 			IModelLeaf<IDescriptor> node = null;
 			for( Vertex vertex: vertices ) {
 				try {
-					node = new ModelNode( graph, domain, vertex );
+					node = new ModelNode( graph, vertex );
 					results.add(node);
 				}
 				catch( Exception ex ) {

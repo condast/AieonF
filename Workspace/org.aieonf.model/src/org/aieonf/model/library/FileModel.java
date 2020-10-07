@@ -86,7 +86,7 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 	}
 
 	public void setSource( String source ){
-		this.getDescriptor().set( IConcept.Attributes.SOURCE, source );
+		this.getDescriptor().set( IConcept.Attributes.SOURCE.name(), source );
 	}
 	
 	/**
@@ -138,12 +138,12 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 	}
 
 	public static String getFilePath( IDescriptor descriptor ){
-		return descriptor.get( IConcept.Attributes.SOURCE.toString() );
+		return descriptor.get( IConcept.Attributes.SOURCE.name() );
 	}
 
 	public static final void convertToFileAieon( IDescriptor descriptor, String uri ){
 		descriptor.set( IDescriptor.Attributes.NAME.name(), FILE );
-		descriptor.set(IConcept.Attributes.SOURCE.toString(), uri);
+		descriptor.set(IConcept.Attributes.SOURCE.name(), uri);
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 			super.setSource( Descriptor.makeValidName( file.getName().split( "[\\.]")[ 0 ]));
 			this.setDescription( file.getAbsolutePath());
 			this.setScope( Scope.PRIVATE );
-			this.set( IConcept.Attributes.SOURCE.toString(), this.file.toURI().toString());
+			this.set( IConcept.Attributes.SOURCE.name(), this.file.toURI().toString());
 			this.setProviderName( file.getName().split( "[\\.]")[ 0 ] );
 		}		
 	}
@@ -181,9 +181,9 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 			this.set( IDescriptor.Attributes.ID, HexConvertor.convert( Convert.CONVERT_TO_HEX, file.getAbsolutePath() ));
 			this.setDescription( file.getAbsolutePath());
 			this.setScope( Scope.PRIVATE );
-			this.set( IConcept.Attributes.SOURCE.toString(), this.file.toURI().toString());
-			this.set( IConcept.Attributes.HIDDEN.toString(), String.valueOf( file.isHidden() ));
-			this.set( IConcept.Attributes.READ_ONLY.toString(), String.valueOf( !file.canWrite()) );
+			this.set( IConcept.Attributes.SOURCE.name(), this.file.toURI().toString());
+			this.set( IConcept.Attributes.HIDDEN.name(), String.valueOf( file.isHidden() ));
+			this.set( IConcept.Attributes.READ_ONLY.name(), String.valueOf( !file.canWrite()) );
 			this.setProviderName( file.getName().split( "[\\.]")[ 0 ] );
 		}		
 	}

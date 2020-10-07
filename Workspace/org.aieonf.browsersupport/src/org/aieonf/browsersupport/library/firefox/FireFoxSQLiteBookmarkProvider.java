@@ -468,7 +468,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 				set( BookmarkAttribute.primkey, str );
 				str = rs.getString( PlacesAttribute.url.name() );
 				if( !Descriptor.isNull(str))
-				  set( IConcept.Attributes.SOURCE, str );
+				  set( IConcept.Attributes.SOURCE.name(), str );
 				str = rs.getString( PlacesAttribute.title.name() );
 				if( !Descriptor.isNull(str)){
 				  String name = Descriptor.createValidName( str );
@@ -487,7 +487,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 				  set( PlacesAttribute.rev_host, str );
 				str = rs.getString( PlacesAttribute.hidden.name() );
 				if( !Descriptor.isNull(str))
-				  set( IConcept.Attributes.HIDDEN.toString(), str );
+				  set( IConcept.Attributes.HIDDEN.name(), str );
 				str = rs.getString( PlacesAttribute.typed.name() );
 				if( !Descriptor.isNull(str))
 				  set( PlacesAttribute.typed, str );

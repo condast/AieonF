@@ -79,7 +79,7 @@ public abstract class AbstractFunctionProvider<K extends Object, F extends Objec
 		loader.setIdentifier( loader.getScope().toString());
 		loader.setStoreInternal( true );
 		loader.setIdentifier( IModelLeaf.S_MODEL );
-		loader.set( IDescriptor.Attributes.NAME, context.get( IConcept.Attributes.SOURCE ));
+		loader.set( IDescriptor.Attributes.NAME.name(), context.get( IConcept.Attributes.SOURCE.name() ));
 		loader.setVersion(1);
 		loader.setEncryptionAlgorithm( Algorithms.AES );
 		loader.setEncryptionKey( S_DEFAULT_ENCRYPTION_KEY );

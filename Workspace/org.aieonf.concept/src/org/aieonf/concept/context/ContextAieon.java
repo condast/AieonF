@@ -81,7 +81,7 @@ public class ContextAieon extends Concept implements IContextAieon
 		this.set( IContextAieon.Attributes.APPLICATION_ID.toString(), applicationID );
 		this.set( IContextAieon.Attributes.APPLICATION_DOMAIN.toString(), source );
 		this.setLocationType( LocationType.APPLICATION );
-		super.set( IDescriptor.Attributes.VERSION, String.valueOf(1 ));
+		super.setValue( IDescriptor.Attributes.VERSION, String.valueOf(1 ));
 	}
 
 	public ContextAieon(IDescriptor base) {

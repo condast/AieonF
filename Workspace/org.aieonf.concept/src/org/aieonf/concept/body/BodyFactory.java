@@ -113,7 +113,7 @@ public class BodyFactory<T extends Object>
 	 */
 	public static void IDFactory( IDescribable describable ){
 		String id = IDFactory( describable, new DescribableSet<Object>( new ArrayList<Object>()));
-		describable.getDescriptor().set( IDescriptor.Attributes.ID, id );
+		describable.getDescriptor().set( IDescriptor.Attributes.ID.name(), id );
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class BodyFactory<T extends Object>
 		if( Descriptor.isNull( descriptor.getName() ))
 			throw new ConceptException( S_ERR_INVALID_DESCRIPTOR + descriptor.toString() );
 		if( descriptor.getID() < 0)
-			descriptor.set( IDescriptor.Attributes.ID, BodyFactory.IDFactory() );
+			descriptor.set( IDescriptor.Attributes.ID.name(), BodyFactory.IDFactory() );
 		if( descriptor.getVersion() < 0 )
 			descriptor.setVersion( 0 );
 
@@ -422,7 +422,7 @@ public class BodyFactory<T extends Object>
 		int hashCode = BodyFactory.hashCode( loader, loader );
 		long signature = ( long )hashCode << 32;
 		signature += BodyFactory.hashCode( loader, descriptor.getDescriptor() );
-		descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE, String.valueOf( signature ));
+		descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE.name(), String.valueOf( signature ));
 	}
 
 	/**

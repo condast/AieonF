@@ -48,7 +48,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	 * @param name
 	 */
 	protected void setName( String name ){
-		set( IDescriptor.Attributes.NAME, name );
+		set( IDescriptor.Attributes.NAME.name(), name );
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	 * @param id
 	 */
 	protected void setID( String id ){
-		set( IDescriptor.Attributes.ID, id );
+		set( IDescriptor.Attributes.ID.name(), id );
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	@Override
 	public final Scope getScope()
 	{
-		String str = super.getDescriptor().get( IConcept.Attributes.SCOPE );
+		String str = super.getDescriptor().get( IConcept.Attributes.SCOPE.name() );
 		if( Utils.assertNull(str))
 			return Scope.APPLICATION;
 		return Scope.valueOf(  StringStyler.styleToEnum( str ));
@@ -81,12 +81,12 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	@Override
 	public final void setScope( Scope scope )
 	{
-		set( IConcept.Attributes.SCOPE, scope.toString() );
+		set( IConcept.Attributes.SCOPE.name(), scope.toString() );
 	}
 
 	@Override
 	public String getSource() {
-		return super.getDescriptor().get( IConcept.Attributes.SOURCE );
+		return super.getDescriptor().get( IConcept.Attributes.SOURCE.name() );
 	}
 
 	
@@ -107,7 +107,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	 */
 	protected void setSource( String source )
 	{
-		set( IConcept.Attributes.SOURCE, source );
+		set( IConcept.Attributes.SOURCE.name(), source );
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	@Override
 	public final boolean isReadOnly()
 	{
-		return super.getDescriptor().getBoolean( ConceptBase.getAttributeKey( IConcept.Attributes.READ_ONLY ));
+		return super.getDescriptor().getBoolean( IConcept.Attributes.READ_ONLY.name() );
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	@Override
 	public final void setReadOnly( boolean readonly )
 	{
-		set( IConcept.Attributes.READ_ONLY , String.valueOf( readonly ));
+		set( IConcept.Attributes.READ_ONLY.name() , String.valueOf( readonly ));
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	@Override
 	public final boolean isHidden()
 	{
-		return super.getDescriptor().getBoolean( ConceptBase.getAttributeKey( IConcept.Attributes.HIDDEN ));
+		return super.getDescriptor().getBoolean( IConcept.Attributes.HIDDEN.name() );
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	@Override
 	public final void setHidden( boolean hidden )
 	{
-		set( IConcept.Attributes.HIDDEN, String.valueOf( hidden ));
+		set( IConcept.Attributes.HIDDEN.name(), String.valueOf( hidden ));
 	}
 
 	/**

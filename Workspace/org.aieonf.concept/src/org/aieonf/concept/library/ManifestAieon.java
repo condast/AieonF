@@ -98,6 +98,6 @@ public class ManifestAieon extends LoaderAieon
     StoreConcept store = new StoreConcept( this );
     String signature =
       encryption.encryptData( store.createDocument().toString() );
-    this.set( IDescriptor.Attributes.SIGNATURE, signature );
+    this.setValue( IDescriptor.Attributes.SIGNATURE, signature );
   }
 }

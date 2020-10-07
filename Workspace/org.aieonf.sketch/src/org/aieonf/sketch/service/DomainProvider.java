@@ -8,9 +8,9 @@ import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.function.IDescribablePredicate;
+import org.aieonf.osgi.domain.IDomainProvider;
 import org.aieonf.sketch.factory.SketchFactory;
 import org.aieonf.sketch.factory.SketchModelFactory;
-import org.condast.aieonf.osgi.concept.IDomainProvider;
 import org.osgi.service.component.annotations.Component;
 
 @Component( name="org.aieonf.sketch.domain.provider.service",

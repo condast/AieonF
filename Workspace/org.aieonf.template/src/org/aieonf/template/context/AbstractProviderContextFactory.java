@@ -92,9 +92,9 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	public ITemplateLeaf<IContextAieon> onCreateTemplate() {
 		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, this.creator );	
 		IDescriptor descriptor = template.getDescriptor();
-		String source = descriptor.get( IConcept.Attributes.SOURCE );
+		String source = descriptor.get( IConcept.Attributes.SOURCE.name() );
 		if( Utils.assertNull( source ))
-			descriptor.set( IConcept.Attributes.SOURCE, template.getID()+ File.separator + S_MODEL );
+			descriptor.set( IConcept.Attributes.SOURCE.name(), template.getID()+ File.separator + S_MODEL );
 		return template;
 	}
 

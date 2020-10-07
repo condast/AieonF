@@ -172,10 +172,10 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 		cat.setScope( IConcept.Scope.PRIVATE );
 		cat.setProvider( super.getManifest().getIdentifier() );
 		Calendar calendar = Calendar.getInstance();
-		cat.set( IDescriptor.Attributes.CREATE_DATE.toString(), calendar.getTime().toString() );
-		cat.set( IDescriptor.Attributes.UPDATE_DATE.toString(), calendar.getTime().toString() );
+		cat.set( IDescriptor.Attributes.CREATE_DATE.name(), calendar.getTime().toString() );
+		cat.set( IDescriptor.Attributes.UPDATE_DATE.name(), calendar.getTime().toString() );
 
-		cat.set( IConcept.Attributes.SOURCE.toString(), super.getManifest().getIdentifier() );
+		cat.set( IConcept.Attributes.SOURCE.name(), super.getManifest().getIdentifier() );
 		BodyFactory.sign( super.getManifest(), cat );
 		IModelNode<IDescriptor> model = new Model<IDescriptor>( cat );
 		stack.push( model );

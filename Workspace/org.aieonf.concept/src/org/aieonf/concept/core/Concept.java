@@ -92,7 +92,7 @@ public class Concept extends Descriptor implements IConcept
 	 */
 	final void setID( String id )
 	{
-		super.set( IDescriptor.Attributes.ID, id );
+		super.setValue( IDescriptor.Attributes.ID, id );
 	}
 
 	/**
@@ -105,12 +105,12 @@ public class Concept extends Descriptor implements IConcept
 		name = name.trim();
 		if( this.checkName( name) == false )
 			throw new IllegalArgumentException( S_ERR_INVALID_NAME + ": " + name );
-		super.set( IDescriptor.Attributes.NAME, name );
+		super.setValue( IDescriptor.Attributes.NAME, name );
 	}
 	
 	@Override
 	public String getSource() {
-		return this.get( IConcept.Attributes.SOURCE );
+		return this.getValue( IConcept.Attributes.SOURCE );
 	}
 
 	/**
@@ -120,12 +120,12 @@ public class Concept extends Descriptor implements IConcept
 	 */
 	protected void setSource( String source )
 	{
-		super.set( IConcept.Attributes.SOURCE, source );
+		setValue( IConcept.Attributes.SOURCE, source );
 	}
 
 	@Override
 	public String getURIPath() {
-		return super.get( IConcept.Attributes.URI.name() );
+		return getValue( IConcept.Attributes.URI );
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final Scope getScope()
 	{
-		String scopeStr = super.get( IConcept.Attributes.SCOPE );
+		String scopeStr = getValue( IConcept.Attributes.SCOPE );
 		if(( scopeStr == null ) || ( scopeStr == "" ))
 			return Scope.UNKNOWN;
 		return Scope.valueOf( StringStyler.styleToEnum( scopeStr ));
@@ -150,7 +150,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final void setScope( Scope scope )
 	{
-		super.set( IConcept.Attributes.SCOPE, scope.toString());
+		setValue( IConcept.Attributes.SCOPE, scope.toString());
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final boolean isReadOnly()
 	{
-		String readOnly = super.get( IConcept.Attributes.READ_ONLY );
+		String readOnly = getValue( IConcept.Attributes.READ_ONLY );
 		return ( readOnly == null )? false: readOnly.toLowerCase().equals( "true" );
 	}
 
@@ -173,7 +173,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final void setReadOnly( boolean readonly )
 	{
-		super.set( IConcept.Attributes.READ_ONLY, String.valueOf( readonly ));
+		setValue( IConcept.Attributes.READ_ONLY, String.valueOf( readonly ));
 	}
 
 	/**
@@ -184,8 +184,8 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final boolean isHidden()
 	{
-		String result = super.get( IConcept.Attributes.HIDDEN );
-		return  ( result == null )? false: result.toLowerCase().trim().equals( Boolean.TRUE );
+		String result = getValue( IConcept.Attributes.HIDDEN );
+		return  ( result == null )? false: result.toUpperCase().trim().equals( Boolean.TRUE.toString() );
 	}
 
 	/**
@@ -196,7 +196,15 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final void setHidden( boolean hidden )
 	{
-		super.set( IConcept.Attributes.HIDDEN, String.valueOf( hidden ));
+		setValue( IConcept.Attributes.HIDDEN, String.valueOf( hidden ));
+	}
+
+	protected String getValue( IConcept.Attributes enm) {
+		return super.getBase().get(enm.name());
+	}
+
+	protected void setValue(IConcept.Attributes enm, String value) {
+		super.getBase().set(enm.name(), value);
 	}
 
 	@Override

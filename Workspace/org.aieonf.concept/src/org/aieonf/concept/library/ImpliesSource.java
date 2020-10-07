@@ -8,6 +8,6 @@ public class ImpliesSource<T extends IDescriptor> extends
 		AttributeImplies<T, T> {
 
 	public ImpliesSource(T reference) {
-		super(reference, IConcept.Attributes.SOURCE );
+		super(reference, IConcept.Attributes.SOURCE.name() );
 	}
 }

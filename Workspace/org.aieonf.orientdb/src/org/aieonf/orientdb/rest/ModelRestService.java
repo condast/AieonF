@@ -88,12 +88,9 @@ public class ModelRestService{
 	public Response addNode( @QueryParam("id") long domainId, @QueryParam("token") long token, 
 			@QueryParam("domain") String domainstr, String data ) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		ModelFactory<IDescriptor> factory = null;
 		try{
  			if( !dispatcher.isRegistered(domainId, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
- 			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
-			factory = new ModelFactory<IDescriptor>( domain, dbService );
 			long id = -1;//factory.transform(data);
 			Gson gson = new Gson();
 			return Response.ok( gson.toJson(id, Long.class)).build();
@@ -119,8 +116,6 @@ public class ModelRestService{
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
-			result = null;//factory.get(domain);
 			ModelFilter<IModelLeaf<IDescriptor>> filter = new ModelFilter<IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
 			return Response.ok(result).build();
@@ -143,8 +138,6 @@ public class ModelRestService{
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
-			result = null;//factory.get(domain);
 			ModelFilter<IModelLeaf<IDescriptor>> filter = new ModelFilter<IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
 			Gson gson = new Gson();
@@ -180,7 +173,7 @@ public class ModelRestService{
 			params.put(FilterFactory.Attributes.REFERENCE, attribute);
 			params.put(FilterFactory.Attributes.VALUE, wildcard);
 			IGraphFilter filter = ff.createFilter(type, params);
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( domain, dbService );
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
 			result = factory.get(filter.doFilter());
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();

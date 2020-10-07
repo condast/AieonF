@@ -148,7 +148,7 @@ public class DatabaseController<M extends IDescribable> extends AbstractJavascri
 		AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
 				CategoryAieon.Attributes.CATEGORY, wildcard );
 		AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
-				IDescriptor.Attributes.DESCRIPTION, wildcard );
+				IDescriptor.Attributes.DESCRIPTION.name(), wildcard );
 		HierarchicalModelAttributeFilter<IDescriptor> filter = new HierarchicalModelAttributeFilter<IDescriptor>( categoryFilter, urlFilter );
 		/*
 		switch( choice ){

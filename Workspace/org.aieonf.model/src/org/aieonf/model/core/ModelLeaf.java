@@ -21,8 +21,8 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	public ModelLeaf(){
 		this.leaf = true;
-		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
-		set( IDescriptor.Attributes.CLASS, this.getClass().getCanonicalName() );
+		set( IDescriptor.Attributes.VERSION.name(), String.valueOf(0));
+		set( IDescriptor.Attributes.CLASS.name(), this.getClass().getCanonicalName() );
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	public ModelLeaf( long id ){
 		this();
-		set( IDescriptor.Attributes.ID, String.valueOf( id ));
+		set( IDescriptor.Attributes.ID.name(), String.valueOf( id ));
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D descriptor, String type ){
 		this( id, parent, descriptor );
-		this.set( IConcept.Attributes.TYPE, type );
+		this.set( IConcept.Attributes.TYPE.name(), type );
 	}
 
 
@@ -142,13 +142,13 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 
 	@Override
 	public Scope getScope() {
-		String str = get( IConcept.Attributes.SCOPE ); 
+		String str = get( IConcept.Attributes.SCOPE.name() ); 
 		Scope scope = StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);
 		return scope;
 	}
 
 	public void setScope( Scope scope ) {
-		set( IConcept.Attributes.SCOPE, scope.name() );
+		set( IConcept.Attributes.SCOPE.name(), scope.name() );
 	}
 
 	/**

@@ -198,6 +198,8 @@ public class DatabaseService implements Closeable{
 	}
 
 	public synchronized void close(){
+		if( graph == null )
+			return;
 		graph.commit();
 		graph.shutdown();
 		graph = null;

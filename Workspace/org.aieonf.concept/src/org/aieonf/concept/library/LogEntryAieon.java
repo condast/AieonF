@@ -72,7 +72,7 @@ public class LogEntryAieon extends DateAieon
 
 	@Override
 	public void setSource( String source ){
-		super.set( IConcept.Attributes.SOURCE, source);
+		super.setValue( IConcept.Attributes.SOURCE, source);
 	}
 	
 	public String getCategory(){

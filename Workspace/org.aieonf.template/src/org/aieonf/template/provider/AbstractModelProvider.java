@@ -84,7 +84,7 @@ public abstract class AbstractModelProvider<K extends Object, D extends IDescrib
 			manifest.fill(template.getDescriptor());
 			this.onSetup(manifest);
 			int hashcode = this.template.getDescriptor().hashCode();
-			manifest.set( IDescriptor.Attributes.ID, String.valueOf( hashcode ));
+			manifest.set( IDescriptor.Attributes.ID.name(), String.valueOf( hashcode ));
 			signer.init(manifest);
 		} catch ( Exception e) {
 			e.printStackTrace();

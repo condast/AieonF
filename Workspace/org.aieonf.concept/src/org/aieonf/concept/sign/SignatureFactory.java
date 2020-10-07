@@ -77,7 +77,7 @@ public class SignatureFactory {
 	    if( !this.ready )
 	    	return ready;
 		signature += BodyFactory.hashCode( encryptor, descriptor.getDescriptor() );
-	    descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE, String.valueOf( signature ));
+	    descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE.name(), String.valueOf( signature ));
 		return ready;
 	}
 }

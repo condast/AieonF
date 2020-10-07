@@ -68,7 +68,7 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_FIREFOX_IDENTIFIER );
 		URI uri = AbstractFileConnector.getDefaultSource( DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
-		baseLoader.set( IConcept.Attributes.SOURCE, uri.getPath());
+		baseLoader.set( IConcept.Attributes.SOURCE.name(), uri.getPath());
 
 		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> provider;
 		if( version == FireFoxVersion.firefox3 )

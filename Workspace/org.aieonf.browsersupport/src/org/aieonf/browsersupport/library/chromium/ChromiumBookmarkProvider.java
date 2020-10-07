@@ -176,7 +176,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			IDFactory( (IConcept) concept );
 			concept.setProvider( manifest.getIdentifier() );
 			concept.setProviderName( manifest.getProviderName() );
-			concept.set( IConcept.Attributes.SOURCE, manifest.getIdentifier() );
+			concept.set( IConcept.Attributes.SOURCE.name(), manifest.getIdentifier() );
 			BodyFactory.sign( manifest, concept );
 		}
 		catch (IOException e) {
@@ -335,9 +335,9 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			super.setDescription( super.getName());
 			if( type.equals( Types.FOLDER.toString() )){
 				super.set( CategoryAieon.Attributes.CATEGORY, super.getName());
-				super.set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
+				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
 			}else{
-				super.set( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
+				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
 			}
 			super.fill();
 		}
@@ -353,15 +353,15 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			}
 			String type = super.get( Attributes.TYPE );
 			if( type.equals( Types.FOLDER.name() )){
-				super.set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
+				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
 				super.set( CategoryAieon.Attributes.CATEGORY, super.get( Attributes.NAME ));
 			}else{
 				String name = super.get( Attributes.NAME );
-				super.set( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
-				super.set( IConcept.Attributes.SOURCE, URLAieon.Attributes.URL.toString() );
+				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
+				super.set( IConcept.Attributes.SOURCE.name(), URLAieon.Attributes.URL.toString() );
 				super.setDescription( name );
 			}
-			super.remove( IDescriptor.Attributes.NAME );
+			super.remove( IDescriptor.Attributes.NAME.name() );
 			super.fill();
 		}
 	}

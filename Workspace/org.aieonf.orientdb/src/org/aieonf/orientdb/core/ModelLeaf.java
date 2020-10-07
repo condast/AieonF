@@ -10,7 +10,6 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 
@@ -27,28 +26,24 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	private IModelNode<?> parent;
 	
 	private transient boolean leaf;
-	private transient boolean changed;
 
-	public ModelLeaf( OrientGraph graph, IDomainAieon domain, Vertex vertex ) {
-		this( graph, domain, null, vertex );
+	public ModelLeaf( OrientGraph graph, Vertex vertex ) {
+		this((IModelNode<?>)null, vertex );
 		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
 		parent = null;
 		while(edges.hasNext()) {
 			Edge edge = edges.next();
-			parent = new ModelNode( graph, domain, edge.getVertex(com.tinkerpop.blueprints.Direction.OUT)); 
+			parent = new ModelNode( graph, edge.getVertex(com.tinkerpop.blueprints.Direction.OUT)); 
 		}
 	}
 	
-	public ModelLeaf( OrientGraph graph, IDomainAieon domain, IModelNode<?> parent, Vertex vertex ) {
+	public ModelLeaf( IModelNode<?> parent, Vertex vertex ) {
 		super( vertex );
 		this.parent = parent;
 		this.leaf = true;
-		this.changed = false;
-		//Fill the properties;
-		for( String key: vertex.getPropertyKeys())
-			super.set( key, (String)vertex.getProperty(key));
+		super.setChanged( false );
 		
-		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IDescriptor.DESCRIPTOR).iterator();
+		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT, IDescriptor.DESCRIPTOR).iterator();
 		if(edges.hasNext()) {
 			//throw new NullPointerException( S_ERR_NULL_ID );
 
@@ -63,11 +58,6 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	@Override
 	public IDescriptor getDescriptor() {
 		return descriptor;
-	}
-
-	@Override
-	public boolean hasChanged() {
-		return changed;
 	}
 
 	@Override
@@ -102,7 +92,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public Scope getScope() {
-		String str = get( IConcept.Attributes.SCOPE ); 
+		String str = get( IConcept.Attributes.SCOPE.name() ); 
 		Scope scope = StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);
 		return scope;	}
 
@@ -155,7 +145,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public int getDepth() {
-		String str = get( IModelLeaf.Attributes.DEPTH);
+		String str = get( IModelLeaf.Attributes.DEPTH.name());
 		if( Utils.assertNull(str))
 			str = "0";
 		return Integer.parseInt( str );
@@ -163,7 +153,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public void setDepth(int depth) throws ConceptException {
-		set( IModelLeaf.Attributes.DEPTH, String.valueOf( depth ));
+		set( IModelLeaf.Attributes.DEPTH.name(), String.valueOf( depth ));
 	}
 
 	@Override
@@ -180,5 +170,4 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	public void setData(IDescriptor descriptor) {
 		this.descriptor = descriptor;
 	}
-
 }

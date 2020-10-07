@@ -50,7 +50,7 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context );
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
-		baseLoader.set( IConcept.Attributes.SOURCE, getDefaultSource().getPath());
+		baseLoader.set( IConcept.Attributes.SOURCE.name(), getDefaultSource().getPath());
 		return new IEFavoritesProvider( baseLoader );
 	}
 }

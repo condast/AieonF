@@ -129,7 +129,7 @@ public abstract class AbstractPersistenceService implements IPersistenceService{
 			logger.info("CONNECTING Manager " + name );
 			ModelScanner<IContextAieon> search = new ModelScanner<IContextAieon>( template );
 			loader = new LoaderAieon( search.getDescriptors( ILoaderAieon.Attributes.LOADER.toString())[0]);
-			loader.set( IConcept.Attributes.SOURCE, S_BUNDLE_ID);
+			loader.set( IConcept.Attributes.SOURCE.name(), S_BUNDLE_ID);
 			loader.setIdentifier( name);
 			File file = ProjectFolderUtils.getDefaultUserFile( loader, true);
 			file.setReadable(true);

@@ -3,6 +3,7 @@ package org.aieonf.orientdb.serialisable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
@@ -13,6 +14,7 @@ import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.implicit.IImplicitAieon;
 import org.aieonf.concept.implicit.ImplicitAieon;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.serialise.AbstractModelTypeAdapter;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
@@ -24,6 +26,12 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
+/**
+ * The model type adapter creates the graph structure in terms of vertices and edges from serialised data.
+ * At the end it wraps this structure in a tree structure (IModelLeaf<IDescriptor>) 
+ * @author Kees
+ *
+ */
 public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 
 	private OrientGraph graph;
@@ -36,10 +44,14 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		this.provider = provider;
 	}
 
+	/**
+	 * The model type adapter FIRST creates the graph structure, and only once this is
+	 * completed makes this into a model
+	 */
 	@Override
 	protected IModelLeaf<IDescriptor> onTransform(Vertex node) {
-		IDomainAieon domain = this.provider.getActiveDomain();
-		return new ModelNode( this.graph, domain, node );
+		ModelNode model = new ModelNode( this.graph, node );
+		return model;
 	}
 
 	@Override
@@ -51,14 +63,13 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 
 	@Override
 	protected boolean onAddChild(Vertex model, Vertex child, String label) {
-		IDomainAieon domain = this.provider.getActiveDomain();
-		ModelNode.addChild(domain, graph, model, child, label);
+		addChild( model, child, label);
 		return true;
 	}
 
 	@Override
-	protected Vertex onSetDescriptor(Vertex node, IConceptBase base) {
-		Iterator<Edge> edges = node.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
+	protected Vertex onSetDescriptor(Vertex vertex, IConceptBase base) {
+		Iterator<Edge> edges = vertex.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
 		Vertex descriptor = null;
 		while(( descriptor == null ) &&  edges.hasNext()) {
 			Edge edge = edges.next();
@@ -79,8 +90,13 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		if( descriptor == null ) {
 			descriptor = graph.addVertex( ModelFactory.S_CLASS + IDescriptor.DESCRIPTORS);
 			descriptor.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
+			Iterator<Map.Entry<String, String>> iterator = base.iterator();
+			while( iterator.hasNext() ) {
+				Map.Entry<String, String> entry = iterator.next();
+				descriptor.setProperty(entry.getKey(), entry.getValue());
+			}		
 		}
-		node.addEdge(IDescriptor.DESCRIPTOR, descriptor);
+		vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
 		return descriptor;
 	}
 	
@@ -88,6 +104,11 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	protected boolean onAddProperty(Vertex node, String key, String value) {
 		node.setProperty(key, value);
 		return true;
+	}
+
+	protected boolean isReverse( Vertex vertex ) {
+		String str = vertex.getProperty(IModelLeaf.Attributes.REVERSE.name());
+		return StringUtils.isEmpty(str)? false: Boolean.parseBoolean(str);
 	}
 
 	protected static Collection<Vertex> findVertices( OrientGraph graph, long id ){
@@ -134,5 +155,17 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		}
 		vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(newid));
 		return vertex;
+	}
+	
+	public static void addChild( Vertex parent, Vertex child, String label ) {
+		String rev = parent.getProperty(IModelLeaf.Attributes.REVERSE.name());
+		boolean reverse = StringUtils.isEmpty(rev)?false: Boolean.parseBoolean(rev);
+		if( reverse ) {
+			child.addEdge(label, parent);
+			parent.addEdge( IModelNode.IS_PARENT, child );
+		}else {
+			parent.addEdge(label,child);
+			child.addEdge(IModelNode.IS_PARENT, parent);
+		}
 	}
 }

@@ -35,7 +35,7 @@ import test.aieonf.orientdb.service.LoginDispatcher;
 public class TestSuite extends AbstractTestSuite<String, String> {
 
 	protected TestSuite() {
-		super("Test2");
+		super("Test Orient DB");
 	}
 
 	public enum Tests{
@@ -60,7 +60,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 	
 	@Override
 	protected void testSuite() throws Exception {
-		Tests test = Tests.TEST_SERIALSE;
+		Tests test = Tests.TEST_ADD_AND_READ;
 		try{
 			switch( test ){
 			case TEST_ADD_AND_READ:

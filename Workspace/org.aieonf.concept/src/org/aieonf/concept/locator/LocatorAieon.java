@@ -128,7 +128,7 @@ implements ILocatorAieon
 	@Override
 	public String getFromExtendedKey(String key)
 	{
-		String extended = super.get( IDescriptor.Attributes.EXTENDED_KEY );
+		String extended = super.getValue( IDescriptor.Attributes.EXTENDED_KEY );
 		extended = extended.replaceAll("[$]", ".");
 		if( Descriptor.isNull( extended ))
 			return super.get(key);
@@ -143,7 +143,7 @@ implements ILocatorAieon
 	 */
 	@Override
 	protected void setExtendedKey( String extended ){
-		super.set(IDescriptor.Attributes.EXTENDED_KEY, extended );
+		super.setValue(IDescriptor.Attributes.EXTENDED_KEY, extended );
 	}
 
 	/* (non-Javadoc)

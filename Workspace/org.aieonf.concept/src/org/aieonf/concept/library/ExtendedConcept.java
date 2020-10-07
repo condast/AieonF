@@ -32,7 +32,7 @@ public class ExtendedConcept extends ConceptWrapper implements IExtendedConcept
 	 */
 	public final String getAuthor()
 	{
-		return this.get( IConcept.Attributes.AUTHOR );
+		return this.get( IConcept.Attributes.AUTHOR.name() );
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class ExtendedConcept extends ConceptWrapper implements IExtendedConcept
 	 */
 	public final void setAuthor( String author )
 	{
-		this.set( IConcept.Attributes.AUTHOR, author );
+		this.set( IConcept.Attributes.AUTHOR.name(), author );
 	}
 
 	/**

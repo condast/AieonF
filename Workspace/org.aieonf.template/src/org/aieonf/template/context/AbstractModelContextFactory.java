@@ -77,8 +77,8 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 		ModelScanner<IContextAieon> search = new ModelScanner<IContextAieon>( this.template );
 		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
 		String str = domain.getDomain();
-		domain.set( IDescriptor.Attributes.ID, String.valueOf( str.hashCode() ) );
-		domain.set( IDescriptor.Attributes.VERSION, S_DEFAULT_VERSION );
+		domain.set( IDescriptor.Attributes.ID.name(), String.valueOf( str.hashCode() ) );
+		domain.set( IDescriptor.Attributes.VERSION.name(), S_DEFAULT_VERSION );
 		return domain;
 	}
 
@@ -90,9 +90,9 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 		builder.build();
 		ITemplateLeaf<IContextAieon> root = (ITemplateLeaf<IContextAieon>) builder.getModel();
 		long id = StringUtils.isEmpty(identifier)?-1:identifier.hashCode();
-		root.getDescriptor().set( IDescriptor.Attributes.ID, String.valueOf(id ));
-		root.getDescriptor().set( IDescriptor.Attributes.VERSION, S_DEFAULT_VERSION );
-		root.getDescriptor().set( IConcept.Attributes.SOURCE, identifier );
+		root.getDescriptor().set( IDescriptor.Attributes.ID.name(), String.valueOf(id ));
+		root.getDescriptor().set( IDescriptor.Attributes.VERSION.name(), S_DEFAULT_VERSION );
+		root.getDescriptor().set( IConcept.Attributes.SOURCE.name(), identifier );
 		return root;	
 	}
 
@@ -110,8 +110,8 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 		if( Utils.assertNull( identifier ))
 			return null;
 		if( identifier.equals( String.valueOf( leaf.getID()))){
-			if( Utils.assertNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE ) )){
-				leaf.getDescriptor().set( IConcept.Attributes.SOURCE, String.valueOf( template.getID() ));
+			if( Utils.assertNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE.name() ) )){
+				leaf.getDescriptor().set( IConcept.Attributes.SOURCE.name(), String.valueOf( template.getID() ));
 			}
 			return (ITemplateLeaf<IContextAieon>) leaf;
 		}

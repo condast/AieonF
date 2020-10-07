@@ -50,7 +50,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( IConceptBase base ) {
 		this.base = base;
 		this.setClassName( this.getClass().getName());
-		set( IDescriptor.Attributes.VERSION, String.valueOf(0));
+		setValue( IDescriptor.Attributes.VERSION, String.valueOf(0));
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( long id )
 	{
 		this();
-		set( IDescriptor.Attributes.ID, String.valueOf( id ));
+		setValue( IDescriptor.Attributes.ID, String.valueOf( id ));
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class Descriptor implements IDescriptor
 		if( this.checkName( name) == false )
 			throw new IllegalArgumentException( S_ERR_INVALID_NAME + ": " + name );
 
-		set( IDescriptor.Attributes.NAME, name );
+		setValue( IDescriptor.Attributes.NAME, name );
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class Descriptor implements IDescriptor
 	public Descriptor( long id, String name )
 	{
 		this( name );
-		set( IDescriptor.Attributes.ID, String.valueOf( id ));
+		setValue( IDescriptor.Attributes.ID, String.valueOf( id ));
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class Descriptor implements IDescriptor
 	{
 		String str = this.get( IDescriptor.Attributes.ID );
 		if(StringUtils.isEmpty(str))
-			str = this.get( IDescriptor.Attributes.ID.name());
+			str = this.getValue( IDescriptor.Attributes.ID);
 		return StringUtils.isEmpty(str)?-1:Long.parseLong( str ); 
 	}
 
@@ -150,7 +150,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getName()
 	{
-		return this.get( IDescriptor.Attributes.NAME.name() );
+		return this.getValue( IDescriptor.Attributes.NAME );
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final int getVersion()
 	{
-		String version = this.get( Attributes.VERSION );
+		String version = this.getValue( Attributes.VERSION );
 		if( Descriptor.isNull( version ))
 			return Integer.MIN_VALUE;
 		return Integer.parseInt( version );
@@ -187,7 +187,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getSignature()
 	{
-		return this.get( IDescriptor.Attributes.SIGNATURE );
+		return this.getValue( IDescriptor.Attributes.SIGNATURE);
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getDescription()
 	{
-		return this.get( IDescriptor.Attributes.DESCRIPTION );
+		return this.getValue( IDescriptor.Attributes.DESCRIPTION );
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public String getProvider()
 	{
-		return this.get( IDescriptor.Attributes.PROVIDER );  	
+		return this.getValue( IDescriptor.Attributes.PROVIDER );  	
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public String getProviderName()
 	{
-		return this.get( IDescriptor.Attributes.PROVIDER_NAME );  	
+		return this.getValue( IDescriptor.Attributes.PROVIDER_NAME );  	
 	}
 
 	/**
@@ -268,7 +268,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public final String getClassName()
 	{
-		return this.get( Attributes.CLASS.name() );
+		return this.getValue( Attributes.CLASS );
 	}
 
 	/**
@@ -279,6 +279,10 @@ public class Descriptor implements IDescriptor
 	protected final void setClassName( String className )
 	{
 		setValue( Attributes.CLASS, className );
+	}
+
+	protected String getValue( Attributes attr ) {
+		return get(attr.name());
 	}
 
 	protected void setValue( Attributes attr, String value ) {
@@ -301,10 +305,10 @@ public class Descriptor implements IDescriptor
 	public void sign( String signature )
 	{
 		if( signature == null ){
-			base.remove( Attributes.SIGNATURE );
+			base.remove( Attributes.SIGNATURE.name() );
 			return;
 		}
-		this.set( Attributes.SIGNATURE, signature );
+		this.setValue( Attributes.SIGNATURE, signature );
 	}  
 
 	/**
@@ -426,7 +430,7 @@ public class Descriptor implements IDescriptor
 			name = "null";
 		long id = this.getID();
 
-		String versionStr = base.get( IDescriptor.Attributes.VERSION );
+		String versionStr = getValue( IDescriptor.Attributes.VERSION );
 		int version = -1;
 		if(( versionStr != null ) && ( versionStr.equals("") == false ))
 			version = this.getVersion();
@@ -581,7 +585,7 @@ public class Descriptor implements IDescriptor
 	public final static Date getDate( IDescribable describable, IDescriptor.Attributes attr )
 	{
 		IDescriptor descriptor = describable.getDescriptor();
-		String str = descriptor.get( attr );
+		String str = descriptor.get( attr.name() );
 		if(( str == null ) || ( str.trim().length() == 0 ))
 			return Calendar.getInstance().getTime();
 
@@ -602,7 +606,7 @@ public class Descriptor implements IDescriptor
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTime( date );
 		long time = calendar.getTimeInMillis();
-		descriptor.set( attr, String.valueOf( time ) );
+		descriptor.set( attr.name(), String.valueOf( time ) );
 	}
 
 	/**
@@ -675,7 +679,7 @@ public class Descriptor implements IDescriptor
 	@Override
 	public String getFromExtendedKey(String key)
 	{
-		String extended = base.get( IDescriptor.Attributes.EXTENDED_KEY );
+		String extended = base.get( IDescriptor.Attributes.EXTENDED_KEY.name() );
 		if( Descriptor.isNull( extended ))
 			return base.get(key);
 		return base.get( extended + "." + key);

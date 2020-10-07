@@ -4,7 +4,7 @@ import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.function.IDescribablePredicate;
-import org.condast.aieonf.osgi.concept.IDomainProvider;
+import org.aieonf.osgi.domain.IDomainProvider;
 import org.osgi.service.component.annotations.Component;
 
 import test.aieonf.orientdb.core.TestFactory;

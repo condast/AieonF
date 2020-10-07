@@ -9,9 +9,9 @@ import java.util.Map;
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
+import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
@@ -21,29 +21,28 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 
 	public static final String S_ERR_NO_DESCRIPTOR_FOUND = "The descriptor was not found for this model";
 		
+	//Needed to remove children
 	private transient OrientGraph graph;
 	
-	private transient IDomainAieon domain; 
-
-	public ModelNode( OrientGraph graph, IDomainAieon domain, Vertex vertex ) {
-		this( graph, domain, null, vertex );
+	public ModelNode( OrientGraph graph, Vertex vertex ) {
+		this( graph, null, vertex );
 	}
 	
-	public ModelNode( OrientGraph graph, IDomainAieon domain, IModelNode<?> parent, Vertex vertex ) {
-		super( graph, domain, parent, vertex );
+	public ModelNode( OrientGraph graph, IModelNode<?> parent, Vertex vertex ) {
+		super( parent, vertex );
 		this.graph = graph;
-		this.domain = domain;
-		Map<IModelLeaf<? extends IDescriptor>, String> children = null;	
 		boolean reverse = isReverse(); 
+		boolean hasChildren = false;
 		if( reverse ) {
 			Iterator<Edge> iterator = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
-			while( iterator.hasNext() ) {
-				Edge edge = iterator.next();
-				addChild( new ModelNode( graph, domain, edge.getVertex(com.tinkerpop.blueprints.Direction.IN)));							
+			if( iterator.hasNext() ) {
+				hasChildren = true;							
 			}
-		}else	
-			getChildren();
-		super.setLeaf(Utils.assertNull(children));
+		}else	{
+			Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
+			hasChildren = !Utils.assertNull(children);							
+		}
+		super.setLeaf( hasChildren);
 	}
 	
 	@Override
@@ -61,7 +60,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child, String type) {
 		Vertex vertex = getVertex();
 		ModelLeaf leaf = (ModelLeaf) child;
-		addChild(domain, graph, vertex, leaf.getVertex(), type);
+		ModelTypeAdapter.addChild(vertex, leaf.getVertex(), type);
 		super.setLeaf(false);
 		return true;
 	}
@@ -104,7 +103,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
 				continue;
 			Vertex child = edge.getVertex(com.tinkerpop.blueprints.Direction.OUT);
-			children.put(new ModelNode( graph, domain, this, child), edge.getLabel());
+			children.put(new ModelNode( graph, this, child), edge.getLabel());
 		}
 		return children;
 	}
@@ -139,25 +138,23 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 
 	@Override
 	public boolean hasChildren() {
-		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
-		return Utils.assertNull(children);
+		Vertex vertex = getVertex();
+		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
+		if(!edges.hasNext())
+			return false;
+		
+		boolean children = false;
+		while( !children && ( edges.hasNext())) {
+			Edge edge = edges.next();
+			if( !IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
+				children = true;
+		}
+		return children;
 	}
 
 	@Override
 	public int nrOfchildren() {
 		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
 		return children.size();
-	}
-	
-	public static void addChild( IDomainAieon domain, OrientGraph graph, Vertex parent, Vertex child, String label ) {
-		String rev = parent.getProperty(IModelLeaf.Attributes.REVERSE.name());
-		boolean reverse = StringUtils.isEmpty(rev)?false: Boolean.parseBoolean(rev);
-		if( reverse ) {
-			graph.addEdge(domain.getDomain(), child, parent, label);
-			graph.addEdge(domain.getDomain(), parent, child, IModelNode.IS_PARENT);
-		}else {
-			graph.addEdge(domain.getDomain(), parent, child, label);
-			graph.addEdge(domain.getDomain(), child, parent, IModelNode.IS_PARENT);
-		}
 	}
 }
