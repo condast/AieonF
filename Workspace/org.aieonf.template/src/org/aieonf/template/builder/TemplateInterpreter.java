@@ -24,7 +24,6 @@ import org.aieonf.concept.loader.ILoaderAieon;
 import org.aieonf.concept.loader.LoaderAieon;
 import org.aieonf.concept.security.IPasswordAieon;
 import org.aieonf.model.builder.IModelBuilder;
-import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.xml.AbstractModelInterpreter;
 import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.property.ITemplateProperty;
@@ -109,7 +108,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 		String desc = StringStyler.prettyString( str );
 		IDescriptor descriptor = null;
 		
-		String id_name = StringStyler.xmlStyleString( IModelLeaf.Attributes.NAME.toString() );
+		String id_name = StringStyler.xmlStyleString( IDescriptor.Attributes.NAME.name() );
 		String name_attr = attributes.getValue( id_name );
 		Concepts dc = Concepts.valueOf(str);
 		switch( dc ){

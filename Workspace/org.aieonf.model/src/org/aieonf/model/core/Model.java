@@ -14,6 +14,8 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 {	
 	private Map<IModelLeaf<? extends IDescriptor>, String> children;
 
+	private boolean reverse;
+	
 	/**
 	 * Create the model. Use only when parsing data
 	 * @param concept
@@ -82,6 +84,16 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 	public Direction getDirection()
 	{
 		return Direction.valueOf( get( IModelNode.Attributes.DIRECTION ));
+	}
+
+	@Override
+	public boolean isReverse() {
+		return this.reverse;
+	}
+
+	@Override
+	public void setReverse( boolean choice ) {
+		this.reverse = choice;
 	}
 
 	/**

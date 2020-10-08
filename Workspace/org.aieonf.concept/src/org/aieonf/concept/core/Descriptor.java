@@ -448,8 +448,9 @@ public class Descriptor implements IDescriptor
 	@Override
 	public String toString()
 	{
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append( this.createDescriptorString());
+		buffer.append( "-" );
 		buffer.append( base.toString() );
 		return buffer.toString();
 	}

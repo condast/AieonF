@@ -28,6 +28,7 @@ import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
+import org.aieonf.model.utils.PrintModel;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
 import org.aieonf.orientdb.filter.IGraphFilter;
@@ -160,7 +161,6 @@ public class ModelRestService{
 			@QueryParam("domain") String domainstr, @QueryParam("filter") String name, 
 			@QueryParam("rules") String rule, @QueryParam("reference") String attribute, @QueryParam("value") String wildcard) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		Collection<IModelLeaf<IDescriptor>> result = null;
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
@@ -174,12 +174,15 @@ public class ModelRestService{
 			params.put(FilterFactory.Attributes.VALUE, wildcard);
 			IGraphFilter filter = ff.createFilter(type, params);
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
-			result = factory.get(filter.doFilter());
+			Collection<IModelLeaf<IDescriptor>> result = factory.get(filter.doFilter());
+			for( IModelLeaf<IDescriptor> model: result )
+				logger.info( PrintModel.printModel(model, true));
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( dispatcher.getProvider(), dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(result.toArray( new IModelLeaf[ result.size() ]), IModelLeaf[].class);
+			logger.info(str);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {

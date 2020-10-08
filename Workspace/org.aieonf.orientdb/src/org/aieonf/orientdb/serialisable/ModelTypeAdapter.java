@@ -62,8 +62,8 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	}
 
 	@Override
-	protected boolean onAddChild(Vertex model, Vertex child, String label) {
-		addChild( model, child, label);
+	protected boolean onAddChild(Vertex model, Vertex child, boolean reversed, String label) {
+		addChild( model, child, reversed, label);
 		return true;
 	}
 
@@ -104,11 +104,6 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	protected boolean onAddProperty(Vertex node, String key, String value) {
 		node.setProperty(key, value);
 		return true;
-	}
-
-	protected boolean isReverse( Vertex vertex ) {
-		String str = vertex.getProperty(IModelLeaf.Attributes.REVERSE.name());
-		return StringUtils.isEmpty(str)? false: Boolean.parseBoolean(str);
 	}
 
 	protected static Collection<Vertex> findVertices( OrientGraph graph, long id ){
@@ -157,15 +152,18 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		return vertex;
 	}
 	
-	public static void addChild( Vertex parent, Vertex child, String label ) {
-		String rev = parent.getProperty(IModelLeaf.Attributes.REVERSE.name());
-		boolean reverse = StringUtils.isEmpty(rev)?false: Boolean.parseBoolean(rev);
-		if( reverse ) {
-			child.addEdge(label, parent);
-			parent.addEdge( IModelNode.IS_PARENT, child );
-		}else {
+	public static void addChild( Vertex parent, Vertex child, boolean reverse, String label ) {
+		if( !reverse ) {
 			parent.addEdge(label,child);
 			child.addEdge(IModelNode.IS_PARENT, parent);
+			return;
 		}
+		child.addEdge(label, parent);
+		parent.addEdge( IModelNode.IS_PARENT, child );
+		String depth = IModelLeaf.Attributes.DEPTH.name();
+		String pdepth = parent.getProperty( depth);
+		String cdepth = child.getProperty(  depth );
+		parent.setProperty( depth, cdepth);
+		child.setProperty( depth, pdepth);
 	}
 }

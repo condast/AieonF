@@ -112,14 +112,14 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public long getID(){
-		String str =  get( Attributes.ID );
+		String str =  get( IDescriptor.Attributes.ID.name() );
 		return StringUtils.isEmpty(str)?0: Long.parseLong(str);
 	}
 
 
 	@Override
 	public String getType() {
-		return get( Attributes.TYPE );
+		return getValue( Attributes.TYPE );
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public String getIdentifier(){
-		return get( Attributes.IDENTIFIER );
+		return getValue( IModelLeaf.Attributes.IDENTIFIER);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public void setIdentifier( String identifier ){
-		set( Attributes.IDENTIFIER , identifier );
+		setValue( IModelLeaf.Attributes.IDENTIFIER , identifier );
 	}
 
 	@Override
@@ -167,17 +167,6 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	public void setParent(IModelNode<?> parent)
 	{
 		this.parent = parent;
-	}
-
-	@Override
-	public boolean isReverse() {
-		String str = super.get(IModelLeaf.Attributes.REVERSE.name());
-		return StringUtils.isEmpty(str)? false: Boolean.parseBoolean(str);
-	}
-
-	@Override
-	public void setReverse( boolean choice ) {
-		super.set( IModelLeaf.Attributes.REVERSE.name(), String.valueOf(choice));
 	}
 
 	/**
@@ -229,7 +218,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	@Override
 	public int getDepth()
 	{
-		String str = get( IModelLeaf.Attributes.DEPTH);
+		String str = getValue( IModelLeaf.Attributes.DEPTH);
 		if( Utils.assertNull(str))
 			str = "0";
 		return Integer.parseInt( str );
@@ -241,7 +230,15 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public void setDepth( int depth ) throws ConceptException{
-		set( IModelLeaf.Attributes.DEPTH, String.valueOf( depth ));
+		setValue( IModelLeaf.Attributes.DEPTH, String.valueOf( depth ));
+	}
+
+	protected String getValue( IModelLeaf.Attributes attr ) {
+		return get(attr.name());
+	}
+
+	protected void setValue( IModelLeaf.Attributes attr, String value ) {
+		set(attr.name(), value);
 	}
 
 	/**

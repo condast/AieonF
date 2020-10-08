@@ -30,15 +30,12 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 			"Attempting to add a concept that will cause a cycle in the model. ";
 
 	public enum Attributes{
-		ID,
-		NAME,
-		TYPE,
 		IDENTIFIER,
+		TYPE,
 		ROOT,
 		LEAF,
 		CHILD,
-		DEPTH,
-		REVERSE;
+		DEPTH;
 
 		@Override
 		public String toString() {
@@ -87,16 +84,6 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	 * @param parent
 	 */
 	void setParent( IModelNode<?> parent );
-
-	/**
-	 * Sometimes the parent-child hierarchy can be reversed. This boolean can then 
-	 * tell the database to look for in- rather than out edges 
-	 * respect to its children
-	 * @return
-	 */
-	public boolean isReverse();
-	
-	public void setReverse( boolean choice );
 
 	/**
 	 * Get the attribute

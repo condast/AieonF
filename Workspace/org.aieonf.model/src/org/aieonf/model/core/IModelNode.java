@@ -40,6 +40,16 @@ public interface IModelNode<D extends Object> extends IModelLeaf<D>
 	public IModelNode.Direction getDirection();
 
 	/**
+	 * Sometimes the parent-child hierarchy can be reversed. This boolean can then 
+	 * tell the database to look for in- rather than out edges 
+	 * respect to its children
+	 * @return
+	 */
+	public boolean isReverse();
+	
+	public void setReverse( boolean choice );
+
+	/**
 	 * Add a child model to the model
 	 * @param child IModelNode<? extends IDescriptor>
 	 * @returns the created model

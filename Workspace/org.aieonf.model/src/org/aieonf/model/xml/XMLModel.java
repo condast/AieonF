@@ -25,7 +25,7 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 		properties = XMLUtils.convertAttributesToProperties(attributes);
 		String name = getName();
 		if(!Utils.assertNull( name )) {
-			properties.put( IModelLeaf.Attributes.IDENTIFIER.name().toLowerCase(), getName());
+			properties.put( IModelLeaf.Attributes.IDENTIFIER.name(), getName());
 		}
 		set( IDescriptor.Attributes.ID, String.valueOf( getID()));
 		set( IDescriptor.Attributes.NAME, getName());
@@ -55,12 +55,12 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 		String str = properties.get( IModelLeaf.Attributes.IDENTIFIER.name()); 
 		if(!StringUtils.isEmpty(str))
 			descriptor.set( IDescriptor.Attributes.ID, str);
-		str = properties.get( IModelLeaf.Attributes.NAME.name()); 
+		str = properties.get( IDescriptor.Attributes.NAME.name()); 
 		if(!StringUtils.isEmpty(str))
-			descriptor.set( IDescriptor.Attributes.NAME, properties.get( IModelLeaf.Attributes.NAME.name()) );
+			descriptor.set( IDescriptor.Attributes.NAME, properties.get( IDescriptor.Attributes.NAME.name()) );
 		str = properties.get( IModelLeaf.Attributes.TYPE.name()); 
 		if(!StringUtils.isEmpty(str))
-		descriptor.set( IDescriptor.Attributes.VERSION, properties.get( IModelLeaf.Attributes.NAME.name()) );
+		descriptor.set( IDescriptor.Attributes.VERSION, properties.get( IDescriptor.Attributes.NAME.name()) );
 		super.setData(descriptor);
 	}	
 }

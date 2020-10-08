@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
@@ -24,31 +25,41 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	//Needed to remove children
 	private transient OrientGraph graph;
 	
+	/**
+	 * It is possible to reverse the parent-child relationship, 
+	 * which allows the database to create a more convenient layout.
+	 * As orient db merely swaps the edge, the boolean is discarded
+	 */
+	private transient boolean reverse;
+	
+	private Logger logger = Logger.getLogger( this.getClass().getName());
+
 	public ModelNode( OrientGraph graph, Vertex vertex ) {
 		this( graph, null, vertex );
 	}
 	
 	public ModelNode( OrientGraph graph, IModelNode<?> parent, Vertex vertex ) {
 		super( parent, vertex );
+		vertex.setProperty(IDescriptor.Attributes.CLASS.name(), IModelNode.class.getCanonicalName());
 		this.graph = graph;
-		boolean reverse = isReverse(); 
-		boolean hasChildren = false;
-		if( reverse ) {
-			Iterator<Edge> iterator = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
-			if( iterator.hasNext() ) {
-				hasChildren = true;							
-			}
-		}else	{
-			Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
-			hasChildren = !Utils.assertNull(children);							
-		}
-		super.setLeaf( hasChildren);
+		this.reverse = false;
+		super.setLeaf( !hasChildren());
 	}
 	
 	@Override
 	public IModelNode.Direction getDirection() {
 		String str = super.get(IModelNode.Attributes.DIRECTION.name());
 		return StringUtils.isEmpty(str)? Direction.UNI_DIRECTIONAL: Direction.valueOf(str);
+	}
+
+	@Override
+	public boolean isReverse() {
+		return this.reverse;
+	}
+
+	@Override
+	public void setReverse( boolean choice ) {
+		this.reverse = choice;
 	}
 
 	@Override
@@ -60,7 +71,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child, String type) {
 		Vertex vertex = getVertex();
 		ModelLeaf leaf = (ModelLeaf) child;
-		ModelTypeAdapter.addChild(vertex, leaf.getVertex(), type);
+		ModelTypeAdapter.addChild(vertex, leaf.getVertex(), this.reverse, type);
 		super.setLeaf(false);
 		return true;
 	}
@@ -100,10 +111,12 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		
 		while( edges.hasNext()) {
 			Edge edge = edges.next();
-			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
+			if( !IModelLeaf.IS_CHILD.equals( edge.getLabel()))
 				continue;
-			Vertex child = edge.getVertex(com.tinkerpop.blueprints.Direction.OUT);
-			children.put(new ModelNode( graph, this, child), edge.getLabel());
+			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
+			IModelLeaf<IDescriptor> child = new ModelNode( graph, this, vchild); 
+			logger.info( child.getData().toString());	
+			children.put(child, edge.getLabel());
 		}
 		return children;
 	}
@@ -143,13 +156,12 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		if(!edges.hasNext())
 			return false;
 		
-		boolean children = false;
-		while( !children && ( edges.hasNext())) {
+		while( edges.hasNext()) {
 			Edge edge = edges.next();
-			if( !IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
-				children = true;
+			if( IModelLeaf.IS_CHILD.equals( edge.getLabel()))
+				return true;
 		}
-		return children;
+		return false;
 	}
 
 	@Override

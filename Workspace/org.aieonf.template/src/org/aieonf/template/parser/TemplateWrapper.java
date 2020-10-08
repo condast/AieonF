@@ -131,9 +131,13 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setReverse( boolean choice ) {
-		this.model.set( IModelLeaf.Attributes.REVERSE.name(), String.valueOf(choice));
+		if( this.model instanceof IModelNode ){
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
+			node.setReverse(choice);
+		}
 	}
 
 	/**

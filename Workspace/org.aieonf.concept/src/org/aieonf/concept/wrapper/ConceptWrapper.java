@@ -4,7 +4,6 @@ import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 
 /**

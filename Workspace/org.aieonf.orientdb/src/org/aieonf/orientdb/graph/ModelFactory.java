@@ -2,13 +2,19 @@ package org.aieonf.orientdb.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.db.DatabaseService;
 
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
@@ -36,16 +42,29 @@ public class ModelFactory< T extends IDescriptor > {
 		this.service = service;
 	}
 	
-
+	/**
+	 * Get the vertices, which are with descriptors, and create the corresponding models
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
 	public Collection<IModelLeaf<IDescriptor>> get( Collection<Vertex> vertices ) throws FilterException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
+		Map<Vertex, IModelNode<IDescriptor>> nodes = new HashMap<>();
 		try {
 			OrientGraph graph = this.service.getGraph();
-			IModelLeaf<IDescriptor> node = null;
+			IModelNode<IDescriptor> node = null;
 			for( Vertex vertex: vertices ) {
 				try {
-					node = new ModelNode( graph, vertex );
-					results.add(node);
+					Iterator<Edge> edges = vertex.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
+					while( edges.hasNext()) {
+						Edge edge = edges.next();
+						Vertex vnode = edge.getVertex(Direction.OUT);
+						IModelNode<IDescriptor> parent = getParent(graph, vnode, nodes);
+						node = new ModelNode( graph, parent, vnode );
+						results.add(node);
+						nodes.put(vnode, node);
+					}
 				}
 				catch( Exception ex ) {
 					ex.printStackTrace();
@@ -56,5 +75,21 @@ public class ModelFactory< T extends IDescriptor > {
 			ex.printStackTrace();
 		}
 		return results;
+	}
+	
+	protected IModelNode<IDescriptor> getParent( OrientGraph graph, Vertex vertex, Map<Vertex, IModelNode<IDescriptor>> parents ) {
+		Iterator<Edge> edges = vertex.getEdges(Direction.IN, IModelLeaf.IS_PARENT).iterator();
+		IModelNode<IDescriptor> parent = null;
+		while( edges.hasNext()) {
+			Edge edge = edges.next();
+			Vertex vparent = edge.getVertex(Direction.OUT);
+			if( parents.containsKey(vparent))
+				parent = parents.get(vparent);
+			else {
+				parent = new ModelNode( graph, getParent( graph, vparent, parents ), vparent );
+				parents.put(vparent, parent);
+			}
+		}
+		return null;
 	}
 }

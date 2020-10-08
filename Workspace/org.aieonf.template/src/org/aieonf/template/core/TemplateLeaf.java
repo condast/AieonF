@@ -26,7 +26,7 @@ public class TemplateLeaf<T extends IDescriptor> extends Model<T> implements ITe
 	private void fill( org.xml.sax.Attributes attributes ){
 		String name = attributes.getValue( StringStyler.xmlStyleString( IDescriptor.Attributes.NAME.name() ));
 		if(!Utils.assertNull( name )) {
-			super.set( IModelLeaf.Attributes.NAME.name(), name );
+			super.set( IDescriptor.Attributes.NAME.name(), name );
 		}
 		String id = attributes.getValue( StringStyler.xmlStyleString( IDescriptor.Attributes.ID.name() ));
 		if(!Utils.assertNull( id )) {

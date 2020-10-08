@@ -26,9 +26,17 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<IModelLeaf<IDescr
 
 	@Override
 	protected boolean onAddChild(IModelLeaf<IDescriptor> model, IModelLeaf<IDescriptor> child,
-			String label) {
-		IModelNode<IDescriptor> node = (IModelNode<IDescriptor>) model;
-		return node.addChild( child, label);
+			boolean reverse, String label) {
+		IModelNode<IDescriptor> node = null;
+		boolean result = false;
+		if( reverse ) {
+			node = (IModelNode<IDescriptor>) child;
+			node.addChild( model, label);
+		}else {
+			node = (IModelNode<IDescriptor>) model;
+			node.addChild( child, label);
+		}
+		return result;
 	}
 
 	@Override

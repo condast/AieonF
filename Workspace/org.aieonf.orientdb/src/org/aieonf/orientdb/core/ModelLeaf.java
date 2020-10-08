@@ -13,9 +13,9 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 
+import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescriptor> {
 
@@ -26,32 +26,19 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	private IModelNode<?> parent;
 	
 	private transient boolean leaf;
-
-	public ModelLeaf( OrientGraph graph, Vertex vertex ) {
-		this((IModelNode<?>)null, vertex );
-		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
-		parent = null;
-		while(edges.hasNext()) {
-			Edge edge = edges.next();
-			parent = new ModelNode( graph, edge.getVertex(com.tinkerpop.blueprints.Direction.OUT)); 
-		}
-	}
 	
 	public ModelLeaf( IModelNode<?> parent, Vertex vertex ) {
 		super( vertex );
+		vertex.setProperty(IDescriptor.Attributes.CLASS.name(), IModelLeaf.class.getCanonicalName());
 		this.parent = parent;
 		this.leaf = true;
 		super.setChanged( false );
 		
+		//Create the descriptor
 		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT, IDescriptor.DESCRIPTOR).iterator();
 		if(edges.hasNext()) {
-			//throw new NullPointerException( S_ERR_NULL_ID );
-
-			//Create the descriptor
-			Vertex dvertex = edges.next().getVertex(com.tinkerpop.blueprints.Direction.OUT);
-			this.descriptor = new Descriptor();
-			for( String key: dvertex.getPropertyKeys())
-				descriptor.set( key, (String)dvertex.getProperty(key));
+			Vertex dvertex = edges.next().getVertex(com.tinkerpop.blueprints.Direction.IN);
+			this.descriptor = new Descriptor( new VertexConceptBase( dvertex ));
 		}
 	}
 
@@ -107,17 +94,6 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	}
 
 	@Override
-	public boolean isReverse() {
-		String str = super.get(IModelLeaf.Attributes.REVERSE.name());
-		return StringUtils.isEmpty(str)? false: Boolean.parseBoolean(str);
-	}
-
-	@Override
-	public void setReverse( boolean choice ) {
-		super.set( IModelLeaf.Attributes.REVERSE.name(), String.valueOf(choice));
-	}
-
-	@Override
 	public void set(Enum<?> attr, String value) {
 		Vertex vertex = getVertex();
 		vertex.setProperty(attr.name(), value);
@@ -145,7 +121,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public int getDepth() {
-		String str = get( IModelLeaf.Attributes.DEPTH.name());
+		String str = getValue( IModelLeaf.Attributes.DEPTH);
 		if( Utils.assertNull(str))
 			str = "0";
 		return Integer.parseInt( str );
@@ -153,7 +129,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public void setDepth(int depth) throws ConceptException {
-		set( IModelLeaf.Attributes.DEPTH.name(), String.valueOf( depth ));
+		setValue( IModelLeaf.Attributes.DEPTH, String.valueOf( depth ));
 	}
 
 	@Override
@@ -170,4 +146,37 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	public void setData(IDescriptor descriptor) {
 		this.descriptor = descriptor;
 	}
+	
+	protected String getValue( IModelLeaf.Attributes attr ) {
+		return get(attr.name());
+	}
+
+	protected void setValue( IModelLeaf.Attributes attr, String value ) {
+		set(attr.name(), value);
+	}
+
+	@Override
+	public int hashCode() {
+		return getVertex().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if( super.equals(obj))
+			return true;
+		if(!( obj instanceof ModelLeaf))
+			return false;
+		ModelLeaf leaf = (ModelLeaf) obj;
+		return leaf.getVertex().equals(this.getVertex());
+	}
+
+	protected static Vertex getParent( Vertex vertex ) {
+		Iterator<Edge> edges = vertex.getEdges(Direction.IN, IModelLeaf.IS_PARENT).iterator();
+		while( edges.hasNext()) {
+			Edge edge = edges.next();
+			return edge.getVertex(Direction.OUT);
+		}
+		return null;
+	}
+
 }
