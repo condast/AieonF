@@ -176,13 +176,13 @@ public class ModelRestService{
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
 			Collection<IModelLeaf<IDescriptor>> result = factory.get(filter.doFilter());
 			for( IModelLeaf<IDescriptor> model: result )
-				logger.info( PrintModel.printModel(model, true));
+				logger.fine( PrintModel.printModel(model, true));
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( dispatcher.getProvider(), dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(result.toArray( new IModelLeaf[ result.size() ]), IModelLeaf[].class);
-			logger.info(str);
+			logger.fine(str);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {
@@ -239,7 +239,7 @@ public class ModelRestService{
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/remove-all")
 	public synchronized Response removeAll( @QueryParam("id") long id, @QueryParam("token") long token,
-			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, String data) {
+			@QueryParam("domain") String domainstr, String data) {
 		DatabaseService dbService = DatabaseService.getInstance();
 		int counter = 0;
 		try{
@@ -247,7 +247,11 @@ public class ModelRestService{
 				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			counter = dbService.remove(modelId);
+			if( StringUtils.isEmpty( data))
+				return Response.noContent().build(); 
+			Gson gson = new Gson();
+			long[] ids = gson.fromJson(data, long[].class);
+			counter = dbService.remove( ids );
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

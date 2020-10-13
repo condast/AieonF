@@ -56,7 +56,7 @@ public abstract class AbstractGraphFilter extends AbstractFilter<Vertex> impleme
 		Collection<Vertex> results = new ArrayList<>();
 		while( iterator.hasNext() ) {
 			Vertex vertex = iterator.next();
-			logger.info( new VertexConceptBase( vertex ).toString());
+			logger.fine( new VertexConceptBase( vertex ).toString());
 			if( acceptEnabled(vertex))
 				results.add(vertex);
 		}

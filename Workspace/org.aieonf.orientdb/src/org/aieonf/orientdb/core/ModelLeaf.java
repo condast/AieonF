@@ -59,6 +59,21 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 		return StringUtils.isEmpty(str)?-1: Long.parseLong( str );
 	}
 
+	
+	@Override
+	public String getName() {
+		Vertex vertex = getVertex();
+		String str = vertex.getProperty(IDescriptor.Attributes.NAME.name()); 
+		return str;
+	}
+
+	@Override
+	public String getVersion() {
+		Vertex vertex = getVertex();
+		String str = vertex.getProperty(IDescriptor.Attributes.VERSION.name()); 
+		return str;
+	}
+
 	@Override
 	public String getType() {
 		Vertex vertex = getVertex();

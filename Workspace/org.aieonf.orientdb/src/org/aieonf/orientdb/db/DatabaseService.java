@@ -132,6 +132,10 @@ public class DatabaseService implements Closeable{
 	}
 
 	public int remove( long id ) {
+		return remove( id, true );
+	}
+	
+	public int remove( long id, boolean removeChildren ) {
 		int counter = 0;
 		Iterable<Vertex> iterable = this.graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
 		if( iterable == null )
@@ -139,30 +143,45 @@ public class DatabaseService implements Closeable{
 		Iterator<Vertex> iterator = iterable.iterator();
 		while( iterator.hasNext() ) {
 			Vertex vertex = iterator.next();			
-			counter += remove( vertex, counter );
+			counter += remove( vertex, counter, removeChildren );
 		}		
 		return counter;
 	}
 
 	public int remove( long[] ids ) {
+		return remove( ids, true );
+	}
+
+	public int remove( long[] ids, boolean removeChildren ) {
 		int counter = 0;
-		for( long id: ids) {
-			counter += remove(id);	
-		}
+		Iterable<Vertex> iterable = this.graph.getVertices();
+		if( iterable == null )
+			return counter;
+		Iterator<Vertex> iterator = iterable.iterator();
+		while( iterator.hasNext() ) {
+			Vertex vertex = iterator.next();			
+			String idstr = vertex.getProperty(IDescriptor.Attributes.ID.name());
+			long id = Long.parseLong(idstr);
+			for( long check: ids ) {
+				if( check == id )
+					counter += remove( vertex, counter, removeChildren );
+			}
+		}		
 		return counter;
 	}
 
-	protected int remove( Vertex vertex, int counter ) {
+	protected int remove( Vertex vertex, int counter, boolean removeChildren ) {
 		if( vertex == null )
 			return counter;
 		
-		Iterator<Edge> iterator = vertex.getEdges(Direction.IN).iterator();
+		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
 		int index=  counter;
 		while( iterator.hasNext()) {
 			Edge edge = iterator.next();
-			Vertex child = edge.getVertex(Direction.OUT);
-			if( countEdges( child,  Direction.OUT) > 0)
-				index += remove( child, index );
+			Vertex child = edge.getVertex(Direction.IN);
+			graph.removeEdge(edge);
+			if(removeChildren && countEdges( child,  Direction.OUT) > 0)
+				index += remove( child, index, removeChildren );
 			}
 		this.graph.removeVertex(vertex);
 		return index;

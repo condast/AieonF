@@ -41,7 +41,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<IModelLeaf<IDescr
 
 	@Override
 	protected IDescriptor onSetDescriptor(IModelLeaf<IDescriptor> node, IConceptBase base ) {
-		IDescriptor descriptor = new Descriptor();
+		IDescriptor descriptor = new Descriptor( base );
 		node.setData(descriptor);
 		return descriptor;
 	}

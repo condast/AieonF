@@ -45,6 +45,13 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 	public boolean remove( M leaf );
 
 	/**
+	 * Remove the models with the given ids
+	 * @param descriptor
+	 * @return
+	 */
+	boolean remove(long[] ids);
+
+	/**
 	 * Remove the models with the given ids from the model with the key id 
 	 * @param descriptor
 	 * @return

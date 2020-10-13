@@ -186,10 +186,10 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 		send( HTTP.DELETE, url, args, null, data );
 	}
 
-	protected void sendDelete( R request, Map<String, String> parameters, D data) throws Exception {
+	protected void sendDelete( R request, Map<String, String> parameters, String post, D data) throws Exception {
 		String url = setRequest( request );
 		String path = toAttributerString( url, parameters );
-		send( HTTP.DELETE, path, request, parameters, null, data );
+		send( HTTP.DELETE, path, request, parameters, post, data );
 	}
 
 
@@ -218,6 +218,7 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 		conn.setRequestMethod( http.name());
 		conn.setRequestProperty("User-Agent", USER_AGENT);
 		conn.setReadTimeout(10000);
+		DataOutputStream wr = null;
 		switch( http ) {
 		case POST:
 			conn.setRequestProperty("Accept", "application/json");
@@ -226,7 +227,18 @@ public abstract class AbstractHttpRequest<R, D extends Object> implements IHttpR
 			conn.setRequestProperty("Content-Type", "application/json; charset=" + charset);
 			conn.setRequestProperty( "Content-Length", String.valueOf( post.length()));
 			conn.setDoOutput(true);
-			DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+			wr = new DataOutputStream(conn.getOutputStream());
+			try{
+				wr.writeBytes( post );
+			}
+			finally{
+				wr.flush();
+				wr.close();
+			}
+			break;
+		case DELETE:
+			conn.setDoOutput(true);
+			wr = new DataOutputStream(conn.getOutputStream());
 			try{
 				wr.writeBytes( post );
 			}

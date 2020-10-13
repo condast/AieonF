@@ -85,6 +85,35 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 		this.set( IConcept.Attributes.TYPE.name(), type );
 	}
 
+	/**
+	 * Get the id of the model. 
+	 * @return
+	 */
+	@Override
+	public long getID(){
+		String str =  get( IDescriptor.Attributes.ID.name() );
+		return StringUtils.isEmpty(str)?0: Long.parseLong(str);
+	}
+
+	/**
+	 * Get the (optional) id of the model. 
+	 * @return
+	 */
+	@Override
+	public String getName(){
+		String str =  get( IDescriptor.Attributes.NAME.name() );
+		return str;
+	}
+
+	/**
+	 * Get the (optional) id of the model. 
+	 * @return
+	 */
+	@Override
+	public String getVersion(){
+		String str =  get( IDescriptor.Attributes.VERSION.name() );
+		return str;
+	}
 
 	/**
 	 * Set the leaf with the given value
@@ -105,17 +134,6 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	public void set( Enum<?> attr, String value ){
 		super.set( attr.name(), value);
 	}
-
-	/**
-	 * Get the (optional) id of the model. 
-	 * @return
-	 */
-	@Override
-	public long getID(){
-		String str =  get( IDescriptor.Attributes.ID.name() );
-		return StringUtils.isEmpty(str)?0: Long.parseLong(str);
-	}
-
 
 	@Override
 	public String getType() {

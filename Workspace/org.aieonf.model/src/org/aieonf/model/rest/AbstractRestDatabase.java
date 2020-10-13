@@ -24,6 +24,8 @@ import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelDatabase;
 
+import com.google.gson.Gson;
+
 public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IModelLeaf<D>> implements IModelDatabase<D, M> {
 
 	public enum Attributes{
@@ -281,7 +283,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 
 	protected abstract String onSerialise( IModelLeaf<? extends IDescriptor>[] leaf);
 	
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean remove(M leaf) {
@@ -300,7 +301,9 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		boolean result = false;
 		try {
 			//client.addListener( e->getResults(e, results ));
-			client.sendDelete(request, parameters, removed);
+			Gson gson = new Gson();
+			String str = gson.toJson(leaf.getID(), Entry.class);
+			client.sendDelete(request, parameters, str, removed);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -308,7 +311,30 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		return result;
 	}
 
-	
+	@Override
+	public boolean remove( long[] ids) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_ALL;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		WebClient<long[]> client = new WebClient<>( path );
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
+		boolean result = false;
+		try {
+			//client.addListener( e->getResults(e, results ));
+			Gson gson = new Gson();
+			String str = gson.toJson(ids, long[].class);
+			client.sendDelete(request, parameters, str, ids);
+			result = Utils.assertNull(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	@Override
 	public boolean remove(Entry<Long, Long[]> ids) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
@@ -324,7 +350,9 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		boolean result = false;
 		try {
 			//client.addListener( e->getResults(e, results ));
-			client.sendDelete(request, parameters, ids);
+			Gson gson = new Gson();
+			String str = gson.toJson(ids, Entry.class);
+			client.sendDelete(request, parameters, str, ids);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -350,7 +378,9 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		boolean result = false;
 		try {
 			client.addListener( e->getResults(e, results ));
-			client.sendDelete(request, parameters, removed);
+			Gson gson = new Gson();
+			String str = gson.toJson(leaf.getID(), Entry.class);
+			client.sendDelete(request, parameters, str, removed);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -374,10 +404,9 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 			super.sendPost(request, parameters, post, data );
 		}
 
-		public void sendDelete( IDatabaseConnection.Requests request, Map<String, String> parameters, DS data) throws Exception {
-			super.sendDelete(request, parameters, data);
+		public void sendDelete( IDatabaseConnection.Requests request, Map<String, String> parameters, String post, DS data) throws Exception {
+			super.sendDelete(request, parameters, post, data);
 		}
-
 
 		@Override
 		protected String onHandleResponse(ResponseEvent<IDatabaseConnection.Requests, DS> response, DS data ) throws IOException {

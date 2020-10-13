@@ -34,10 +34,19 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 		this.children = node.getChildren();
 	}
 
-
 	@Override
 	public long getID() {
 		return this.model.getID();
+	}
+
+	@Override
+	public String getName() {
+		return this.model.getName();
+	}
+
+	@Override
+	public String getVersion() {
+		return this.model.getVersion();
 	}
 
 	@Override

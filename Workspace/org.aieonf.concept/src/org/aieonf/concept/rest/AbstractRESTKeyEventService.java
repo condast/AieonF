@@ -46,12 +46,12 @@ public abstract class AbstractRESTKeyEventService<R,D> extends AbstractKeyEventS
 		client.sendPost(request, parameters, post, data);
 	}
 
-	public void delete( R request, long id, long token, Map<String, String> parameters, D data ) throws Exception{
+	public void delete( R request, long id, long token, Map<String, String> parameters, String post, D data ) throws Exception{
 		WebClient client = new WebClient( url);
 		parameters.put( Attributes.ID.toString(), String.valueOf(id));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf(token));
 		parameters.put( Attributes.DOMAIN.toString(), super.getDomain().getDomain());
-		client.sendDelete(request, parameters, data);
+		client.sendDelete(request, parameters, post, data);
 	}
 
 	protected abstract D onProcessResponse( ResponseEvent<R,D> response );
@@ -72,8 +72,8 @@ public abstract class AbstractRESTKeyEventService<R,D> extends AbstractKeyEventS
 			super.sendPost(request, parameters, post, data );
 		}
 
-		public void sendDelete( R request, Map<String, String> parameters, D data) throws Exception {
-			super.sendDelete(request, parameters, data);
+		public void sendDelete( R request, Map<String, String> parameters, String post, D data) throws Exception {
+			super.sendDelete(request, parameters, post, data);
 		}
 
 		@Override

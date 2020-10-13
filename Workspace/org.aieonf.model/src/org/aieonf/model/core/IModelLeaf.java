@@ -44,10 +44,22 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	}
 
 	/**
-	 * Get the (optional) id of the model. 
+	 * Get the id of the model. 
 	 * @return
 	 */
 	public long getID();
+
+	/**
+	 * Get the name of the model. 
+	 * @return
+	 */
+	public String getName();
+
+	/**
+	 * Get the version of the model. 
+	 * @return
+	 */
+	public String getVersion();
 
 	/**
 	 * The type is mandatory, and is used to assign a model to a cluster. 
