@@ -1,7 +1,7 @@
 package org.aieonf.model.xml;
 
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,16 +17,16 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	private String identifier;
 	private M model;
 	private String key;
-	private URL url;
+	private InputStream inp;
 	
 	private Collection<IModelBuilderListener<T>> listeners;
 
 	protected AbstractModelInterpreter( String identifier, Class<?> clss, String resourceLocation) {
-		this( identifier, clss.getResource( resourceLocation ));
+		this( identifier, clss.getResourceAsStream( resourceLocation ));
 	}
 
-	protected AbstractModelInterpreter( String identifier, URL url ) {
-		this.url = url;
+	protected AbstractModelInterpreter( String identifier, InputStream inp ) {
+		this.inp = inp;
 		this.identifier = identifier;
 		this.listeners = new ArrayList<IModelBuilderListener<T>>();
 	}
@@ -54,8 +54,8 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	}
 	
 	@Override
-	public URL getURL() {
-		return url;
+	public InputStream getInputStream() {
+		return inp;
 	}
 	
 	@Override
@@ -96,9 +96,6 @@ public abstract class AbstractModelInterpreter<T extends IDescriptor, M extends 
 	public synchronized M create( String name, Attributes attributes) {
 		this.model = this.onCreate( name, attributes);
 		this.active = ( this.model != null );
-		if( model == null ) {
-			return null;
-		}
 		return model;
 	}
 

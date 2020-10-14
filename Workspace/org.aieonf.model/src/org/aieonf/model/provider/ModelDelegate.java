@@ -9,7 +9,6 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.model.provider.IModelProvider;
 
 public class ModelDelegate<M extends IDescriptor> implements IModelDelegate<M> 
 {

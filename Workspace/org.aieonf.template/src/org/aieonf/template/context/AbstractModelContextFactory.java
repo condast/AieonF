@@ -14,13 +14,14 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.AttributeFilter;
+import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.search.ModelScanner;
-import org.aieonf.model.xml.IXMLModelInterpreter;
+import org.aieonf.model.xml.IModelInterpreterFactory;
 import org.aieonf.template.def.ITemplateLeaf;
 import org.aieonf.template.def.ITemplateNode;
 import org.aieonf.template.xml.XMLTemplateBuilder;
@@ -82,11 +83,10 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 		return domain;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected final ITemplateLeaf<IContextAieon> createDefaultTemplate( String identifier, IXMLModelInterpreter interpreter ) {
+	protected final ITemplateLeaf<IContextAieon> createDefaultTemplate( String identifier, IModelInterpreterFactory<IContextAieon> factory ) {
 		logger.info("Parsing model: " + identifier );
 		XMLTemplateBuilder<IContextAieon,ITemplateLeaf<IContextAieon>> builder = 
-				new XMLTemplateBuilder<IContextAieon, ITemplateLeaf<IContextAieon>>( identifier, interpreter );
+				new XMLTemplateBuilder<IContextAieon, ITemplateLeaf<IContextAieon>>( identifier, factory, IModelBuilder.S_DEFAULT_LOCATION);
 		builder.build();
 		ITemplateLeaf<IContextAieon> root = (ITemplateLeaf<IContextAieon>) builder.getModel();
 		long id = StringUtils.isEmpty(identifier)?-1:identifier.hashCode();

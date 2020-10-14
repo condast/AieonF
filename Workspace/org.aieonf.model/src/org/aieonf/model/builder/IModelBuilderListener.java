@@ -25,6 +25,7 @@ public interface IModelBuilderListener<M extends Object> {
 		CONTEXT,
 		DESCRIPTOR,
 		CHILDREN,
+		LOCATION,
 		PROPERTIES;
 	
 		@Override

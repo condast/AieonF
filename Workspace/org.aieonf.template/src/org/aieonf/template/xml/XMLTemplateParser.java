@@ -25,14 +25,14 @@ import org.aieonf.template.def.ITemplateNode;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> extends XMLModelParser<T,M>{
+public class XMLTemplateParser<D extends IDescriptor, M extends IModelLeaf<D>> extends XMLModelParser<D,M>{
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	
-	private ITemplateNode<T> root;	
+	private ITemplateNode<D> root;	
 	private XMLApplication application;
 
-	public XMLTemplateParser( IXMLModelInterpreter<T> creator) {
+	public XMLTemplateParser( IXMLModelInterpreter<D> creator) {
 		super( creator );
 	}
 	
@@ -40,19 +40,19 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 	 * Get the root factory 
 	 * @return
 	 */
-	public IModelLeaf<T> getRoot() {
+	public IModelLeaf<D> getRoot() {
 		return root;
 	}
 	
 	@Override
 	protected void checkModel(ModelAttributes index, String qName) {
-		if( !index.equals( ModelAttributes.APPLICATION ) && !index.equals( ModelAttributes.CHILDREN))
+		if( !index.equals( ModelAttributes.APPLICATION ) && !index.equals( ModelAttributes.CHILDREN) && !index.equals( ModelAttributes.MODELS ))
 			throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
 	}
 
 	@Override
-	protected IModelNode<T> createModel(Attributes attributes) {
-		this.root = new TemplateNode<T>( attributes );
+	protected IModelNode<D> createModel(Attributes attributes) {
+		this.root = new TemplateNode<D>( attributes );
 		return this.root;
 	}
 
@@ -62,11 +62,10 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
 		String str = StringStyler.styleToEnum(qName);
-		ModelAttributes ma = null;
-		IXMLModelInterpreter<T> creator = super.getCreator();
+		IXMLModelInterpreter<D> creator = super.getCreator();
 		if( !ModelAttributes.isModelAttribute( qName ))
 			return;
-		ma = ModelAttributes.valueOf( str );
+		ModelAttributes ma = ModelAttributes.valueOf( str );
 		switch( ma ){
 		case APPLICATION:
 			application = new XMLApplication();
@@ -75,7 +74,7 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 		case CONTEXT:
 			ContextAieon ca = (ContextAieon)creator.create( qName, attributes);
 			application.extendContext( ca );
-			this.root.setData( (T) ca );
+			this.root.setData( (D) ca );
 			this.root.setIdentifier( ModelAttributes.CONTEXT.toString());
 			break;
 		default:
@@ -118,7 +117,7 @@ public class XMLTemplateParser<T extends IDescriptor, M extends IModelLeaf<T>> e
 		public String getVersion(){
 			return properties.get( Fields.VERSION.name().toLowerCase());
 		}
-		
+
 		/**
 		 * Extends the given context aieon
 		 * @param context

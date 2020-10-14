@@ -1,36 +1,19 @@
 package org.aieonf.graph.context;
 
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
-import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.template.context.AbstractModelContextFactory;
-import org.aieonf.template.def.ITemplateLeaf;
+import org.aieonf.model.xml.IModelInterpreterFactory;
+import org.aieonf.template.builder.TemplateInterpreterFactory;
+import org.aieonf.template.context.AbstractProviderContextFactory;
 
 
 /**
  * The simple context factory creates a default context and model
  * @author Kees Pieters
  */
-public class GraphContextFactory extends AbstractModelContextFactory<IDescriptor, IModelLeaf<IDescriptor>> 
-{
-	private String bundle_id;
-	private IXMLModelInterpreter<ITemplateLeaf<IDescriptor>> creator;
+public class GraphContextFactory extends AbstractProviderContextFactory<IContextAieon, IModelLeaf<IContextAieon>>{
 	
-	protected GraphContextFactory( String bundle_id, IXMLModelInterpreter<ITemplateLeaf<IDescriptor>> creator ) {
-		this.bundle_id = bundle_id;
-		this.creator = creator;
-	}
-
-	@Override
-	public ITemplateLeaf<IContextAieon> onCreateTemplate() {
-		return this.createDefaultTemplate( this.bundle_id, creator );	
-	}
-
-	@Override
-	public IDescribablePredicate<IDescriptor> createPredicates() {
-		// TODO Auto-generated method stub
-		return null;
+	public GraphContextFactory( String bundle_id, IModelInterpreterFactory<IContextAieon> creator ) {
+		super( bundle_id, new TemplateInterpreterFactory<IContextAieon>( GraphContextFactory.class ));
 	}
 }

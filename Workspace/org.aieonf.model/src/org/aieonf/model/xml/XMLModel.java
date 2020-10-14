@@ -23,22 +23,23 @@ public class XMLModel<T extends IDescriptor> extends Model<T>{
 	
 	private void fill( org.xml.sax.Attributes attributes ){
 		properties = XMLUtils.convertAttributesToProperties(attributes);
+		String identifier = properties.get(IDescriptor.Attributes.ID.name());
+		set( IModelLeaf.Attributes.IDENTIFIER.name(), identifier);
+		properties.put(IDescriptor.Attributes.ID.name(), String.valueOf(-1));
 		String name = getName();
 		if(!Utils.assertNull( name )) {
-			properties.put( IModelLeaf.Attributes.IDENTIFIER.name(), getName());
+			properties.put( IDescriptor.Attributes.NAME.name(), name);
 		}
-		set( IDescriptor.Attributes.ID, String.valueOf( getID()));
-		set( IDescriptor.Attributes.NAME, getName());
 	}
 
 	public long getID(){
-		String key = StringStyler.xmlStyleString( IDescriptor.Attributes.ID.name().toLowerCase()); 
+		String key = StringStyler.xmlStyleString( IDescriptor.Attributes.ID.name()); 
 		String value = properties.get( key);
-		return Long.parseLong(value);
+		return StringUtils.isEmpty(value)?-1: Long.parseLong(value);
 	}
 
 	public String getName(){
-		String key = StringStyler.xmlStyleString( IDescriptor.Attributes.NAME.name().toLowerCase()); 
+		String key = StringStyler.xmlStyleString( IDescriptor.Attributes.NAME.name()); 
 		return properties.get( key);
 	}
 

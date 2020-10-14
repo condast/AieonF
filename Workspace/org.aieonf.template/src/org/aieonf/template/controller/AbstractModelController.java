@@ -10,7 +10,7 @@ import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
-import org.aieonf.template.builder.IModelBuilder;
+import org.aieonf.template.builder.ITemplateBuilder;
 import org.aieonf.template.context.ITemplateContextFactory;
 import org.aieonf.template.def.ITemplateLeaf;
 
@@ -98,7 +98,7 @@ public abstract class AbstractModelController<D extends IDescriptor, M extends I
 	 * add the required model builder to build the model
 	 * @return
 	 */
-	protected abstract IModelBuilder<M> getModelBuilder();
+	protected abstract ITemplateBuilder<M> getModelBuilder();
 	
 	/**
 	 * Verify the model with the given string for categories
@@ -109,7 +109,7 @@ public abstract class AbstractModelController<D extends IDescriptor, M extends I
 	
 	@Override
 	public M createModel(){
-		IModelBuilder<M> builder = this.getModelBuilder();
+		ITemplateBuilder<M> builder = this.getModelBuilder();
 		IModelBuilderListener<M> listener = new IModelBuilderListener<M>(){
 
 			@Override

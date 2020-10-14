@@ -4,6 +4,7 @@ import org.aieonf.concept.IDescribable;
 import org.aieonf.model.builder.IModelBuilderListener;
 
 public interface IModelParser<M extends IDescribable> {
+	
 	/**
 	 * Add a model builder listener
 	 * @param event

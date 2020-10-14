@@ -8,7 +8,6 @@ import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.Concept;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.DateAieon;
 import org.aieonf.concept.library.LocaleAieon;
 import org.aieonf.concept.locator.ILocatorAieon;
@@ -60,6 +59,11 @@ public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IMod
 	
 	public ModelInterpreter() {
 		super( S_IDENTIFIER, ModelInterpreter.class, IModelBuilder.S_DEFAULT_LOCATION );
+	}
+	
+	@Override
+	public Class<?> getProcessedClass() {
+		return this.getClass();
 	}
 
 	@Override

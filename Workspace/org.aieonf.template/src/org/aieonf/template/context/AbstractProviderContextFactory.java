@@ -14,8 +14,8 @@ import org.aieonf.concept.function.IDescribablePredicate;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
-import org.aieonf.model.xml.IXMLModelInterpreter;
-import org.aieonf.template.builder.TemplateInterpreter;
+import org.aieonf.model.xml.IModelInterpreterFactory;
+import org.aieonf.template.builder.TemplateInterpreterFactory;
 import org.aieonf.template.def.ITemplateLeaf;
 
 /**
@@ -30,18 +30,18 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	
 	private Collection<IFunctionProvider<String, IModelProvider<IDescriptor, M>>> functions;
 	
-	private IXMLModelInterpreter<IDescriptor> creator;
+	private IModelInterpreterFactory<IContextAieon> factory;
 	
 	private DescribableCollectionPredicate<IDescriptor> predicates;
 
 	protected AbstractProviderContextFactory( String bundle_id, Class<?> clss ) {
-		this( bundle_id, new TemplateInterpreter(clss));
+		this( bundle_id, new TemplateInterpreterFactory<IContextAieon>(clss));
 	}
 	
-	protected AbstractProviderContextFactory( String bundle_id, IXMLModelInterpreter<IDescriptor> creator ) {
+	protected AbstractProviderContextFactory( String bundle_id, IModelInterpreterFactory<IContextAieon> factory ) {
 		this.bundle_id = bundle_id;
 		functions = new ArrayList<>();
-		this.creator = creator;
+		this.factory = factory;
 		predicates = new DescribableCollectionPredicate<>(); 
 	}
 
@@ -90,7 +90,7 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 
 	@Override
 	public ITemplateLeaf<IContextAieon> onCreateTemplate() {
-		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, this.creator );	
+		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, factory );	
 		IDescriptor descriptor = template.getDescriptor();
 		String source = descriptor.get( IConcept.Attributes.SOURCE.name() );
 		if( Utils.assertNull( source ))

@@ -25,7 +25,6 @@ import org.aieonf.model.builder.IModelBuilderListener.ModelAttributes;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
-import org.aieonf.model.xml.IModelParser;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -137,8 +136,12 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable> exten
 				break;
 			case MODEL:
 				index = this.stack.lastElement();
-				this.checkModel(index, qName);
-				this.current = this.createModel(attributes);
+				String location = getAttributeValue(IModelBuilderListener.ModelAttributes.LOCATION.name().toLowerCase(), attributes);
+				if( StringUtils.isEmpty(location)) {
+					this.checkModel(index, qName);
+					this.current = this.createModel(attributes);
+				}else 
+					this.notifyListeners( new ModelBuilderEvent<M>( this, ModelAttributes.LOCATION, (M) this.current ));
 				if( this.parent != null )
 					this.parent.addChild( this.current );
 				this.models.add( (M) this.current);

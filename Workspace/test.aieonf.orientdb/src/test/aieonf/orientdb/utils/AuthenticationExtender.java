@@ -1,6 +1,6 @@
 package test.aieonf.orientdb.utils;
 
-import java.net.URL;
+import java.io.InputStream;
 
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
@@ -30,11 +30,15 @@ public class AuthenticationExtender implements IXMLModelInterpreter<IModelLeaf<I
 		this.active = active;
 		this.domain = domain;
 	}
-
 	
 	@Override
 	public String getIdentifier() {
 		return S_IDENTIFIER;
+	}
+
+	@Override
+	public Class<?> getProcessedClass() {
+		return this.getClass();
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class AuthenticationExtender implements IXMLModelInterpreter<IModelLeaf<I
 	}
 
 	@Override
-	public URL getURL() {
+	public InputStream getInputStream() {
 		// TODO Auto-generated method stub
 		return null;
 	}

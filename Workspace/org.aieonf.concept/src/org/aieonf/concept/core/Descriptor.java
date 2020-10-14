@@ -44,7 +44,7 @@ public class Descriptor implements IDescriptor
 	private IConceptBase base;
 	
 	public Descriptor() {
-		this( new ConceptBase() );
+		this(-1);
 	}
 
 	public Descriptor( IConceptBase base ) {
@@ -57,9 +57,8 @@ public class Descriptor implements IDescriptor
 	 * Create a descriptor with the given id and name
 	 * @param id String
 	 */
-	public Descriptor( long id )
-	{
-		this();
+	public Descriptor( long id ){
+		this( new ConceptBase() );
 		setValue( IDescriptor.Attributes.ID, String.valueOf( id ));
 	}
 

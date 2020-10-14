@@ -5,7 +5,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.template.def.ITemplateLeaf;
 
-public interface IModelBuilder<D extends IDescribable> {
+public interface ITemplateBuilder<D extends IDescribable> {
 
 	void addListener(IModelBuilderListener<D> listener);
 

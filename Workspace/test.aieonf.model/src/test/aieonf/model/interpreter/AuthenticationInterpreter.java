@@ -41,6 +41,11 @@ public class AuthenticationInterpreter extends AbstractModelInterpreter<IDescrip
 	}
 
 	@Override
+	public Class<?> getProcessedClass() {
+		return this.getClass();
+	}
+
+	@Override
 	public IDescriptor getModel() {
 		return this.model;
 	}

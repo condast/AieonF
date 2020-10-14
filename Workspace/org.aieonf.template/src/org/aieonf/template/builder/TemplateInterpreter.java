@@ -1,6 +1,6 @@
 package org.aieonf.template.builder;
 
-import java.net.URL;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -12,6 +12,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.domain.DomainAieon;
 import org.aieonf.concept.domain.IDomainAieon;
@@ -80,9 +81,17 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 		super( ITemplateLeaf.S_TEMPLATE, clss, location );
 	}
 
-	public TemplateInterpreter( Class<?> clss, URL url ) {
-		super( ITemplateLeaf.S_TEMPLATE, url );
+	public TemplateInterpreter( Class<?> clss, InputStream in ) {
+		super( ITemplateLeaf.S_TEMPLATE, in );
 		this.clss = clss;
+	}
+
+	/**
+	 * Get the Class of the template
+	 * @return
+	 */
+	public Class<?> getProcessedClass(){
+		return clss;
 	}
 
 	protected IContextAieon getContext(){
@@ -103,7 +112,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 	public synchronized IDescriptor onCreate( String name, Attributes attributes) {
 		String str = StringStyler.styleToEnum( name );
 		if( !Concepts.isValid( str ))
-			return null;
+			return new Descriptor( -1, str );
 
 		String desc = StringStyler.prettyString( str );
 		IDescriptor descriptor = null;
@@ -194,7 +203,6 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 			return true;
 		}
 		boolean retval = true;
-		Map<ITemplateProperty.Attributes, String> ca = convertAttributes(attrs);
 		Enum<?> enm = null;
 		switch( dc ){
 		case CONTEXT:

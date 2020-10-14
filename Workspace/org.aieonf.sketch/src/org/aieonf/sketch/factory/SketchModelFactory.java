@@ -1,7 +1,10 @@
 package org.aieonf.sketch.factory;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -11,15 +14,15 @@ import java.util.Map;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
-import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.sketch.Activator;
-import org.aieonf.template.builder.TemplateInterpreter;
+import org.aieonf.template.builder.TemplateInterpreterFactory;
 import org.aieonf.template.context.AbstractProviderContextFactory;
 
-public class SketchModelFactory extends AbstractProviderContextFactory<IDescriptor, IModelLeaf<IDescriptor>> {
+public class SketchModelFactory extends AbstractProviderContextFactory<IContextAieon, IModelLeaf<IContextAieon>> {
 
 	public static final String S_AIEONF_INF = "AIEONF-INF";
 	public static final String S_AIEONF = "aieonf-";
@@ -30,8 +33,8 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IDescript
 	
 	private File root;
 	
-	public SketchModelFactory( File root ) throws MalformedURLException {
-		super( Activator.BUNDLE_ID, new TemplateInterpreter( SketchModelFactory.class, getAieonFURL( root ) ));
+	public SketchModelFactory( File root ){
+		super( Activator.BUNDLE_ID, new SketchInterpreterFactory( SketchModelFactory.class, root ));
 		this.root = root;
 	}
 
@@ -48,11 +51,6 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IDescript
 	public String getFilePath( String location ) throws MalformedURLException{
 		File file = new File( root, S_WEB + location );
 		return file.getAbsolutePath();
-	}
-
-	private static URL getAieonFURL( File root ) throws MalformedURLException{
-		File aieonf = new File( root, IModelBuilder.S_DEFAULT_LOCATION );
-		return aieonf.toURI().toURL();
 	}
 
 	@Override
@@ -121,6 +119,27 @@ public class SketchModelFactory extends AbstractProviderContextFactory<IDescript
 		return results;
 	}
 
+	private static class SketchInterpreterFactory extends TemplateInterpreterFactory<IContextAieon>{
+
+		private File root;
+		
+		public SketchInterpreterFactory(Class<?> clss, File root) {
+			super(clss);
+			this.root = root;
+		}
+
+		@Override
+		public InputStream createInputStream(String resource) {
+			File aieonf = new File( root, IModelBuilder.S_DEFAULT_LOCATION );
+			try {
+				return new FileInputStream( aieonf.getAbsolutePath());
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
 	private static class FileFilter implements FilenameFilter{
 
 		@Override

@@ -100,15 +100,7 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 	 * @return
 	 */
 	public boolean canCreate(){
-		URL url = this.interpreter.getURL();
-		if( url == null )
-			return false;
-		try {
-			return ( url.openConnection().getContentLengthLong() > 0 );
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+		return ( this.interpreter != null ) && ( this.interpreter.getInputStream() != null );
 	}
 
 	/* (non-Javadoc)
@@ -128,11 +120,10 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 		// note that if your XML already declares the XSD to which it has to conform, then there's no need to create a validator from a Schema object
 		Source schemaFile = new StreamSource( this.interpreter.getClass().getResourceAsStream( IModelBuilder.S_SCHEMA_LOCATION ));
 		InputStream in = null;
-		URL url = this.interpreter.getURL();
 		try {
-			in = url.openStream();
+			in = this.interpreter.getInputStream();
 		} catch (Exception e1) {
-			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.interpreter.getURL() + "\n");
+			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.interpreter + "\n");
 			e1.printStackTrace();
 		}
 		
@@ -151,6 +142,8 @@ public class XMLModelBuilder<T extends IDescriptor, M extends IModelLeaf<T>> imp
 				parser.addModelBuilderListener( listener );
 			saxParser.parse( in, parser );
 			models = parser.getModels();
+			for( IModelBuilderListener<M> listener: this.listeners )
+				parser.removeModelBuilderListener( listener );
 			logger.info("AIEONF Bundle Parsed: " + this.domainId + "\n");
 		} catch( SAXNotRecognizedException e ){
 			failed = true;
