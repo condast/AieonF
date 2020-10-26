@@ -36,6 +36,7 @@ public class Concept extends Descriptor implements IConcept
 	public Concept()
 	{
 		super();
+		setScope( Scope.PRIVATE);
 	}
 
 	/**
@@ -138,7 +139,7 @@ public class Concept extends Descriptor implements IConcept
 	{
 		String scopeStr = getValue( IConcept.Attributes.SCOPE );
 		if(( scopeStr == null ) || ( scopeStr == "" ))
-			return Scope.UNKNOWN;
+			return Scope.PRIVATE;
 		return Scope.valueOf( StringStyler.styleToEnum( scopeStr ));
 	}
 
@@ -150,7 +151,7 @@ public class Concept extends Descriptor implements IConcept
 	@Override
 	public final void setScope( Scope scope )
 	{
-		setValue( IConcept.Attributes.SCOPE, scope.toString());
+		setValue( IConcept.Attributes.SCOPE, scope.name());
 	}
 
 	/**

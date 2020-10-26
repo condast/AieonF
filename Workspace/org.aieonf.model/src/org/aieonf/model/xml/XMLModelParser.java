@@ -31,23 +31,23 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLModelParser<T extends IDescriptor, M extends IDescribable> extends DefaultHandler implements IModelParser<M>{
+public class XMLModelParser<D extends IDescriptor, M extends IDescribable> extends DefaultHandler implements IModelParser<M>{
 
 	private static final String S_ERR_MALFORMED_XML = "The XML code is malformed at: ";
 	
 	private Collection<M> models;
 
-	private IModelNode<T>  parent;
-	private IModelNode<T>  current;
+	private IModelNode<IDescriptor>  parent;
+	private IModelNode<IDescriptor>  current;
 	
 	private Stack<ModelAttributes> stack;
 	
-	private IXMLModelInterpreter<T> interpreter;	
+	private IXMLModelInterpreter<D> interpreter;	
 	private Collection<IModelBuilderListener<M>> listeners;
 
 	private Logger logger = Logger.getLogger( XMLModelParser.class.getName() );
 
-	public XMLModelParser( IXMLModelInterpreter<T> interpreter) {
+	public XMLModelParser( IXMLModelInterpreter<D> interpreter) {
 		this.stack = new Stack<ModelAttributes>();
 		this.interpreter = interpreter;
 		this.models = new ArrayList<M>();
@@ -58,15 +58,15 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable> exten
 		return stack;
 	}
 
-	protected synchronized IXMLModelInterpreter<T> getCreator() {
+	protected synchronized IXMLModelInterpreter<D> getCreator() {
 		return interpreter;
 	}
 
-	protected synchronized void setCurrent(XMLModel<T> current) {
+	protected synchronized void setCurrent(XMLModel current) {
 		this.current = current;
 	}
 
-	protected synchronized IModelLeaf<T> getCurrent() {
+	protected synchronized IModelLeaf<? extends IDescriptor> getCurrent() {
 		return current;
 	}
 
@@ -111,8 +111,8 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable> exten
 			throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
 	}
 	
-	protected IModelNode<T> createModel( Attributes attributes ){
-		return new XMLModel<T>( attributes );
+	protected IModelNode<IDescriptor> createModel( Attributes attributes ){
+		return new XMLModel( attributes );
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -191,7 +191,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable> exten
 		case CHILDREN:
 			if(( this.parent != null ) &&( this.parent != current )){
 				current = parent;
-				parent = (IModelNode<T>) current.getParent();
+				parent = (IModelNode<IDescriptor>) current.getParent();
 			}
 			break;
 		case CONTEXT:
@@ -265,7 +265,7 @@ public class XMLModelParser<T extends IDescriptor, M extends IDescribable> exten
 	 * @param message
 	 * @return
 	 */
-	protected String printError( IModelLeaf<T> model, String message ){
+	protected String printError( IModelLeaf<IDescriptor> model, String message ){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("ERROR: ");
 		buffer.append( message );

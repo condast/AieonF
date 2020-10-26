@@ -90,7 +90,6 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 				continue;
 			if( !leaf.getVertex().equals( edge.getVertex(com.tinkerpop.blueprints.Direction.IN)))
 				continue;
-			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.OUT);
 			Iterator<Edge> vedges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IModelNode.IS_PARENT).iterator();
 			while( vedges.hasNext())
 			graph.removeEdge(edge);
@@ -115,7 +114,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 				continue;
 			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
 			IModelLeaf<IDescriptor> child = new ModelNode( graph, this, vchild); 
-			logger.info( child.getData().toString());	
+			logger.fine( child.getData().toString());	
 			children.put(child, edge.getLabel());
 		}
 		return children;

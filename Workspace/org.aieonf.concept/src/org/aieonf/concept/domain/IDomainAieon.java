@@ -1,6 +1,7 @@
 package org.aieonf.concept.domain;
 
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 
 public interface IDomainAieon extends IDescriptor
@@ -40,6 +41,11 @@ public interface IDomainAieon extends IDescriptor
 	 * Get the short name for this domain
 	 */
 	public String getShortName();
+
+	/**
+	 * Get the scope for this domain
+	 */
+	public IConcept.Scope getScope();
 
 	/**
 	 * Get the perspective to which to observe this domain

@@ -5,6 +5,10 @@ import java.util.Map;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.IConceptBase;
 import org.xml.sax.Attributes;
 
 public class XMLUtils {
@@ -53,6 +57,21 @@ public class XMLUtils {
 			}
 		}
 		return attrs;
+	}
+
+	/**
+	 * Convert the attributes to a string map
+	 * @param attributes
+	 * @return
+	 */
+	public static IDescriptor convertAttributesToDescriptor( Attributes attributes ){
+		IConceptBase base = new ConceptBase();
+		for( int i=0; i<attributes.getLength(); i++  ){
+			if( !Utils.assertNull( attributes.getLocalName(i))){
+				base.set( attributes.getLocalName( i ), attributes.getValue(i));
+			}
+		}
+		return new Descriptor( base );
 	}
 
 }

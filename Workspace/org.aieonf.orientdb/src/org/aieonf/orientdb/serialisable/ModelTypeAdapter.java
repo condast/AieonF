@@ -19,7 +19,6 @@ import org.aieonf.model.serialise.AbstractModelTypeAdapter;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
 import org.aieonf.orientdb.graph.ModelFactory;
-import org.aieonf.osgi.selection.IActiveDomainProvider;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -35,13 +34,13 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 
 	private OrientGraph graph;
+		
+	private IDomainAieon domain; 
 	
-	private IActiveDomainProvider provider;
-	
-	public ModelTypeAdapter( IActiveDomainProvider provider, OrientGraph graph) {
+	public ModelTypeAdapter( IDomainAieon domain, OrientGraph graph) {
 		super();
+		this.domain = domain;
 		this.graph = graph;
-		this.provider = provider;
 	}
 
 	/**
@@ -56,13 +55,14 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 
 	@Override
 	protected Vertex onCreateNode(long id, boolean leaf) {
-		IDomainAieon domain = this.provider.getActiveDomain();
 		String str = domain.getDomain().replace(".", "_");
 		return findOrCreateVertex( this.graph, str, id);
 	}
 
 	@Override
 	protected boolean onAddChild(Vertex model, Vertex child, boolean reversed, String label) {
+		if( child == null )
+			return  false;
 		addChild( model, child, reversed, label);
 		return true;
 	}
@@ -121,13 +121,19 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 
 	protected static Collection<Vertex> findVertices( OrientGraph graph, String domain, long id ){
 		Collection<Vertex> results=  new ArrayList<>();
-		Iterator<Vertex> iterator = graph.getVerticesOfClass(domain).iterator();
-		while( iterator.hasNext() ) {
-			Vertex vertex = iterator.next();
-			String check = vertex.getProperty(IDescriptor.Attributes.ID.name());
-			if( StringUtils.isEmpty(check) ||( Long.parseLong(check) != id))
-				continue;
-			results.add(vertex);
+		Iterator<Vertex> iterator = null;
+		try{
+			iterator = graph.getVerticesOfClass(domain).iterator();
+			while( iterator.hasNext() ) {
+				Vertex vertex = iterator.next();
+				String check = vertex.getProperty(IDescriptor.Attributes.ID.name());
+				if( StringUtils.isEmpty(check) ||( Long.parseLong(check) != id))
+					continue;
+				results.add(vertex);
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
 		}
 		return results;
 	}

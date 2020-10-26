@@ -50,10 +50,11 @@ public class XMLTemplateParser<D extends IDescriptor, M extends IModelLeaf<D>> e
 			throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " index: " + index);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	protected IModelNode<D> createModel(Attributes attributes) {
+	protected IModelNode<IDescriptor> createModel(Attributes attributes) {
 		this.root = new TemplateNode<D>( attributes );
-		return this.root;
+		return (IModelNode<IDescriptor>) this.root;
 	}
 
 	@SuppressWarnings("unchecked")

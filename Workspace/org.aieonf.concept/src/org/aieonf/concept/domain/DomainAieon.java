@@ -1,11 +1,10 @@
 package org.aieonf.concept.domain;
 
-import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 
 import org.aieonf.concept.implicit.ImplicitAieon;
 
-public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
+public class DomainAieon extends ImplicitAieon implements IDomainAieon
 {
 	private static final long serialVersionUID = -7712089015989805720L;
 
@@ -14,14 +13,14 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	*/
 	public DomainAieon() {
 	  super( );
+	  super.setScope(Scope.PUBLIC);
 	}
 
 	/**
 	 * Create a domain name with the given name
 	 * @param domain
 	*/
-	public DomainAieon( String shortName )
-	{
+	public DomainAieon( String shortName ){
 	  this( IDomainAieon.Attributes.DOMAIN.name(), shortName );
 	}
 
@@ -34,6 +33,7 @@ public class DomainAieon extends ImplicitAieon implements IConcept, IDomainAieon
 	  super( IDomainAieon.Attributes.DOMAIN.name());
 	  super.set(IDomainAieon.Attributes.DOMAIN.name(), shortName );
 	  super.set(IDomainAieon.Attributes.SHORT_NAME.name(), shortName );
+	  super.setScope(Scope.PUBLIC);
 	}
 	
 	/**

@@ -9,7 +9,6 @@ import org.aieonf.concept.core.*;
 public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor>{
 	private static final long serialVersionUID = 1L;
 
-
 	public ImplicitAieon() {
 		super();
 	}

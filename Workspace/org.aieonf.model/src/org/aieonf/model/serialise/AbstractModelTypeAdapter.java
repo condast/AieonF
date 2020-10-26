@@ -22,6 +22,8 @@ import com.google.gson.stream.JsonWriter;
 
 public abstract class AbstractModelTypeAdapter<N extends Object, D extends Object> extends TypeAdapter<IModelLeaf<IDescriptor>> {
 
+	public static final String S_ERR_CYCLE_DETECTED = "A cycle has been detected: ";
+
 	public enum Attributes{
 		PROPERTIES,//Properties of the model
 		DESCRIPTOR,//Descriptor
@@ -83,10 +85,10 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		String label;
 		boolean complete = false;
 		String key = null;
+		N node = null;
 		while(!complete && jsonReader.hasNext() ) {
 			JsonToken token = jsonReader.peek();
 			logger.fine(token.toString());
-			N node = null;
 			switch( token) {
 			case BEGIN_ARRAY:
 				jsonReader.beginArray();
@@ -117,12 +119,13 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 						while( !JsonToken.END_ARRAY.equals(token )) {
 							N child = readNode( jsonReader );
 							token = jsonReader.peek();
-							jsonReader.endObject();
-							token = jsonReader.peek();
-							if( JsonToken.NULL.equals(token) ) {
-								label = IModelLeaf.IS_CHILD;
+							logger.fine( token.name());
+							label = IModelLeaf.IS_CHILD;
+							if( JsonToken.END_OBJECT.equals( token ))
+								jsonReader.endObject();
+							else if( JsonToken.NULL.equals(token)) {
 								jsonReader.nextNull();
-							}else
+							}else if( JsonToken.STRING.equals(token))
 								label = jsonReader.nextString();
 							onAddChild( node, child, reversed, label);
 							token = jsonReader.peek();
@@ -186,7 +189,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 				break;
 			}
 		}
-		return nodes.pop();
+		return ( nodes.isEmpty()? node: nodes.pop());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -229,12 +232,17 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 			arg0.value(model.isReverse());
 			arg0.name(Attributes.CHILDREN.name());
 			arg0.beginArray();
-			for( Map.Entry<IModelLeaf<? extends IDescriptor>, String> child: model.getChildren().entrySet() ) {
-				write( arg0, (IModelLeaf<IDescriptor>) child.getKey());
-				if( child.getValue() == null)
+			for( Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry: model.getChildren().entrySet() ) {
+				IModelLeaf<? extends IDescriptor> child = entry.getKey();
+				if( child.equals(model)) {
+					logger.warning( S_ERR_CYCLE_DETECTED + child.getID() + "->" + model.getID());
+					continue;
+				}else
+					write( arg0, (IModelLeaf<IDescriptor>) child);
+				if( entry.getValue() == null)
 					arg0.value( IModelLeaf.IS_CHILD);
 				else
-					arg0.value(child.getValue());
+					arg0.value(entry.getValue());
 			}
 			arg0.endArray();
 		}

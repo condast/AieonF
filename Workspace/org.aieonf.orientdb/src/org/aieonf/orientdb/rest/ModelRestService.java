@@ -64,9 +64,11 @@ public class ModelRestService{
 			GsonBuilder builder = new GsonBuilder(); 
 			builder.enableComplexMapKeySerialization();
 			dbService.open(domain);
-			ModelTypeAdapter adapter = new ModelTypeAdapter( dispatcher.getProvider(), dbService.getGraph());
+			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();
+			
+			//TODO data is not transformed correctly into a model leaf
 			logger.info( data );
 			IModelLeaf<?>[] results = gson.fromJson(data, IModelLeaf[].class);
 			response = ( Utils.assertNull(results))? Response.noContent().build(): 
@@ -179,10 +181,10 @@ public class ModelRestService{
 				logger.fine( PrintModel.printModel(model, true));
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
-			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( dispatcher.getProvider(), dbService.getGraph()));
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(result.toArray( new IModelLeaf[ result.size() ]), IModelLeaf[].class);
-			logger.fine(str);
+			logger.info(str);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {

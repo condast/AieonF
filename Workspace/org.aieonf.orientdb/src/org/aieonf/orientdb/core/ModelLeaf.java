@@ -182,7 +182,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 		if(!( obj instanceof ModelLeaf))
 			return false;
 		ModelLeaf leaf = (ModelLeaf) obj;
-		return leaf.getVertex().equals(this.getVertex());
+		return leaf.getVertex().getId().equals(this.getVertex().getId());
 	}
 
 	protected static Vertex getParent( Vertex vertex ) {
