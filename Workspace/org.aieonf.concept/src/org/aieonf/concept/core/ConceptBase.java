@@ -202,10 +202,9 @@ public class ConceptBase implements IConceptBase
 		return this.properties.keySet().iterator() ;
 	}
 
-	
 	@Override
-	public Iterator<Map.Entry<String, String>> iterator() {
-		return this.properties.entrySet().iterator();
+	public Set<Map.Entry<String, String>> entrySet() {
+		return this.properties.entrySet();
 	}
 
 	@Override

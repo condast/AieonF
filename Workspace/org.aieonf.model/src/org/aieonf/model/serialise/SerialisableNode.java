@@ -27,13 +27,13 @@ public class SerialisableNode {
 	
 	public SerialisableNode( IModelLeaf<? extends IDescriptor> model ) {
 		this();
-		Iterator<Map.Entry<String, String>> iterator = model.iterator();
+		Iterator<Map.Entry<String, String>> iterator = model.entrySet().iterator();
 		while( iterator.hasNext() ) {
 			Map.Entry<String, String> entry = iterator.next();
 			if( !StringUtils.isEmpty(entry.getKey()))
 				p.put(entry.getKey(), entry.getValue());
 		}
-		iterator = model.getData().iterator();
+		iterator = model.getData().entrySet().iterator();
 		while( iterator.hasNext() ) {
 			Map.Entry<String, String> entry = iterator.next();
 			if( !StringUtils.isEmpty(entry.getKey()))

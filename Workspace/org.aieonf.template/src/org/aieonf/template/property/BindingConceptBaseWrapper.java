@@ -135,11 +135,10 @@ public class BindingConceptBaseWrapper implements IConceptBase, PropertyChangeLi
 	public Iterator<String> keySet() {
 		return base.keySet();
 	}
-
 	
 	@Override
-	public Iterator<Entry<String, String>> iterator() {
-		return base.iterator();
+	public Set<Entry<String, String>> entrySet() {
+		return base.entrySet();
 	}
 
 	@Override

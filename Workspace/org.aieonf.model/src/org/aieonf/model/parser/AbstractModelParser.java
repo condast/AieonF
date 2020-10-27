@@ -63,7 +63,7 @@ public abstract class AbstractModelParser<D extends IDescriptor, M extends IMode
 		super.parseModel(model);//first parse the descriptor
 		String type = ParseTypes.MODEL.name();
 		notifyListeners( new ParseEvent<D,M>(this, model, type, IModelParser.Status.PREPARE ));
-		Iterator<Map.Entry<String, String>> iterator = model.iterator();
+		Iterator<Map.Entry<String, String>> iterator = model.entrySet().iterator();
 		while( result & iterator.hasNext()) {
 			Map.Entry<String, String> entry = iterator.next();
 			notifyListeners( new ParseEvent<D,M>(this, model, type, entry.getKey(), entry.getValue()));

@@ -15,6 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
@@ -407,11 +408,6 @@ public class Descriptor implements IDescriptor
 	}
 
 	@Override
-	public Iterator<Map.Entry<String, String>> iterator() {
-		return base.iterator();
-	}
-
-	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
@@ -767,11 +763,18 @@ public class Descriptor implements IDescriptor
 	public int getInteger(String attribute) {
 		return base.getInteger(attribute);
 	}
-
 	
 	@Override
 	public Iterator<String> keySet() {
 		return base.keySet();
+	}
+
+	/**
+	 * Get the entry set
+	 * @return
+	 */
+	public Set<Map.Entry<String, String>> entrySet(){
+		return base.entrySet();
 	}
 
 	@Override

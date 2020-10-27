@@ -90,7 +90,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		if( descriptor == null ) {
 			descriptor = graph.addVertex( ModelFactory.S_CLASS + IDescriptor.DESCRIPTORS);
 			descriptor.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
-			Iterator<Map.Entry<String, String>> iterator = base.iterator();
+			Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
 			while( iterator.hasNext() ) {
 				Map.Entry<String, String> entry = iterator.next();
 				descriptor.setProperty(entry.getKey(), entry.getValue());

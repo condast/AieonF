@@ -40,7 +40,7 @@ public class DescribableParser<D extends IDescriptor, M extends IDescribable> im
 
 	protected boolean parseData(M model){
 		IDescriptor descriptor = model.getDescriptor();
-		Iterator<Map.Entry<String, String>> iterator = descriptor.iterator();
+		Iterator<Map.Entry<String, String>> iterator = descriptor.entrySet().iterator();
 		while( iterator.hasNext()) {
 			Map.Entry<String, String> entry = iterator.next();
 			notifyListeners( new ParseEvent<D,M>(this, model, type, entry.getKey(), entry.getValue()));

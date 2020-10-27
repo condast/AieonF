@@ -1,8 +1,5 @@
 package org.aieonf.model.core;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
@@ -166,13 +163,6 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	 */
 	void setDepth( int depth ) throws ConceptException;
 	
-	/**
-	 * Get an iterator of the concept properties
-	 *
-	 * @return Iterator<String>
-	 */
-	public abstract Iterator<Map.Entry<String, String>> iterator();
-
 	/**
 	 * If the given descriptor is considered the same as that of the leaf, this method returns '0'.
 	 * Otherwise it returns a comparable result, depending on the provided implies operator 

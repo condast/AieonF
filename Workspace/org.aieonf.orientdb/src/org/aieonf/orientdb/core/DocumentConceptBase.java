@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
@@ -207,7 +208,7 @@ public class DocumentConceptBase implements IConceptBase {
 
 	
 	@Override
-	public Iterator<Entry<String, String>> iterator() {
+	public Set<Map.Entry<String, String>> entrySet() {
 		Iterator<Entry<String, Object>> iterator = this.document.iterator();
 		Map<String, String> results = new HashMap<>();
 		while( iterator.hasNext() ){
@@ -215,7 +216,7 @@ public class DocumentConceptBase implements IConceptBase {
 			String key = StringStyler.toPackageString(entry.getKey());
 			results.put( key, (String) entry.getValue());
 		}
-		return results.entrySet().iterator();
+		return results.entrySet();
 	}
 
 	/* (non-Javadoc)

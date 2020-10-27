@@ -127,7 +127,8 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 								jsonReader.nextNull();
 							}else if( JsonToken.STRING.equals(token))
 								label = jsonReader.nextString();
-							onAddChild( node, child, reversed, label);
+							if( child != null )
+								onAddChild( node, child, reversed, label);
 							token = jsonReader.peek();
 						}
 						jsonReader.endArray();
@@ -189,7 +190,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 				break;
 			}
 		}
-		return ( nodes.isEmpty()? node: nodes.pop());
+		return ( node == null )? node: ( nodes.isEmpty()? node: nodes.pop());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -201,7 +202,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		arg0.name(Attributes.LEAF.name());
 		arg0.value(leaf.isLeaf());
 		arg0.name(Attributes.PROPERTIES.name());
-		Iterator<Map.Entry<String, String>> iterator = leaf.iterator();
+		Iterator<Map.Entry<String, String>> iterator = leaf.entrySet().iterator();
 		arg0.beginArray();
 		while(iterator.hasNext() ) {
 			Map.Entry<String, String> entry = iterator.next();
@@ -215,7 +216,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		arg0.endArray();
 		if( leaf.getData() != null ) {
 			arg0.name(Attributes.DESCRIPTOR.name());
-			iterator = leaf.getData().iterator();
+			iterator = leaf.getData().entrySet().iterator();
 			arg0.beginArray();
 			while(iterator.hasNext() ) {
 				Map.Entry<String, String> entry = iterator.next();

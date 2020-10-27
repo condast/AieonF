@@ -88,6 +88,8 @@ public class ModelFactory< T extends IDescriptor > {
 		while( edges.hasNext()) {
 			Edge edge = edges.next();
 			Vertex vparent = edge.getVertex(Direction.OUT);
+			if( vparent == null )
+				continue;
 			if( vparent.getId().equals(vertex.getId())) {
 				logger.warning( S_ERR_CYCLE_DETECTED + vparent.getId() + "->" + vertex.getId());
 				continue;

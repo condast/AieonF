@@ -2,6 +2,7 @@ package org.aieonf.concept.wrapper;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
@@ -324,10 +325,9 @@ public class DescriptorWrapper implements IDescriptor
 		return this.descriptor.keySet();
 	}
 
-	
 	@Override
-	public Iterator<Entry<String, String>> iterator() {
-		return this.descriptor.iterator();
+	public Set<Entry<String, String>> entrySet() {
+		return this.descriptor.entrySet();
 	}
 
 	/**

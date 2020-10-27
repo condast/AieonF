@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescriptor;
@@ -213,14 +213,14 @@ public class VertexConceptBase implements IConceptBase {
 
 	
 	@Override
-	public Iterator<Entry<String, String>> iterator() {
+	public Set<Map.Entry<String, String>> entrySet() {
 		Iterator<String> iterator = this.vertex.getPropertyKeys().iterator() ;
 		Map<String, String> results = new HashMap<>();
 		while( iterator.hasNext() ){
 			String key = StringStyler.toPackageString(iterator.next());
 			results.put( key, (String) vertex.getProperty(key));
 		}
-		return results.entrySet().iterator();
+		return results.entrySet();
 	}
 
 	/* (non-Javadoc)
