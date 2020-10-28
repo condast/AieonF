@@ -91,11 +91,12 @@ public class ModelFactory< T extends IDescriptor > {
 			if( vparent == null )
 				continue;
 			if( vparent.getId().equals(vertex.getId())) {
+				graph.removeEdge(edge);
 				logger.warning( S_ERR_CYCLE_DETECTED + vparent.getId() + "->" + vertex.getId());
 				continue;
 			}
 			if( parents.containsKey(vparent.getId()))
-				parent = parents.get(vparent);
+				parent = parents.get(vparent.getId());
 			else {
 				parent = new ModelNode( graph, getParent( graph, vparent, parents ), vparent );
 				if( parent != null )

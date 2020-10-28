@@ -15,6 +15,7 @@ import org.aieonf.commons.http.IHttpRequest.HttpStatus;
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.security.ISecureGenerator;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.FilterFactory;
@@ -47,10 +48,14 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	private IDomainAieon domain;
 	private boolean open;
 	
+	//Declared here because of its use in a listener
+	private String id;
+
 	private Collection<IModelListener<M>> listeners;
 
 	protected AbstractRestDatabase( ISecureGenerator generator, IDomainAieon domain, String path ) {
 		this.path = path;
+		id = null;
 		this.domain = domain;
 		this.generator = generator;
 		this.open = false;
@@ -155,7 +160,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean add(M leaf) {
+	public long add(M leaf) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.ADD;
 		Map<String, String> parameters = new HashMap<>();
@@ -164,23 +169,20 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		IModelLeaf<? extends IDescriptor>[] added = new IModelLeaf[1]; 
 		added[0] = leaf;
-		boolean result = false;
 		WebClient<IModelLeaf<? extends IDescriptor>[]> client = new WebClient<>( path );
-		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		try {
 			client.addListener( e->{
 				if( HttpStatus.OK.getStatus() != e.getResponseCode())
 					return;
-				String id = e.getResponse();
+				id = e.getResponse();
 				IModelLeaf<? extends IDescriptor>[] models = e.getData();
 				models[0].set(IDescriptor.Attributes.ID.name(), id);
 			});
 			client.sendPost(request, parameters, onSerialise(added), added);
-			result = Utils.assertNull(results);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return StringUtils.isEmpty(id)?-1: Long.parseLong(id);
 	}
 
 	@SuppressWarnings("unchecked")

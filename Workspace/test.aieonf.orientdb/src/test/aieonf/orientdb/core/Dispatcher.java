@@ -1,8 +1,12 @@
 package test.aieonf.orientdb.core;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map.Entry;
 
+import org.aieonf.commons.security.ILoginListener;
 import org.aieonf.commons.security.ISecureGenerator;
+import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
@@ -15,10 +19,13 @@ public class Dispatcher implements ISecureGenerator, IActiveDomainProvider
 	
 	private static Dispatcher dispatcher = new Dispatcher();
 	
+	private Collection<ILoginListener> listeners;
+
 	private TestFactory factory = TestFactory.getInstance(); 
 
 	private Dispatcher() {
 		factory.createTemplate();
+		this.listeners = new ArrayList<ILoginListener>();
 	}
 
 	/**
@@ -82,5 +89,17 @@ public class Dispatcher implements ISecureGenerator, IActiveDomainProvider
 		return factory.createPredicates();
 	}
 
+	public void addLoginListener(ILoginListener listener) {
+		this.listeners.add(listener);
+	}
+
+	public void removeLoginListener(ILoginListener listener) {
+		this.listeners.remove(listener);
+	}
+	
+	protected void notifyLoginEvent( LoginEvent event ){
+		for( ILoginListener listener: this.listeners )
+			listener.notifyLoginEvent(event);
+	}
 	
 }

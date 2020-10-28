@@ -113,6 +113,10 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 			if( !IModelLeaf.IS_CHILD.equals( edge.getLabel()))
 				continue;
 			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
+			if( vchild == null )
+				continue;
+			if( vertex.getId().equals(vchild.getId()))
+				graph.removeEdge(edge);
 			IModelLeaf<IDescriptor> child = new ModelNode( graph, this, vchild); 
 			logger.fine( child.getData().toString());	
 			children.put(child, edge.getLabel());

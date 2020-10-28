@@ -176,15 +176,17 @@ public class ModelRestService{
 			params.put(FilterFactory.Attributes.VALUE, wildcard);
 			IGraphFilter filter = ff.createFilter(type, params);
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
-			Collection<IModelLeaf<IDescriptor>> result = factory.get(filter.doFilter());
-			for( IModelLeaf<IDescriptor> model: result )
+			Collection<IModelLeaf<IDescriptor>> results = factory.get(filter.doFilter());
+			for( IModelLeaf<IDescriptor> model: results)
 				logger.fine( PrintModel.printModel(model, true));
+			if( Utils.assertNull(results))
+				return Response.noContent().build();
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
-			String str = gson.toJson(result.toArray( new IModelLeaf[ result.size() ]), IModelLeaf[].class);
-			logger.info(str);
+			String str = gson.toJson(results.toArray( new IModelLeaf[ results.size() ]), IModelLeaf[].class);
+			logger.fine(str);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {

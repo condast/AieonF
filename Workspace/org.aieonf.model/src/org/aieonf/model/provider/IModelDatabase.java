@@ -26,9 +26,9 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 	/**
 	 * Add a model
 	 * @param descriptor
-	 * @return
+	 * @return the id of the newly made model
 	 */
-	public boolean add( M leaf );
+	public long add( M leaf );
 
 	/**
 	 * Add a child to the given parent

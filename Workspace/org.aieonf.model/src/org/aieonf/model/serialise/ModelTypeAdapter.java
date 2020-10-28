@@ -15,6 +15,11 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<IModelLeaf<IDescr
 	}
 
 	@Override
+	protected String getID(IModelLeaf<IDescriptor> node) {
+		return String.valueOf( node.getID() );
+	}
+
+	@Override
 	protected IModelLeaf<IDescriptor> onTransform(IModelLeaf<IDescriptor> node) {
 		return node;
 	}

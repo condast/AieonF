@@ -22,7 +22,8 @@ import com.google.gson.stream.JsonWriter;
 
 public abstract class AbstractModelTypeAdapter<N extends Object, D extends Object> extends TypeAdapter<IModelLeaf<IDescriptor>> {
 
-	public static final String S_ERR_CYCLE_DETECTED = "A cycle has been detected: ";
+	public static final String S_ERR_NULL_CHILD = "The child is null: ";
+	public static final String S_ERR_CYCLE_DETECTED = "A cycle has been detected ";
 
 	public enum Attributes{
 		PROPERTIES,//Properties of the model
@@ -81,6 +82,17 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 
 	protected abstract boolean onAddProperty( N node, String key, String value );
 
+	protected void handleCycle( N parent, N child, String label ) {
+		logger.warning( S_ERR_CYCLE_DETECTED + "(" + label + "):" + getID( parent ) + "->" + getID( child ));
+	}
+
+	/**
+	 * Get the id og the given node
+	 * @param node
+	 * @return
+	 */
+	protected abstract String getID( N node );
+
 	protected N readNode( JsonReader jsonReader ) throws ParseException, IOException {
 		String label;
 		boolean complete = false;
@@ -127,8 +139,12 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 								jsonReader.nextNull();
 							}else if( JsonToken.STRING.equals(token))
 								label = jsonReader.nextString();
-							if( child != null )
-								onAddChild( node, child, reversed, label);
+							if( child != null ) {
+								if( getID( child ).equals( getID( node )))
+									handleCycle(node, child, label);
+								else								
+									onAddChild( node, child, reversed, label);
+							}
 							token = jsonReader.peek();
 						}
 						jsonReader.endArray();
@@ -236,7 +252,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 			for( Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry: model.getChildren().entrySet() ) {
 				IModelLeaf<? extends IDescriptor> child = entry.getKey();
 				if( child.equals(model)) {
-					logger.warning( S_ERR_CYCLE_DETECTED + child.getID() + "->" + model.getID());
+					logger.warning( S_ERR_CYCLE_DETECTED + model.getID() + "->" + child.getID());
 					continue;
 				}else
 					write( arg0, (IModelLeaf<IDescriptor>) child);

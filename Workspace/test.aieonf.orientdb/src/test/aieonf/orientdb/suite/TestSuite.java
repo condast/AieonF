@@ -29,8 +29,9 @@ import org.condast.commons.test.core.ITestEvent;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import test.aieonf.orientdb.core.Dispatcher;
 import test.aieonf.orientdb.core.TestFactory;
-import test.aieonf.orientdb.service.LoginDispatcher;
 
 public class TestSuite extends AbstractTestSuite<String, String> {
 
@@ -159,7 +160,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 	}
 
 	private final void testRegister() throws Exception{
-		LoginDispatcher dispatcher = LoginDispatcher.getInstance();
+		Dispatcher dispatcher = Dispatcher.getInstance();
 		/*
 		LoginEvent le = new LoginEvent( this, LoginEvents.REGISTER, "test", "test_pwd" );
 		dispatcher.setLoginEvent(le);

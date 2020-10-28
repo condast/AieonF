@@ -36,11 +36,16 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	private OrientGraph graph;
 		
 	private IDomainAieon domain; 
-	
+
 	public ModelTypeAdapter( IDomainAieon domain, OrientGraph graph) {
 		super();
 		this.domain = domain;
 		this.graph = graph;
+	}
+	
+	@Override
+	protected String getID(Vertex node) {
+		return node.getId().toString();
 	}
 
 	/**
@@ -59,10 +64,17 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		return findOrCreateVertex( this.graph, str, id);
 	}
 
+	
+	@Override
+	protected void handleCycle(Vertex parent, Vertex child, String label) {
+		Iterator<Edge> edges = parent.getEdges(Direction.BOTH, label).iterator();
+		while( edges.hasNext())
+			this.graph.removeEdge(edges.next());
+		super.handleCycle(parent, child, label);
+	}
+
 	@Override
 	protected boolean onAddChild(Vertex model, Vertex child, boolean reversed, String label) {
-		if( child == null )
-			return  false;
 		addChild( model, child, reversed, label);
 		return true;
 	}
