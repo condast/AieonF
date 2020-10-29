@@ -18,6 +18,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
@@ -139,7 +140,9 @@ public class Descriptor implements IDescriptor
 		String str = this.get( IDescriptor.Attributes.ID );
 		if(StringUtils.isEmpty(str))
 			str = this.getValue( IDescriptor.Attributes.ID);
-		return StringUtils.isEmpty(str)?-1:Long.parseLong( str ); 
+		if( StringUtils.isEmpty(str) || !NumberUtils.isNumeric(str))
+			return -1;
+		return Long.parseLong( str ); 
 	}
 
 	/**

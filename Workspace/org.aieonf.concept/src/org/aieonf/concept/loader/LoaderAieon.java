@@ -11,7 +11,6 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.body.IBodyAieon;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.locator.ILocatorAieon;
 import org.aieonf.concept.locator.LocatorAieon;
 
 /**
@@ -49,8 +48,8 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	 */
 	public LoaderAieon()
 	{
-		super( ILoaderAieon.Attributes.LOADER.toString() );
-		super.setName( ILoaderAieon.Attributes.LOADER.toString() );
+		super( ILoaderAieon.Attributes.LOADER.name() );
+		super.setName( ILoaderAieon.Attributes.LOADER.name() );
 		super.setScope( IConcept.Scope.APPLICATION );
 		this.set( ILoaderAieon.Attributes.INTERNAL, Boolean.TRUE.toString() );
 		this.set( ILoaderAieon.Attributes.CREATABLE, Boolean.FALSE.toString() );
@@ -70,8 +69,8 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	{
 		super( ILoaderAieon.Attributes.LOADER.name(), identifier, uri );
 		super.setScope( IConcept.Scope.APPLICATION );
-		this.set( ILoaderAieon.Attributes.INTERNAL, Boolean.TRUE.toString() );
-		this.set( ILoaderAieon.Attributes.CREATABLE, Boolean.FALSE.toString() );
+		this.set( ILoaderAieon.Attributes.INTERNAL.name(), Boolean.TRUE.toString() );
+		this.set( ILoaderAieon.Attributes.CREATABLE.name(), Boolean.FALSE.toString() );
 		this.setReadOnly( Boolean.TRUE );
 		this.setAieonCreatorClass( ILoaderAieon.class );
 	}
@@ -80,8 +79,8 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 		super( descriptor);		
 		super.setName( ILoaderAieon.Attributes.LOADER.name() );
 		super.setScope( IConcept.Scope.APPLICATION );
-		this.set( ILoaderAieon.Attributes.INTERNAL, Boolean.TRUE.toString() );
-		this.set( ILoaderAieon.Attributes.CREATABLE, Boolean.FALSE.toString() );
+		this.set( ILoaderAieon.Attributes.INTERNAL.name(), Boolean.TRUE.toString() );
+		this.set( ILoaderAieon.Attributes.CREATABLE.name(), Boolean.FALSE.toString() );
 		this.setReadOnly( Boolean.TRUE );
 		this.setAieonCreatorClass( ILoaderAieon.class );
 	}
@@ -92,7 +91,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	 */
 	@Override
 	public boolean getStoreInternal(){
-		String value = this.get( ILoaderAieon.Attributes.INTERNAL );
+		String value = this.get( ILoaderAieon.Attributes.INTERNAL.name() );
 		if( Descriptor.isNull( value ))
 			return false;
 		return ConceptBase.parseBoolean( value );
@@ -105,7 +104,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	 */
 	@Override
 	public void setStoreInternal( boolean choice ){
-		this.set( ILoaderAieon.Attributes.INTERNAL, String.valueOf( choice ));
+		this.set( ILoaderAieon.Attributes.INTERNAL.name(), String.valueOf( choice ));
 	}
 
 	/**
@@ -158,14 +157,14 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	@Override
 	public boolean isCreatable()
 	{
-		String str = this.get( ILoaderAieon.Attributes.CREATABLE );
+		String str = this.get( ILoaderAieon.Attributes.CREATABLE.name() );
 		return Boolean.parseBoolean( str );
 	}
 
 	@Override
 	public void setCreatable(boolean choice)
 	{
-		this.set( ILoaderAieon.Attributes.CREATABLE, String.valueOf( choice ));
+		this.set( ILoaderAieon.Attributes.CREATABLE.name(), String.valueOf( choice ));
 	}
 
 
@@ -178,7 +177,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	@Override
 	public void setAieonCreatorClass( Class<? extends IDescriptor> clss )
 	{
-		this.set( ILoaderAieon.Attributes.AIEON_CREATOR_CLASS, clss.getName() );
+		this.set( ILoaderAieon.Attributes.AIEON_CREATOR_CLASS.name(), clss.getName() );
 	}
 
 	/**
@@ -191,7 +190,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 		if( this.isDebugmode() || isDebugMode( descriptor ))
 			return true;
 
-		String source = descriptor.get( ILocatorAieon.Attributes.URI );
+		String source = descriptor.get( IConcept.Attributes.URI.name() );
 		if( Descriptor.isNull( source ))
 			return false;
 		if( this.getURI() == null )
@@ -224,7 +223,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 
 		ILoaderAieon.Attributes[] attrs = ILoaderAieon.Attributes.values();
 		for( ILoaderAieon.Attributes attr: attrs ){
-			if( this.get( attr ) == null )
+			if( this.get( attr.name() ) == null )
 				throw new NullPointerException( error + attr );
 		}
 	}

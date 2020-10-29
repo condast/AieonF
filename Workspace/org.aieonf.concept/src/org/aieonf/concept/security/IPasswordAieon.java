@@ -13,7 +13,9 @@ public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 		USER_NAME,
 		PASSWORD,
 		CONFIRMATION,
+		EMAIL,
 		REGISTER,
+		LOGIN,
 		URL;
 		
 		@Override
@@ -73,6 +75,19 @@ public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 	public abstract void setConfirmation(String password);
 
 	/**
+	 * Get the email address
+	 * @return String
+	 */
+	public String getEmail();
+
+	/**
+	 * Set the email address
+	 * @param email String
+	 * @
+	*/
+	void setEmail(String email);
+
+	/**
 	 * If true, the loaded collection is registering
 	 * @return
 	 */
@@ -92,5 +107,4 @@ public interface IPasswordAieon extends IDescriptor, IImplicit<IDescriptor>
 	 * @return boolean
 	 */
 	public abstract boolean isValidUser(String userName, String password);
-
 }

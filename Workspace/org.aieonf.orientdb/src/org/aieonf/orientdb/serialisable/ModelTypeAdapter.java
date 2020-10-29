@@ -64,7 +64,6 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		return findOrCreateVertex( this.graph, str, id);
 	}
 
-	
 	@Override
 	protected void handleCycle(Vertex parent, Vertex child, String label) {
 		Iterator<Edge> edges = parent.getEdges(Direction.BOTH, label).iterator();
@@ -99,15 +98,22 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 				}
 			}
 		}
+		String idStr = IDescriptor.Attributes.ID.name();
 		if( descriptor == null ) {
 			descriptor = graph.addVertex( ModelFactory.S_CLASS + IDescriptor.DESCRIPTORS);
-			descriptor.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(graph.countVertices()));
-			Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
-			while( iterator.hasNext() ) {
-				Map.Entry<String, String> entry = iterator.next();
-				descriptor.setProperty(entry.getKey(), entry.getValue());
-			}		
+			descriptor.setProperty(idStr, String.valueOf(graph.countVertices()));
 		}
+		Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
+		while( iterator.hasNext() ) {
+			Map.Entry<String, String> entry = iterator.next();
+			if( !idStr.equals(entry.getKey()) )
+				descriptor.setProperty(entry.getKey(), entry.getValue());
+			else {
+				long id = Long.parseLong( entry.getValue());
+				if( id >= 0 )
+					descriptor.setProperty(idStr, String.valueOf(graph.countVertices()));
+			}
+		}		
 		vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
 		return descriptor;
 	}

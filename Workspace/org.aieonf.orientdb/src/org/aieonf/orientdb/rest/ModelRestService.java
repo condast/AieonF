@@ -68,7 +68,6 @@ public class ModelRestService{
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();
 			
-			//TODO data is not transformed correctly into a model leaf
 			logger.info( data );
 			IModelLeaf<?>[] results = gson.fromJson(data, IModelLeaf[].class);
 			response = ( Utils.assertNull(results))? Response.noContent().build(): 

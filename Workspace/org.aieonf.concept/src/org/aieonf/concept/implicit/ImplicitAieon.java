@@ -95,13 +95,10 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 		if( StringUtils.isEmpty(implicit))
 			return false;
 		String reference = get( implicit );
-		String source = descriptor.get( implicit );
-		if(( source == null ) && ( reference == null ))
-			return true;
-		if(( source == null ) || ( reference == null ))
+		if( reference == null )
 			return false;
-
-		return ( reference.equals( source ));
+		String source = descriptor.get( implicit );
+		return ( source == null )? false: ( reference.equals( source ));
 	}
 
 	/**

@@ -15,8 +15,7 @@ public interface ILocatorAieon extends IDescriptor
     LOCATOR,
     LOCATION,
     LOCATION_TYPE,
-    IDENTIFIER,
-    URI;
+    IDENTIFIER;
     
 	@Override
 	public String toString() {

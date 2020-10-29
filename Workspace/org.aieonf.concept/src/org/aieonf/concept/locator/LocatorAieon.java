@@ -37,7 +37,7 @@ implements ILocatorAieon
 	 */
 	public LocatorAieon() 
 	{
-		this( ILocatorAieon.Attributes.URI.name() );
+		this( IConcept.Attributes.URI.name() );
 		EmbeddedAieon.setEmbedded( this );
 	}
 
@@ -47,10 +47,10 @@ implements ILocatorAieon
 	 */
 	protected LocatorAieon( String attribute ) 
 	{
-		super( ILocatorAieon.Attributes.LOCATOR.toString(), attribute );
+		super( ILocatorAieon.Attributes.LOCATOR.name(), attribute );
 		super.setScope( Scope.APPLICATION );
-		this.setName( ILocatorAieon.Attributes.LOCATOR.toString() );
-		this.set( ILocatorAieon.Attributes.LOCATOR, Boolean.TRUE.toString() );
+		this.setName( ILocatorAieon.Attributes.LOCATOR.name() );
+		this.set( ILocatorAieon.Attributes.LOCATOR.name(), Boolean.TRUE.toString() );
 		EmbeddedAieon.setEmbedded( this );
 	}
 
@@ -65,7 +65,7 @@ implements ILocatorAieon
 	 */
 	public LocatorAieon( String name, String identifier, URI source ) throws MalformedURLException
 	{
-		super( ILocatorAieon.Attributes.URI.name(),source.getPath() );
+		super( IConcept.Attributes.URI.name(),source.getPath() );
 		this.setName( name );
 		this.setURI( source );
 		this.setIdentifier( identifier );
@@ -75,8 +75,8 @@ implements ILocatorAieon
 	public LocatorAieon( IDescriptor descriptor ) {
 		super( descriptor.getBase());
 		super.setScope( Scope.APPLICATION );
-		this.setName( ILocatorAieon.Attributes.LOCATOR.toString() );
-		this.set( ILocatorAieon.Attributes.LOCATOR, Boolean.TRUE.toString() );
+		this.setName( ILocatorAieon.Attributes.LOCATOR.name() );
+		this.set( ILocatorAieon.Attributes.LOCATOR.name(), Boolean.TRUE.toString() );
 		EmbeddedAieon.setEmbedded( this );		
 	}
 
@@ -87,7 +87,7 @@ implements ILocatorAieon
 	@Override
 	public String getIdentifier()
 	{
-		return this.get( ILocatorAieon.Attributes.IDENTIFIER );
+		return this.get( ILocatorAieon.Attributes.IDENTIFIER.name() );
 	}
 
 	/**
@@ -98,7 +98,7 @@ implements ILocatorAieon
 	@Override
 	public void setIdentifier( String identifier )
 	{
-		super.set( ILocatorAieon.Attributes.IDENTIFIER, identifier );
+		super.set( ILocatorAieon.Attributes.IDENTIFIER.name(), identifier );
 	}
 
 	/**
@@ -108,7 +108,7 @@ implements ILocatorAieon
 	@Override
 	public URI getURI()
 	{
-		String str = super.get( ILocatorAieon.Attributes.URI.name() );
+		String str = super.get( IConcept.Attributes.URI.name() );
 		if( Utils.assertNull(str))
 			return null;
 		return URI.create( str );
@@ -122,7 +122,7 @@ implements ILocatorAieon
 	@Override
 	public void setURI( URI source )
 	{
-		super.set( ILocatorAieon.Attributes.URI.name(), getStringFromURI( source ));
+		super.set( IConcept.Attributes.URI.name(), getStringFromURI( source ));
 	}
 
 	@Override

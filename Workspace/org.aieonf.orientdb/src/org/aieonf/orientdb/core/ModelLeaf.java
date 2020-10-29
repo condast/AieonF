@@ -39,6 +39,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 		if(edges.hasNext()) {
 			Vertex dvertex = edges.next().getVertex(com.tinkerpop.blueprints.Direction.IN);
 			this.descriptor = new Descriptor( new VertexConceptBase( dvertex ));
+			this.descriptor.set( IDescriptor.Attributes.ID.name(), dvertex.getId().toString());
 		}
 	}
 

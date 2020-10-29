@@ -39,7 +39,7 @@ import org.aieonf.concept.loader.LoaderAieon;
  * @version 1.0
  */
 public class PasswordAieon extends LoaderAieon implements IPasswordAieon
-{
+{	
 	public static final String S_DEFAULT_IDENTIFIER = 
 			"org.condast.private";
 
@@ -85,7 +85,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		super.setClassName( this.getClass().getName() );
 		super.setSource( S_DEFAULT_URI );
 		super.setExtendedKey( IPasswordAieon.Attributes.class.getName() );
-			}
+	}
 
 	/**
 	 * Create the password descriptor
@@ -100,7 +100,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	public PasswordAieon( String identifier, URI source, 
 			String userName, String password )
 					throws MalformedURLException
-					{
+	{
 		super( identifier, source );
 		this.setUserName( userName );
 		this.setPassword( password );
@@ -111,19 +111,19 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		super.setSource( S_DEFAULT_URI );
 		super.setExtendedKey( IPasswordAieon.Attributes.class.getName() );
 	}
-	
+
 	public PasswordAieon( IDescriptor descriptor ) {
 		super( descriptor);
-		
+
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.condast.concept.database.security.IPasswordAieon#getUserName()
 	 */
 	@Override
 	public String getUserName()
 	{
-		String userName = this.get(IPasswordAieon.Attributes.USER_NAME.toString());
+		String userName = this.get(IPasswordAieon.Attributes.USER_NAME.name());
 		return StringUtils.isEmpty(userName)? this.get( IPasswordAieon.Attributes.USER_NAME ): userName;
 	}
 
@@ -133,7 +133,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public void setUserName( String userName )
 	{
-		this.set( IPasswordAieon.Attributes.USER_NAME, userName );
+		this.set( IPasswordAieon.Attributes.USER_NAME.name(), userName );
 	}
 
 	/* (non-Javadoc)
@@ -142,7 +142,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public String getPassword()
 	{
-		String password = this.get(IPasswordAieon.Attributes.PASSWORD.toString());
+		String password = this.get(IPasswordAieon.Attributes.PASSWORD.name());
 		return StringUtils.isEmpty(password)? this.get( IPasswordAieon.Attributes.PASSWORD ): password;
 	}
 
@@ -152,7 +152,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public void setPassword( String password )
 	{
-		this.set( IPasswordAieon.Attributes.PASSWORD, password );
+		this.set( IPasswordAieon.Attributes.PASSWORD.name(), password );
 	}
 
 	/* (non-Javadoc)
@@ -161,7 +161,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public String getConfirmation()
 	{
-		return this.get( IPasswordAieon.Attributes.CONFIRMATION );
+		return this.get( IPasswordAieon.Attributes.CONFIRMATION.name() );
 	}
 
 	/* (non-Javadoc)
@@ -170,7 +170,28 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public void setConfirmation( String password )
 	{
-		this.set( IPasswordAieon.Attributes.CONFIRMATION, password );
+		this.set( IPasswordAieon.Attributes.CONFIRMATION.name(), password );
+	}
+
+	/**
+	 * Get the email address
+	 * @return String
+	 */
+	@Override
+	public String getEmail()
+	{
+		return this.get( IPasswordAieon.Attributes.EMAIL.name() );
+	}
+
+	/**
+	 * Set the email address
+	 * @param email String
+	 * @
+	*/
+	@Override
+	public void setEmail( String email ) 
+	{
+		this.set( IPasswordAieon.Attributes.EMAIL.name(), email );
 	}
 
 	/**
@@ -216,7 +237,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	@Override
 	public void setRegister( boolean register )
 	{
-		this.set( IPasswordAieon.Attributes.REGISTER, String.valueOf( register ));
+		this.set( IPasswordAieon.Attributes.REGISTER.name(), String.valueOf( register ));
 	}
 
 	/* (non-Javadoc)
@@ -242,11 +263,11 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		if( super.test( descriptor ) == false )
 			return false;
 
-		String attr = ConceptBase.getAttributeKey( IPasswordAieon.Attributes.USER_NAME );
+		String attr = get( IPasswordAieon.Attributes.USER_NAME.name() );
 		String value = descriptor.get( attr );
 		if(( value == null ) || ( value.equals( this.getUserName() ) == false ))
 			return false;
-		attr = ConceptBase.getAttributeKey( IPasswordAieon.Attributes.PASSWORD );
+		attr = get( IPasswordAieon.Attributes.PASSWORD.name() );
 		value = descriptor.get( attr );
 		return (( value != null ) && ( value.equals( this.getPassword() )));
 	}
@@ -275,10 +296,10 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	 * @return boolean
 	 */
 	public boolean isClass(IDescriptor descriptor) {
-		String attr = ConceptBase.getAttributeKey( IPasswordAieon.Attributes.USER_NAME );
+		String attr = get( IPasswordAieon.Attributes.USER_NAME.name() );
 		if( descriptor.get( attr ) == null )
 			return false;
-		attr = ConceptBase.getAttributeKey( IPasswordAieon.Attributes.PASSWORD );
+		attr = get( IPasswordAieon.Attributes.PASSWORD.name() );
 		return ( descriptor.get( attr ) != null );
 	}
 
@@ -317,12 +338,12 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		String error = IBodyAieon.S_ERR_INVALID_LOADER +  this.getClass().getName() + ": ";
 		IPasswordAieon.Attributes[] attrs = IPasswordAieon.Attributes.values();
 		for( IPasswordAieon.Attributes attr: attrs ){
-			if( this.get( attr ) == null )
+			if( this.get( attr.name() ) == null )
 				throw new NullPointerException( error + attr );
 		}		
 	}
 
-	
+
 
 	/**
 	 * Get the user name of the given concept, or null if none was found
@@ -332,7 +353,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	 */
 	public static String getUserName( IDescriptor concept )
 	{
-		String key = ConceptBase.getAttributeKey( IPasswordAieon.Attributes.USER_NAME );
+		String key = concept.get( IPasswordAieon.Attributes.USER_NAME.name() );
 		return( concept.get( key ));
 	}
 
@@ -344,7 +365,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	 */
 	static String getPassword( IDescriptor concept )
 	{
-		return( concept.get( ConceptBase.getAttributeKey( IPasswordAieon.Attributes.PASSWORD )));
+		return( concept.get( IPasswordAieon.Attributes.PASSWORD.name() ));
 	}  
 
 	/**
@@ -357,7 +378,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	{
 		if( PasswordAieon.isPasswordAieon( concept ) == false )
 			return false;
-		String pwd = concept.get( ConceptBase.getAttributeKey( IPasswordAieon.Attributes.PASSWORD ));
+		String pwd = concept.get( IPasswordAieon.Attributes.PASSWORD.name());
 		return password.trim().toLowerCase().equals( pwd );
 	}  
 
@@ -369,11 +390,11 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	public static boolean isPasswordConfirmed( IConcept concept ){
 		if( PasswordAieon.isPasswordAieon( concept ) == false )
 			return false;
-		String pwd = concept.get( ConceptBase.getAttributeKey( IPasswordAieon.Attributes.PASSWORD ));
+		String pwd = concept.get( IPasswordAieon.Attributes.PASSWORD.name());
 		if( Descriptor.isNull( pwd ))
 			return false;
 		pwd = pwd.trim();
-		String confirm = concept.get( ConceptBase.getAttributeKey( IPasswordAieon.Attributes.CONFIRMATION ));
+		String confirm = concept.get( IPasswordAieon.Attributes.CONFIRMATION.name() );
 		if( Descriptor.isNull( confirm ))
 			return false;
 		confirm = confirm.trim().toLowerCase();
