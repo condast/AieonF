@@ -110,7 +110,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 				descriptor.setProperty(entry.getKey(), entry.getValue());
 			else {
 				long id = Long.parseLong( entry.getValue());
-				if( id >= 0 )
+				if( id < 0 )
 					descriptor.setProperty(idStr, String.valueOf(graph.countVertices()));
 			}
 		}		

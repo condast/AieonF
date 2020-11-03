@@ -38,6 +38,13 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 	public boolean add( M parent, M child );
 
 	/**
+	 * Find the model with the given id
+	 * @param id
+	 * @return
+	 */
+	public M find(long id);
+
+	/**
 	 * Remove a model 
 	 * @param descriptor
 	 * @return

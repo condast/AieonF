@@ -3,6 +3,7 @@ package org.aieonf.orientdb.core;
 import java.util.Iterator;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IConcept.Scope;
@@ -20,7 +21,9 @@ import com.tinkerpop.blueprints.Vertex;
 public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescriptor> {
 
 	public static final String S_ERR_NULL_ID = "The model does not have a descriptor: ";
-	
+
+	public static final String REGEX_NON_NUMERIC = "[^\\d.]";
+
 	private IDescriptor descriptor;
 	
 	private IModelNode<?> parent;
@@ -39,7 +42,11 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 		if(edges.hasNext()) {
 			Vertex dvertex = edges.next().getVertex(com.tinkerpop.blueprints.Direction.IN);
 			this.descriptor = new Descriptor( new VertexConceptBase( dvertex ));
-			this.descriptor.set( IDescriptor.Attributes.ID.name(), dvertex.getId().toString());
+			String idstr = dvertex.getProperty(IDescriptor.Attributes.ID.name());
+			if( StringUtils.isEmpty(idstr) || !NumberUtils.isNumeric(idstr) || idstr.trim().startsWith("-")) {
+				idstr = dvertex.getId().toString().replaceAll(REGEX_NON_NUMERIC, "");
+				this.descriptor.set( IDescriptor.Attributes.ID.name(), idstr);
+			}
 		}
 	}
 

@@ -12,6 +12,7 @@ public interface IDatabaseConnection {
 		ADD,
 		ADD_NODE,
 		CONTAINS,
+		FIND,
 		GET,
 		SEARCH,
 		UPDATE,

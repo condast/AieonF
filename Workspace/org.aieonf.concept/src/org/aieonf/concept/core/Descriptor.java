@@ -696,7 +696,7 @@ public class Descriptor implements IDescriptor
 
 	public static void setExtendedKey( IDescriptor descriptor, String key ){
 		key = key.replaceAll("[$]", ".");
-		descriptor.set( IDescriptor.Attributes.EXTENDED_KEY, key );
+		descriptor.set( IDescriptor.Attributes.EXTENDED_KEY.name(), key );
 	}
 
 	public static boolean isDescriptorAttribute( String key ){

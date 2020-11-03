@@ -128,6 +128,40 @@ public class ModelRestService{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/find")
+	public Response findModel( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, @QueryParam("version") String version) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		IModelLeaf<IDescriptor>[] result = null;
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+ 				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
+			Collection<IModelLeaf<IDescriptor>> results = factory.find( modelId );
+			if( Utils.assertNull(results))
+				return Response.noContent().build();
+			GsonBuilder builder = new GsonBuilder();
+			builder.enableComplexMapKeySerialization();
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+			Gson gson = builder.create();
+			result = results.toArray( new IModelLeaf[ results.size()]); 
+			String str = gson.toJson(result, IModelLeaf[].class );
+			return Response.ok( str ).build();
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}	
+	}
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get")

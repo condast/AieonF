@@ -46,7 +46,43 @@ public class ModelFactory< T extends IDescriptor > {
 	public ModelFactory( DatabaseService service ) {
 		this.service = service;
 	}
-	
+
+	/**
+	 * Get the vertices, which are with descriptors, and create the corresponding models
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	public Collection<IModelLeaf<IDescriptor>> find( long id ) throws FilterException {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
+		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		try {
+			OrientGraph graph = this.service.getGraph();
+			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(id));
+			IModelNode<IDescriptor> node = null;
+			for( Vertex vertex: vertices ) {
+				try {
+					Iterator<Edge> edges = vertex.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
+					while( edges.hasNext()) {
+						Edge edge = edges.next();
+						Vertex vnode = edge.getVertex(Direction.OUT);
+						IModelNode<IDescriptor> parent = getParent(graph, vnode, nodes);
+						node = new ModelNode( graph, parent, vnode );
+						results.add(node);
+						nodes.put(vnode, node);
+					}
+				}
+				catch( Exception ex ) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return results;
+	}
+
 	/**
 	 * Get the vertices, which are with descriptors, and create the corresponding models
 	 * @param vertices

@@ -239,6 +239,27 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	}
 
 	@Override
+	public M find( long id) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.FIND;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.MODEL_ID.toString(), String.valueOf(id));
+		WebClient<M[]> client = new WebClient<>( path );
+		Collection<M>results = new ArrayList<>();
+		try {
+			client.addListener( e->getResults(e, results ));
+			client.sendGet(request, parameters);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Utils.assertNull(results)? null: results.iterator().next();
+	}
+
+	@Override
 	public Collection<M> get(IDescriptor descriptor) throws ParseException {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.GET;

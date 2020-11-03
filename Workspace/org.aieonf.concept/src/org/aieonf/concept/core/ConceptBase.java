@@ -11,6 +11,7 @@ package org.aieonf.concept.core;
 import java.util.*;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.strings.StringStyler;
 
 /**
@@ -167,7 +168,7 @@ public class ConceptBase implements IConceptBase
 	public final int getInteger( String attribute )
 	{
 		String val = this.get( attribute );
-		if( val == null )
+		if(( val == null ) || !NumberUtils.isNumeric(val))
 			return 0;
 
 		val = val.toLowerCase().trim();
