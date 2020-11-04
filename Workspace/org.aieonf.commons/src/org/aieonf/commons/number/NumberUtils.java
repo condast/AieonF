@@ -1,14 +1,24 @@
 package org.aieonf.commons.number;
 
+import org.aieonf.commons.strings.StringUtils;
+
 public class NumberUtils {
 
+	/**
+	 * Test if the given string is numerical
+	 * @param str
+	 * @return
+	 */
 	public static boolean isNumeric(String str) {
-	    if (str == null) {
+	    if (StringUtils.isEmpty(str)) {
 	        return false;
 	    }
-	    int sz = str.length();
+	    String test = str.trim();
+	    int sz = test.length();
 	    for (int i = 0; i < sz; i++) {
-	        if (Character.isDigit(str.charAt(i)) == false) {
+	        if(( i==0 ) && test.charAt(i)=='-')
+	        	continue;
+	    	if (Character.isDigit(test.charAt(i)) == false) {
 	            return false;
 	        }
 	    }

@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.apache.org/licenses/LICENSE-2.0.html
  *******************************************************************************/
-package org.aieonf.model.xml;
+package org.aieonf.commons.filter.xml;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,15 +23,17 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.io.IOUtils;
-import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.builder.IModelBuilder;
-import org.aieonf.model.builder.IModelBuilderListener;
-import org.aieonf.model.core.IModelLeaf;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 
-public class XMLModelBuilder<D extends IDescriptor, M extends IModelLeaf<D>> implements IModelBuilder<Collection<M>> {
+public class XMLFilterBuilder<D extends Object> {
+
+	public static String S_DEFAULT_FOLDER = "/AIEONF-INF";
+	public static String S_DEFAULT_LOCATION = S_DEFAULT_FOLDER + "/filters.xml";
+	public static String S_SCHEMA_LOCATION =  S_DEFAULT_FOLDER + "/filters-schema.xsd";
+	public static String S_DEFAULT_FILTER_LOCATION = S_DEFAULT_FOLDER + "/filters.xml";
 
 	protected static final String JAXP_SCHEMA_SOURCE =
 		    "http://java.sun.com/xml/jaxp/properties/schemaSource";
@@ -48,69 +50,50 @@ public class XMLModelBuilder<D extends IDescriptor, M extends IModelLeaf<D>> imp
 		
 	private boolean completed, failed;
 	
-	private String domainId;
-	private IXMLModelInterpreter<D> interpreter;
+	private String identifier;
 
-	private Collection<IModelBuilderListener<M>> listeners;
+	private Collection<IFilterBuilderListener<IFilter<D>>> listeners;
 	
-	private XMLModelParser<D,M> parser;
+	private XMLFilterParser<D> parser;
 	
 	//First parse the XML file
-	private Collection<M> models = null;
+	private Collection<IFilter<D>> filters = null;
 	
-	private Logger logger = Logger.getLogger( XMLModelBuilder.class.getName() );
-
+	private Class<?> clss;
+	
+	private Logger logger = Logger.getLogger( XMLFilterBuilder.class.getName() );
+	
 	/**
 	 * Build the factories from the given resource in the class file and add them to the container
-	 * @param domainId
+	 * @param identifier
 	 * @param clss
 	 * @param location
 	 * @param interpreter
 	 */
-	public XMLModelBuilder( String domainId, IXMLModelInterpreter<D> interpreter ) {
-		this( new XMLModelParser<D,M>(interpreter), domainId, interpreter );
-	}
-	
-	/**
-	 * Build the factories from the given resource in the class file and add them to the container
-	 * @param domainId
-	 * @param clss
-	 * @param location
-	 * @param interpreter
-	 */
-	public XMLModelBuilder( XMLModelParser<D,M> parser, String domainId, IXMLModelInterpreter<D> interpreter ) {
-		this.domainId = domainId;
+	public XMLFilterBuilder( XMLFilterParser<D> parser, Class<?> clss, String identifier ) {
+		this.identifier = identifier;
+		this.clss = clss;
 		this.parser = parser;
-		this.interpreter = interpreter;
 		this.completed = false;
 		this.failed = false;
-		this.listeners = new ArrayList<IModelBuilderListener<M>>();
+		this.listeners = new ArrayList<IFilterBuilderListener<IFilter<D>>>();
 	}
 
-	public void addModelBuilderListener( IModelBuilderListener<M> listener ){
+	public void addModelBuilderListener( IFilterBuilderListener<IFilter<D>> listener ){
 		this.listeners.add( listener );
 	}
 
-	public void removeodelBuilderListener( IModelBuilderListener<M> listener ){
+	public void removeodelBuilderListener( IFilterBuilderListener<IFilter<D>> listener ){
 		this.listeners.remove( listener );
-	}
-
-	/**
-	 * Returns true if the url points to a valid resource
-	 * @return
-	 */
-	public boolean canCreate(){
-		return ( this.interpreter != null ) && ( this.interpreter.getInputStream() != null );
 	}
 
 	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#build()
 	 */
 	@SuppressWarnings("unused")
-	@Override
 	public void build() {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
-		URL schema_in = XMLModelBuilder.class.getResource( IModelBuilder.S_SCHEMA_LOCATION); 
+		URL schema_in = XMLFilterBuilder.class.getResource( XMLFilterBuilder.S_SCHEMA_LOCATION); 
 		if( schema_in == null )
 			throw new RuntimeException( S_ERR_NO_SCHEMA_FOUND );
 		
@@ -118,17 +101,17 @@ public class XMLModelBuilder<D extends IDescriptor, M extends IModelLeaf<D>> imp
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 		// note that if your XML already declares the XSD to which it has to conform, then there's no need to create a validator from a Schema object
-		Source schemaFile = new StreamSource( this.interpreter.getClass().getResourceAsStream( IModelBuilder.S_SCHEMA_LOCATION ));
+		Source schemaFile = new StreamSource(clss.getResourceAsStream( S_SCHEMA_LOCATION ));
 		InputStream in = null;
 		try {
-			in = this.interpreter.getInputStream();
+			in = clss.getResourceAsStream(S_DEFAULT_LOCATION);
 		} catch (Exception e1) {
-			logger.severe( S_ERR_NO_TEMPLATE_FOUND + this.interpreter + "\n");
+			logger.severe( S_ERR_NO_TEMPLATE_FOUND + S_DEFAULT_LOCATION + "\n");
 			e1.printStackTrace();
 		}
 		
 		try {
-			logger.info("Parsing SAIGHT Bundle: " + this.domainId + "\n");
+			logger.info("Parsing SAIGHT Bundle: " + this.identifier + "\n");
 			//Schema schema = schemaFactory.newSchema(schemaFile);
 			//factory.setSchema(schema);//saxParser.
 			
@@ -138,13 +121,13 @@ public class XMLModelBuilder<D extends IDescriptor, M extends IModelLeaf<D>> imp
 			
 			//saxParser.setProperty(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA); 
 			//saxParser.setProperty(JAXP_SCHEMA_SOURCE, new File(JP2P_XSD_SCHEMA)); 
-			for( IModelBuilderListener<M> listener: this.listeners )
+			for( IFilterBuilderListener<IFilter<D>> listener: this.listeners )
 				parser.addModelBuilderListener( listener );
 			saxParser.parse( in, parser );
-			models = parser.getModels();
-			for( IModelBuilderListener<M> listener: this.listeners )
+			filters = parser.getFilters();
+			for( IFilterBuilderListener<IFilter<D>> listener: this.listeners )
 				parser.removeModelBuilderListener( listener );
-			logger.info("AIEONF Bundle Parsed: " + this.domainId + "\n");
+			logger.info("AIEONF Bundle Parsed: " + this.identifier + "\n");
 		} catch( SAXNotRecognizedException e ){
 			failed = true;
 			e.printStackTrace();			
@@ -167,11 +150,9 @@ public class XMLModelBuilder<D extends IDescriptor, M extends IModelLeaf<D>> imp
 		
 		this.completed = true;
 	}
-
 	
-	@Override
-	public Collection<M> getModel() {
-		return models;
+	public Collection<IFilter<D>> getFilters() {
+		return filters;
 	}
 
 	public boolean complete() {
@@ -182,7 +163,6 @@ public class XMLModelBuilder<D extends IDescriptor, M extends IModelLeaf<D>> imp
 	/* (non-Javadoc)
 	 * @see net.osgi.jp2p.chaupal.xml.IFactoryBuilder#isCompleted()
 	 */
-	@Override
 	public boolean isCompleted() {
 		return completed;
 	}
