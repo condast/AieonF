@@ -29,7 +29,7 @@ public interface ITemplateProperty<T extends Object, U extends Object, V extends
 		 * @return
 		 */
 		public static boolean contains( String str ){
-			if( Descriptor.isNull(str))
+			if( Descriptor.assertNull(str))
 				return false;
 			Attributes[] attrs = Attributes.values();
 			for( Attributes attr: attrs ){

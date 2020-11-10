@@ -24,4 +24,15 @@ public class NumberUtils {
 	    }
 	    return true;
 	}
+	
+	/**
+	 * Parse the given String for a long value
+	 * @param value
+	 * @return
+	 */
+	public static long parseLong( String value ) {
+		if( StringUtils.isEmpty(value) || !isNumeric(value))
+			return -1;
+		return Long.parseLong(value);
+	}
 }

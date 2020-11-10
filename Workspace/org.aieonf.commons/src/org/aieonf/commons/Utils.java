@@ -82,4 +82,13 @@ public class Utils
 		return (( collection == null ) || ( collection.length == 0 )); 
 	}
 
+	/**
+	 * Returns true if the collection is null or empty
+	 * @param collection
+	 * @return
+	 */
+	public static boolean assertNull( long[] collection ){
+		return (( collection == null ) || ( collection.length == 0 )); 
+	}
+
 }

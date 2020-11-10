@@ -239,7 +239,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 				
 				//skip categories
 				String fk = aieon.getFK();
-				if( Descriptor.isNull(fk))
+				if( Descriptor.assertNull(fk))
 					continue;
 
 				placesAieon = places.get( Integer.parseInt( fk ));
@@ -249,7 +249,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 					continue;
 				aieon.setSource(uri );
 				faviconAieon = resources.get( placesAieon.getFavIconID() );
-				if(( faviconAieon != null ) && ! Descriptor.isNull( faviconAieon.getSource()))
+				if(( faviconAieon != null ) && ! Descriptor.assertNull( faviconAieon.getSource()))
 					aieon.fill("ICON", faviconAieon.getSource() );
 				IModelNode<IDescriptor> cat = categories.get( Integer.valueOf( aieon.getParentID()));
 				if( cat == null )
@@ -467,35 +467,35 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 				String str = rs.getString( PlacesAttribute.id.name() );
 				set( BookmarkAttribute.primkey, str );
 				str = rs.getString( PlacesAttribute.url.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( IConcept.Attributes.SOURCE.name(), str );
 				str = rs.getString( PlacesAttribute.title.name() );
-				if( !Descriptor.isNull(str)){
+				if( !Descriptor.assertNull(str)){
 				  String name = Descriptor.createValidName( str );
 				  this.setName( name );
 					if( name.length() < str.length() )
 						this.setDescription( str );
 				}
 				str = rs.getString( PlacesAttribute.rev_host.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( PlacesAttribute.rev_host, str );
 				str = rs.getString( PlacesAttribute.visit_count.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( PlacesAttribute.visit_count, str );
 				str = rs.getString( PlacesAttribute.rev_host.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( PlacesAttribute.rev_host, str );
 				str = rs.getString( PlacesAttribute.hidden.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( IConcept.Attributes.HIDDEN.name(), str );
 				str = rs.getString( PlacesAttribute.typed.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( PlacesAttribute.typed, str );
 				str = rs.getString( PlacesAttribute.favicon_id.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( PlacesAttribute.favicon_id, str );
 				str = rs.getString( PlacesAttribute.frecency.name() );
-				if( !Descriptor.isNull(str))
+				if( !Descriptor.assertNull(str))
 				  set( PlacesAttribute.frecency, str );
 			  
 			}

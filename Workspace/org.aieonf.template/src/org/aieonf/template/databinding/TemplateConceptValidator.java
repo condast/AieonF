@@ -97,7 +97,7 @@ public class TemplateConceptValidator
 		for( TemplateProperty<?,?> tda: attrs ){
 			tav = new TemplateAttributeValidator( tda );
 			value = descriptor.get( tda.getKey() );
-			if( Descriptor.isNull(value ))
+			if( Descriptor.assertNull(value ))
 				value =  null;//descriptor.getFromExtendedKey( tda.getKey() );
 			retVal &= tav.validate( value ).isCorrect();
 			if( retVal )

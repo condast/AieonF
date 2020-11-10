@@ -2,10 +2,25 @@ package org.aieonf.model.provider;
 
 import java.util.Map;
 
+import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IDescribable;
 
 public interface IModelDatabase<K extends Object, M extends IDescribable> extends IModelProvider<K, M>{
-	
+
+	public enum Attributes{
+		ID,
+		TOKEN,
+		DOMAIN,
+		MODEL_ID,
+		CATEGORY,
+		WILDCARD;
+
+		@Override
+		public String toString() {
+			return StringStyler.xmlStyleString( super.name());
+		}
+	}
+
 	public enum Roles{
 		ADMIN,
 		READ;
@@ -50,6 +65,14 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 	 * @return
 	 */
 	public boolean remove( M leaf );
+
+	/**
+	 * Remove the children from the given parent
+	 * @param parent
+	 * @param children
+	 * @return
+	 */
+	boolean remove(long parent, long[] children);
 
 	/**
 	 * Remove the models with the given ids

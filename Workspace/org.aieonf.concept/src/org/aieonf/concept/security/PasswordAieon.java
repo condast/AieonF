@@ -391,11 +391,11 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		if( PasswordAieon.isPasswordAieon( concept ) == false )
 			return false;
 		String pwd = concept.get( IPasswordAieon.Attributes.PASSWORD.name());
-		if( Descriptor.isNull( pwd ))
+		if( Descriptor.assertNull( pwd ))
 			return false;
 		pwd = pwd.trim();
 		String confirm = concept.get( IPasswordAieon.Attributes.CONFIRMATION.name() );
-		if( Descriptor.isNull( confirm ))
+		if( Descriptor.assertNull( confirm ))
 			return false;
 		confirm = confirm.trim().toLowerCase();
 		return pwd.equals(confirm );

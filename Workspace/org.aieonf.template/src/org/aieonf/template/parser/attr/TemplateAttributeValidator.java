@@ -29,7 +29,7 @@ public class TemplateAttributeValidator<T extends Enum<?>> extends AbstractValid
 	 * @return
 	 */
 	public String initValue( String str ){
-		if( Descriptor.isNull(str))
+		if( Descriptor.assertNull(str))
 			return null;
 		if( str.substring(0, 1).equals("{"))
 			str = str.substring(1);

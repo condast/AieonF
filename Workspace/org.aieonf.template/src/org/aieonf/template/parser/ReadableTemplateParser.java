@@ -319,7 +319,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 		tda.fill(node.getAttributes() );
 		TemplateAttributeValidator<?> validator = new TemplateAttributeValidator( tda );
 		String result = validator.initValue( node.getTextContent() );
-		if( !Descriptor.isNull( result )){
+		if( !Descriptor.assertNull( result )){
 			tNode.getDescriptor().set( node.getNodeName(), result );
 		};
 	}
@@ -345,7 +345,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 			//target.addAttribute( ta );
 			TemplateAttributeValidator<?> validator = new TemplateAttributeValidator( ta );
 			String result = validator.initValue( value );
-			if( !Descriptor.isNull( result ))
+			if( !Descriptor.assertNull( result ))
 				target.set( key,  result);
 		}
 	}

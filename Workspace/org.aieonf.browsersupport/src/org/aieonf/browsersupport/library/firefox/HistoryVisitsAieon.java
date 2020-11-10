@@ -32,22 +32,22 @@ public class HistoryVisitsAieon extends Concept implements IDataResource
 			setName( S_HISTORY_VISITS );
 			setVersion( 1 );
 			String str = rs.getString( InputHistoryAttribute.place_id.name() );
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				set( InputHistoryAttribute.place_id, str );
 			str = rs.getString( InputHistoryAttribute.session.name() );
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				setDescription( str );
 			str = rs.getString( InputHistoryAttribute.id.name() );
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				set( InputHistoryAttribute.id, str );
 			str = rs.getString( InputHistoryAttribute.from_visit.name() );
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				set( InputHistoryAttribute.from_visit, str );
 			str = rs.getString( InputHistoryAttribute.visit_date.name() );
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				set( InputHistoryAttribute.visit_date, str );
 			str = rs.getString( InputHistoryAttribute.visit_type.name() );
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				set( InputHistoryAttribute.visit_type, str );
 		}
 		catch (SQLException e) {
@@ -76,7 +76,7 @@ public class HistoryVisitsAieon extends Concept implements IDataResource
 	
 	public int getPlacesId(){
 		String str = super.get( InputHistoryAttribute.place_id );
-		if( Descriptor.isNull( str))
+		if( Descriptor.assertNull( str))
 			return -1;
 		return Integer.parseInt( str );
 	}

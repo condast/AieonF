@@ -158,7 +158,7 @@ public class DateAieon extends LocaleAieon implements IImplicitAieon<IDescriptor
 		else
 			calendar = Calendar.getInstance( super.getLocale() );
 		String time = super.get( Attributes.TIME_IN_MILLIS );
-		if( Descriptor.isNull( time ))
+		if( Descriptor.assertNull( time ))
 			time = String.valueOf( Descriptor.getCreateDate(this).getTime());
 		if( time == null )
 			return calendar;

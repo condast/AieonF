@@ -12,41 +12,94 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringStyler;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.osgi.framework.Bundle;
 
-public abstract class AbstractImages {
+public abstract class AbstractImages implements IImageProvider {
+
+	public static final String S_RESOURCES = "/resources/";
 
 	private static final String S_ERR_INVALID_BUNDLE_NAME = "The bundle name is invalid: ";
 
 	public enum ImageSize{
+		DEFAULT,
+		TINY,
 		SMALL,
+		MEDIUM,
 		NORMAL,
 		LARGE,
-		TILE;
+		BIG,
+		HUGE;
 		
 		public int getSize(){
-			int size = 32;
-			switch( this ){
-			case SMALL:
+			return getSize( this );
+		}
+		
+		public static String getFolder( ImageSize isize ) {
+			String result=  "/";
+			switch( isize ) {
+			case DEFAULT:
+				break;
+			default:
+				result = isize.name().toLowerCase() + result;
+			}
+			return result;
+		}
+		
+		public static int getSize( ImageSize isize){
+			int size = 0;
+			switch( isize ){
+			case TINY:
 				size = 16;
 				break;
+			case SMALL:
+				size = 24;
+				break;
+			case MEDIUM:
+				size = 32;
+				break;
 			case LARGE:
+				size = 48;
+				break;
+			case BIG:
 				size = 64;
 				break;
-			case TILE:
+			case HUGE:
 				size = 128;
+				break;
+			
+			case DEFAULT://Fallthrough
 			default:
+				size = 32;//is NORMAL
 				break;
 			}
 			return size;
 		}
 		
-		public static String getLocation( ImageSize size, String imageName ){
-			return size.name().toLowerCase() + "/" + imageName + "-" + size.getSize() + ".png";
+		
+		@Override
+		public String toString() {
+			return super.toString().toLowerCase();
+		}
+
+		public static ImageSize getImageSize( int size ) {
+			ImageSize imageSize = null;
+			for( ImageSize iSize : ImageSize.values() ) {
+				if( size == iSize.getSize() )
+					imageSize = iSize;
+			}
+			return imageSize;
+		}
+		
+		public static String getLocation( String imageName, ImageSize size ){
+			String name = StringStyler.xmlStyleString(imageName);
+			String folder = ImageSize.DEFAULT.equals(size)?"":size.name().toLowerCase();
+			String size_suffix = ImageSize.DEFAULT.equals(size)?"": String.valueOf( size.getSize());
+			return folder + "/" + name + "-" + size_suffix + ".png";
 		}
 	}
 	
@@ -56,8 +109,8 @@ public abstract class AbstractImages {
 	private String bundleName;
 	private ImageSize size;
 
-	protected AbstractImages( String path ) {
-		this( path, null, ImageSize.NORMAL );
+	protected AbstractImages( String bundleName ) {
+		this( S_RESOURCES, bundleName, ImageSize.NORMAL );
 	}
 
 	protected AbstractImages( String path, String bundleName ) {
@@ -84,11 +137,10 @@ public abstract class AbstractImages {
 		return data;
 	}
 
-	/**
-	 * Get the image with the given 
-	 * @param identifier
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.condast.commons.ui.image.IImageProvider#getImageFromName(java.lang.String)
 	 */
+	@Override
 	public Image getImageFromName( String identifier ){
 		
 		ImageStore data = images.get( identifier );
@@ -100,14 +152,13 @@ public abstract class AbstractImages {
 	}
 	
 	protected String getSizedLocation( Enum<?> identifier ){
-		return ImageSize.getLocation(size, identifier.name().toLowerCase());
+		return ImageSize.getLocation(identifier.name().toLowerCase(), size );
 	}
 	
-	/**
-	 * 
-	 * @param identifier
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.condast.commons.ui.image.IImageProvider#getSizedImage(java.lang.Enum)
 	 */
+	@Override
 	public Image getSizedImage( Enum<?> identifier ){
 		String path = getSizedLocation(identifier);//ImageSize.getLocation(size, identifier.name().toLowerCase());
 		return getImageFromName(path);
@@ -115,6 +166,10 @@ public abstract class AbstractImages {
 	
 	protected abstract void initialise();
 	
+	/* (non-Javadoc)
+	 * @see org.condast.commons.ui.image.IImageProvider#dispose()
+	 */
+	@Override
 	public void dispose(){
 		for( ImageStore data: images.values() )
 			data.image.dispose();

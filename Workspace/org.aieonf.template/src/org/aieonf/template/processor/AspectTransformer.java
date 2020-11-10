@@ -50,7 +50,7 @@ public class AspectTransformer
 	 * @throws ConceptException
 	 */
 	public void fillAieon( IDescriptor descriptor, String attribute, String value ) throws ConceptException{
-		if(( !Descriptor.isNull( attribute )) && ( !Descriptor.isNull( value )))
+		if(( !Descriptor.assertNull( attribute )) && ( !Descriptor.assertNull( value )))
 				descriptor.set( classifier + "."+ attribute, value);
 	}
 

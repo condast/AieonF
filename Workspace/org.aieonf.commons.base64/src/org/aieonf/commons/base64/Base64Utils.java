@@ -39,7 +39,7 @@ public class Base64Utils
     	buf.flush();
     	in.close();
       String str = new String( Base64.encodeBase64(buf.toByteArray() ), "UTF-8");
-      if( Descriptor.isNull( str ))
+      if( Descriptor.assertNull( str ))
       	return null;
       return "data:image/png;base64," + str;
     }

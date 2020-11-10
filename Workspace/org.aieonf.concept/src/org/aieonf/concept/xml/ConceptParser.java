@@ -143,7 +143,7 @@ public class ConceptParser
 		Document doc = element.getOwnerDocument();
 		for( Node child: children ){
 			str = child.getNodeName();
-			if( Descriptor.isNull( str ))
+			if( Descriptor.assertNull( str ))
 				continue;
 			str = str.trim().toLowerCase();
 			if( str.equals( IConcept.ATTRIBUTES.toLowerCase() )){

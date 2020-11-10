@@ -143,7 +143,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 				jp.nextToken();
 				while (jp.nextToken() != JsonToken.END_OBJECT) {
 					namefield = jp.getCurrentName();
-					if( Descriptor.isNull( namefield ))
+					if( Descriptor.assertNull( namefield ))
 						continue;
 					jp.nextToken();
 					jp.nextToken();
@@ -328,7 +328,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 				if( Attributes.CHILDREN.equals( attr ))
 					continue;
 				
-				if( !Descriptor.isNull( entry.getValue().textValue() ))
+				if( !Descriptor.assertNull( entry.getValue().textValue() ))
 					set( Attributes.convert(attr), entry.getValue().textValue() );
 			}
 			String type = super.get( Attributes.TYPE );
@@ -346,7 +346,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			while (parser.nextToken() != JsonToken.END_OBJECT) {
 				String namefield = parser.getCurrentName();
 				parser.nextToken();
-				if( Descriptor.isNull( namefield ))
+				if( Descriptor.assertNull( namefield ))
 					continue;
 				Attributes attr = Attributes.valueOf(namefield);
 				set( attr, parser.getText() );

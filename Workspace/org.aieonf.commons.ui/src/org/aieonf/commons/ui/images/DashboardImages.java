@@ -17,14 +17,16 @@ import org.eclipse.swt.graphics.Image;
 
 public class DashboardImages extends AbstractImages {
 
-	public static final String S_ICON_PATH = "/resources/";
-	
 	public enum Images{
 		ADD,
 		DELETE,
-		SETTINGS,
-		SETTINGS_16,
+		DELETE_SMALL,
+		DONTSHOW,
+		SETTINGSGREEN,
 		DOSSIER,
+		FIELD,
+		LOCATE,
+		QUESTION,
 		QUESTION_MARK,
 		HOME,
 		CONDAST,
@@ -32,52 +34,66 @@ public class DashboardImages extends AbstractImages {
 		HELP,
 		WORLD,
 		MAP,
-		COMPARE;
+		COMPARE,
+		EXPAND,
+		COLLAPSE;
 
 		@Override
 		public String toString() {
 			return StringStyler.prettyString( super.toString() );
 		}
+
+		public static String getResource( Images image ){
+			return getResource(image, ImageSize.NORMAL);
+		}
 		
-		public static String getFileName( Images image ){
-			String str = null;
+		public static String getResource( Images image, ImageSize size ){
+			StringBuilder builder = new StringBuilder();
 			switch( image ){
-			case ADD:
-				str = "Add-32.png";
-				break;
 			case CONDAST:
-				str = "condast.png";
+				builder.append(ImageSize.getFolder(ImageSize.DEFAULT));
+				builder.append(".png" );	
 				break;
 			case DOSSIER:
-				str = "dossier-16.png";
+				builder.append(ImageSize.getFolder(ImageSize.TINY));
+				builder.append( "dossier-16");
 				break;
 			case HOME:
-				str = "home-16.png";
+				builder.append(ImageSize.getFolder(ImageSize.TINY));
+				builder.append( "home-16");
 				break;
 			case QUESTION_MARK:
-				str = "question_mark-16.png";
-				break;
-			case SETTINGS:
-				str = "Settings-32.png";
-				break;
-			case SETTINGS_16:
-				str = "Settings-16.png";
-				break;
-			case WORLD:
-				str = "world-32.png";
+				builder.append(ImageSize.getFolder(ImageSize.TINY));
+				builder.append( "question_mark-16");
 				break;
 			default:
-				str = image.name().toLowerCase() + "-32.png";
+				builder.append(ImageSize.getFolder(size));
+				builder.append(image.name().toLowerCase());
+				builder.append("-" );
+				builder.append( size.getSize() );
+				builder.append(".png" );	
 				break;
 			}
+			return builder.toString();
+		}
+		
+		/**
+		 * 
+		 * @param image, enumimages like Images.ADD, DELETE and so on
+		 * @param imageSize, 
+		 * @return
+		 */
+		public static String getFileName( Images image, ImageSize imageSize ){
+			String str = ImageSize.getLocation( image.name(), imageSize );//get location, filename and size from super
 			return str;
 		}
+
 	}
 	
 	private static DashboardImages images = new DashboardImages();
 	
 	private DashboardImages() {
-		super( S_ICON_PATH, Activator.BUNDLE_ID );
+		super( S_RESOURCES, Activator.BUNDLE_ID );
 	}
 
 	/**
@@ -90,16 +106,20 @@ public class DashboardImages extends AbstractImages {
 	
 	@Override
 	public void initialise(){
-		for( Images img: Images.values() )
-			setImage( Images.getFileName( img ));
+		for( Images image: Images.values())
+			setImage( image.toString() );
 	}
 
-	/**
-	 * Get the image
-	 * @param desc
-	 * @return
-	 */
-	public Image getImage( Images desc ){
-			return getImageFromName( Images.getFileName(desc));				
+	public static Image getImage( Images image, ImageSize size ){
+		return getInstance().getImageFromName( Images.getResource( image ));
 	}
+
+	public static Image getImage( Images image ){
+		return getInstance().getImageFromName( Images.getResource( image ));
+	}
+
+	protected void setImage( Images image ){
+		super.setImage( Images.getResource(image));
+	}
+
 }

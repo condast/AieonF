@@ -130,7 +130,7 @@ implements ILocatorAieon
 	{
 		String extended = super.getValue( IDescriptor.Attributes.EXTENDED_KEY );
 		extended = extended.replaceAll("[$]", ".");
-		if( Descriptor.isNull( extended ))
+		if( Descriptor.assertNull( extended ))
 			return super.get(key);
 		return super.get( extended + "." + key);
 	}

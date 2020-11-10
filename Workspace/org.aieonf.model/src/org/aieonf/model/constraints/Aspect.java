@@ -81,7 +81,7 @@ public class Aspect extends ImplicitAieon implements IAspect
 		if( !descriptor.getName().equals( this.getName() ))
 			return false;
 		String aspect = descriptor.get( IAspect.Attributes.Aspect.name() );
-		if( Descriptor.isNull( aspect ))
+		if( Descriptor.assertNull( aspect ))
 			return false;
 		String thisAspect = this.getAspect();
 		return thisAspect.equals( aspect );

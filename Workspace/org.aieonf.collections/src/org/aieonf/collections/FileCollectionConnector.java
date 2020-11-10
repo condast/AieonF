@@ -230,13 +230,13 @@ public class FileCollectionConnector<T extends IDescribable> extends AbstractCol
   	}
 		logger.log( Level.FINE, "Checking source");
     String source = loader.getURI().getPath().trim();
-		if(( loader.getURI() == null ) || Descriptor.isNull( source ))
+		if(( loader.getURI() == null ) || Descriptor.assertNull( source ))
 			throw new CollectionException( S_ERR_NO_SOURCE_FOUND + loader.toString() );
  		logger.log( Level.FINE, "Checking identifier");
   	if(( loader.getIdentifier() == null ) || loader.getIdentifier().trim().equals( "" ))
 			throw new CollectionException( S_ERR_NO_IDENTIFIER_FOUND + loader.getURI() );
 		logger.log( Level.FINE, "Checking uri");
-    if(( loader.getURI() == null ) || Descriptor.isNull( loader.getURI().getPath() ))
+    if(( loader.getURI() == null ) || Descriptor.assertNull( loader.getURI().getPath() ))
 			throw new CollectionException( S_ERR_NO_URI_FOUND + loader.getURI() );
 		logger.log( Level.FINE, "Checking key");
   }

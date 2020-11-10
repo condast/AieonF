@@ -125,7 +125,7 @@ public class SketchController extends AbstractJavascriptController {
 	 */
 	public synchronized void search( String choice_str, String wildcard ) throws Exception
 	{
-		if( Descriptor.isNull( wildcard ))
+		if( Descriptor.assertNull( wildcard ))
 			wildcard = WildcardFilter.S_ALL;
 		AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
 				CategoryAieon.Attributes.CATEGORY, wildcard );

@@ -169,7 +169,7 @@ public class BodyFactory<T extends Object>
 	 */
 	protected static void setDescriptor( IDescriptor descriptor ) throws ConceptException
 	{
-		if( Descriptor.isNull( descriptor.getName() ))
+		if( Descriptor.assertNull( descriptor.getName() ))
 			throw new ConceptException( S_ERR_INVALID_DESCRIPTOR + descriptor.toString() );
 		if( descriptor.getID() < 0)
 			descriptor.set( IDescriptor.Attributes.ID.name(), BodyFactory.IDFactory() );

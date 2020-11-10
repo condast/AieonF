@@ -45,7 +45,7 @@ public class LocationManager extends AbstractLocationManager<IDescriptor>
 	{
     IDescriptor descriptor = describable.getDescriptor();
 		String name = descriptor.getName().toLowerCase();
-    if( Descriptor.isNull( name ))
+    if( Descriptor.assertNull( name ))
       throw new ConceptException( S_ERR_INVALID_NAME + name );
 
     String firstChar = String.valueOf( name.charAt( 0 ));

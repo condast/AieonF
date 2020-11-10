@@ -33,7 +33,7 @@ public class TemplateAttributes
 		 * @return
 		 */
 		public static boolean contains( String str ){
-			if( Descriptor.isNull(str))
+			if( Descriptor.assertNull(str))
 				return false;
 			Attributes[] attrs = Attributes.values();
 			for( Attributes attr: attrs ){
@@ -94,7 +94,7 @@ public class TemplateAttributes
   		if( !Attributes.contains( key ))
   			continue;	
   		String text = node.getTextContent();
-  		if( Descriptor.isNull( text ))
+  		if( Descriptor.assertNull( text ))
   			return;
   		
   		Attributes attr = Attributes.valueOf( key.toUpperCase() );

@@ -125,18 +125,18 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 	public void fill( ResultSet rs ) throws ConceptException{
 		try {
 			String str =  rs.getString( Columns.toColumnName( Columns.ID ));
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				set( IDescriptor.Attributes.ID, str );		
 			str =  rs.getString( Columns.toColumnName( Columns.MIME_TYPE ));
-			if( !Descriptor.isNull(str))
+			if( !Descriptor.assertNull(str))
 				set( IDataURI.Attribute.MIME_TYPE, str );		
 			str =  rs.getString( Columns.toColumnName( Columns.DATA ));
-			if( !Descriptor.isNull(str)){
+			if( !Descriptor.assertNull(str)){
 				set( IDataResource.Attribute.Resource, str );		
 				super.set( Attribute.DataUri.name(), "true");
 			}
 			str =  rs.getString( Columns.toColumnName( Columns.URL ));
-			if( !Descriptor.isNull(str)){
+			if( !Descriptor.assertNull(str)){
 				setSource( str );		
 			}
 			set( BookmarkAieon.BookmarkAttribute.primkey, rs.getString( "id" ));
@@ -156,7 +156,7 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 	public String getType()
 	{
 		String str = super.get( IDataResource.Attribute.Type );
-		if( Descriptor.isNull( str ))
+		if( Descriptor.assertNull( str ))
 			return S_EMPTY;
 		return str;
 	}

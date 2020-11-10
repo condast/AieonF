@@ -17,7 +17,8 @@ public interface IDatabaseConnection {
 		SEARCH,
 		UPDATE,
 		REMOVE,
-		REMOVE_ALL;
+		REMOVE_ALL,
+		REMOVE_CHILDREN;
 
 		@Override
 		public String toString() {

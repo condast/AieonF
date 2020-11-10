@@ -24,7 +24,7 @@ public class TemplateProcessor<T extends ITemplateAieon>
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ITemplateNode<IDescriptor> findNode( String aspect ) throws ModelException{
-		if( Descriptor.isNull( aspect ))
+		if( Descriptor.assertNull( aspect ))
 			return null; 
 		return findNode( new TemplateNodeWrapper( this.template ), aspect );
 	}
@@ -45,7 +45,7 @@ public class TemplateProcessor<T extends ITemplateAieon>
 		IAspect aspectAieon = null;//node.getTemplateAttributes().getAspect();
 		if( aspectAieon == null )
 			return null;
-		if( Descriptor.isNull( aspectAieon.getAspect() ))
+		if( Descriptor.assertNull( aspectAieon.getAspect() ))
 			return null;
 		String asp = aspectAieon.getAspect().trim().toLowerCase();
 		String[] split = aspect.trim().toLowerCase().split( REG_EX );

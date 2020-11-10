@@ -162,9 +162,9 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 		if( !descriptor.getName().equals( reference.getName() ))
 			return false;
 		String refVal = reference.get( attribute );
-		if( Descriptor.isNull( refVal ))
+		if( Descriptor.assertNull( refVal ))
 			return false;
-		if( Descriptor.isNull( descriptor.get( attribute )))
+		if( Descriptor.assertNull( descriptor.get( attribute )))
 			return false;
 		return refVal.equals( descriptor.get( attribute ));
 	}
@@ -179,7 +179,7 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 		if( !implicit.isFamily( desc ))
 			return false;
 		IDescriptor descriptor = ( IDescriptor )desc;
-		return !Descriptor.isNull( descriptor.get( reference ));
+		return !Descriptor.assertNull( descriptor.get( reference ));
 	}
 
 }

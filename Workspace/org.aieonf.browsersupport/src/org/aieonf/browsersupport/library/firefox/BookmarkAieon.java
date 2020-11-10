@@ -53,7 +53,7 @@ public class BookmarkAieon extends Concept implements IDataResource
 			setDescription( title );							
 			switch( type ){
 			case 1:
-				if(( !Descriptor.isNull( fk ) && !Descriptor.isNull( title ))) {
+				if(( !Descriptor.assertNull( fk ) && !Descriptor.assertNull( title ))) {
 					if( parent != 5 ){
 						String name = Descriptor.createValidName( title );
 						set( IDescriptor.Attributes.NAME, name );
@@ -66,7 +66,7 @@ public class BookmarkAieon extends Concept implements IDataResource
 				}
 				break;
 			case 2:
-				if( !Descriptor.isNull( title )) {
+				if( !Descriptor.assertNull( title )) {
 					set( CategoryAieon.Attributes.CATEGORY, title );
 					set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
 				}

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.commons.transaction.AbstractTransaction;
@@ -187,6 +188,29 @@ public class DatabaseService implements Closeable{
 		return index;
 	}
 
+	public int removeChildren( long id, long[] children ) {
+		int counter = 0;
+		Iterable<Vertex> iterable = this.graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
+		if( iterable == null )
+			return counter;
+		Iterator<Vertex> iterator = iterable.iterator();
+		while( iterator.hasNext() ) {
+			Vertex vertex = iterator.next();			
+			Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();
+			while( edges.hasNext()) {
+				Edge edge = edges.next();
+				Vertex other = getOther( edge, vertex);
+				for( long check: children ) {
+					if( check == getId(other))
+						graph.removeEdge(edge);
+				}
+				if( !hasEdges( other))
+					graph.removeVertex(other);
+			}
+		}		
+		return counter;
+	}
+
 	protected int countEdges( Vertex vertex, Direction direction ) {
 		int counter = 0;
 		Iterator<Edge> iterator = vertex.getEdges(direction).iterator();
@@ -195,6 +219,25 @@ public class DatabaseService implements Closeable{
 			counter++;
 		}
 		return counter;
+	}
+	
+	public static long getId( Vertex vertex ) {
+		return NumberUtils.parseLong( vertex.getProperty(IDescriptor.Attributes.ID.name())); 
+	}
+
+	public static boolean hasEdges( Vertex vertex ) {
+		Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();		
+		return edges.hasNext(); 
+	}
+
+	public static boolean hasEdges( Vertex vertex, Direction direction ) {
+		Iterator<Edge> edges = vertex.getEdges(direction).iterator();		
+		return edges.hasNext(); 
+	}
+
+	public static Vertex getOther( Edge edge, Vertex vertex ) {
+		Vertex check = edge.getVertex( Direction.IN); 
+		return !check.equals(vertex)?check: edge.getVertex(Direction.OUT);
 	}
 	
 	public void sync(){

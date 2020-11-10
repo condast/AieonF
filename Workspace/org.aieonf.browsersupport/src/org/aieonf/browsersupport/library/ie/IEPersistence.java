@@ -107,7 +107,7 @@ public class IEPersistence extends AbstractFilePersistence
 			return;
 		String datauri = Base64Utils.getBase64DataURI( this.getClass(), "/images/explorer.png");
 		try {
-			if( !Descriptor.isNull( datauri ))
+			if( !Descriptor.assertNull( datauri ))
 				model.setResource( datauri );
 		}
 		catch (ConceptException e) {

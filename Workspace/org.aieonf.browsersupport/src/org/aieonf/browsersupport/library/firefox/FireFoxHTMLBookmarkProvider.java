@@ -133,10 +133,10 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 			urlEon.set( IDescriptor.Attributes.NAME.toString(), name );
 			urlEon.setDescription( description );
 			cat.addChild( new ModelLeaf<IConcept>( urlEon ));
-			if( Descriptor.isNull( urlEon.getResource() )){
+			if( Descriptor.assertNull( urlEon.getResource() )){
 				String datauri = Base64Utils.getBase64DataURI( this.getClass(), "/images/firefox.png");
 				try {
-					if( !Descriptor.isNull( datauri ))
+					if( !Descriptor.assertNull( datauri ))
 						urlEon.setResource( datauri );
 				}
 				catch (ConceptException e) {
@@ -207,7 +207,7 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 			if( !Base64Utils.isArrayByteBase64(resource.getResource().getBytes("UTF-8" ))){
 				String datauri = Base64Utils.getBase64DataURI( this.getClass(), "/images/firefox.png");
 				try {
-					if( !Descriptor.isNull( datauri ))
+					if( !Descriptor.assertNull( datauri ))
 						urlEon.setResource( datauri );
 				}
 				catch (ConceptException e) {

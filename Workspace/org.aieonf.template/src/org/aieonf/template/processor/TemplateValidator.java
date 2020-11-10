@@ -23,7 +23,7 @@ public class TemplateValidator extends AbstractValidator<String> implements IVal
 		TemplateAttributes ta = null;//this.template.getTemplateAttributes();
 		if( !ta.getAspect().getAspect().equals( super.getReference() ))
 			return new ValidationEvent<String, String>( this, false);
-		return new ValidationEvent<String, String>( this, (( Descriptor.isNull( value )) || ( value.length() <= 25)));
+		return new ValidationEvent<String, String>( this, (( Descriptor.assertNull( value )) || ( value.length() <= 25)));
 	}
 
 	protected boolean performValidation(String aspect, String attribute, String value)
@@ -31,7 +31,7 @@ public class TemplateValidator extends AbstractValidator<String> implements IVal
 		TemplateAttributes ta = null;//this.template.getTemplateAttributes();
 		if( !ta.getAspect().getAspect().equals( super.getReference() ))
 			return false;
-		return (( Descriptor.isNull( value )) || ( value.length() > 25));
+		return (( Descriptor.assertNull( value )) || ( value.length() > 25));
 	}
 
 }

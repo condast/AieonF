@@ -92,7 +92,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	@Override
 	public boolean getStoreInternal(){
 		String value = this.get( ILoaderAieon.Attributes.INTERNAL.name() );
-		if( Descriptor.isNull( value ))
+		if( Descriptor.assertNull( value ))
 			return false;
 		return ConceptBase.parseBoolean( value );
 	}
@@ -191,7 +191,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 			return true;
 
 		String source = descriptor.get( IConcept.Attributes.URI.name() );
-		if( Descriptor.isNull( source ))
+		if( Descriptor.assertNull( source ))
 			return false;
 		if( this.getURI() == null )
 			return false;
@@ -261,7 +261,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	public static boolean isDebugMode( IDescriptor descriptor )
 	{
 		String str = descriptor.get( S_DEBUG_MODE );
-		if( Descriptor.isNull(str))
+		if( Descriptor.assertNull(str))
 			return false;
 		Boolean result = str.equals(Boolean.TRUE.toString().toLowerCase() );
 		if( !result )

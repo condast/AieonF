@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
-
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
@@ -32,8 +30,6 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	 */
 	private transient boolean reverse;
 	
-	private Logger logger = Logger.getLogger( this.getClass().getName());
-
 	public ModelNode( OrientGraph graph, Vertex vertex ) {
 		this( graph, null, vertex );
 	}
@@ -118,7 +114,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 			if( vertex.getId().equals(vchild.getId()))
 				graph.removeEdge(edge);
 			IModelLeaf<IDescriptor> child = new ModelNode( graph, this, vchild); 
-			logger.fine( child.getData().toString());	
+			//logger.fine( child.getData().toString());	
 			children.put(child, edge.getLabel());
 		}
 		return children;

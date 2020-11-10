@@ -28,7 +28,6 @@ import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
-import org.aieonf.model.utils.PrintModel;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
 import org.aieonf.orientdb.filter.IGraphFilter;
@@ -210,8 +209,8 @@ public class ModelRestService{
 			IGraphFilter filter = ff.createFilter(type, params);
 			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
 			Collection<IModelLeaf<IDescriptor>> results = factory.get(filter.doFilter());
-			for( IModelLeaf<IDescriptor> model: results)
-				logger.fine( PrintModel.printModel(model, true));
+			//for( IModelLeaf<IDescriptor> model: results)
+			//	logger.fine( PrintModel.printModel(model, true));
 			if( Utils.assertNull(results))
 				return Response.noContent().build();
 			GsonBuilder builder = new GsonBuilder();
@@ -252,7 +251,7 @@ public class ModelRestService{
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/remove")
 	public synchronized Response remove( @QueryParam("id") long id, @QueryParam("token") long token,
-			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId) {
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, String data) {
 		DatabaseService dbService = DatabaseService.getInstance();
 		int counter = 0;
 		try{
@@ -261,6 +260,32 @@ public class ModelRestService{
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
 			counter = dbService.remove(modelId);
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}
+		return (counter == 0)?Response.ok( counter ).build():Response.noContent().build();
+	}
+
+	@DELETE
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/remove-children")
+	public synchronized Response removeChildren( @QueryParam("id") long id, @QueryParam("token") long token,
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, String data) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		int counter = 0;
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			Gson gson = new Gson();
+			long[] ids = gson.fromJson(data, long[].class);
+			counter = dbService.removeChildren( modelId, ids );
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

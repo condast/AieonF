@@ -165,7 +165,7 @@ public class Descriptor implements IDescriptor
 	public final int getVersion()
 	{
 		String version = this.getValue( Attributes.VERSION );
-		if( Descriptor.isNull( version ))
+		if( Descriptor.assertNull( version ))
 			return Integer.MIN_VALUE;
 		return Integer.parseInt( version );
 	}
@@ -532,7 +532,7 @@ public class Descriptor implements IDescriptor
 	 * @param str
 	 * @return
 	 */
-	public final static boolean isNull( String str ){
+	public final static boolean assertNull( String str ){
 		return ( str == null ) || ( str.trim().length() == 0 );
 	}
 
@@ -543,7 +543,7 @@ public class Descriptor implements IDescriptor
 	 */
 	public final static boolean isValid( IDescriptor descriptor ){
 		String str = descriptor.getName();
-		return isNull( str )?false: ( descriptor.getVersion() >= 0 );
+		return assertNull( str )?false: ( descriptor.getVersion() >= 0 );
 	}
 
 	/**
@@ -679,7 +679,7 @@ public class Descriptor implements IDescriptor
 	public String getFromExtendedKey(String key)
 	{
 		String extended = base.get( IDescriptor.Attributes.EXTENDED_KEY.name() );
-		if( Descriptor.isNull( extended ))
+		if( Descriptor.assertNull( extended ))
 			return base.get(key);
 		return base.get( extended + "." + key);
 	}

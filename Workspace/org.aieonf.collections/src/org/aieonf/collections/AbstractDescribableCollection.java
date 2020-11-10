@@ -189,7 +189,7 @@ public abstract class AbstractDescribableCollection<T extends IDescribable> exte
   @Override
   public boolean containsID(String ID)
   {
-  	if(!( Descriptor.isNull( ID )))
+  	if(!( Descriptor.assertNull( ID )))
   		return false;
 
   	IFilter<IDescribable> filter = new AttributeFilter<IDescribable>( AttributeFilter.Rules.EQUALS, IDescriptor.Attributes.ID.name(), ID );

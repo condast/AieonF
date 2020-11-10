@@ -29,20 +29,6 @@ import com.google.gson.Gson;
 
 public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IModelLeaf<D>> implements IModelDatabase<D, M> {
 
-	public enum Attributes{
-		ID,
-		TOKEN,
-		DOMAIN,
-		MODEL_ID,
-		CATEGORY,
-		WILDCARD;
-
-		@Override
-		public String toString() {
-			return StringStyler.xmlStyleString( super.name());
-		}
-	}
-
 	private ISecureGenerator generator;
 	private String path;
 	private IDomainAieon domain;
@@ -327,6 +313,31 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 			Gson gson = new Gson();
 			String str = gson.toJson(leaf.getID(), Entry.class);
 			client.sendDelete(request, parameters, str, removed);
+			result = Utils.assertNull(results);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public boolean remove( long parent, long[] children) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_CHILDREN;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.MODEL_ID.toString(), String.valueOf(parent));
+		WebClient<long[]> client = new WebClient<>( path );
+		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
+		boolean result = false;
+		try {
+			//client.addListener( e->getResults(e, results ));
+			Gson gson = new Gson();
+			String str = gson.toJson(children, long[].class);
+			client.sendDelete(request, parameters, str, children);
 			result = Utils.assertNull(results);
 		} catch (Exception e) {
 			e.printStackTrace();

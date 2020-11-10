@@ -157,7 +157,7 @@ public class DataURI extends Concept implements IDataURI
 	@Override
 	public boolean isBase64Encoded(){
 		String str = this.getEncoding();
-		return ( !Descriptor.isNull(str) && str.equals(S_BASE64 ));
+		return ( !Descriptor.assertNull(str) && str.equals(S_BASE64 ));
 	}
 
 	@Override

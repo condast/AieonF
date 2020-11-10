@@ -157,7 +157,7 @@ public class ModelController<T extends IModelLeaf<? extends IDescriptor>> implem
 		while( iterator.hasNext() ){
 			key = iterator.next();
 			value = concept.get(key);
-			if( Descriptor.isNull(value ))
+			if( Descriptor.assertNull(value ))
 				continue;
 			if( value.startsWith("{") && value.endsWith("}"))
 				concept.set(key, null);
