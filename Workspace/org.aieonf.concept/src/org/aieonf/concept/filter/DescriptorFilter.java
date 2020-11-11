@@ -168,7 +168,7 @@ public class DescriptorFilter<T extends IDescribable> extends AbstractFilter<T>
 	{
 		if(!( obj instanceof IDescribable ))
 			return false;    
-		T desc = ( T )obj;
+		T desc = obj;
 		IDescribable descriptor = desc.getDescriptor();
 		try{
 			if( this.caseInsensitive )

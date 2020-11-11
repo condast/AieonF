@@ -40,6 +40,7 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 		this(name, name);
 	}
 
+	@Override
 	public String getImplicit() {
 		return super.get(IImplicit.Attributes.IMPLICIT.name());
 	}

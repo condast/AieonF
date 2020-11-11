@@ -53,12 +53,14 @@ public class ModelDelegate<M extends IDescriptor> implements IModelDelegate<M>
 			mbl.notifyChange( new ModelEvent<M>( this, event.getModel() ));
 	}
 
+	@Override
 	public void open( IDescriptor domain) {
 		for( IModelProvider<IDescriptor, M> provider: this.providers ){
 			provider.open( domain );
 		}
 	}
 
+	@Override
 	public boolean isOpen() {
 		for( IModelProvider<IDescriptor, M> provider: this.providers ){
 			if( provider.isOpen())

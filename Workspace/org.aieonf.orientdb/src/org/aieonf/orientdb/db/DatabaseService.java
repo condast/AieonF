@@ -259,6 +259,7 @@ public class DatabaseService implements Closeable{
 		return transaction;
 	}
 
+	@Override
 	public synchronized void close(){
 		if( graph == null )
 			return;
@@ -273,6 +274,7 @@ public class DatabaseService implements Closeable{
 			super( provider );
 		}
 
+		@Override
 		public void close() {
 			super.getProvider().close();
 			if( !super.getProvider().isOpen())

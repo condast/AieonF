@@ -27,6 +27,7 @@ public abstract class AbstractWidgetVerificationDelegate implements IWidgetVerif
 	}
 
 
+	@Override
 	public void disable(boolean disable) {
 		this.disable = disable;
 	}

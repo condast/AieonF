@@ -90,6 +90,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 	 * Get the Class of the template
 	 * @return
 	 */
+	@Override
 	public Class<?> getProcessedClass(){
 		return clss;
 	}

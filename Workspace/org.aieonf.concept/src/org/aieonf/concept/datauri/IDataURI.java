@@ -52,5 +52,6 @@ public interface IDataURI extends IDataResource, IConcept{
 	 */
 	public boolean isBase64Encoded();
 
+	@Override
 	public void fill(String string, String resource);
 }

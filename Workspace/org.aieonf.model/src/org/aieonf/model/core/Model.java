@@ -270,6 +270,20 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 	}
 	
 	/**
+	 * Get the child with the given id
+	 * @param parent
+	 * @param id
+	 * @return
+	 */
+	public static IModelLeaf<? extends IDescriptor> getChild( IModelNode<IDescriptor> parent, long id ){
+		for( IModelLeaf<? extends IDescriptor> child: parent.getChildren().keySet()) {
+			if( child.getID() == id )
+				return child;
+		}
+		return null;
+	}
+	
+	/**
 	 * Get the descriptors belonging to the given model
 	 * @param model
 	 * @return

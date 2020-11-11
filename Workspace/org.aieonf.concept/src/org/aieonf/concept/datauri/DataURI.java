@@ -77,6 +77,7 @@ public class DataURI extends Concept implements IDataURI
 	 * Fill the Data URI with the given datauri string
 	 * @param datauri
 	 */
+	@Override
 	public void fill( String key, String datauri ){
 		super.set( IDataResource.Attribute.Type, key);
 		String str = datauri.replace("\"", "").trim();

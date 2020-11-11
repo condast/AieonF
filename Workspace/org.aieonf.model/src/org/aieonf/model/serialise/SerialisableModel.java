@@ -45,6 +45,7 @@ public class SerialisableModel extends SerialisableNode{
 		c.put(child, label);	
 	}
 
+	@Override
 	public boolean isleaf() {
 		return Utils.assertNull(c);
 	}

@@ -224,6 +224,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 		return leaf;
 	}
 
+	@Override
 	public void setLeaf(boolean leaf) {
 		this.leaf = leaf;
 	}

@@ -121,7 +121,7 @@ public class LocaleAieon extends ImplicitAieon
 	{
 		if( !( descriptor instanceof IDescriptor ))
 			return false;
-		return ( this.compareTo(( IDescriptor )descriptor ) == 0);
+		return ( this.compareTo(descriptor ) == 0);
 	}
 
 	/**

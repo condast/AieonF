@@ -50,7 +50,7 @@ public class SketchWizard extends AbstractXmlFlowWizard<KeyEvent<IDatabaseConnec
 	};
 
 	public SketchWizard( Composite parent, int style ) {
-		super( SketchWizard.class.getResourceAsStream( S_WIZARD_DESC ), SketchWizard.class, null );
+		super( SketchWizard.class.getResourceAsStream( S_WIZARD_DESC ), SketchWizard.class );
 		//controller = new SketchController( new Browser( parent, style ));
 		wizard = this;
 		service.addListener(listener);

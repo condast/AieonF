@@ -51,6 +51,7 @@ public abstract class AbstractFunctionProvider<K extends Object, F extends Objec
 	 * @param leaf
 	 * @return
 	 */
+	@Override
 	public boolean canProvide( K identifier ) {
 		return S_FUNCTION_PROVIDER_ID.equals(identifier);
 	}

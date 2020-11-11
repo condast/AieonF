@@ -34,6 +34,7 @@ public class DatabasePersistenceService extends AbstractPersistenceService {
 		return service;
 	}
 	
+	@Override
 	public void setDomain(IDomainAieon domain) {
 		IDomainAieon current = super.getDomain();
 		if(( current != null ) && ( current.equals(domain) ))

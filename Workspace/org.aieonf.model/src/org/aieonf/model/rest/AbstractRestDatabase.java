@@ -438,6 +438,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 			super.sendPost(request, parameters, post, data );
 		}
 
+		@Override
 		public void sendDelete( IDatabaseConnection.Requests request, Map<String, String> parameters, String post, DS data) throws Exception {
 			super.sendDelete(request, parameters, post, data);
 		}

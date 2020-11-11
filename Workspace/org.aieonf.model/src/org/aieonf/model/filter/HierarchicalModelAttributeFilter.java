@@ -89,7 +89,7 @@ public class HierarchicalModelAttributeFilter<D extends IDescriptor> extends Hie
 			retval = ModelFilterWrapper.acceptDepth( minDepth, maxDepth, child );
 			break;
 		case ALLPARENTS:
-			retval =  ModelFilterWrapper.acceptDepth( minDepth, maxDepth, child ) && super.getChildFilter().accept((IModelLeaf<D>) child );
+			retval =  ModelFilterWrapper.acceptDepth( minDepth, maxDepth, child ) && super.getChildFilter().accept(child );
 			break;
 		case AS_IS:
 			break;

@@ -20,6 +20,7 @@ Export-Package: org.aieonf.commons,
  org.aieonf.commons.implicit,
  org.aieonf.commons.io,
  org.aieonf.commons.js,
+ org.aieonf.commons.messaging,
  org.aieonf.commons.net,
  org.aieonf.commons.number,
  org.aieonf.commons.parser,
@@ -34,5 +35,6 @@ Export-Package: org.aieonf.commons,
  org.aieonf.commons.validation,
  org.aieonf.commons.xml
 Import-Package: javax.persistence;version="2.0.6",
+ javax.servlet;version="3.0.0",
  javax.ws.rs.core;version="2.0.1"
 Automatic-Module-Name: org.aieonf.commons

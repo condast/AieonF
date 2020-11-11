@@ -65,10 +65,13 @@ public class LabelProviderImages extends AbstractImages{
 	public Image getImage( Images desc, boolean enabled ){
 		if( enabled )
 			return getImage( desc );
-		return getDisableImage(desc);
-		
+		return getDisableImage(desc);	
 	}
-	
+
+	public Image getChecked( boolean checked ) {
+		return checked?getImage(Images.CHECKED): getImage(Images.UNCHECKED);
+	}
+
 	/**
 	 * Get the image
 	 * @param desc
@@ -116,5 +119,4 @@ public class LabelProviderImages extends AbstractImages{
 			return getImageFromName( S_QUESTION_MARK_ICON );				
 		}
 	}
-
 }

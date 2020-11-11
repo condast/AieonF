@@ -2,10 +2,9 @@ package org.aieonf.orientdb;
 
 import javax.servlet.Servlet;
 import javax.ws.rs.ApplicationPath;
-
+import org.aieonf.commons.messaging.AbstractServletWrapper;
 import org.aieonf.orientdb.log.DebugExceptionMapper;
 import org.aieonf.orientdb.rest.ModelRestService;
-import org.condast.commons.messaging.http.AbstractServletWrapper;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 

@@ -78,15 +78,15 @@ public class DatabaseController<M extends IDescribable> extends AbstractJavascri
 						database.search(filter);
 						break;
 					case ADD:
-						leaf = (M) gson.fromJson( (String) args[1], clss );
+						leaf = gson.fromJson( (String) args[1], clss );
 						database.add(leaf);
 						break;
 					case REMOVE:
-						leaf = (M) gson.fromJson( (String) args[1], clss );
+						leaf = gson.fromJson( (String) args[1], clss );
 						database.remove(leaf);
 						break;
 					case UPDATE:
-						leaf = (M) gson.fromJson( (String) args[1], clss );
+						leaf = gson.fromJson( (String) args[1], clss );
 						database.update(leaf);
 						break;
 
@@ -94,7 +94,6 @@ public class DatabaseController<M extends IDescribable> extends AbstractJavascri
 						break;
 					}
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				logger.info( args.toString() );

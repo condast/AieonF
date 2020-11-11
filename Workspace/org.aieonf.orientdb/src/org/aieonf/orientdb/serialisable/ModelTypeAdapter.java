@@ -179,11 +179,11 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	public static void addChild( Vertex parent, Vertex child, boolean reverse, String label ) {
 		if( !reverse ) {
 			parent.addEdge(label,child);
-			child.addEdge(IModelNode.IS_PARENT, parent);
+			child.addEdge(IModelLeaf.IS_PARENT, parent);
 			return;
 		}
 		child.addEdge(label, parent);
-		parent.addEdge( IModelNode.IS_PARENT, child );
+		parent.addEdge( IModelLeaf.IS_PARENT, child );
 		String depth = IModelLeaf.Attributes.DEPTH.name();
 		String pdepth = parent.getProperty( depth);
 		String cdepth = child.getProperty(  depth );

@@ -41,6 +41,7 @@ public class TemplateNode<T extends IDescriptor>
 	 * @param descriptor
 	 * @return
 	 */
+	@Override
 	protected boolean contains( Collection<IModelLeaf<?>> store, IModelLeaf<?> model, IDescriptor descr ){
 		if( store.contains( model ))
 			return false;

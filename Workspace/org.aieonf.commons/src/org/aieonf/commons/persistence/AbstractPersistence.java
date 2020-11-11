@@ -1,7 +1,5 @@
 package org.aieonf.commons.persistence;
 
-import org.aieonf.commons.persistence.IPersistence;
-
 public abstract class AbstractPersistence<T extends Object> implements IPersistence<T>
 {
 	public static final String S_ERR_PERSISTENCE_NOT_OPEN = 

@@ -1,7 +1,5 @@
 package org.aieonf.commons.tree;
 
-import org.aieonf.commons.tree.IChildObject;
-
 public class ChildObject<T extends Object> implements IChildObject<T> {
 
 	private T parent;

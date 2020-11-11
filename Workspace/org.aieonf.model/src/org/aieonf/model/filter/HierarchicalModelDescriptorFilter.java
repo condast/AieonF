@@ -89,7 +89,7 @@ public class HierarchicalModelDescriptorFilter<D extends IDescriptor> extends Hi
 			retval = true;
 			break;
 		case ALLPARENTS:
-			retval = super.getChildFilter().accept( (IModelLeaf<D>) child );
+			retval = super.getChildFilter().accept( child );
 		case AS_IS:
 			break;
 		}

@@ -218,7 +218,7 @@ public class AttributeFilter<D extends IDescribable> extends AbstractFilter<D> i
 
 		if(!( obj instanceof IDescribable ))
 			return false;    
-		IDescribable desc = ( IDescribable )obj;
+		IDescribable desc = obj;
 		String value = desc.getDescriptor().get( this.refKey );
 		boolean contains = ( value != null );
 		logger.log( Level.FINE, "The descriptor " + obj.toString() + " contains " + this.refKey + ": " + contains  + " " + value);

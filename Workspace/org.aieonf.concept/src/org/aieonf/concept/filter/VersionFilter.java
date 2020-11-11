@@ -128,7 +128,7 @@ public class VersionFilter<T extends IDescribable> extends AbstractFilter<T>
 	{
 		if(!( obj instanceof IDescribable ))
 			return false;    
-		IDescribable desc = ( IDescribable )obj;
+		IDescribable desc = obj;
 		return this.accept( desc.getDescriptor().get( IDescriptor.Attributes.VERSION.name() ));
 	}
 

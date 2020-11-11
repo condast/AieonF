@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.aieonf.commons.i8n.Language;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.ui.flow.AbstractFlowControl;
 import org.aieonf.commons.ui.flow.IFlowControl;
@@ -33,7 +32,6 @@ import org.eclipse.swt.widgets.Control;
 public abstract class AbstractXmlFlowWizard<T extends Object> extends AbstractFlowControlWizard<T> implements IXmlFlowWizard<T>{
 
 	private IWizard wizard;
-	private Language language;
 	private boolean previousNext;
 	private FlowControl flow;
 	
@@ -52,10 +50,9 @@ public abstract class AbstractXmlFlowWizard<T extends Object> extends AbstractFl
 		}
 	};
 
-	protected AbstractXmlFlowWizard( InputStream in, Class<?> clss, Language language ) {
+	protected AbstractXmlFlowWizard( InputStream in, Class<?> clss ) {
 		this.wizard = this;
 		this.clss = clss;
-		this.language = language;
 		this.previousNext = true;
 		store = new HashMap<String, IndexStore>();
 		createWizard(in);
@@ -157,6 +154,7 @@ public abstract class AbstractXmlFlowWizard<T extends Object> extends AbstractFl
 		container.addListener(listener);
 	}
 
+	@Override
 	public void setPreviousNext(boolean previousNext) {
 		this.previousNext = previousNext;
 	}
@@ -177,6 +175,7 @@ public abstract class AbstractXmlFlowWizard<T extends Object> extends AbstractFl
 	 * @param message
 	 * @param type
 	 */
+	@Override
 	public IndexStore addPage(String pageName, String description, String message, ContainerTypes type, boolean onCancel, boolean onFinish ) {
 		current = new IndexStore( pageName, description, message, type, this.store.size() );
 		if( onCancel ){
@@ -193,14 +192,17 @@ public abstract class AbstractXmlFlowWizard<T extends Object> extends AbstractFl
 		return current;
 	}
 	
+	@Override
 	public IndexStore getCurrent(){
 		return current;
 	}	
 
+	@Override
 	public void setTitleStyle(String titleStyle) {
 		this.titleStyle = titleStyle;
 	}
 
+	@Override
 	public void setButtonbarStyle(String buttonbarStyle) {
 		this.buttonbarStyle = buttonbarStyle;
 	}
@@ -252,6 +254,7 @@ public abstract class AbstractXmlFlowWizard<T extends Object> extends AbstractFl
 	 * @param event
 	 */
 	protected void injectButtonEvent( ButtonEvent<T> event ){
+		setData(event.getData());
 		switch( event.getButton() ){
 		case CONTINUE:
 			selectContainer( getFlowControl().getIndex());
@@ -286,6 +289,7 @@ public abstract class AbstractXmlFlowWizard<T extends Object> extends AbstractFl
 		return container.isHelpAvailable();
 	}
 
+	@Override
 	public void performSave( IWizardPage arg0 ){
 		synchronizeData( arg0 );
 		if( getContainer() instanceof WizardContainer ){

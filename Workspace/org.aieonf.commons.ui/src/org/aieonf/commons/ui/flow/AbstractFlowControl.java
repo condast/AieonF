@@ -37,6 +37,7 @@ public abstract class AbstractFlowControl<T extends Object> implements IFlowCont
 			listener.notifyEventChanged(event);
 	}
 	
+	@Override
 	public int getIndex(){
 		return ( this.history.isEmpty() )? 0: this.history.lastElement();		
 	}

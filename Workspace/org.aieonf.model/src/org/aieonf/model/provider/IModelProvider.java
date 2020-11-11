@@ -141,5 +141,6 @@ public interface IModelProvider<K extends Object, M extends IDescribable> extend
 	/**
 	 * Deactivate the function
 	 */
+	@Override
 	public void deactivate();
 }

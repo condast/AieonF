@@ -229,6 +229,7 @@ public class WizardContainer extends HeadlessWizardContainer implements IButtonW
 		}
 	}
 	
+	@Override
 	public void updateButtons(){
 		if( this.buttonBar == null )
 			return;
@@ -376,11 +377,13 @@ public class WizardContainer extends HeadlessWizardContainer implements IButtonW
 		return list.toArray( new IButtonWizardContainer.Buttons[ list.size() ]);
 	}
 	
+	@Override
 	public String getRwtId() {
 		return rwtId;
 	}
 
 
+	@Override
 	public void setRwtId(String rwtId) {
 		this.rwtId = rwtId;
 	}

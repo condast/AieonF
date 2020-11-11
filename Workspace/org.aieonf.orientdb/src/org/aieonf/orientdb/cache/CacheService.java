@@ -96,6 +96,7 @@ public class CacheService implements Closeable{
 		}
 	}
 
+	@Override
 	public void close(){
 		try {
 			if(( database != null ) && !database.isClosed() ) {

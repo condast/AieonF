@@ -32,6 +32,7 @@ public class KeywordController extends AbstractJavascriptController{
 		this.callback = new JavaScriptCallBack(browser, name);
 	}
 
+	@Override
 	public Browser getBrowser() {
 		return browser;
 	}

@@ -26,6 +26,7 @@ public abstract class AbstractRESTKeyEventService<R,D> extends AbstractKeyEventS
 		this.url = url;
 	}
 	
+	@Override
 	public void setEvent( R request, long id, long token ) throws Exception{
 		setEvent( request, id, token, new HashMap<String, String>());
 	}
@@ -72,6 +73,7 @@ public abstract class AbstractRESTKeyEventService<R,D> extends AbstractKeyEventS
 			super.sendPost(request, parameters, post, data );
 		}
 
+		@Override
 		public void sendDelete( R request, Map<String, String> parameters, String post, D data) throws Exception {
 			super.sendDelete(request, parameters, post, data);
 		}

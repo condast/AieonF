@@ -86,7 +86,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 				continue;
 			if( !leaf.getVertex().equals( edge.getVertex(com.tinkerpop.blueprints.Direction.IN)))
 				continue;
-			Iterator<Edge> vedges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IModelNode.IS_PARENT).iterator();
+			Iterator<Edge> vedges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IModelLeaf.IS_PARENT).iterator();
 			while( vedges.hasNext())
 			graph.removeEdge(edge);
 			return true;

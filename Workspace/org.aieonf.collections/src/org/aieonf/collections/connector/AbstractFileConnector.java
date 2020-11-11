@@ -2,7 +2,6 @@ package org.aieonf.collections.connector;
 
 import org.aieonf.collections.CollectionException;
 import org.aieonf.collections.IAccessible;
-import org.aieonf.collections.connector.AbstractCollectionConnector;
 import org.aieonf.collections.locator.FileLocator;
 import org.aieonf.collections.locator.Locator;
 import org.aieonf.concept.*;

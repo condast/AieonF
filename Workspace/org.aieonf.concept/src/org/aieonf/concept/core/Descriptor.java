@@ -105,6 +105,7 @@ public class Descriptor implements IDescriptor
 		this.setClassName( descriptor.getClass().getName() );
 	}
 	
+	@Override
 	public IConceptBase getBase() {
 		return base;
 	}
@@ -522,7 +523,7 @@ public class Descriptor implements IDescriptor
 		}
 		name = name.replace( ' ', '_');
 		name = name.replaceAll( NotRegexp, "").trim();
-		if( name.matches( Descriptor.NAME_REGEXP ) == false )
+		if( name.matches( IDescriptor.NAME_REGEXP ) == false )
 			name = "_" + name;
 		return name;
 	}
@@ -776,6 +777,7 @@ public class Descriptor implements IDescriptor
 	 * Get the entry set
 	 * @return
 	 */
+	@Override
 	public Set<Map.Entry<String, String>> entrySet(){
 		return base.entrySet();
 	}

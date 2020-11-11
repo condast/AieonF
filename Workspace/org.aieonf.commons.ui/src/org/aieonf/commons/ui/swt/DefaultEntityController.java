@@ -127,6 +127,7 @@ public class DefaultEntityController<T extends Object> implements IEntityControl
 		verifier.removeVerifyListener(listener);
 	}
 
+	@Override
 	public VerifyListener getVerifyListener() {
 		return verifier.getVerifyListener();
 	}
@@ -136,6 +137,7 @@ public class DefaultEntityController<T extends Object> implements IEntityControl
 		return editListener;
 	}
 
+	@Override
 	public SelectionListener getListener(){
 		return listener;
 	}
@@ -206,12 +208,14 @@ public class DefaultEntityController<T extends Object> implements IEntityControl
 			this.notifyWidgetSelected( new EntryEvent( arg0));
 	}
 
+	@Override
 	public void notifyWidgetSelected( ModifyEvent arg0, VerificationTypes type ){
 		if( verifier.verifyWidget( new VerifyEvent( new EntryEvent( arg0 )), type )) 
 			this.notifyWidgetSelected( new EntryEvent( arg0));
 	}
 
 	
+	@Override
 	public void notifyWidgetSelected( SelectionEvent arg0 ){
 		if(!this.blockEntry )
 			listener.widgetSelected( arg0 );

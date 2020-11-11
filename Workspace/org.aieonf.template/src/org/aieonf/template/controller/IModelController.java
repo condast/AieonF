@@ -35,6 +35,7 @@ public interface IModelController<U extends IDescribable> extends Closeable{
 	/**
 	 * Close the controller
 	 */
+	@Override
 	public void close();
 
 	/**

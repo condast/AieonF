@@ -38,10 +38,12 @@ public abstract class AbstractFlowWizardPage extends WizardPage implements IFlow
 		this.helpAvailable = false;
 	}
 
+	@Override
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
+	@Override
 	public void setMessage(String message) {
 		this.message = message;
 	}
@@ -111,7 +113,8 @@ public abstract class AbstractFlowWizardPage extends WizardPage implements IFlow
 		toolbar.setLayout( new GridLayout(4, true));
 		if( this.helpAvailable ){
 			Button button = createToolBarButton( S_HELP_ID, toolbar, SWT.PUSH);
-			button.setImage( DashboardImages.getInstance().getImage( Images.HELP));
+			DashboardImages.getInstance();
+			button.setImage( DashboardImages.getImage( Images.HELP));
 			button.addSelectionListener( new SelectionAdapter(){
 				private static final long serialVersionUID = 1L;
 

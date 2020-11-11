@@ -42,12 +42,14 @@ public interface IButtonWizardContainer extends IHeadlessWizardContainer{
 	 * Get the index position(s) when a finish is allowed
 	 * @return
 	 */
+	@Override
 	public int getFinishIndex();
 	
 	/**
 	 * The amount ofpages in the container
 	 * @return
 	 */
+	@Override
 	public int size();
 
 	Composite getToolBar();
