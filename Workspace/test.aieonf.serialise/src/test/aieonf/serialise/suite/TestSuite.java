@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import test.aieonf.serialise.context.TestFactory;
-import test.aieonf.serialise.core.ModelTypeAdapter;
+import test.aieonf.serialise.core.TestModelTypeAdapter;
 import test.aieonf.serialise.core.TestObject;
 
 public class TestSuite extends AbstractTestSuite<String, String> {
@@ -83,14 +83,14 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 	private void testSerialisation() {
 		Scanner scanner = null;
-		for( int i=5; i<6; i++ ) {
+		for( int i=9; i<10; i++ ) {
 			scanner = new Scanner( this.getClass().getResourceAsStream(S_RESOURCES + i + S_TXT));
 			StringBuilder builder = new StringBuilder();
 			while( scanner.hasNextLine())
 				builder.append(scanner.nextLine());
 			GsonBuilder gbuilder = new GsonBuilder(); 
 			gbuilder.enableComplexMapKeySerialization();
-			ModelTypeAdapter adapter = new ModelTypeAdapter();
+			TestModelTypeAdapter adapter = new TestModelTypeAdapter();
 			gbuilder.registerTypeAdapter( TestObject.class, adapter);
 			Gson gson = gbuilder.create();
 			TestObject[] models = gson.fromJson(builder.toString(), TestObject[].class ); 

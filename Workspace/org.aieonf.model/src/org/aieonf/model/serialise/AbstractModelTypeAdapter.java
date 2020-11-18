@@ -134,13 +134,10 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 					case CHILDREN:
 						node = nodes.peek();
 						jsonReader.beginArray();
-						token = jsonReader.peek();
 						while( !JsonToken.END_ARRAY.equals(token )) {
+							token = jsonReader.peek();
 							jsonReader.beginArray();
 							N child = readNode( jsonReader );
-							token = jsonReader.peek();
-							logger.info( token.name());
-							jsonReader.endObject();
 							token = jsonReader.peek();
 							logger.info( token.name());
 							label = IModelLeaf.IS_CHILD;
@@ -166,6 +163,12 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 						D descriptor = onCreateDescriptor( base);
 						node = onCreateNode( store.id, store.base, store.leaf, descriptor);
 						nodes.push(node);
+						//Close if it is a leaf
+						token = jsonReader.peek();	
+						if( JsonToken.END_OBJECT.equals(token)) {
+							jsonReader.endObject();
+							completed = true;
+						}
 						break;
 					case LEAF:
 						jsonReader.nextBoolean();

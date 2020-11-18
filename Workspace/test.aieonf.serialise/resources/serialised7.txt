@@ -1,0 +1,6 @@
+[{		"ID":3,
+		"LEAF":true,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"2"}],
+		"DESCRIPTOR":[{"SCOPE":"PRIVATE"},{"CATEGORY":"Test"},{"VERSION":"0"},{"ID":"3"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"CATEGORY"},{"IMPLICIT":"CATEGORY"}]
+ }
+] 

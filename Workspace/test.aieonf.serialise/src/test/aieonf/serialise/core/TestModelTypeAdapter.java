@@ -18,7 +18,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
-public class ModelTypeAdapter extends TypeAdapter<TestObject> {
+public class TestModelTypeAdapter extends TypeAdapter<TestObject> {
 
 	public static final String S_ERR_NULL_CHILD = "The child is null: ";
 	public static final String S_ERR_CYCLE_DETECTED = "A cycle has been detected ";
@@ -51,7 +51,7 @@ public class ModelTypeAdapter extends TypeAdapter<TestObject> {
 	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	public ModelTypeAdapter() {
+	public TestModelTypeAdapter() {
 		nodes = new Stack<>();
 		reversed = false;
 	}
@@ -118,9 +118,6 @@ public class ModelTypeAdapter extends TypeAdapter<TestObject> {
 							TestObject child = readNode( jsonReader );
 							token = jsonReader.peek();
 							logger.fine( token.name());
-							jsonReader.endObject();
-							token = jsonReader.peek();
-							logger.fine( token.name());
 							label = IModelLeaf.IS_CHILD;
 							if( JsonToken.STRING.equals(token))
 								label = jsonReader.nextString();
@@ -143,6 +140,12 @@ public class ModelTypeAdapter extends TypeAdapter<TestObject> {
 						base = createBase( jsonReader, token);
 						node = new TestObject( store.id, store.name, store.leaf, store.base, base);
 						nodes.push(node);
+						token = jsonReader.peek();	
+						//Close if it is a leaf
+						if( JsonToken.END_OBJECT.equals(token)) {
+							jsonReader.endObject();
+							completed = true;
+						}
 						break;
 					case LEAF:
 						jsonReader.nextBoolean();
@@ -162,8 +165,8 @@ public class ModelTypeAdapter extends TypeAdapter<TestObject> {
 	protected Map<String, String> createBase( JsonReader jsonReader, JsonToken token) throws IOException {
 		Map<String, String> base = new HashMap<String, String>();
 		jsonReader.beginArray();
-		token = jsonReader.peek();
 		while( !JsonToken.END_ARRAY.equals( token )){
+			token = jsonReader.peek();
 			jsonReader.beginObject();
 			if( jsonReader.peek().equals(JsonToken.NAME)) {
 				String name = jsonReader.nextName();
@@ -180,7 +183,6 @@ public class ModelTypeAdapter extends TypeAdapter<TestObject> {
 			token = jsonReader.peek();
 		}
 		jsonReader.endArray();
-		token = jsonReader.peek();
 		return base;
 	}
 

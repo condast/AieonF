@@ -63,10 +63,11 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		String str = domain.getDomain().replace(".", "_");
 		
 		Vertex vertex = getParent( this.graph, str, descriptor, IDescriptor.DESCRIPTOR);
-		if( vertex == null ) {
-			vertex = findOrCreateVertex( str, base);
-			fill(vertex, base );
-		}
+		if( vertex != null )
+			return vertex;
+			
+		vertex = findOrCreateVertex( str, base);
+		fill(vertex, base );
 		vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
 		return vertex;
 	}
