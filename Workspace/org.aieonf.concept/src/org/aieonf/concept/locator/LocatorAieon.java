@@ -75,6 +75,7 @@ implements ILocatorAieon
 	public LocatorAieon( IDescriptor descriptor ) {
 		super( descriptor.getBase());
 		super.setScope( Scope.APPLICATION );
+		this.setImplicit( ILocatorAieon.Attributes.LOCATOR.name() );
 		this.setName( ILocatorAieon.Attributes.LOCATOR.name() );
 		this.set( ILocatorAieon.Attributes.LOCATOR.name(), Boolean.TRUE.toString() );
 		EmbeddedAieon.setEmbedded( this );		

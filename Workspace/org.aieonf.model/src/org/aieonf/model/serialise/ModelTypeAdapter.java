@@ -25,8 +25,11 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<IModelLeaf<IDescr
 	}
 
 	@Override
-	protected IModelLeaf<IDescriptor> onCreateNode(long id, boolean leaf) {
-		return leaf? new ModelLeaf<IDescriptor>( id ): new Model<IDescriptor>( id );
+	protected IModelLeaf<IDescriptor> onCreateNode( long id, IConceptBase base, boolean leaf, IDescriptor descriptor) {
+		base.set(IDescriptor.Attributes.ID.name(), String.valueOf(id));
+		IModelLeaf<IDescriptor> result = leaf? new ModelLeaf<IDescriptor>( base ): new Model<IDescriptor>( base );
+		result.setData(descriptor);
+		return result;
 	}
 
 	@Override
@@ -45,15 +48,8 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<IModelLeaf<IDescr
 	}
 
 	@Override
-	protected IDescriptor onSetDescriptor(IModelLeaf<IDescriptor> node, IConceptBase base ) {
+	protected IDescriptor onCreateDescriptor(IConceptBase base ) {
 		IDescriptor descriptor = new Descriptor( base );
-		node.setData(descriptor);
 		return descriptor;
-	}
-
-	@Override
-	protected boolean onAddProperty(IModelLeaf<IDescriptor> node, String key, String value) {
-		node.set(key, value);
-		return true;
 	}
 }

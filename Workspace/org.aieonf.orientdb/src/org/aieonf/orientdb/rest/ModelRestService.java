@@ -30,9 +30,9 @@ import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
+import org.aieonf.orientdb.factory.ModelFactory;
 import org.aieonf.orientdb.filter.IGraphFilter;
 import org.aieonf.orientdb.filter.VertexFilterFactory;
-import org.aieonf.orientdb.graph.ModelFactory;
 import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -218,7 +218,7 @@ public class ModelRestService{
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(results.toArray( new IModelLeaf[ results.size() ]), IModelLeaf[].class);
-			logger.fine(str);
+			logger.info(str);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {

@@ -9,13 +9,23 @@ import java.util.TreeSet;
 import org.aieonf.commons.Utils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
+import org.aieonf.concept.core.IConceptBase;
 
 public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModelNode<D>
 {	
 	private Map<IModelLeaf<? extends IDescriptor>, String> children;
 
 	private boolean reverse;
-	
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public Model( IConceptBase base ){
+		super( base );
+		this.children = new HashMap<>();
+	}
+
 	/**
 	 * Create the model. Use only when parsing data
 	 * @param concept

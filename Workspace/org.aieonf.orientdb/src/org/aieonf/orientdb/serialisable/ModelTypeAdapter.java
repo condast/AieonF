@@ -6,24 +6,24 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.IConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.implicit.IImplicitAieon;
 import org.aieonf.concept.implicit.ImplicitAieon;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.serialise.AbstractModelTypeAdapter;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
-import org.aieonf.orientdb.graph.ModelFactory;
+import org.aieonf.orientdb.factory.ModelFactory;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+
 
 /**
  * The model type adapter creates the graph structure in terms of vertices and edges from serialised data.
@@ -59,9 +59,16 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	}
 
 	@Override
-	protected Vertex onCreateNode(long id, boolean leaf) {
+	protected Vertex onCreateNode( long id, IConceptBase base, boolean leaf, Vertex descriptor ) {
 		String str = domain.getDomain().replace(".", "_");
-		return findOrCreateVertex( this.graph, str, id);
+		
+		Vertex vertex = getParent( this.graph, str, descriptor, IDescriptor.DESCRIPTOR);
+		if( vertex == null ) {
+			vertex = findOrCreateVertex( str, base);
+			fill(vertex, base );
+		}
+		vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
+		return vertex;
 	}
 
 	@Override
@@ -74,54 +81,211 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 
 	@Override
 	protected boolean onAddChild(Vertex model, Vertex child, boolean reversed, String label) {
+		if( exists( model, child ))
+			return false;
 		addChild( model, child, reversed, label);
 		return true;
 	}
 
 	@Override
-	protected Vertex onSetDescriptor(Vertex vertex, IConceptBase base) {
-		Iterator<Edge> edges = vertex.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
-		Vertex descriptor = null;
-		while(( descriptor == null ) &&  edges.hasNext()) {
-			Edge edge = edges.next();
-			descriptor = edge.getVertex(Direction.IN);
-		}
-		if( descriptor == null ) {
-			if( ImplicitAieon.isImplicit(base)) {
-				IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( base );
-				Iterator<Vertex> iterator = graph.getVerticesOfClass(IDescriptor.DESCRIPTORS ).iterator();
-				while(( descriptor == null ) && iterator.hasNext()) {
-					Vertex test=  iterator.next();
-					IDescriptor concept = new Descriptor( new VertexConceptBase( test ));
-					if( implicit.accept(concept) )
-						descriptor = test;
-				}
+	protected Vertex onCreateDescriptor(IConceptBase base) {
+		Iterator<Vertex> vertices = graph.getVertices().iterator();
+		Vertex vertex = null;
+		ImplicitAieon implicit = null;
+		while( vertices.hasNext() ) {
+			vertex = vertices.next();
+			IDescriptor vdescriptor = VertexConceptBase.createDescriptor( vertex );
+			if( ImplicitAieon.isImplicit(vdescriptor)) {
+				implicit = new ImplicitAieon( vdescriptor.getBase() );
+				if( implicit.test( new Descriptor( base )))
+					return vertex;
+			}else if( ImplicitAieon.isImplicit(base)){
+				implicit = new ImplicitAieon( base );
+				if( implicit.test( vdescriptor)) {
+					ImplicitAieon.setImplicit(vdescriptor, implicit.getImplicit());
+					return vertex;
+				}			
 			}
 		}
+		
+		//The new descriptor is not already available, so create a new vertex and add the properties of the base
 		String idStr = IDescriptor.Attributes.ID.name();
-		if( descriptor == null ) {
-			descriptor = graph.addVertex( ModelFactory.S_CLASS + IDescriptor.DESCRIPTORS);
-			descriptor.setProperty(idStr, String.valueOf(graph.countVertices()));
-		}
+		vertex = graph.addVertex( ModelFactory.S_CLASS + IDescriptor.DESCRIPTORS);
+		vertex.setProperty(idStr, String.valueOf( graph.countVertices() ));
+		
 		Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
 		while( iterator.hasNext() ) {
 			Map.Entry<String, String> entry = iterator.next();
 			if( !idStr.equals(entry.getKey()) )
-				descriptor.setProperty(entry.getKey(), entry.getValue());
+				vertex.setProperty(entry.getKey(), entry.getValue());
 			else {
 				long id = Long.parseLong( entry.getValue());
 				if( id < 0 )
-					descriptor.setProperty(idStr, String.valueOf(graph.countVertices()));
+					vertex.setProperty(idStr, String.valueOf(graph.countVertices()));
 			}
 		}		
-		vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
-		return descriptor;
+		return vertex;
 	}
 	
-	@Override
-	protected boolean onAddProperty(Vertex node, String key, String value) {
-		node.setProperty(key, value);
-		return true;
+	public static Direction opposite( Direction direction ) {
+		Direction result = Direction.BOTH;
+		switch( direction ) {
+		case IN:
+			result = Direction.OUT;
+			break;
+		case OUT:
+			result = Direction.IN;
+			break;
+		default:
+			break;
+		}
+		return result;
+	}
+	
+	/**
+	 * Get the parent vertex for the given label
+	 * @param vertex
+	 * @param label
+	 * @return
+	 */
+	protected static Vertex getParent( OrientGraph graph, String domain, Vertex vertex, String label ) {
+		Collection<Vertex> results = getConnected( graph, domain, vertex, Direction.IN, label);
+		return Utils.assertNull(results)? null: results.iterator().next();
+	}
+
+	/**
+	 * Get the vertices that are connected to the given vertex, by domain, direction and label
+	 * @param vertex
+	 * @param label
+	 * @return
+	 */
+	protected static Collection<Vertex> getConnected( OrientGraph graph, String domain, Vertex vertex, Direction direction, String label ) {
+		Collection<Vertex> results = new ArrayList<>();
+		Collection<Object> ids = new ArrayList<>();
+		Iterator<Edge> edges = vertex.getEdges(direction, label).iterator();
+		Vertex connected = null;
+		while( edges.hasNext()) {
+			Edge edge = edges.next();
+			connected = edge.getVertex( opposite( direction ));
+			ids.add(connected.getId());
+		}
+		Iterator<Vertex> vertices = graph.getVerticesOfClass(domain).iterator();
+		while( vertices.hasNext()) {
+			Vertex test = vertices.next();
+			if( ids.contains(test.getId()))
+				results.add(test);
+		}
+		return results;
+	}
+
+	/**
+	 * If the parent/child relationship exists, return true;
+	 * @param vertex
+	 * @param label
+	 * @return
+	 */
+	protected static boolean exists( Vertex parent, Vertex child ) {
+		Iterator<Edge> iterator = parent.getEdges(Direction.BOTH ).iterator();
+		while( iterator.hasNext() ) {
+			Edge edge = iterator.next();
+			if( edge.getVertex( Direction.IN).getId() == parent.getId() ){
+				if( edge.getVertex( Direction.OUT).getId() == child.getId())
+					return true;
+			}else if( edge.getVertex( Direction.OUT).getId() == parent.getId() ){
+				if( edge.getVertex( Direction.IN).getId() == child.getId())
+					return true;
+			}
+		}
+		return false;
+	}
+
+	protected Vertex findOrCreateVertex( String domain, long id ) {
+		Vertex vertex = null;
+		long newid = id;
+		if( id>0) {
+			Collection<Vertex> vertices = findVertices( graph, domain, id);
+			if( !Utils.assertNull(vertices)) {
+				vertex = vertices.iterator().next();
+				return vertex;
+			}else {
+				newid = graph.countVertices();
+				vertex = graph.addVertex( ModelFactory.S_CLASS + domain);				
+			}
+		}else {
+			newid = graph.countVertices();
+			vertex = graph.addVertex( ModelFactory.S_CLASS + domain );
+		}
+		vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(newid));
+		return vertex;
+	}
+	
+	//@Override
+	//protected boolean onAddProperty(Vertex node, String key, String value) {
+	//	node.setProperty(key, value);
+	//	return true;
+	//}
+
+	/**
+	 * Find the vertices that belong to the given domain and have equal (positive) id as the reference, or are implicit
+	 * @param graph
+	 * @param domain
+	 * @param base
+	 * @return
+	 */
+	protected Collection<Vertex> findVertices( OrientGraph graph, String domain, IConceptBase base ){
+		Collection<Vertex> results=  new ArrayList<>();
+		Iterator<Vertex> iterator = null;
+		long id = Descriptor.parseId(base);
+		try{
+			iterator = graph.getVerticesOfClass(domain).iterator();
+			while( iterator.hasNext() ) {
+				Vertex vertex = iterator.next();
+				String idstr = vertex.getProperty(IDescriptor.Attributes.ID.name());
+				long refId = Descriptor.parseId( idstr);
+				if(( id >= 0 ) &&  ( refId == id )) {
+					results.add(vertex);
+				}else {
+					IConceptBase vbase = new VertexConceptBase( vertex );
+					if( ImplicitAieon.areImplicit(base, vbase))
+						results.add(vertex);
+				}
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return results;
+	}
+
+	protected boolean areImplicit( Vertex vreference, Vertex vtest ) {
+		IConceptBase base = new VertexConceptBase( vreference );
+		IConceptBase test = new VertexConceptBase( vreference );
+		ImplicitAieon implicit = null;
+		boolean result = false;
+		if( ImplicitAieon.isImplicit(base)) {
+			implicit = new ImplicitAieon( base );
+			result = implicit.accept(new Descriptor( test ));
+		}else if( ImplicitAieon.isImplicit(test)) {
+			implicit = new ImplicitAieon( test );
+			result = implicit.accept(new Descriptor( base ));
+			if( result )
+				base.set(IImplicit.Attributes.IMPLICIT.name(), test.get(IImplicit.Attributes.IMPLICIT.name()));
+		}
+		return result;
+	}
+	
+	protected Vertex findOrCreateVertex( String domain, IConceptBase base ) {
+		Vertex vertex = null;
+		Collection<Vertex> vertices = findVertices( graph, domain, base);
+		if( !Utils.assertNull(vertices)) {
+			vertex = vertices.iterator().next();
+			return vertex;
+		}else {
+			long newid = graph.countVertices();
+			vertex = graph.addVertex( ModelFactory.S_CLASS + domain );				
+			vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(newid));
+		}
+		return vertex;
 	}
 
 	protected static Collection<Vertex> findVertices( OrientGraph graph, long id ){
@@ -156,26 +320,6 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		return results;
 	}
 
-	protected static Vertex findOrCreateVertex( OrientGraph graph, String domain, long id ) {
-		Vertex vertex = null;
-		long newid = id;
-		if( id>0) {
-			Collection<Vertex> vertices = findVertices( graph, domain, id);
-			if( !Utils.assertNull(vertices)) {
-				vertex = vertices.iterator().next();
-				return vertex;
-			}else {
-				newid = graph.countVertices();
-				vertex = graph.addVertex( domain);				
-			}
-		}else {
-			newid = graph.countVertices();
-			vertex = graph.addVertex( domain );
-		}
-		vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(newid));
-		return vertex;
-	}
-	
 	public static void addChild( Vertex parent, Vertex child, boolean reverse, String label ) {
 		if( !reverse ) {
 			parent.addEdge(label,child);
@@ -189,5 +333,14 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		String cdepth = child.getProperty(  depth );
 		parent.setProperty( depth, cdepth);
 		child.setProperty( depth, pdepth);
+	}
+	
+	public static void fill( Vertex vertex, IConceptBase base ) {
+		Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
+		while( iterator.hasNext() ) {
+			Map.Entry<String, String> entry = iterator.next();
+			vertex.setProperty(entry.getKey(), entry.getValue());
+		}
+			
 	}
 }

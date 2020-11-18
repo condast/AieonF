@@ -2,7 +2,6 @@ package org.aieonf.concept.implicit;
 
 import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.commons.strings.StringUtils;
-import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.*;
 
@@ -32,14 +31,6 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 		super(base);
 	}
 
-	protected ImplicitAieon(long id, String name) {
-		super(id, name);
-	}
-
-	public ImplicitAieon(String name) {
-		this(name, name);
-	}
-
 	@Override
 	public String getImplicit() {
 		return super.get(IImplicit.Attributes.IMPLICIT.name());
@@ -61,19 +52,29 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 	 * @return boolean
 	 */
 	@Override
-	public boolean test( IDescriptor descriptor)
+	public boolean test( IDescriptor descriptor){
+		String implicit = getImplicit();
+		return test( implicit, descriptor);
+	}
+
+	/**
+	 * If implies is true, the given descriptor is considered to be equal to this one,
+	 * even though the form and structure (descriptor!) may be different.
+	 *
+	 * @param descriptor IDescriptor
+	 * @return boolean
+	 */
+	protected boolean test( String implicit, IDescriptor descriptor)
 	{
 		if( descriptor == null )
 			return false;
-		if( super.getDescriptor().objEquals( descriptor ))
+		if( super.getDescriptor().equals( descriptor ))
 			return true;
-
-		if(( descriptor instanceof IConcept ) == false )
+		String impl = get( implicit );
+		if( StringUtils.isEmpty(impl))
 			return false;
-		IConcept concept = ( IConcept )descriptor;
-		String implicit = getImplicit();
-		return ( concept.get( implicit ) != null ) &&
-				concept.get( implicit ).equals( this.get( implicit ));
+		String impl1 = descriptor.get( implicit );
+		return (  !StringUtils.isEmpty(impl1)) && impl.equals( impl1 );
 	}
 
 	/**
@@ -153,6 +154,36 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 		return !StringUtils.isEmpty(implicit);
 	}
 
+	/**
+	 * Make the given descriptor implicit
+	 * @param descriptor
+	 * @param implicit
+	 */
+	public static void setImplicit( IDescriptor descriptor, String implicit ) {
+		descriptor.set(IImplicit.Attributes.IMPLICIT.name(), implicit);
+	}
+
+	/**
+	 * Returns true if the two base objects are implicit
+	 * @param ref
+	 * @param test
+	 * @return
+	 */
+	public static boolean areImplicit( IConceptBase ref, IConceptBase test ) {
+		ImplicitAieon implicit = null;
+		boolean result = false;
+		if( ImplicitAieon.isImplicit(ref)) {
+			implicit = new ImplicitAieon( ref );
+			result = implicit.accept(new Descriptor( test ));
+		}else if( ImplicitAieon.isImplicit(test)) {
+			implicit = new ImplicitAieon( test );
+			result = implicit.accept(new Descriptor( ref ));
+			if( result )
+				ref.set(IImplicit.Attributes.IMPLICIT.name(), test.get(IImplicit.Attributes.IMPLICIT.name()));
+		}
+		return result;
+	
+	}
 	/**
 	 * Default implies operation. This happens when the given descriptor is of the same family as the reference
 	 * @param descriptor

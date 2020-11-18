@@ -254,4 +254,12 @@ public class VertexConceptBase implements IConceptBase {
 		return buffer.toString();
 	}
 
+	/**
+	 * Create a new concept base
+	 * @param vertex
+	 * @return
+	 */
+	public static IDescriptor createDescriptor( Vertex vertex ) {
+		return new Descriptor( new VertexConceptBase( vertex ));
+	}
 }

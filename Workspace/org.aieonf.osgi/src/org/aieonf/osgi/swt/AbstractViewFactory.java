@@ -13,7 +13,7 @@ public abstract class AbstractViewFactory<C extends Control> implements IViewFac
 
 	@Override
 	public boolean isOfDomain(IDomainAieon domain) {
-		return ( this.domain != null ) && this.domain.equals(domain);
+		return ( this.domain != null ) && this.domain.test(domain);
 	}
 
 	@Override

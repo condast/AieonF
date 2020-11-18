@@ -55,7 +55,7 @@ public class AspectTransformer
 	}
 
 	/**
-	 * Get the aspect belongin to the given descriptor 
+	 * Get the aspect belonging to the given descriptor 
 	 * @param td
 	 * @param descriptor
 	 * @throws ConceptException

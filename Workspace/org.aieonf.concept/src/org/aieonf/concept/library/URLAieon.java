@@ -67,6 +67,7 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	public URLAieon()
 	{
 		super(  );
+		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 	}
 
 	/**
@@ -76,6 +77,7 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	public URLAieon( String uri ) 
 	{
 		super( IConcept.Attributes.SOURCE.name() );
+		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 		super.setSource( uri );
 		super.setDescription(uri);
 	    super.setClassName( this.getClass().getCanonicalName() );
@@ -90,6 +92,7 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	public URLAieon( String name, String uri ) 
 	{
 		super( IConcept.Attributes.SOURCE.name() );
+		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 		super.setSource( uri );
 	    super.setClassName( this.getClass().getCanonicalName() );
 		super.setDescription(name);
@@ -103,6 +106,7 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	
 	public URLAieon( IDescriptor descriptor ) {
 		super( descriptor );
+		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 		setClassName(this.getClass().getCanonicalName());
 	}
 	
@@ -171,19 +175,19 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 
 	@Override
 	public boolean test(IDescriptor descriptor) {
-		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( IConcept.Attributes.SOURCE.name() );
+		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( super.getBase(), IConcept.Attributes.SOURCE.name() );
 		return implicit.test(descriptor);
 	}
 
 	@Override
 	public boolean accept(IDescriptor descriptor) {
-		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( IConcept.Attributes.SOURCE.name() );
+		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( super.getBase(), IConcept.Attributes.SOURCE.name() );
 		return implicit.accept(descriptor);
 	}
 
 	@Override
 	public boolean isFamily(Object arg0) {
-		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( IConcept.Attributes.SOURCE.name() );
+		IImplicitAieon<IDescriptor> implicit = new ImplicitAieon( super.getBase(), IConcept.Attributes.SOURCE.name() );
 		return implicit.isFamily(arg0);
 	}
 

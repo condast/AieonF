@@ -1,5 +1,8 @@
 package org.aieonf.model.core;
 
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
@@ -7,20 +10,34 @@ import org.aieonf.concept.IConcept.Scope;
 import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.IConceptBase;
 
-public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IModelLeaf<D>
+public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 {	
 	//The concept that is modelled
 	private D descriptor;
 	private boolean leaf;
 
 	private IModelNode<?> parent;
+	
+	private IConceptBase base;
+	private transient boolean changed;
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
+	public ModelLeaf( IConceptBase base ){
+		this.base = base;
+		this.leaf = true;
+		this.changed = false;
+	}
 
 	/**
 	 * Only used for special models
 	 */
 	public ModelLeaf(){
-		this.leaf = true;
+		this( new ConceptBase());
 		set( IDescriptor.Attributes.VERSION.name(), String.valueOf(0));
 		set( IDescriptor.Attributes.CLASS.name(), this.getClass().getCanonicalName() );
 	}
@@ -122,7 +139,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public String get( Enum<?> attr ){
-		return super.get( attr.name());
+		return base.get( attr.name());
 	}
 
 	/**
@@ -132,7 +149,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	 */
 	@Override
 	public void set( Enum<?> attr, String value ){
-		super.set( attr.name(), value);
+		base.set( attr.name(), value);
 	}
 
 	@Override
@@ -198,7 +215,7 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 	
 	@Override
 	public IDescriptor getDescriptor() {
-		return new Descriptor( this );
+		return new Descriptor( base );
 	}
 
 	/**
@@ -305,5 +322,29 @@ public class ModelLeaf<D extends IDescriptor> extends ConceptBase implements IMo
 		IModelNode<? extends IDescriptor> md = 
 				(IModelNode<? extends IDescriptor>) model;
 		return md.hasChildren();		
+	}
+
+	@Override
+	public boolean hasChanged() {
+		return changed;
+	}
+
+	protected void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+
+	@Override
+	public Set<Entry<String, String>> entrySet() {
+		return base.entrySet();
+	}
+
+	@Override
+	public String get(String key) {
+		return base.get(key);
+	}
+
+	@Override
+	public void set(String key, String value) {
+		base.set(key, value);
 	}
 }

@@ -54,7 +54,7 @@ public class LocaleAieon extends ImplicitAieon
 	*/
 	public LocaleAieon( String name ) 
 	{
-		super( name );
+		super( name, S_LOCALE );
 		Locale locale = Locale.getDefault();
 		super.set( S_LOCALE, locale.getLanguage() );
 		super.set( Attributes.COUNTRY, locale.getCountry() );
@@ -84,7 +84,7 @@ public class LocaleAieon extends ImplicitAieon
 	 */
 	protected LocaleAieon( String name, Locale locale )
 	{
-		super( name );
+		super( name, S_LOCALE);
 		super.set( S_LOCALE, locale.getLanguage() );
 		super.set( S_LOCALE, locale.getLanguage() );
 		super.set( Attributes.COUNTRY, locale.getCountry() );

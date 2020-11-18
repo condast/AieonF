@@ -1,5 +1,6 @@
 package org.aieonf.concept.domain;
 
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 
 import org.aieonf.concept.implicit.ImplicitAieon;
@@ -13,6 +14,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	*/
 	public DomainAieon() {
 	  super( );
+	  super.setImplicit(IDomainAieon.Attributes.DOMAIN.name());
 	  super.setScope(Scope.PUBLIC);
 	}
 
@@ -30,7 +32,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	*/
 	public DomainAieon( String domain, String shortName )
 	{
-	  super( IDomainAieon.Attributes.DOMAIN.name());
+	  super( domain, IDomainAieon.Attributes.DOMAIN.name());
 	  super.set(IDomainAieon.Attributes.DOMAIN.name(), shortName );
 	  super.set(IDomainAieon.Attributes.SHORT_NAME.name(), shortName );
 	  super.setScope(Scope.PUBLIC);
@@ -41,18 +43,18 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	 */
 	@Override
 	public String getShortName(){
-		return this.get( IDomainAieon.Attributes.SHORT_NAME.toString() );
+		return this.get( IDomainAieon.Attributes.SHORT_NAME.name() );
 	}
 	
 	
 	@Override
 	public String getUserName() {
-		return this.get( IDomainAieon.Attributes.USER_NAME.toString() );
+		return this.get( IDomainAieon.Attributes.USER_NAME.name() );
 	}
 
 	@Override
 	public String getPassword() {
-		return this.get( IDomainAieon.Attributes.PASSWORD.toString() );
+		return this.get( IDomainAieon.Attributes.PASSWORD.name() );
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	@Override
 	public String getDomain()
 	{
-		return this.get(IDomainAieon.Attributes.DOMAIN.toString() );
+		return this.get(IDomainAieon.Attributes.DOMAIN.name() );
 	}
 	
 	/**
@@ -72,7 +74,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	@Override
 	public String getPerspective()
 	{
-		return this.get(IDomainAieon.Attributes.PERSPECTIVE.toString() );
+		return this.get(IDomainAieon.Attributes.PERSPECTIVE.name() );
 	}
 	
 	/**
@@ -81,7 +83,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	 */
 	protected void setPerspective( String perspective )
 	{
-	  super.set(IDomainAieon.Attributes.PERSPECTIVE.toString(), perspective );
+	  super.set(IDomainAieon.Attributes.PERSPECTIVE.name(), perspective );
 	}
 
 	/**
@@ -90,7 +92,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	 */
 	public void setActive( boolean choice )
 	{
-		super.getDescriptor().set( IDomainAieon.Attributes.ACTIVE.toString(), String.valueOf( choice ));
+		super.getDescriptor().set( IDomainAieon.Attributes.ACTIVE.name(), String.valueOf( choice ));
 	}
 /**
 	 * Get the sort order of this domain
@@ -98,7 +100,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	 */
 	public int getSort()
 	{
-		return super.getInteger( IDomainAieon.Attributes.SORT.toString() );
+		return super.getInteger( IDomainAieon.Attributes.SORT.name() );
 	}
 
 	/**
@@ -106,7 +108,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	 * @param sort
 	 */
 	public void setSort( int sort ){
-		super.getDescriptor().set( IDomainAieon.Attributes.SORT.toString(), String.valueOf( sort ));
+		super.getDescriptor().set( IDomainAieon.Attributes.SORT.name(), String.valueOf( sort ));
 	}
 
 	/**
@@ -114,7 +116,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	 * @return
 	*/
 	public String getParent(){
-		return this.get( IDomainAieon.Attributes.PARENT.toString() );
+		return this.get( IDomainAieon.Attributes.PARENT.name() );
 	}
 
 	/**
@@ -122,7 +124,7 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	 * @param name
 	 */
 	public void setParent( String parent ){
-		this.set(IDomainAieon.Attributes.PARENT.toString(), parent );
+		this.set(IDomainAieon.Attributes.PARENT.name(), parent );
 	}
 	
 	/**
@@ -132,7 +134,16 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	public boolean isRootDomain(){
 		return ( this.getParent() == null );
 	}	
+
 	
+	@Override
+	public boolean test(IDescriptor descriptor) {
+		if( super.test(descriptor))
+			return true;
+		String implicit = StringUtils.prettyString( super.getImplicit());
+		return test( implicit, descriptor);
+	}
+
 	@Override
 	public int hashCode() {
 		return getDomain().hashCode();
@@ -146,5 +157,10 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 			return false;
 		IDomainAieon check = (IDomainAieon) obj;
 		return getDomain().equals(check.getDomain());
+	}
+
+	@Override
+	public String toString() {
+		return this.getDomain() + "(" + this.getShortName() + ")";
 	}
 }

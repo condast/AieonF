@@ -353,7 +353,8 @@ public class Descriptor implements IDescriptor
 		IDescriptor descriptor = ( IDescriptor )obj;
 		if( this.getID() != descriptor.getID())
 			return false;
-				
+		if(( this.getID() < 0 ) || ( descriptor.getID() < 0 ))
+			return false;
 		String name = descriptor.getName();
 		if( this.getName() == null ){
 			return (( name == null ) || ( name.equals( IConceptBase.NULL )));
@@ -828,7 +829,22 @@ public class Descriptor implements IDescriptor
 		return ( attr.length() > 0 );
 	}
 
+	/**
+	 * Parse the id of the given string, or a negative value if it wasn't found
+	 * @param str
+	 * @return
+	 */
 	public static long parseId( String str ) {
 		return StringUtils.isEmpty(str)?-1:Long.parseLong(str);
 	}
+	
+	/**
+	 * Parse the id of the given concept base, or a negative value if it wasn't found
+	 * @param IConceptBase
+	 * @return
+	 */
+	public static long parseId( IConceptBase base ) {
+		return parseId( base.get(IDescriptor.Attributes.ID.name()));
+	}
+
 }

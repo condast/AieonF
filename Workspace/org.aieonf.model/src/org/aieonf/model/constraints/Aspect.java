@@ -15,14 +15,12 @@ public class Aspect extends ImplicitAieon implements IAspect
 	 */
 	private static final long serialVersionUID = -3243066463369378315L;
 
-	public Aspect()
-	{
-		super( IAspect.S_ASPECT );
+	public Aspect(){
+		super();
 	}
-
-	public Aspect(String name)
-	{
-		super(IAspect.S_ASPECT );
+	
+	public Aspect(String name){
+		super(name, IAspect.S_ASPECT );
 		this.setAspect(name);
 		this.setDepth(0 );
 	}

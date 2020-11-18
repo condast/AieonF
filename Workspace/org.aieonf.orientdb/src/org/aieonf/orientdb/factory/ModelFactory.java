@@ -1,4 +1,4 @@
-package org.aieonf.orientdb.graph;
+package org.aieonf.orientdb.factory;
 
 import java.util.ArrayList;
 import java.util.Collection;

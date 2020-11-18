@@ -171,7 +171,7 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 			case CONTEXT:
 			case DESCRIPTOR:
 				ma = ModelAttributes.PROPERTIES;
-				interpreter.setProperty( StringStyler.prettyString( qName ), attributes);				
+				interpreter.setProperty( str, attributes);				
 				break;
 			default:	
 				break;

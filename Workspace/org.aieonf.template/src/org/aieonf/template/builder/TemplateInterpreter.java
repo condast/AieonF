@@ -15,7 +15,6 @@ import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.domain.DomainAieon;
-import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.DateAieon;
 import org.aieonf.concept.library.LocaleAieon;
@@ -210,8 +209,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 			enm = IContextAieon.Attributes.valueOf( key );
 			break;
 		case DOMAIN:
-			enm = IDomainAieon.Attributes.valueOf( key );
-			super.setKey( enm.toString() );			
+			super.setKey( key );			
 			break;
 		case LOADER:
 			if( ILoaderAieon.Attributes.isValid(key ))

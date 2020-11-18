@@ -1,10 +1,11 @@
 package org.aieonf.concept.domain;
 
+import org.aieonf.commons.implicit.IImplicit;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 
-public interface IDomainAieon extends IDescriptor
+public interface IDomainAieon extends IDescriptor, IImplicit<IDescriptor>
 {
 	//Supported attributes
 	public enum Attributes{

@@ -7,6 +7,9 @@ import java.util.Set;
 public interface IConceptBase extends Cloneable{
 
 	public static final String NULL = "null";
+
+	public static final String S_PROPERTIES = "PROPERTIES";
+	
 	//The error messages
 	public static final String S_ERR_INVALID_ATTRIBUTE = "The attribute does not exist or is not valid for this operation";
 	public static final String S_KEY_NOT_FOUND_ERR = "Key not found";

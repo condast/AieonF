@@ -1,0 +1,75 @@
+[
+	{	"ID":3,
+		"LEAF":false,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"1"}],
+		"DESCRIPTOR":[{"SCOPE":"PRIVATE"},{"CATEGORY":"Test"},{"VERSION":"0"},{"ID":"3"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"CATEGORY"},{"IMPLICIT":"CATEGORY"}],
+		"REVERSED":false,
+		"CHILDREN":[
+			[{	"ID":1,
+				"LEAF":true,
+				"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"IDENTIFIER":"org.aieonf.model"},{"DEPTH":"2"}],
+				"DESCRIPTOR":[{"data":"Bedrijf"},{"SCOPE":"PUBLIC"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"ID":"1"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"Data"},{"IMPLICIT":"SOURCE"}]
+			 },"isChild"]
+			]
+	},{	"ID":12,
+		"LEAF":false,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"2"}],
+		"DESCRIPTOR":[{"SCOPE":"PRIVATE"},{"CATEGORY":"Test"},{"VERSION":"0"},{"ID":"3"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"CATEGORY"},{"IMPLICIT":"CATEGORY"}],
+		"REVERSED":false,
+		"CHILDREN":[
+			[{	"ID":8,
+				"LEAF":true,
+				"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"IDENTIFIER":"org.aieonf.model"},{"DEPTH":"2"}],
+				"DESCRIPTOR":[{"data":"Bedrijf"},{"SCOPE":"PUBLIC"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"ID":"1"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"Data"},{"IMPLICIT":"SOURCE"}]
+			 },"isChild"]
+		]
+	},{	"ID":3,
+		"LEAF":false,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"1"}],
+		"DESCRIPTOR":[{"SCOPE":"PRIVATE"},{"CATEGORY":"Test"},{"VERSION":"0"},{"ID":"3"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"CATEGORY"},{"IMPLICIT":"CATEGORY"}],
+		"REVERSED":false,
+		"CHILDREN":[
+			[{	"ID":1,
+				"LEAF":true,
+				"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"IDENTIFIER":"org.aieonf.model"},{"DEPTH":"2"}],
+				"DESCRIPTOR":[{"data":"Bedrijf"},{"SCOPE":"PUBLIC"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"ID":"1"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"Data"},{"IMPLICIT":"SOURCE"}]
+			 },"isChild"]
+		]
+	},{	"ID":3,
+		"LEAF":false,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"1"}],
+		"DESCRIPTOR":[{"SCOPE":"PRIVATE"},{"CATEGORY":"Test"},{"VERSION":"0"},{"ID":"3"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"CATEGORY"},{"IMPLICIT":"CATEGORY"}],
+		"REVERSED":false,
+		"CHILDREN":[
+			[{	"ID":1,
+				"LEAF":true,
+				"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"IDENTIFIER":"org.aieonf.model"},{"DEPTH":"2"}],
+				"DESCRIPTOR":[{"data":"Bedrijf"},{"SCOPE":"PUBLIC"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"ID":"1"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"Data"},{"IMPLICIT":"SOURCE"}]
+			 },"isChild"]
+		]
+	},{	"ID":5,
+		"LEAF":false,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"2"}],
+		"DESCRIPTOR":[{"SCOPE":"PRIVATE"},{"CATEGORY":"Bedrijf"},{"VERSION":"0"},{"ID":"5"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"CATEGORY"},{"IMPLICIT":"CATEGORY"}],
+		"REVERSED":false,
+		"CHILDREN":[
+			[{	"ID":1,
+				LEAF":true,
+				"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"IDENTIFIER":"org.aieonf.model"},{"DEPTH":"2"}],
+				"DESCRIPTOR":[{"data":"Bedrijf"},{"SCOPE":"PUBLIC"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"ID":"1"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"Data"},{"IMPLICIT":"SOURCE"}]
+			},"isChild"]
+		]
+	},{	"ID":9,
+		"LEAF":false,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"1"}],
+		"DESCRIPTOR":[{"SCOPE":"PRIVATE"},{"CATEGORY":"Bedrijf"},{"VERSION":"0"},{"ID":"5"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"CATEGORY"},{"IMPLICIT":"CATEGORY"}],
+		"REVERSED":false,
+		"CHILDREN":[
+			[{	"ID":8,
+				"LEAF":true,
+				"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"IDENTIFIER":"org.aieonf.model"},{"DEPTH":"2"}],
+				"DESCRIPTOR":[{"data":"Bedrijf"},{"SCOPE":"PUBLIC"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"ID":"1"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"Data"},{"IMPLICIT":"SOURCE"}]
+			 },"isChild"]
+		]
+	}
+]
