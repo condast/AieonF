@@ -102,7 +102,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		boolean completed = false;
 		while(!completed && jsonReader.hasNext() ) {
 			token = jsonReader.peek();
-			logger.info(token.toString());
+			logger.fine(token.toString());
 			switch( token) {
 			case BEGIN_OBJECT:
 				jsonReader.beginObject();
@@ -125,7 +125,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 				break;
 			case NAME:
 				key = jsonReader.nextName().toUpperCase();
-				logger.info(key);
+				logger.fine(key);
 				if( Attributes.isAttribute( key )) {
 					switch( Attributes.valueOf( key )) {
 					case REVERSED:
@@ -139,7 +139,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 							jsonReader.beginArray();
 							N child = readNode( jsonReader );
 							token = jsonReader.peek();
-							logger.info( token.name());
+							logger.fine( token.name());
 							label = IModelLeaf.IS_CHILD;
 							if( JsonToken.STRING.equals(token))
 								label = jsonReader.nextString();
