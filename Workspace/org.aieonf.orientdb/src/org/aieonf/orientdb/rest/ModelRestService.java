@@ -82,19 +82,30 @@ public class ModelRestService{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/add-node")
 	public Response addNode( @QueryParam("id") long domainId, @QueryParam("token") long token, 
-			@QueryParam("domain") String domainstr, String data ) {
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, @QueryParam("label") String label, String data ) {
 		DatabaseService dbService = DatabaseService.getInstance();
 		try{
  			if( !dispatcher.isRegistered(domainId, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			long id = -1;//factory.transform(data);
-			Gson gson = new Gson();
-			return Response.ok( gson.toJson(id, Long.class)).build();
+			IDomainAieon domain = dispatcher.getDomain(domainId, token, domainstr);
+			dbService.open( domain );
+			GsonBuilder builder = new GsonBuilder(); 
+			builder.enableComplexMapKeySerialization();
+			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
+			builder.registerTypeAdapter( IModelLeaf.class, adapter);
+			Gson gson = builder.create();			
+			logger.info( data );
+			IModelLeaf<IDescriptor>[] results = gson.fromJson(data, IModelLeaf[].class);
+			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
+			String str = StringUtils.isEmpty(label)?Model.IS_CHILD: label;
+			boolean result = factory.addNode(modelId, results[0], str);
+			return result? Response.ok( gson.toJson(modelId, Long.class)).build(): Response.serverError().build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

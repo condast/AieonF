@@ -12,6 +12,7 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.orientdb.core.ModelNode;
+import org.aieonf.orientdb.core.VertexConceptBase;
 import org.aieonf.orientdb.db.DatabaseService;
 
 import com.tinkerpop.blueprints.Direction;
@@ -81,6 +82,30 @@ public class ModelFactory< T extends IDescriptor > {
 			ex.printStackTrace();
 		}
 		return results;
+	}
+
+	/**
+	 * Add the given node to the model with the given model id
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	public boolean addNode( long modelId, IModelLeaf<IDescriptor> node, String label) throws FilterException {
+		try {
+			OrientGraph graph = this.service.getGraph();
+			Iterator<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(modelId)).iterator();
+			if( !vertices.hasNext())
+				return false;
+			Vertex vertex = vertices.next();
+			VertexConceptBase base = (VertexConceptBase) node.getDescriptor().getBase();
+			Vertex child = base.getVertex();
+			vertex.addEdge( label, child);
+			return true;
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return false;
 	}
 
 	/**

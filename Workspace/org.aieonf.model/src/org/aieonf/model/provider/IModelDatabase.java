@@ -12,6 +12,7 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 		TOKEN,
 		DOMAIN,
 		MODEL_ID,
+		LABEL,
 		CATEGORY,
 		WILDCARD;
 
@@ -46,11 +47,11 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 	public long add( M leaf );
 
 	/**
-	 * Add a child to the given parent
+	 * Add a child to the given parent, using the given label
 	 * @param descriptor
 	 * @return
 	 */
-	public boolean add( M parent, M child );
+	public boolean addNode( long modelId, String label, M child );
 
 	/**
 	 * Find the model with the given id

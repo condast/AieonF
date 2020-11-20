@@ -173,13 +173,15 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean add(M parent, M child) {
+	public boolean addNode(long modelId, String label, M child) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.ADD_NODE;
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( modelId ));
+		parameters.put( Attributes.LABEL.toString(), label);
 		IModelLeaf<? extends IDescriptor>[] added = new IModelLeaf[1]; 
 		added[0] = child;
 		boolean result = false;
