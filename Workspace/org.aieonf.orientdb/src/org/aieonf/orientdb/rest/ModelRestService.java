@@ -30,7 +30,7 @@ import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
-import org.aieonf.orientdb.factory.ModelFactory;
+import org.aieonf.orientdb.factory.ModelDatabase;
 import org.aieonf.orientdb.filter.IGraphFilter;
 import org.aieonf.orientdb.filter.VertexFilterFactory;
 import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
@@ -102,7 +102,7 @@ public class ModelRestService{
 			Gson gson = builder.create();			
 			logger.info( data );
 			IModelLeaf<IDescriptor>[] results = gson.fromJson(data, IModelLeaf[].class);
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
+			ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
 			String str = StringUtils.isEmpty(label)?Model.IS_CHILD: label;
 			boolean result = factory.addNode(modelId, results[0], str);
 			return result? Response.ok( gson.toJson(modelId, Long.class)).build(): Response.serverError().build();
@@ -151,7 +151,7 @@ public class ModelRestService{
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
+			ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
 			Collection<IModelLeaf<IDescriptor>> results = factory.find( modelId );
 			if( Utils.assertNull(results))
 				return Response.noContent().build();
@@ -199,6 +199,40 @@ public class ModelRestService{
 		}	
 	}
 
+	@SuppressWarnings("unchecked")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/search-models")
+	public Response searchModels( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, @QueryParam("key") String key, @QueryParam("value") String value) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		IModelLeaf<IDescriptor>[] result = null;
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+ 				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
+			Collection<IModelLeaf<IDescriptor>> results = factory.find( key, value );
+			if( Utils.assertNull(results))
+				return Response.noContent().build();
+			GsonBuilder builder = new GsonBuilder();
+			builder.enableComplexMapKeySerialization();
+			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+			Gson gson = builder.create();
+			result = results.toArray( new IModelLeaf[ results.size()]); 
+			String str = gson.toJson(result, IModelLeaf[].class );
+			return Response.ok( str ).build();
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}	
+	}
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/search")
@@ -218,7 +252,7 @@ public class ModelRestService{
 			params.put(FilterFactory.Attributes.REFERENCE, attribute);
 			params.put(FilterFactory.Attributes.VALUE, wildcard);
 			IGraphFilter filter = ff.createFilter(type, params);
-			ModelFactory<IDescriptor> factory = new ModelFactory<IDescriptor>( dbService );
+			ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
 			Collection<IModelLeaf<IDescriptor>> results = factory.get(filter.doFilter());
 			//for( IModelLeaf<IDescriptor> model: results)
 			//	logger.fine( PrintModel.printModel(model, true));

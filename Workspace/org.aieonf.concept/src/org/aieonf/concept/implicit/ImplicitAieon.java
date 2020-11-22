@@ -70,6 +70,11 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 			return false;
 		if( super.getDescriptor().equals( descriptor ))
 			return true;
+		String implicit1 = ImplicitAieon.getImplicitKey(descriptor);
+		if( !StringUtils.isEmpty(implicit) && !StringUtils.isEmpty(implicit1)) {
+			if( !implicit.equals(implicit1))
+				return false;
+		}
 		String impl = get( implicit );
 		if( StringUtils.isEmpty(impl))
 			return false;
@@ -152,6 +157,15 @@ public class ImplicitAieon extends Concept implements IImplicitAieon<IDescriptor
 	public static boolean isImplicit( IDescriptor descriptor ) {
 		String implicit = descriptor.get(IImplicit.Attributes.IMPLICIT.name());
 		return !StringUtils.isEmpty(implicit);
+	}
+
+	/**
+	 * returns true if the given concept base contains an implicit directive
+	 * @param base
+	 * @return
+	 */
+	public static String getImplicitKey( IDescriptor descriptor ) {
+		return descriptor.get(IImplicit.Attributes.IMPLICIT.name());
 	}
 
 	/**

@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.orientdb.core.ModelNode;
@@ -20,7 +21,7 @@ import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
-public class ModelFactory< T extends IDescriptor > {
+public class ModelDatabase< T extends IDescriptor > {
 
 	public static final String S_CLASS = "class:";
 	
@@ -42,10 +43,13 @@ public class ModelFactory< T extends IDescriptor > {
 
 	private DatabaseService service;
 	
+	private IDomainAieon domain; 
+	
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 	
-	public ModelFactory( DatabaseService service ) {
+	public ModelDatabase( DatabaseService service, IDomainAieon domain ) {
 		this.service = service;
+		this.domain = domain;
 	}
 
 	/**
@@ -71,6 +75,39 @@ public class ModelFactory< T extends IDescriptor > {
 						node = new ModelNode( graph, parent, vnode );
 						results.add(node);
 						nodes.put(vnode, node);
+					}
+				}
+				catch( Exception ex ) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return results;
+	}
+
+	/**
+	 * Get the models that have the given key-value pair
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	public Collection<IModelLeaf<IDescriptor>> find( String key, String value ) throws FilterException {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
+		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		try {
+			OrientGraph graph = this.service.getGraph();
+			Iterable<Vertex> vertices = graph.getVertices( service.getDomainClass(domain) + "." + key, value );
+			IModelNode<IDescriptor> node = null;
+			for( Vertex vertex: vertices ) {
+				try {
+					Iterator<Edge> edges = vertex.getEdges(Direction.OUT, IDescriptor.DESCRIPTOR).iterator();
+					if( edges.hasNext()) {
+						IModelNode<IDescriptor> parent = getParent(graph, vertex, nodes);
+						node = new ModelNode( graph, parent, vertex );
+						results.add(node);
 					}
 				}
 				catch( Exception ex ) {

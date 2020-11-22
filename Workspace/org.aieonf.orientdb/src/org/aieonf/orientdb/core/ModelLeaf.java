@@ -52,7 +52,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 
 	@Override
 	public IDescriptor getDescriptor() {
-		return descriptor;
+		return new Descriptor( this );
 	}
 
 	@Override

@@ -1,0 +1,18 @@
+[{	"ID":243,
+	"LEAF":false,
+	"PROPERTIES":[{"VERSION":"0"},{"TITLE":"Captain\u0027s log"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"IDENTIFIER":"LOG"},{"DEPTH":"1"}],
+	"DESCRIPTOR":[{"Locale":"en"},{"ORG_AIEONF_CONCEPT_LIBRARY_LOCALEAIEON_ATTRIBUTES_COUNTRY":"GB"},{"SCOPE":"{Scope}"},{"DESCRIPTION":"{Description}"},{"VERSION":"0"},{"Title":"{Title}"},{"ID":"202"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"NAME":"LogEntry"},{"IMPLICIT":"TIME_IN_MILLIS"}],
+	"REVERSED":false,
+	"CHILDREN":[[
+		{"ID":254,
+		"LEAF":true,
+		"PROPERTIES":[{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"2"}],
+		"DESCRIPTOR":[{"SCOPE":"{Scope}"},{"DESCRIPTION":"{Description}"},{"VERSION":"0"},{"ID":"213"},{"CLASS":"org.aieonf.concept.core.Descriptor"},{"Url":"{http://www.url.org}"},{"IMPLICIT":"SOURCE"},{"NAME":"Url"}]
+		},"isChild"
+	],[{"ID":232,
+		"LEAF":true,
+		"PROPERTIES":[{"LOG_ENTRY":"\u003cp\u003enew log 2\u003c/p\u003e\n"},{"SCOPE":"UNKNOWN"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"TITLE":"Entry title 2"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"NAME":"LogEntry"},{"IMPLICIT":"TIME_IN_MILLIS"}]
+	   },"isChild"
+	]]
+ }
+]

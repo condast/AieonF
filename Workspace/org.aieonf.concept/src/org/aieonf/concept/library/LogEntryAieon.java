@@ -3,8 +3,8 @@ package org.aieonf.concept.library;
 import java.util.Calendar;
 import java.util.Locale;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 
@@ -63,36 +63,24 @@ public class LogEntryAieon extends DateAieon
 
 
 	public String getTitle(){
-		return super.get(Attributes.TITLE );
+		return super.get(Attributes.TITLE.name() );
 	}
 	
 	public void setTitle( String title ){
-		super.set( Attributes.TITLE, title);
+		super.set( Attributes.TITLE.name(), title);
+	}
+
+	public String getLogEntry(){
+		String str = super.get(Attributes.LOG_ENTRY ); 
+		return StringUtils.isEmpty(str)?"{new log}": str;
+	}
+	
+	public void setLogEntry( String log ){
+		super.set( Attributes.LOG_ENTRY.name(), log);
 	}
 
 	@Override
 	public void setSource( String source ){
 		super.setValue( IConcept.Attributes.SOURCE, source);
-	}
-	
-	public String getCategory(){
-		if( Utils.assertNull( super.getDescription()))
-			return null;
-		return super.getDescription().split("[\\s]")[0];
-	}
-	
-	/**
-	 * Give a description that is never null
-	 * @param descriptor
-	 * @return
-	 */
-	public static String getDescription( IDescriptor descriptor ){
-		String desc = descriptor.getDescription();
-		if( desc == null )
-			desc = descriptor.get( Attributes.TITLE );
-		if( desc == null )
-			desc = descriptor.getName();
-		return desc;
-
 	}
 }

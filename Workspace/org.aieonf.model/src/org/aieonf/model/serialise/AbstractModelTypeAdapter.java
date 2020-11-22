@@ -24,6 +24,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 
 	public static final String S_ERR_NULL_CHILD = "The child is null: ";
 	public static final String S_ERR_CYCLE_DETECTED = "A cycle has been detected ";
+	public static final String S_ERR_NO_DESCRIPTOR = "The descriptor is null!";
 
 	public enum Attributes{
 		PROPERTIES,//Properties of the model
@@ -122,6 +123,15 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 				else
 					base = new ConceptBase();
 				store = new Store( id, leaf, base );
+				token = jsonReader.peek();
+				if( JsonToken.END_OBJECT.equals(token)) {
+					logger.warning(S_ERR_NO_DESCRIPTOR );
+					node = onCreateNode( store.id, store.base, store.leaf, null);
+					nodes.push(node);
+					jsonReader.endObject();
+					completed = true;
+				}
+				token = jsonReader.peek();
 				break;
 			case NAME:
 				key = jsonReader.nextName().toUpperCase();

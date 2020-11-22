@@ -22,6 +22,7 @@ public class TestModelTypeAdapter extends TypeAdapter<TestObject> {
 
 	public static final String S_ERR_NULL_CHILD = "The child is null: ";
 	public static final String S_ERR_CYCLE_DETECTED = "A cycle has been detected ";
+	public static final String S_ERR_NO_DESCRIPTOR = "The descriptor is null!";
 
 	public enum Attributes{
 		PROPERTIES,//Properties of the model
@@ -100,6 +101,15 @@ public class TestModelTypeAdapter extends TypeAdapter<TestObject> {
 				else
 					base = new HashMap<>();
 				store = new Store( id, name, leaf, base );
+				token = jsonReader.peek();
+				if( JsonToken.END_OBJECT.equals(token)) {
+					logger.warning(S_ERR_NO_DESCRIPTOR );
+					node = new TestObject( store.id, store.name, store.leaf, store.base, base);
+					nodes.push(node);
+					jsonReader.endObject();
+					completed = true;
+				}
+				token = jsonReader.peek();
 				break;
 			case NAME:
 				key = jsonReader.nextName().toUpperCase();
@@ -117,7 +127,7 @@ public class TestModelTypeAdapter extends TypeAdapter<TestObject> {
 							jsonReader.beginArray();
 							TestObject child = readNode( jsonReader );
 							token = jsonReader.peek();
-							logger.fine( token.name());
+							logger.info( token.name());
 							label = IModelLeaf.IS_CHILD;
 							if( JsonToken.STRING.equals(token))
 								label = jsonReader.nextString();

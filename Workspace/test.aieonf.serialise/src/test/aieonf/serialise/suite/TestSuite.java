@@ -83,11 +83,13 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 
 	private void testSerialisation() {
 		Scanner scanner = null;
-		for( int i=9; i<10; i++ ) {
+		for( int i=10; i<11; i++ ) {
+			logger.info( "Scanning: " + S_RESOURCES + i + S_TXT );
 			scanner = new Scanner( this.getClass().getResourceAsStream(S_RESOURCES + i + S_TXT));
 			StringBuilder builder = new StringBuilder();
 			while( scanner.hasNextLine())
 				builder.append(scanner.nextLine());
+			logger.info( "Parsing: " + builder.toString());
 			GsonBuilder gbuilder = new GsonBuilder(); 
 			gbuilder.enableComplexMapKeySerialization();
 			TestModelTypeAdapter adapter = new TestModelTypeAdapter();

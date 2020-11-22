@@ -1,5 +1,6 @@
 package org.aieonf.model.provider;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.aieonf.commons.strings.StringStyler;
@@ -12,6 +13,8 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 		TOKEN,
 		DOMAIN,
 		MODEL_ID,
+		KEY,
+		VALUE,
 		LABEL,
 		CATEGORY,
 		WILDCARD;
@@ -59,6 +62,14 @@ public interface IModelDatabase<K extends Object, M extends IDescribable> extend
 	 * @return
 	 */
 	public M find(long id);
+
+	/**
+	 * search for models that have the given key-value pair
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public Collection<M> searchModels(String key, String value);
 
 	/**
 	 * Remove a model 

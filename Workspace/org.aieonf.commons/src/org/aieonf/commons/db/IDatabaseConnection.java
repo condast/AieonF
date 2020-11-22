@@ -15,6 +15,7 @@ public interface IDatabaseConnection {
 		FIND,
 		GET,
 		SEARCH,
+		SEARCH_MODELS,
 		UPDATE,
 		REMOVE,
 		REMOVE_ALL,

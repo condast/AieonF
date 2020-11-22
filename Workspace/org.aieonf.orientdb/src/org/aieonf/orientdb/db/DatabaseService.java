@@ -103,12 +103,15 @@ public class DatabaseService implements Closeable{
 		this.graph = persistence.createDatabase();
 		if( graph.getVertexType(IDescriptor.DESCRIPTORS) == null )
 			graph.createVertexType( IDescriptor.DESCRIPTORS );
-		String domain_id = domain.getDomain().replace("." , "_");
+		String domain_id = getDomainClass(domain);
 		if( graph.getVertexType( domain_id) == null )
 			graph.createVertexType( domain_id );
 		return true;
 	}
 	
+	public String getDomainClass( IDomainAieon domain ) {
+		return domain.getDomain().replace("." , "_");
+	}
 	public String getIdentifier(){
 		return S_IDENTIFIER;
 	}

@@ -89,7 +89,7 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 * @param concept
 	 */
 	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D descriptor ){
-		this( id );
+		this( id, descriptor );
 		this.parent = parent;
 	}
 
