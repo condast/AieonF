@@ -334,7 +334,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			String type = super.get( Attributes.TYPE );
 			super.setDescription( super.getName());
 			if( type.equals( Types.FOLDER.toString() )){
-				super.set( CategoryAieon.Attributes.CATEGORY, super.getName());
+				super.set( CategoryAieon.Attributes.CATEGORY.name(), super.getName());
 				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 			}else{
 				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
@@ -354,11 +354,11 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			String type = super.get( Attributes.TYPE );
 			if( type.equals( Types.FOLDER.name() )){
 				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
-				super.set( CategoryAieon.Attributes.CATEGORY, super.get( Attributes.NAME ));
+				super.set( CategoryAieon.Attributes.CATEGORY.name(), super.get( Attributes.NAME.name() ));
 			}else{
 				String name = super.get( Attributes.NAME );
-				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
-				super.set( IConcept.Attributes.SOURCE.name(), URLAieon.Attributes.URL.toString() );
+				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.name() );
+				super.set( IConcept.Attributes.SOURCE.name(), URLAieon.Attributes.URL.name() );
 				super.setDescription( name );
 			}
 			super.remove( IDescriptor.Attributes.NAME.name() );

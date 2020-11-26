@@ -19,10 +19,12 @@ import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.request.AbstractKeyEventDataProvider;
+import org.aieonf.concept.request.DataProcessedEvent;
 import org.aieonf.concept.request.IKeyEventDataProvider;
 import org.aieonf.concept.request.KeyEvent;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.provider.IModelProvider;
@@ -31,13 +33,15 @@ import org.aieonf.template.provider.AbstractModelProvider;
 import org.osgi.service.component.annotations.Component;
 
 @Component( name=KeyEventDataProvider.S_COMPONENT_NAME, immediate=true)
-public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>> implements IKeyEventDataProvider<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>> {
+public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> implements IKeyEventDataProvider<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> {
 
 	public static final String S_COMPONENT_NAME = "org.aieonf.browsersupport.key.data.service";
 
 	private ModelProvider provider;
 	
 	private IDomainAieon domain;
+	
+	private KeyEvent<IDatabaseConnection.Requests> request;
 	
 	public KeyEventDataProvider() {
 		ContextFactory factory = ContextFactory.getInstance();
@@ -46,9 +50,11 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 		provider = new ModelProvider( IFunctionProvider.S_FUNCTION_PROVIDER_ID, new ContextAieon( template.getData()));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	protected IModelLeaf<IDescriptor> onProcesskeyEvent(KeyEvent<Requests> event) {
+	protected IModelLeaf<IDescriptor>[] onProcesskeyEvent(KeyEvent<Requests> event) {
 		try {
+			request = event;
 			provider.open(domain);
 			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = 
 					new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, 
@@ -56,7 +62,7 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 			Collection<IModelLeaf<IDescriptor>> results = provider.search( filter );
 			if( Utils.assertNull(results))
 				return null;
-			return results.iterator().next();
+			return results.toArray( new IModelLeaf[ results.size()]);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -65,6 +71,13 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 			provider.close();
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void notifyResultsFound( ModelEvent<IModelLeaf<IDescriptor>> event ) {
+		IModelLeaf<IDescriptor>[] results = event.getModel().toArray( new IModelLeaf[ event.getModel().size()]);
+		DataProcessedEvent<Requests, IModelLeaf<IDescriptor>[]> devent = new DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>( this, request, results );
+		super.notifyDataProcessed( devent);
 	}
 	
 	private class ModelProvider extends AbstractModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>{
@@ -76,8 +89,11 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 		protected ModelProvider(String identifier, IContextAieon context) {
 			super(identifier, context);
 			cmf = new ChromiumModelFunctionProvider(context).getFunction(identifier);
+			cmf.addListener(e->notifyResultsFound( e ));
 			ffmf = new FireFoxModelFunction( context ).getFunction(identifier);
+			ffmf.addListener(e->notifyResultsFound( e ));
 			ieff = new IEFavoritesFunction(context).getFunction(identifier);
+			ieff.addListener(e->notifyResultsFound( e ));
 		}
 
 		@Override

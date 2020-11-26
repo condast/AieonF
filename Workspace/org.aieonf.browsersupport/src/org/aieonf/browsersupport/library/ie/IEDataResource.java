@@ -1,10 +1,10 @@
 package org.aieonf.browsersupport.library.ie;
 
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
-import org.aieonf.concept.wrapper.ConceptWrapper;
 
-public class IEDataResource extends ConceptWrapper implements IDataResource
+public class IEDataResource extends Concept implements IDataResource
 {
 	public IEDataResource(IDescriptor descriptor)
 	{
@@ -22,8 +22,8 @@ public class IEDataResource extends ConceptWrapper implements IDataResource
 	{
 		try {
 			String[] split = resource.split("\n");
-			set( IDescriptor.Attributes.ID.toString(), split[0] );
-			set( IDescriptor.Attributes.NAME.toString(), split[2] );
+			setValue( IDescriptor.Attributes.ID, split[0] );
+			setValue( IDescriptor.Attributes.NAME, split[2] );
 			String[] keyValue = split[3].split("[=]");
 			setSource( keyValue[1]);
 			keyValue = split[5].split("[=]");

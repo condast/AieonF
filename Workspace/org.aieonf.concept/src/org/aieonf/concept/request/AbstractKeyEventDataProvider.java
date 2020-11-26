@@ -21,6 +21,11 @@ public abstract class AbstractKeyEventDataProvider<R, D> implements IKeyEventDat
 		this.listeners.remove(listener);
 	}
 
+	protected void notifyDataProcessed( DataProcessedEvent<R, D> event ) {
+		for( IKeyEventDataListener<R, D> listener: this.listeners )
+			listener.notifyKeyEventProcessed(event);
+	}
+	
 	protected abstract D onProcesskeyEvent( KeyEvent<R> event );
 	
 	@Override

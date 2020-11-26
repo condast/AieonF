@@ -234,8 +234,8 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 							categories.put( BookmarkAieon.getPrimKey( category ), new Model<IDescriptor>(category ));
 					}else{
 						IModelLeaf<IDescriptor> child = new ModelLeaf<IDescriptor>(concept);
-						if( filter.acceptChild(child))
-							results.add( child );
+						//if( filter.acceptChild(child))
+						results.add( child );
 					}
 				}
 				catch (ConceptException e) {
@@ -247,7 +247,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			PlacesAieon placesAieon;
 			FireFoxReference faviconAieon;
 			for( IModelLeaf<IDescriptor> result: results ){
-				aieon = ( BookmarkAieon )result.getDescriptor();
+				aieon = ( BookmarkAieon )result.getData();
 
 				//skip categories
 				String fk = aieon.getFK();
@@ -472,9 +472,9 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 
 		public void fill( ResultSet rs ) throws ConceptException{
 			try {
-				set( IDescriptor.Attributes.ID, rs.getString( PlacesAttribute.guid.name() ));
+				setValue( IDescriptor.Attributes.ID, rs.getString( PlacesAttribute.guid.name() ));
 				setVersion( 1 );
-				set( IDescriptor.Attributes.UPDATE_DATE, rs.getString( PlacesAttribute.last_visit_date.name() ));
+				setValue( IDescriptor.Attributes.UPDATE_DATE, rs.getString( PlacesAttribute.last_visit_date.name() ));
 
 				String str = rs.getString( PlacesAttribute.id.name() );
 				set( BookmarkAttribute.primkey, str );

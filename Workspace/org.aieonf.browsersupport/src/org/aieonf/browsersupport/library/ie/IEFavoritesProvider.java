@@ -101,13 +101,13 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 		fileEon.setProvider( super.getManifest().getIdentifier() );
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis( model.getFile().lastModified() );
-		fileEon.set( IDescriptor.Attributes.CREATE_DATE, calendar.getTime().toString() );
-		fileEon.set( IDescriptor.Attributes.UPDATE_DATE, calendar.getTime().toString() );
+		fileEon.set( IDescriptor.Attributes.CREATE_DATE.name(), calendar.getTime().toString() );
+		fileEon.set( IDescriptor.Attributes.UPDATE_DATE.name(), calendar.getTime().toString() );
 		if( model.getFile().isDirectory() ){
-			fileEon.set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
-			fileEon.set( CategoryAieon.Attributes.CATEGORY, fileEon.getName() );
+			fileEon.set( IDescriptor.Attributes.NAME.name(), CategoryAieon.Attributes.CATEGORY.name() );
+			fileEon.set( CategoryAieon.Attributes.CATEGORY.name(), fileEon.getName() );
 		}else{
-			fileEon.set( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
+			fileEon.set( IDescriptor.Attributes.NAME.name(), URLAieon.Attributes.URL.toString() );
 		}
 	}
 
@@ -123,12 +123,12 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 		File file = new File( String.valueOf( descriptor.getID() ));
 		if ( file.isDirectory() ){
 			String[] split = file.getName().split( "/" );
-			descriptor.set( IDescriptor.Attributes.DESCRIPTION, split[ split.length - 1 ]);
+			descriptor.set( IDescriptor.Attributes.DESCRIPTION.name(), split[ split.length - 1 ]);
 		}
 		else
 		{
 			String[] split = file.getName().split( "[.]" );
-			descriptor.set( IDescriptor.Attributes.DESCRIPTION, split[ 0 ]);
+			descriptor.set( IDescriptor.Attributes.DESCRIPTION.name(), split[ 0 ]);
 		}
 	}
 

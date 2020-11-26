@@ -130,7 +130,7 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 
 			String description = name;
 			name = Descriptor.makeValidName( name );
-			urlEon.set( IDescriptor.Attributes.NAME.toString(), name );
+			urlEon.set( IDescriptor.Attributes.NAME.name(), name );
 			urlEon.setDescription( description );
 			cat.addChild( new ModelLeaf<IConcept>( urlEon ));
 			if( Descriptor.assertNull( urlEon.getResource() )){

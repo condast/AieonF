@@ -12,9 +12,8 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.datauri.IDataURI;
-import org.aieonf.concept.wrapper.ConceptWrapper;
 
-public class FireFoxReference extends ConceptWrapper implements IDataResource{
+public class FireFoxReference extends Concept implements IDataResource{
 	private static final long serialVersionUID = -290451331218647891L;
 
 	public static final String S_HREF = "href";
@@ -56,9 +55,8 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 		}	
 	}
 
-	public FireFoxReference()
-	{
-		super( new Concept());
+	public FireFoxReference(){
+		super();
 	}
 
 	/**
@@ -88,7 +86,7 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 				correct = true;
 			}
 			if( key.equals( S_ID ))
-				super.set( IDescriptor.Attributes.ID.toString(), value );
+				super.setValue( IDescriptor.Attributes.ID, value );
 			if(( split.length > 3 ) && ( i==2 )){
 				this.fill( key, value );
 			}
@@ -116,8 +114,8 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 		setReadOnly( true );
 		setScope( IConcept.Scope.PRIVATE );
 		Calendar calendar = Calendar.getInstance();
-		set( IDescriptor.Attributes.CREATE_DATE.toString(), calendar.getTime().toString() );
-		set( IDescriptor.Attributes.UPDATE_DATE.toString(), calendar.getTime().toString() );
+		setValue( IDescriptor.Attributes.CREATE_DATE, calendar.getTime().toString() );
+		setValue( IDescriptor.Attributes.UPDATE_DATE, calendar.getTime().toString() );
 	}
 
 	/**
@@ -130,7 +128,7 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 		try {
 			String str =  rs.getString( Columns.toColumnName( Columns.ID ));
 			if( !Descriptor.assertNull(str))
-				set( IDescriptor.Attributes.ID, str );		
+				setValue( IDescriptor.Attributes.ID, str );		
 			set( IDataURI.Attribute.MIME_TYPE, "text/plain" );		
 			str =  rs.getString( Columns.toColumnName( Columns.DATA ));
 			if( !Descriptor.assertNull(str)){
@@ -150,8 +148,8 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 		setReadOnly( true );
 		setScope( IConcept.Scope.PRIVATE );
 		Calendar calendar = Calendar.getInstance();
-		set( IDescriptor.Attributes.CREATE_DATE.toString(), calendar.getTime().toString() );
-		set( IDescriptor.Attributes.UPDATE_DATE.toString(), calendar.getTime().toString() );
+		setValue( IDescriptor.Attributes.CREATE_DATE, calendar.getTime().toString() );
+		setValue( IDescriptor.Attributes.UPDATE_DATE, calendar.getTime().toString() );
 	}
 
 	@Override

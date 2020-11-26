@@ -31,10 +31,10 @@ public class BookmarkAieon extends Concept implements IDataResource
 	
 	public void fill( ResultSet rs ) throws ConceptException{
 		try {
-			set( IDescriptor.Attributes.ID, rs.getString( BookmarkAttribute.guid.name() ));
+			setValue( IDescriptor.Attributes.ID, rs.getString( BookmarkAttribute.guid.name() ));
 			setVersion( 1 );
-			set( IDescriptor.Attributes.CREATE_DATE, rs.getString( BookmarkAttribute.dateAdded.name() ));
-			set( IDescriptor.Attributes.UPDATE_DATE, rs.getString( BookmarkAttribute.lastModified.name() ));
+			setValue( IDescriptor.Attributes.CREATE_DATE, rs.getString( BookmarkAttribute.dateAdded.name() ));
+			setValue( IDescriptor.Attributes.UPDATE_DATE, rs.getString( BookmarkAttribute.lastModified.name() ));
 
 			String fk = rs.getString( BookmarkAttribute.fk.name() );
 			set( BookmarkAttribute.fk, fk );
@@ -56,19 +56,19 @@ public class BookmarkAieon extends Concept implements IDataResource
 				if(( !Descriptor.assertNull( fk ) && !Descriptor.assertNull( title ))) {
 					if( parent != 5 ){
 						String name = Descriptor.createValidName( title );
-						set( IDescriptor.Attributes.NAME, name );
+						set( IDescriptor.Attributes.NAME.name(), name );
 						if( name.length() < title.length() )
 							this.setDescription( title );
 					}else{
 						set( CategoryAieon.Attributes.CATEGORY.name(), title );
-						set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );							
+						setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );							
 					}
 				}
 				break;
 			case 2:
 				if( !Descriptor.assertNull( title )) {
 					set( CategoryAieon.Attributes.CATEGORY.name(), title );
-					set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
+					setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 				}
 				break;
 			default:
