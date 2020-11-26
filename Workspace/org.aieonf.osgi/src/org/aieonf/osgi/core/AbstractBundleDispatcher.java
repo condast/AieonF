@@ -23,7 +23,7 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 	private ISecureGenerator generator;
 
 	private String path;
-	private IModelDatabase<IDescriptor, IModelLeaf<IDescriptor>> database;
+	private IModelDatabase<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> database;
 	
 	private IDomainAieon domain; 
 
@@ -52,14 +52,14 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 		return input.toArray( new IModelLeaf[input.size()]);
 	}
 
-	protected abstract IModelDatabase<IDescriptor, IModelLeaf<IDescriptor>> createDatabase( ISecureGenerator generator, IDomainAieon domain, String path );
+	protected abstract IModelDatabase<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> createDatabase( ISecureGenerator generator, IDomainAieon domain, String path );
 	
 	public void setGenerator(ISecureGenerator generator) {
 		this.generator = generator;
 		database = createDatabase(generator, domain, path);
 	}
 
-	protected IModelDatabase<IDescriptor, IModelLeaf<IDescriptor>> getDatabase() {
+	protected IModelDatabase<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> getDatabase() {
 		return database;
 	}
 

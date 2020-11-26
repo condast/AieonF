@@ -59,7 +59,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IModelLeaf<IDescriptor>> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
 		super.getModels().clear();
 		try {
 			parseTree( filter );
@@ -69,7 +69,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 		return super.getModels();
 	}
 
-	private void parseTree( IModelFilter<IModelLeaf<IDescriptor>> filter) throws ParseException{
+	private void parseTree( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException{
 		ObjectMapper m = new ObjectMapper();
 		JsonNode rootNode;
 		URI uri = super.getManifest().getURI();
@@ -87,7 +87,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 		}
 	}
 
-	private void parseTree( IModelNode<IDescriptor> leaf, JsonNode node, IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ParseException, ConceptException{
+	private void parseTree( IModelNode<IDescriptor> leaf, JsonNode node, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ParseException, ConceptException{
 		//if(( leaf != null ) && ( filter.accept( leaf )))
 		//	models.add( leaf );
 
@@ -335,7 +335,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			super.setDescription( super.getName());
 			if( type.equals( Types.FOLDER.toString() )){
 				super.set( CategoryAieon.Attributes.CATEGORY, super.getName());
-				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
+				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 			}else{
 				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
 			}
@@ -353,7 +353,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			}
 			String type = super.get( Attributes.TYPE );
 			if( type.equals( Types.FOLDER.name() )){
-				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
+				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 				super.set( CategoryAieon.Attributes.CATEGORY, super.get( Attributes.NAME ));
 			}else{
 				String name = super.get( Attributes.NAME );

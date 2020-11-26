@@ -2,6 +2,7 @@ package org.aieonf.sketch.factory;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.aieonf.concept.IDescriptor;
@@ -49,6 +50,8 @@ public class SketchFactory extends AbstractProviderContextFactory<IDescriptor, I
 	 */
 	public synchronized Map<IDomainAieon,SketchModelFactory> getFactories() throws MalformedURLException {
 		IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) createModel();
+		if( model == null )
+			return new HashMap<>();
 		URLAieon urlAieon = new URLAieon( model.getData());
 		URI path = ProjectFolderUtils.getParsedAieonFDir( urlAieon.getURIPath(), Activator.BUNDLE_ID);
 		return SketchModelFactory.getFactories( path.getRawPath());

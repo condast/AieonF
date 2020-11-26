@@ -4,9 +4,10 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.aieonf.commons.strings.StringStyler;
-import org.aieonf.concept.IDescribable;
+import org.aieonf.concept.IDescriptor;
+import org.aieonf.model.core.IModelLeaf;
 
-public interface IModelDatabase<K extends Object, M extends IDescribable> extends IModelProvider<K, M>{
+public interface IModelDatabase<K extends Object, D extends IDescriptor, M extends IModelLeaf<D>> extends IModelProvider<K, D, M>{
 
 	public enum Attributes{
 		ID,

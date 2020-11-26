@@ -13,7 +13,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
-public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<String, IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>> {
+public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<String, IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>> {
 
 	//Default location
 	private static final String DEFAULT_CHROMIUM_ROOT =
@@ -42,7 +42,7 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<Stri
 
 	
 	@Override
-	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
+	protected IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
 		ILoaderAieon baseLoader = getDefaultLoader( context);
 		URI uri = ProjectFolderUtils.appendToUserDir(DEFAULT_CHROMIUM_ROOT + "//" + DEFAULT_BOOKMARKS_FILE, false );
 		baseLoader.set( IConcept.Attributes.SOURCE.name(), uri.toString() );
@@ -51,7 +51,7 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<Stri
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context);
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
-		IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( baseLoader );
+		IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( baseLoader );
 		return gdb;
 	}
 }

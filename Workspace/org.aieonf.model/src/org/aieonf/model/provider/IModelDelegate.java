@@ -1,7 +1,6 @@
 package org.aieonf.model.provider;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
@@ -13,15 +12,15 @@ import org.aieonf.model.filter.IModelFilter;
  * listeners  
  * @author Kees
  *
- * @param <U>
+ * @param <D>
  */
-public interface IModelDelegate<U extends IDescribable>{
+public interface IModelDelegate<D extends IDescriptor, M extends IModelLeaf<D>>{
 
 	/**
 	 * Open the delegate
 	 * @param domain
 	 */
-	public void open(IDescriptor domain );
+	public void open(D domain );
 	
 	public boolean isOpen();
 		
@@ -36,31 +35,31 @@ public interface IModelDelegate<U extends IDescribable>{
 	 * @param descriptor
 	 * @return
 	 */
-	public void contains( U descriptor );
+	public void contains( M descriptor );
 
 	/**
 	 * Delegates the get function
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public void get( U descriptor ) throws ParseException;
+	public void get( M descriptor ) throws ParseException;
 
 	/**
 	 * Delegates the serach function
 	 * @param filter
 	 * @throws ParseException
 	 */
-	public void search( IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ParseException;
+	public void search( IModelFilter<D, M> filter ) throws ParseException;
 
 	/**
 	 * Add a change listener
 	 * @param listener
 	 */
-	void addListener(IModelListener<U> listener);
+	void addListener(IModelListener<M> listener);
 
 	/**
 	 * Remove a listener
 	 * @param listener
 	 */
-	void removeListener(IModelListener<U> listener);
+	void removeListener(IModelListener<M> listener);
 }

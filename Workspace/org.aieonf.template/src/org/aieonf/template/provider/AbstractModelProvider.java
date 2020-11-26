@@ -11,13 +11,14 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.sign.SignatureFactory;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.HierarchicalModelDescriptorFilter;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
-public abstract class AbstractModelProvider<K extends Object, D extends IDescribable, M extends IDescribable> implements IModelProvider<K, M> {
+public abstract class AbstractModelProvider<K extends IDescriptor, D extends IDescriptor, M extends IModelLeaf<D>> implements IModelProvider<K, D, M> {
 
 	private static final String S_ERR_PROVIDER_NOT_OPEN = "The provider is not open";
 
@@ -156,15 +157,15 @@ public abstract class AbstractModelProvider<K extends Object, D extends IDescrib
 	@Override
 	public Collection<M> get(IDescriptor descriptor) throws ParseException {
 		@SuppressWarnings("unchecked")
-		IModelFilter<M> flt = (IModelFilter<M>) new HierarchicalModelDescriptorFilter<IDescriptor>( descriptor );
+		IModelFilter<D,M> flt = (IModelFilter<D,M>) new HierarchicalModelDescriptorFilter<IDescriptor>( descriptor );
 		return this.search(flt);
 	}
 
-	protected abstract Collection<M> onSearch(IModelFilter<M> filter) throws ParseException;
+	protected abstract Collection<M> onSearch(IModelFilter<D,M> filter) throws ParseException;
 
 	
 	@Override
-	public Collection<M> search(IModelFilter<M> filter) throws ParseException {
+	public Collection<M> search(IModelFilter<D,M> filter) throws ParseException {
 		if( !open )
 			throw new ParseException( S_ERR_PROVIDER_NOT_OPEN );
 		models = onSearch( filter);

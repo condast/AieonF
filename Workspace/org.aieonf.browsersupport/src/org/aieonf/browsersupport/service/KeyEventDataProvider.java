@@ -50,8 +50,8 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 	protected IModelLeaf<IDescriptor> onProcesskeyEvent(KeyEvent<Requests> event) {
 		try {
 			provider.open(domain);
-			IModelFilter<IModelLeaf<IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, 
+			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = 
+					new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, 
 							IDescriptor.Attributes.NAME.name(), CategoryAieon.Attributes.CATEGORY.name()));
 			Collection<IModelLeaf<IDescriptor>> results = provider.search( filter );
 			if( Utils.assertNull(results))
@@ -69,9 +69,9 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 	
 	private class ModelProvider extends AbstractModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>{
 
-		private IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> cmf;
-		private IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> ffmf;
-		private IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> ieff;
+		private IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> cmf;
+		private IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> ffmf;
+		private IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> ieff;
 
 		protected ModelProvider(String identifier, IContextAieon context) {
 			super(identifier, context);
@@ -105,7 +105,7 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 		}
 	
 		@Override
-		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IModelLeaf<IDescriptor>> filter) throws ParseException {
+		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
 			Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 			//results.addAll( cmf.search( filter ));
 			results.addAll( ffmf.search( filter ));

@@ -132,7 +132,7 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 	public M createModel() {
 		ModelScanner<IDescriptor> scanner = new ModelScanner<IDescriptor>( this.template );
 		IAttributeFilter<IDescriptor> filter = new AttributeFilter<>( AttributeFilter.Rules.EQUALS, IModelLeaf.Attributes.IDENTIFIER.name(), S_MODEL_ID);
-		IModelFilter<IModelLeaf<IDescriptor>> modelFilter = new ModelFilter<>( filter);
+		IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> modelFilter = new ModelFilter<>( filter);
 		M model = null;
 		try {
 			Collection<IModelLeaf<IDescriptor>> models = scanner.search(modelFilter);

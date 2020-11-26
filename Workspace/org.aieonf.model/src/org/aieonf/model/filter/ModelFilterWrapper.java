@@ -4,12 +4,12 @@ import java.util.Collection;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IAttributeFilter;
-import org.aieonf.concept.IDescribable;
+import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 
-public class ModelFilterWrapper<M extends IDescribable> implements
-		IModelFilter<M> {
+public class ModelFilterWrapper<D extends IDescriptor, M extends IModelLeaf<D>> implements
+		IModelFilter<D,M> {
 
 	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";
 	private IAttributeFilter<M> filter;

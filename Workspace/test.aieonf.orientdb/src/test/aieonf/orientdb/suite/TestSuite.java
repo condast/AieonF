@@ -180,8 +180,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		try{		
 			database.open( factory.getDomain());
 			database.add(model);
-			IModelFilter<IModelLeaf<IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
+			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = 
+					new ModelFilter<IDescriptor,IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
 			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
@@ -217,8 +217,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		try{		
 			database.open( factory.getDomain());
 			database.add(model);
-			IModelFilter<IModelLeaf<IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
+			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = 
+					new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME, "CATEGORY"));
 			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );
@@ -252,8 +252,8 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 			TimeUnit.SECONDS.sleep(15);
 			logger.info("START TEST");
 			database.add(model);
-			IModelFilter<IModelLeaf<IDescriptor>> filter = 
-					new ModelFilter<IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
+			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = 
+					new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, IDescriptor.Attributes.NAME.name(), "CATEGORY"));
 			Collection<IModelLeaf<IDescriptor>> results = database.search(filter);
 			for( IModelLeaf<? extends IDescriptor> leaf: results )
 				logger.info( leaf.getDescriptor().toString() );

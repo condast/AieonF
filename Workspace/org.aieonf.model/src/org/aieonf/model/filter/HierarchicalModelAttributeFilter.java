@@ -8,7 +8,7 @@ import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.concept.filter.HierarchicalAttributeFilter;
 import org.aieonf.model.core.IModelLeaf;
 
-public class HierarchicalModelAttributeFilter<D extends IDescriptor> extends HierarchicalAttributeFilter<D, IModelLeaf<D>> implements IModelFilter<IModelLeaf<D>>
+public class HierarchicalModelAttributeFilter<D extends IDescriptor> extends HierarchicalAttributeFilter<D, IModelLeaf<D>> implements IModelFilter<D,IModelLeaf<D>>
 {
 	private static final String S_ERR_MIN_DEPTH_WRONG = "The minimum depth must be equal to, or larger than zero";
 

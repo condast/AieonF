@@ -13,12 +13,12 @@ import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.filter.IDescribableFilter;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.core.ModelLeaf;
-import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.provider.IModelProvider;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -191,7 +191,7 @@ public class CacheService implements Closeable{
 		return results.toArray( new IDescriptor[ results.size()]);
 	}
 
-	public Collection<IDescriptor> search(IModelFilter<IDescriptor> filter) throws ParseException {
+	public Collection<IDescriptor> search(IDescribableFilter<IDescriptor> filter) throws ParseException {
 		Collection<IDescriptor> results = new ArrayList<IDescriptor>();
 		for (ODocument document : database.browseCluster( S_CACHE )) {
 			IDescriptor descriptor = createDescriptor(document);    

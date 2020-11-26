@@ -23,12 +23,12 @@ import org.aieonf.template.def.ITemplateLeaf;
  * @author Kees Pieters
  */
 public abstract class AbstractProviderContextFactory<D extends IDescriptor, M extends IModelLeaf<D>> 
-extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<String, IDescriptor, M>
+extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<String, D, M>
 {
 	private static final String S_MODEL = "Model";
 	private String bundle_id;
 	
-	private Collection<IFunctionProvider<String, IModelProvider<IDescriptor, M>>> functions;
+	private Collection<IFunctionProvider<String, IModelProvider<String, D, M>>> functions;
 	
 	private IModelInterpreterFactory<IContextAieon> factory;
 	
@@ -56,7 +56,7 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	public boolean hasFunction( String name ){
 		if( Utils.assertNull( name ))
 			return false;
-		for( IFunctionProvider<String, IModelProvider<IDescriptor, M>> function: functions ){
+		for( IFunctionProvider<String, IModelProvider<String, D, M>> function: functions ){
 			if( function.canProvide( name ))
 				return true;
 		}
@@ -67,7 +67,7 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	 * @see org.aieonf.template.context.IProviderContextFactory#removeProvider(org.aieonf.model.builder.IFunctionProvider)
 	 */
 	@Override
-	public void addProvider(IFunctionProvider<String, IModelProvider<IDescriptor, M>> function) {
+	public void addProvider(IFunctionProvider<String, IModelProvider<String, D, M>> function) {
 		IDomainAieon domain = super.getDomain();
 		if( function.supportsDomain( domain )){
 			this.functions.add( function );
@@ -75,8 +75,8 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	}
 
 	@Override
-	public IModelProvider<IDescriptor, M> getFunction(String key) {
-		for( IFunctionProvider<String, IModelProvider<IDescriptor, M>> function: functions ){
+	public IModelProvider<String, D, M> getFunction(String key) {
+		for( IFunctionProvider<String, IModelProvider<String, D, M>> function: functions ){
 			if( function.canProvide( key ))
 				return function.getFunction(key);
 		}
@@ -84,7 +84,7 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	}
 
 	@Override
-	public void removeProvider( IFunctionProvider<String,IModelProvider<IDescriptor, M>> function ){
+	public void removeProvider( IFunctionProvider<String,IModelProvider<String, D, M>> function ){
 		this.functions.remove( function );
 	}
 

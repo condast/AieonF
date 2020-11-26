@@ -7,7 +7,9 @@ public interface ITableEventListener<D, C extends Object> {
 	public enum TableEvents{
 		VIEW_TABLE,
 		EDIT,
-		DELETE;
+		DELETE,
+		SELECT,
+		DOUBLE_CLICK;
 
 		@Override
 		public String toString() {

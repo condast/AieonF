@@ -69,7 +69,7 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IModelLeaf<IDescriptor>> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
 		super.getModels().clear();
 		FileModel model = new FileModel( root );
 		this.parseFileModel(model);
@@ -104,7 +104,7 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 		fileEon.set( IDescriptor.Attributes.CREATE_DATE, calendar.getTime().toString() );
 		fileEon.set( IDescriptor.Attributes.UPDATE_DATE, calendar.getTime().toString() );
 		if( model.getFile().isDirectory() ){
-			fileEon.set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
+			fileEon.set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 			fileEon.set( CategoryAieon.Attributes.CATEGORY, fileEon.getName() );
 		}else{
 			fileEon.set( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );

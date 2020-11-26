@@ -128,7 +128,7 @@ public class ModelRestService{
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			ModelFilter<IModelLeaf<IDescriptor>> filter = new ModelFilter<IModelLeaf<IDescriptor>>(null);
+			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
 			return Response.ok(result).build();
 		}
@@ -184,7 +184,7 @@ public class ModelRestService{
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			ModelFilter<IModelLeaf<IDescriptor>> filter = new ModelFilter<IModelLeaf<IDescriptor>>(null);
+			ModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>(null);
 			result = filter.doFilter(result);
 			Gson gson = new Gson();
 			String str = gson.toJson(result.toArray(new IModelLeaf[ result.size()]), Model[].class );

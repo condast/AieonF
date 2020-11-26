@@ -1,8 +1,8 @@
 package org.aieonf.template.context;
 
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IFunctionProvider;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelProvider;
 
 /**
@@ -14,11 +14,11 @@ import org.aieonf.model.provider.IModelProvider;
  * @param <M>
  * @param <C>
  */
-public interface IProviderContextFactory<K extends Object, D extends IDescriptor, M extends IDescribable> extends ITemplateContextFactory<M> {
+public interface IProviderContextFactory<K extends Object, D extends IDescriptor, M extends IModelLeaf<D>> extends ITemplateContextFactory<M> {
 
-	public void addProvider(IFunctionProvider<K, IModelProvider<D, M>> function);
+	public void addProvider(IFunctionProvider<K, IModelProvider<K, D, M>> function);
 
-	public void removeProvider(IFunctionProvider<K, IModelProvider<D, M>> function);
+	public void removeProvider(IFunctionProvider<K, IModelProvider<K, D, M>> function);
 
 	/**
 	 * Returns true if the factory returns the given function
@@ -32,6 +32,6 @@ public interface IProviderContextFactory<K extends Object, D extends IDescriptor
 	 * @param data
 	 * @return
 	 */
-	public IModelProvider<D, M> getFunction( K function );
+	public IModelProvider<K, D, M> getFunction( K function );
 
 }

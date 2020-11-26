@@ -27,7 +27,7 @@ import org.aieonf.model.provider.IModelDatabase;
 
 import com.google.gson.Gson;
 
-public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IModelLeaf<D>> implements IModelDatabase<D, M> {
+public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IModelLeaf<D>> implements IModelDatabase<IDomainAieon, D, M> {
 
 	private ISecureGenerator generator;
 	private String path;
@@ -49,7 +49,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	}
 
 	@Override
-	public void open(IDescriptor key) {
+	public void open(IDomainAieon key) {
 		this.open = true;
 	}
 
@@ -291,7 +291,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	}
 	
 	@Override
-	public Collection<M> search(IModelFilter<M> filter)
+	public Collection<M> search(IModelFilter<D,M> filter)
 			throws ParseException {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.SEARCH;

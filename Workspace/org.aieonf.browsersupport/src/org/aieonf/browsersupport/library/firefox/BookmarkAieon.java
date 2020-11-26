@@ -60,15 +60,15 @@ public class BookmarkAieon extends Concept implements IDataResource
 						if( name.length() < title.length() )
 							this.setDescription( title );
 					}else{
-						set( CategoryAieon.Attributes.CATEGORY, title );
-						set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );							
+						set( CategoryAieon.Attributes.CATEGORY.name(), title );
+						set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );							
 					}
 				}
 				break;
 			case 2:
 				if( !Descriptor.assertNull( title )) {
-					set( CategoryAieon.Attributes.CATEGORY, title );
-					set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.toString() );
+					set( CategoryAieon.Attributes.CATEGORY.name(), title );
+					set( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 				}
 				break;
 			default:

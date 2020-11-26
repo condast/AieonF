@@ -14,7 +14,7 @@ import org.aieonf.model.function.AbstractFunctionProvider;
 import org.aieonf.model.provider.IModelProvider;
 
 public class IEFavoritesFunction extends AbstractFunctionProvider<String, 
-IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
+IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>>
 {
 	//Default identifier
 	private static final String DEFAULT_IE_IDENTIFIER =
@@ -44,7 +44,7 @@ IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>>>
 	}
 
 	@Override
-	protected IModelProvider<IDomainAieon, IModelLeaf<IDescriptor>> onCreateFunction( String aieon ) {
+	protected IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> onCreateFunction( String aieon ) {
 		ILoaderAieon baseLoader = getDefaultLoader(context);
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context );

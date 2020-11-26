@@ -21,7 +21,7 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 	public static final String S_ID= "id";
 	public static final String S_EMPTY = "empty";
 	public static final String S_DATA = "data";
-	
+
 	public static final String S_ERR_ILLEGAL_REFERENCE_1 = 
 			"Illegal Reference; Should minimally have the form <A HREF ID>";
 	public static final String S_ERR_ILLEGAL_REFERENCE_2 = 
@@ -30,28 +30,32 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 			"Illegal Data URI; Should have the form <type>=data:mimetype/encoding,data>";
 	public static final String S_ERR_ILLEGAL_DATA_URI_4 = 
 			"Illegal MIMETYPE; Should have the form <type>/<value>";
-	
+
 	public enum Attribute{
 		DataUri
 	}
-	
+
 	public enum Columns{
 		ID,
-		MIME_TYPE,
-		DATA,
-		URL;
+		ICON_URL,
+		FIXED_ICON_URL_HASH,
+		WIDTH,
+		ROOT,
+		COLOR,
+		EXPIRE_MS,
+		DATA;
 
 		@Override
 		public String toString() {
 			return StringStyler.prettyString( super.toString() );
 		}
-		
+
 		public static String toColumnName( Columns column){
 			String str = column.name().toLowerCase();
 			return str;
 		}	
 	}
-	
+
 	public FireFoxReference()
 	{
 		super( new Concept());
@@ -66,28 +70,28 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 		String[] split = datauri.split("[ ]");
 		if( split.length < 3 )
 			throw new ConceptException( S_ERR_ILLEGAL_REFERENCE_1 );
-		
+
 		String[] strSplit;		
 		String key,value;
 		String str;
 		boolean correct = false;
 		for( int i=1; i<split.length; i++ ){
-		  str = split[ i ].replace("\"", "").trim();
+			str = split[ i ].replace("\"", "").trim();
 			strSplit = str.split("[=]");
-		  if( strSplit.length != 2 )
-		  	throw new ConceptException( S_ERR_ILLEGAL_REFERENCE_2 + split[i]);
-		
-		  key = strSplit[0].toLowerCase().trim();
-		  value = strSplit[1].replace("\"", "").trim();
-		  if( key.equals( S_HREF )){
-		  	super.setSource( value );
-		  	correct = true;
-		  }
-		  if( key.equals( S_ID ))
-		  	super.set( IDescriptor.Attributes.ID.toString(), value );
-		  if(( split.length > 3 ) && ( i==2 )){
-		  	this.fill( key, value );
-		  }
+			if( strSplit.length != 2 )
+				throw new ConceptException( S_ERR_ILLEGAL_REFERENCE_2 + split[i]);
+
+			key = strSplit[0].toLowerCase().trim();
+			value = strSplit[1].replace("\"", "").trim();
+			if( key.equals( S_HREF )){
+				super.setSource( value );
+				correct = true;
+			}
+			if( key.equals( S_ID ))
+				super.set( IDescriptor.Attributes.ID.toString(), value );
+			if(( split.length > 3 ) && ( i==2 )){
+				this.fill( key, value );
+			}
 		}
 		if( correct == false )
 			throw new ConceptException( S_ERR_ILLEGAL_REFERENCE_2 );
@@ -96,7 +100,7 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 	public boolean isDataUri() throws ConceptException{
 		return this.getBoolean( Attribute.DataUri.name() );
 	}
-	
+
 	/**
 	 * Fill the Data URI with the given datauri string
 	 * @param type
@@ -108,12 +112,12 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 		set( IDataResource.Attribute.Resource, resource );
 		if( resource.startsWith( S_DATA))
 			super.set( Attribute.DataUri.name(), "true");
-    setVersion( 1 );
-    setReadOnly( true );
-    setScope( IConcept.Scope.PRIVATE );
-    Calendar calendar = Calendar.getInstance();
-    set( IDescriptor.Attributes.CREATE_DATE.toString(), calendar.getTime().toString() );
-    set( IDescriptor.Attributes.UPDATE_DATE.toString(), calendar.getTime().toString() );
+		setVersion( 1 );
+		setReadOnly( true );
+		setScope( IConcept.Scope.PRIVATE );
+		Calendar calendar = Calendar.getInstance();
+		set( IDescriptor.Attributes.CREATE_DATE.toString(), calendar.getTime().toString() );
+		set( IDescriptor.Attributes.UPDATE_DATE.toString(), calendar.getTime().toString() );
 	}
 
 	/**
@@ -127,15 +131,13 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 			String str =  rs.getString( Columns.toColumnName( Columns.ID ));
 			if( !Descriptor.assertNull(str))
 				set( IDescriptor.Attributes.ID, str );		
-			str =  rs.getString( Columns.toColumnName( Columns.MIME_TYPE ));
-			if( !Descriptor.assertNull(str))
-				set( IDataURI.Attribute.MIME_TYPE, str );		
+			set( IDataURI.Attribute.MIME_TYPE, "text/plain" );		
 			str =  rs.getString( Columns.toColumnName( Columns.DATA ));
 			if( !Descriptor.assertNull(str)){
 				set( IDataResource.Attribute.Resource, str );		
 				super.set( Attribute.DataUri.name(), "true");
 			}
-			str =  rs.getString( Columns.toColumnName( Columns.URL ));
+			str =  rs.getString( Columns.toColumnName( Columns.ICON_URL ));
 			if( !Descriptor.assertNull(str)){
 				setSource( str );		
 			}
@@ -144,12 +146,12 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 		catch (SQLException e) {
 			throw new ConceptException( e );
 		}
-    setVersion( 1 );
-    setReadOnly( true );
-    setScope( IConcept.Scope.PRIVATE );
-    Calendar calendar = Calendar.getInstance();
-    set( IDescriptor.Attributes.CREATE_DATE.toString(), calendar.getTime().toString() );
-    set( IDescriptor.Attributes.UPDATE_DATE.toString(), calendar.getTime().toString() );
+		setVersion( 1 );
+		setReadOnly( true );
+		setScope( IConcept.Scope.PRIVATE );
+		Calendar calendar = Calendar.getInstance();
+		set( IDescriptor.Attributes.CREATE_DATE.toString(), calendar.getTime().toString() );
+		set( IDescriptor.Attributes.UPDATE_DATE.toString(), calendar.getTime().toString() );
 	}
 
 	@Override
@@ -166,9 +168,9 @@ public class FireFoxReference extends ConceptWrapper implements IDataResource{
 	{
 		return super.get(  IDataResource.Attribute.Resource );
 	}
-	
+
 	public void setResource( String resource ) throws ConceptException{
 		super.set( IDataResource.Attribute.Resource, resource );
 	}
-	
+
 }

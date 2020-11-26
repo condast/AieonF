@@ -3,8 +3,8 @@ package org.aieonf.model.provider;
 import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.filter.IModelFilter;
 
 /**
@@ -13,7 +13,7 @@ import org.aieonf.model.filter.IModelFilter;
  *
  * @param <M>
  */
-public interface IModelProvider<K extends Object, M extends IDescribable> extends IProvider<M>{
+public interface IModelProvider<K extends Object, D extends IDescriptor, M extends IModelLeaf<D>> extends IProvider<M>{
 
 	public static final String S_DESCRIPTOR_PROVIDER_ID = "org.aieonf.descriptor.provider";
 	public static final String S_CONCEPT_PROVIDER_ID    = "org.aieonf.concept.provider";
@@ -136,7 +136,7 @@ public interface IModelProvider<K extends Object, M extends IDescribable> extend
 	 * @param descriptor
 	 * @throws ParseException
 	 */
-	public Collection<M> search( IModelFilter<M> filter ) throws ParseException;
+	public Collection<M> search( IModelFilter<D, M> filter ) throws ParseException;
 	
 	/**
 	 * Deactivate the function

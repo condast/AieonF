@@ -32,7 +32,7 @@ public class FireFoxJSONBookmarkProvider extends AbstractModelProvider<IDomainAi
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IModelLeaf<IDescriptor>> filter) {
+	public Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) {
 		{
 			Collection<IModelLeaf<IDescriptor>> models = new ArrayList<IModelLeaf<IDescriptor>>();
 			URI uri = URI.create( super.getManifest().getSource());

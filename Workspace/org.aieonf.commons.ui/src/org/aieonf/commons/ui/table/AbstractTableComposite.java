@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.aieonf.commons.ui.IBindableWidget;
+import org.aieonf.commons.ui.table.ITableEventListener.TableEvents;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.core.IModelLeaf;
@@ -18,6 +19,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 
@@ -74,12 +77,26 @@ public abstract class AbstractTableComposite<D extends IDescriptor, C extends Ob
 		return input;
 	}
 
-
 	/**
 	 * Prepare the composite
 	 */
 	protected abstract void prepare();
-	
+
+	/**
+	 * Prepare the composite
+	 */
+	@SuppressWarnings("unchecked")
+	protected void onRowSelected( SelectionChangedEvent e ) {
+		try {
+			IStructuredSelection selection = (IStructuredSelection)e.getSelection();
+			IModelLeaf<D> entry = (IModelLeaf<D>) selection.getFirstElement();
+			notifyTableEvent( new TableEvent<IModelLeaf<D>, C>( this, TableEvents.SELECT, entry));
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}		
+	}
+
 	/**
 	 * Create the composite
 	 * @param parent
@@ -91,6 +108,7 @@ public abstract class AbstractTableComposite<D extends IDescriptor, C extends Ob
 		table.setLinesVisible(true);
 		table.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		table.setData( RWT.CUSTOM_ITEM_HEIGHT, Integer.valueOf( 22 ));		
+		tableViewer.addSelectionChangedListener( e-> onRowSelected( e ));
 		tableViewer.setContentProvider( new ModelProvider());
 		
 		tclayout = new TableColumnLayout();
@@ -234,6 +252,7 @@ public abstract class AbstractTableComposite<D extends IDescriptor, C extends Ob
 		return viewerColumn;
 	}
 
+	
 	/**
 	 * Response to clicking a header
 	 * @param e

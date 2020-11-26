@@ -100,7 +100,7 @@ public class CategoryAieon extends ImplicitAieon implements IImplicitAieon<IDesc
 	@Override
 	public boolean isA( IDescriptor descriptor )
 	{
-		return Descriptor.hasAttribute( descriptor,  Attributes.CATEGORY.toString() );
+		return Descriptor.hasAttribute( descriptor,  Attributes.CATEGORY.name() );
 	}
 
 	/**

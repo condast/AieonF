@@ -2,36 +2,19 @@ package org.aieonf.model.filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.IAttributeFilter;
-import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.concept.filter.FilterFactory;
-import org.aieonf.concept.filter.FilterFactory.Filters;
+import org.aieonf.concept.filter.DescribableFilter;
+import org.aieonf.model.core.IModelLeaf;
 
-public class ModelFilter<M extends IDescribable> implements
-		IModelFilter<M> {
+public class ModelFilter<D extends IDescriptor, M extends IModelLeaf<D>> extends DescribableFilter<M> implements
+		IModelFilter<D,M> {
 
-	private IAttributeFilter<IDescriptor> filter;
-	
-	private Collection<M> rejected;
 	
 	public ModelFilter( IAttributeFilter<IDescriptor> filter ) {
-		super();
-		this.filter = filter;
-		rejected = new ArrayList<M>();
-	}
-
-	@Override
-	public String getName() {
-		return filter.getName();
-	}
-
-	@Override
-	public Filters getType() {
-		return Filters.ATTRIBUTES;
+		super( filter );
 	}
 
 	@Override
@@ -45,52 +28,20 @@ public class ModelFilter<M extends IDescribable> implements
 	}
 
 	@Override
-	public String getRule() {
-		return filter.getRule();
-	}
-
-	@Override
-	public Mode getMode() {
-		return filter.getMode();
-	}
-
-	@Override
-	public int getAmount() {
-		return filter.getAmount();
-	}
-
-	@Override
-	public void setAmount(int amount) {
-		filter.setAmount(amount);
-	}
-
-	
-	@Override
-	public void setValue(String value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setMode(Mode mode) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean accept( M leaf) throws FilterException {
-		return filter.accept( leaf.getDescriptor() );
+	public boolean accept( M leaf ) throws FilterException {
+		return super.getFilter().accept( leaf.getData() );
 	}
 
 	@Override
 	public Collection<M> doFilter(Collection<M> collection) throws FilterException {
 		Collection<M> results = new ArrayList<M>();
-		rejected.clear();
+		IAttributeFilter<IDescriptor> filter = super.getFilter();
+		getRejected().clear();
 		for( M model: collection ){
 			if(( filter == null ) || filter.accept( model.getDescriptor()))
 				results.add(model);
 			else
-				rejected.add( model);
+				getRejected().add( model);
 		}
 		return results;
 	}
@@ -100,40 +51,23 @@ public class ModelFilter<M extends IDescribable> implements
 			Collection<M> collection, int amount)
 			throws FilterException {
 		Collection<M> results = new ArrayList<M>();
-		rejected.clear();
+		getRejected().clear();
+		IAttributeFilter<IDescriptor> filter = super.getFilter();
 		for( M model: collection ){
-			if( filter.accept( model.getDescriptor())){
+			if( filter.accept( model.getData())){
 				results.add(model);
 				if( results.size() == amount )
 					return results;
 			}else
-				rejected.add( model);
+				getRejected().add( model);
 		}
 		return results;
 	}
 
-	@Override
-	public Collection<M> getRejected() {
-		return rejected;
-	}
 	
 	@Override
 	public boolean acceptChild(M child) {
-		return filter.accept( child.getDescriptor() );
-	}
-	
-	public static <M extends IDescribable> ModelFilter<M> createFilter( FilterFactory.Filters name, Map<String, String> attributes){
-		IAttributeFilter<IDescriptor> filter = FilterFactory.createFilter(name, attributes);
-		return new ModelFilter<M>( filter );
-	}
-
-	@Override
-	public String getReference() {
-		return filter.getReference();
-	}
-
-	@Override
-	public String getValue() {
-		return filter.getValue();
+		IAttributeFilter<IDescriptor> filter = super.getFilter();
+		return filter.accept( child.getData() );
 	}
 }

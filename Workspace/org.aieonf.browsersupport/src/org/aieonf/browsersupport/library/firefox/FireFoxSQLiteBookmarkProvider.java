@@ -51,7 +51,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 
 	@Override
 	protected void onSetup( ManifestAieon manifest ) {
-		
+
 	}
 
 	@Override
@@ -75,7 +75,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	}
 
 	@Override
-	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ParseException {
+	public Collection<IModelLeaf<IDescriptor>> onSearch( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ParseException {
 		{
 			getModels().clear();
 			threadpool.submit( getBookmarksFuture(this, filter));
@@ -83,7 +83,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 		}
 	}
 
-	protected Callable<Collection<IModelLeaf<IDescriptor>>> getBookmarksFuture( final Object source, final IModelFilter<IModelLeaf<IDescriptor>> filter){
+	protected Callable<Collection<IModelLeaf<IDescriptor>>> getBookmarksFuture( final Object source, final IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter){
 		Callable<Collection<IModelLeaf<IDescriptor>>> task = new Callable<Collection<IModelLeaf<IDescriptor>>>(){
 
 			@Override
@@ -94,7 +94,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 					setBusy();
 					places = getPlaces();
 					resources = getResources();
-					
+
 					getModels().addAll( getBookmarks( places, resources, filter ));
 					IModelLeaf<IDescriptor> result = getHistory(filter);
 					if( result != null )
@@ -118,7 +118,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 				}
 				return getModels();
 			}
-		
+
 		};
 		return task;
 	}
@@ -164,11 +164,17 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	 * @throws ConceptException
 	 */
 	protected Map<Integer, FireFoxReference> getResources() throws ConceptException{
-		String query_favicons = "SELECT * FROM favicons.sqlite";
+		String query_favicons = "SELECT * FROM moz_icons";
 		Map<Integer, FireFoxReference>resources = new HashMap<Integer, FireFoxReference>();
+		Connection connect = null;
 		try{
+			String path = super.getManifest().getSource();
+			path = path.replace("places", "favicons");
+			File file = new File( path );
+			connect = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath());
+
 			//Find all the stored urls, and match them with the bookmarks
-			Statement statement = connection.createStatement();
+			Statement statement = connect.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			ResultSet rs = statement.executeQuery( query_favicons );
 			FireFoxReference resource;
@@ -185,19 +191,25 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			}
 			return resources;
 		}
-		catch(SQLException e)
-		{
+		catch(SQLException e){
 			throw new ConceptException(e );
 		}
+		finally {
+			try {
+				connect.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	
+
 	/**
 	 * Get the 
 	 * @param file
 	 * @return
 	 * @throws ConceptException
 	 */
-	private Collection<IModelNode<IDescriptor>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources, IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ConceptException{
+	private Collection<IModelNode<IDescriptor>> getBookmarks( Map<Integer, PlacesAieon> places, Map<Integer, FireFoxReference> resources, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_bookmarks = "SELECT * FROM moz_bookmarks";
 
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
@@ -236,7 +248,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			FireFoxReference faviconAieon;
 			for( IModelLeaf<IDescriptor> result: results ){
 				aieon = ( BookmarkAieon )result.getDescriptor();
-				
+
 				//skip categories
 				String fk = aieon.getFK();
 				if( Descriptor.assertNull(fk))
@@ -272,7 +284,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	 * @return
 	 * @throws ConceptException
 	 */
-	private IModelLeaf<IDescriptor> getHistory( IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ConceptException{
+	private IModelLeaf<IDescriptor> getHistory( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places, moz_inputhistory WHERE moz_places.id = moz_inputhistory.place_id";
 		return this.getConceptsFromQuery("Input History", query_inputhistory, filter );
 	}
@@ -283,7 +295,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IDescriptor> getPopularSites( IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ConceptException{
+	protected IModelLeaf<IDescriptor> getPopularSites( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places ORDER by visit_count DESC LIMIT 20";
 		return this.getConceptsFromQuery("Most Popular", query_inputhistory, filter );
 	}
@@ -294,7 +306,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	 * @return
 	 * @throws ConceptException
 	 */
-	private IModelLeaf<IDescriptor> getConceptsFromQuery( String title, String query, IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ConceptException{
+	private IModelLeaf<IDescriptor> getConceptsFromQuery( String title, String query, IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		IModelNode<IDescriptor> model = null;
 		try
 		{
@@ -336,7 +348,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	 * @return
 	 * @throws ConceptException
 	 */
-	protected IModelLeaf<IDescriptor> getHistoryVisits( IModelFilter<IModelLeaf<IDescriptor>> filter ) throws ConceptException{
+	protected IModelLeaf<IDescriptor> getHistoryVisits( IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter ) throws ConceptException{
 		String query_inputhistory = "SELECT * FROM moz_places WHERE moz_places.id = ( SELECT place_id FROM moz_historyvisits )";
 		IModelNode<IDescriptor> model;
 		try
@@ -443,7 +455,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	private static class PlacesAieon extends Concept implements IDataResource
 	{
 		private static final long serialVersionUID = 3919937519277313629L;
-		
+
 		public enum PlacesAttribute{
 			id,
 			url,
@@ -457,47 +469,47 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			frecency,
 			last_visit_date
 		}
-		
+
 		public void fill( ResultSet rs ) throws ConceptException{
 			try {
 				set( IDescriptor.Attributes.ID, rs.getString( PlacesAttribute.guid.name() ));
 				setVersion( 1 );
 				set( IDescriptor.Attributes.UPDATE_DATE, rs.getString( PlacesAttribute.last_visit_date.name() ));
-			  
+
 				String str = rs.getString( PlacesAttribute.id.name() );
 				set( BookmarkAttribute.primkey, str );
 				str = rs.getString( PlacesAttribute.url.name() );
 				if( !Descriptor.assertNull(str))
-				  set( IConcept.Attributes.SOURCE.name(), str );
+					set( IConcept.Attributes.SOURCE.name(), str );
 				str = rs.getString( PlacesAttribute.title.name() );
 				if( !Descriptor.assertNull(str)){
-				  String name = Descriptor.createValidName( str );
-				  this.setName( name );
+					String name = Descriptor.createValidName( str );
+					this.setName( name );
 					if( name.length() < str.length() )
 						this.setDescription( str );
 				}
 				str = rs.getString( PlacesAttribute.rev_host.name() );
 				if( !Descriptor.assertNull(str))
-				  set( PlacesAttribute.rev_host, str );
+					set( PlacesAttribute.rev_host, str );
 				str = rs.getString( PlacesAttribute.visit_count.name() );
 				if( !Descriptor.assertNull(str))
-				  set( PlacesAttribute.visit_count, str );
+					set( PlacesAttribute.visit_count, str );
 				str = rs.getString( PlacesAttribute.rev_host.name() );
 				if( !Descriptor.assertNull(str))
-				  set( PlacesAttribute.rev_host, str );
+					set( PlacesAttribute.rev_host, str );
 				str = rs.getString( PlacesAttribute.hidden.name() );
 				if( !Descriptor.assertNull(str))
-				  set( IConcept.Attributes.HIDDEN.name(), str );
+					set( IConcept.Attributes.HIDDEN.name(), str );
 				str = rs.getString( PlacesAttribute.typed.name() );
 				if( !Descriptor.assertNull(str))
-				  set( PlacesAttribute.typed, str );
+					set( PlacesAttribute.typed, str );
 				str = rs.getString( PlacesAttribute.favicon_id.name() );
 				if( !Descriptor.assertNull(str))
-				  set( PlacesAttribute.favicon_id, str );
+					set( PlacesAttribute.favicon_id, str );
 				str = rs.getString( PlacesAttribute.frecency.name() );
 				if( !Descriptor.assertNull(str))
-				  set( PlacesAttribute.frecency, str );
-			  
+					set( PlacesAttribute.frecency, str );
+
 			}
 			catch (SQLException e) {
 				throw new ConceptException( e );

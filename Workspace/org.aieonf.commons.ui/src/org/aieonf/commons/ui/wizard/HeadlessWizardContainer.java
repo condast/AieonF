@@ -171,7 +171,7 @@ public class HeadlessWizardContainer implements IHeadlessWizardContainer{
 					updateMessage();
 					updateWindowTitle();
 					updateTitleBar();
-					body.layout( true );//DO NOT REMOVE! It may result in unexpected UI behaviour!
+					body.requestLayout();//TODO: Necessary to keep the following line? DO NOT REMOVE! It may result in unexpected UI behaviour!
 				}
 				catch( Exception ex ){
 					ex.printStackTrace();
