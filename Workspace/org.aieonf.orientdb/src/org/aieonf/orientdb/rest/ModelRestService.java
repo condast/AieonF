@@ -252,8 +252,8 @@ public class ModelRestService{
 			params.put(FilterFactory.Attributes.REFERENCE, attribute);
 			params.put(FilterFactory.Attributes.VALUE, wildcard);
 			IGraphFilter filter = ff.createFilter(type, params);
-			ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
-			Collection<IModelLeaf<IDescriptor>> results = factory.get(filter.doFilter());
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			Collection<IModelLeaf<IDescriptor>> results = database.get(filter.doFilter());
 			//for( IModelLeaf<IDescriptor> model: results)
 			//	logger.fine( PrintModel.printModel(model, true));
 			if( Utils.assertNull(results))
@@ -275,21 +275,37 @@ public class ModelRestService{
 		}	
 	}
 
+	@SuppressWarnings("unchecked")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
 	@Path("/update")
-	public Response update( @QueryParam("id") long id, @QueryParam("token") long token, String data) {
+	public Response update( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, String data) {
+		DatabaseService dbService = DatabaseService.getInstance();
 		try{
- 			if( !dispatcher.isLoggedIn( id, token))
+			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
-			//int index = service.getUserData().getSelectedVesselIndex();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			GsonBuilder builder = new GsonBuilder(); 
+			builder.enableComplexMapKeySerialization();
+			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
+			builder.registerTypeAdapter( IModelLeaf.class, adapter);
+			Gson gson = builder.create();			
+			logger.info( data );
+			IModelLeaf<IDescriptor>[] results = gson.fromJson(data, IModelLeaf[].class);
+			database.update(results[0] );
 			return Response.ok(0).build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
 			return Response.serverError().build();
 		}
+		finally {
+			IOUtils.closeQuietly( dbService );
+		}	
 	}
 
 	@DELETE

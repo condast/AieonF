@@ -66,8 +66,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		if( vertex != null )
 			return vertex;
 			
-		vertex = findOrCreateVertex( str, base);
-		fill(vertex, base );
+		vertex = findOrCreateVertex( graph, str, base);
 		vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
 		return vertex;
 	}
@@ -155,38 +154,6 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	//	return true;
 	//}
 
-	/**
-	 * Find the vertices that belong to the given domain and have equal (positive) id as the reference, or are implicit
-	 * @param graph
-	 * @param domain
-	 * @param base
-	 * @return
-	 */
-	protected Collection<Vertex> findVertices( OrientGraph graph, String domain, IConceptBase base ){
-		Collection<Vertex> results=  new ArrayList<>();
-		Iterator<Vertex> iterator = null;
-		long id = Descriptor.parseId(base);
-		try{
-			iterator = graph.getVerticesOfClass(domain).iterator();
-			while( iterator.hasNext() ) {
-				Vertex vertex = iterator.next();
-				String idstr = vertex.getProperty(IDescriptor.Attributes.ID.name());
-				long refId = Descriptor.parseId( idstr);
-				if(( id >= 0 ) &&  ( refId == id )) {
-					results.add(vertex);
-				}else {
-					IConceptBase vbase = new VertexConceptBase( vertex );
-					if( ImplicitAieon.areImplicit(base, vbase))
-						results.add(vertex);
-				}
-			}
-		}
-		catch( Exception ex ) {
-			ex.printStackTrace();
-		}
-		return results;
-	}
-
 	protected boolean areImplicit( Vertex vreference, Vertex vtest ) {
 		IConceptBase base = new VertexConceptBase( vreference );
 		IConceptBase test = new VertexConceptBase( vreference );
@@ -204,25 +171,12 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		return result;
 	}
 	
-	protected Vertex findOrCreateVertex( String domain, IConceptBase base ) {
-		Vertex vertex = null;
-		Collection<Vertex> vertices = findVertices( graph, domain, base);
-		if( !Utils.assertNull(vertices)) {
-			vertex = vertices.iterator().next();
-			return vertex;
-		}else {
-			vertex = graph.addVertex( ModelDatabase.S_CLASS + domain );				
-			vertex.setProperty(IDescriptor.Attributes.ID.name(), createId( vertex.getId()));
-		}
-		return vertex;
-	}
-
 	/**
 	 * Create an id from the given vertex or edge
 	 * @param obj
 	 * @return
 	 */
-	protected static String createId( Object obj ) {
+	public static String createId( Object obj ) {
 		String str = obj.toString().replaceAll("[^0-9]", "");
 		return str;
 	}
@@ -297,6 +251,52 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Find the vertices that belong to the given domain and have equal (positive) id as the reference, or are implicit
+	 * @param graph
+	 * @param domain
+	 * @param base
+	 * @return
+	 */
+	protected static Collection<Vertex> findVertices( OrientGraph graph, String domain, IConceptBase base ){
+		Collection<Vertex> results=  new ArrayList<>();
+		Iterator<Vertex> iterator = null;
+		long id = Descriptor.parseId(base);
+		try{
+			iterator = graph.getVerticesOfClass(domain).iterator();
+			while( iterator.hasNext() ) {
+				Vertex vertex = iterator.next();
+				String idstr = vertex.getProperty(IDescriptor.Attributes.ID.name());
+				long refId = Descriptor.parseId( idstr);
+				if(( id >= 0 ) &&  ( refId == id )) {
+					results.add(vertex);
+				}else {
+					IConceptBase vbase = new VertexConceptBase( vertex );
+					if( ImplicitAieon.areImplicit(base, vbase))
+						results.add(vertex);
+				}
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return results;
+	}
+
+	public static Vertex findOrCreateVertex( OrientGraph graph, String domain, IConceptBase base ) {
+		Vertex vertex = null;
+		Collection<Vertex> vertices = findVertices( graph, domain, base);
+		if( !Utils.assertNull(vertices)) {
+			vertex = vertices.iterator().next();
+			return vertex;
+		}else {
+			vertex = graph.addVertex( ModelDatabase.S_CLASS + domain );				
+			vertex.setProperty(IDescriptor.Attributes.ID.name(), createId( vertex.getId()));
+		}
+		fill(vertex, base );
+		return vertex;
 	}
 
 	protected static Collection<Vertex> findVertices( OrientGraph graph, long id ){

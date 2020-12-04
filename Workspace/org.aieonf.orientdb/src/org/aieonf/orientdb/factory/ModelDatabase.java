@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
@@ -15,6 +16,7 @@ import org.aieonf.model.core.IModelNode;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
 import org.aieonf.orientdb.db.DatabaseService;
+import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -202,5 +204,90 @@ public class ModelDatabase< T extends IDescriptor > {
 			}
 		}
 		return parent;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void update(IModelLeaf<? extends IDescriptor> leaf) {
+		try {
+			OrientGraph graph = this.service.getGraph();
+			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(leaf.getID()));
+			IModelNode<IDescriptor> model = null;
+			boolean found = false;
+			for( Vertex vertex: vertices ) {
+				updateProperties(leaf.getDescriptor(), vertex, false);
+				Iterator<Edge> edges = vertex.getEdges(Direction.IN).iterator();
+				while( edges.hasNext()) {
+					Edge edge = edges.next();
+					Vertex vnode = edge.getVertex(Direction.OUT);
+					if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
+						updateProperties(leaf.getData(), vnode, false);
+					}
+					if(leaf.isLeaf())
+						continue;
+					//First remove edges that don't exist any more, or update the labels
+					model = (IModelNode<IDescriptor>) leaf;
+					Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>,String>> iterator = model.getChildren().entrySet().iterator();
+					found = false;
+					while( iterator.hasNext() ) {
+						Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
+						String id = vnode.getProperty(IDescriptor.Attributes.ID.name());
+						if( id.equals( String.valueOf(entry.getKey().getID()))){
+							if( !edge.getLabel().equals(entry.getValue())) {
+								graph.removeEdge(edge);
+								vertex.addEdge(entry.getValue(), vnode);
+							}
+						}
+					}
+					if(!found)
+						graph.removeEdge(edge);
+				}
+				if( leaf.isLeaf())
+					return;
+				model = (IModelNode<IDescriptor>) leaf;
+				Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>,String>> iterator = model.getChildren().entrySet().iterator();
+				found = false;
+				while( iterator.hasNext() ) {
+					Vertex vnode = null;
+					Edge edge = null;
+					Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
+					edges = vertex.getEdges(Direction.IN).iterator();
+					while( edges.hasNext()) {
+						edge = edges.next();
+						vnode = edge.getVertex(Direction.OUT);
+						if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
+							found = true;
+							update( entry.getKey());
+						}
+					}
+					String str = domain.getDomain().replace(".", "_");
+					if( found == false ) {
+						ModelTypeAdapter.findOrCreateVertex(graph, str, entry.getKey().getDescriptor().getBase());				
+						vnode = graph.addVertex(ModelDatabase.S_CLASS + IDescriptor.DESCRIPTORS);
+						ModelTypeAdapter.fill(vnode, entry.getKey().getData().getBase());
+						vertex.addEdge(IDescriptor.DESCRIPTOR, vnode);
+					}
+				}
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+	}
+	
+	protected void updateProperties( IDescriptor descriptor, Vertex vertex, boolean include ) {
+		if(!include ) {
+			for( String key: vertex.getPropertyKeys()) {
+				String attr = descriptor.get(key);
+				if( IDescriptor.Attributes.ID.name().equals(attr) || IDescriptor.Attributes.CREATE_DATE.name().equals(attr))
+					continue;
+				if(StringUtils.isEmpty(attr))
+					vertex.removeProperty(key);
+			}
+		}
+		Iterator<Map.Entry<String, String>> iterator = descriptor.entrySet().iterator();
+		while( iterator.hasNext() ) {
+			Map.Entry<String, String> entry = iterator.next();
+			vertex.setProperty(entry.getKey(), entry.getValue());
+		}
 	}
 }

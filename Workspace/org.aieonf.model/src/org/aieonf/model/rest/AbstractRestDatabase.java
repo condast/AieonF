@@ -404,14 +404,13 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		WebClient<Entry<Long, Long[]>> client = new WebClient<>( path );
-		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		boolean result = false;
 		try {
 			//client.addListener( e->getResults(e, results ));
 			Gson gson = new Gson();
 			String str = gson.toJson(ids, Entry.class);
 			client.sendDelete(request, parameters, str, ids);
-			result = Utils.assertNull(results);
+			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -429,17 +428,13 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
-		M[] removed = (M[]) new IModelLeaf[1]; 
-		removed[0] = leaf;
-		WebClient<M[]> client = new WebClient<>( path );
-		Collection<M>results = new ArrayList<>();
+		WebClient<M> client = new WebClient<>( path );
+		IModelLeaf<? extends IDescriptor>[] updated = new IModelLeaf[1]; 
+		updated[0] = leaf;
 		boolean result = false;
 		try {
-			client.addListener( e->getResults(e, results ));
-			Gson gson = new Gson();
-			String str = gson.toJson(leaf.getID(), Entry.class);
-			client.sendDelete(request, parameters, str, removed);
-			result = Utils.assertNull(results);
+			client.sendPut(request, parameters, onSerialise(updated), leaf);
+			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
