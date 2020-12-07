@@ -5,9 +5,9 @@ import java.util.Collection;
 
 import org.aieonf.commons.parser.ParseException;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.filter.IDescribableFilter;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
-import org.aieonf.model.filter.IModelFilter;
 
 public class ModelScanner<D extends IDescriptor>{
 
@@ -63,14 +63,14 @@ public class ModelScanner<D extends IDescriptor>{
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<IModelLeaf<IDescriptor>> search(IModelFilter<D,IModelLeaf<D>> filter) throws ParseException {
+	public Collection<IModelLeaf<IDescriptor>> search(IDescribableFilter<IModelLeaf<D>> filter) throws ParseException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		searchModel( results, filter, (IModelLeaf<D>) model );
 		return results;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void searchModel( Collection<IModelLeaf<IDescriptor>> results, IModelFilter<D,IModelLeaf<D>> filter, IModelLeaf<D> current ){
+	protected void searchModel( Collection<IModelLeaf<IDescriptor>> results, IDescribableFilter<IModelLeaf<D>> filter, IModelLeaf<D> current ){
 		if( filter.accept( current ))
 			results.add( (IModelLeaf<IDescriptor>) current );
 		if(!( current instanceof IModelNode ))

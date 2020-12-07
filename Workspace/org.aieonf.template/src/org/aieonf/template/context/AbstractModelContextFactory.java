@@ -14,12 +14,12 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.filter.AttributeFilter;
+import org.aieonf.concept.filter.DescribableFilter;
+import org.aieonf.concept.filter.IDescribableFilter;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.ModelBuilderEvent;
 import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.filter.IModelFilter;
-import org.aieonf.model.filter.ModelFilter;
 import org.aieonf.model.search.ModelScanner;
 import org.aieonf.model.xml.IModelInterpreterFactory;
 import org.aieonf.template.def.ITemplateLeaf;
@@ -132,7 +132,7 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 	public M createModel() {
 		ModelScanner<IDescriptor> scanner = new ModelScanner<IDescriptor>( this.template );
 		IAttributeFilter<IDescriptor> filter = new AttributeFilter<>( AttributeFilter.Rules.EQUALS, IModelLeaf.Attributes.IDENTIFIER.name(), S_MODEL_ID);
-		IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> modelFilter = new ModelFilter<>( filter);
+		IDescribableFilter<IModelLeaf<IDescriptor>> modelFilter = new DescribableFilter<>( filter);
 		M model = null;
 		try {
 			Collection<IModelLeaf<IDescriptor>> models = scanner.search(modelFilter);

@@ -2,6 +2,7 @@ package org.aieonf.commons.ui.table;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -10,10 +11,12 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.ui.celleditors.AbstractCheckBoxCellEditor;
 import org.aieonf.commons.ui.edit.CheckBoxEditingSupport;
 import org.aieonf.commons.ui.images.IInformationImages.Information;
+import org.aieonf.commons.ui.table.ITableEventListener.TableEvents;
 import org.aieonf.commons.ui.images.InformationImages;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -21,7 +24,7 @@ import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewerColumn;
 
-public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C extends Object> extends AbstractTableComposite<D, C>
+public abstract class AbstractSimpleTableComposite<C extends Object> extends AbstractTableComposite<IDescriptor, C>
 {
 	private static final long serialVersionUID = 976428552549736382L;
 
@@ -44,7 +47,7 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 		
 	private TableViewerColumn deleteColumn;
 	
-	private Map<IModelLeaf<? extends IDescriptor>, Boolean> list;
+	private Map<IModelLeaf<IDescriptor>, Boolean> selected;
 
 	/**
 	 * Create the composite.
@@ -54,8 +57,7 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 	public AbstractSimpleTableComposite( Composite parent, int style)
 	{
 		super( parent, style);
-		list = new HashMap<>();
-		//setDeleteImage();	
+		selected = new HashMap<>();
 	}
 
 	@Override
@@ -74,20 +76,23 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 	protected void setDeleteColumn(TableViewerColumn deleteColumn) {
 		this.deleteColumn = deleteColumn;
 		this.deleteColumn.setEditingSupport( new CheckBoxEditingSupport<IModelLeaf<IDescriptor>>( super.getTableViewer(), new DeleteCheckBoxEditor() ));
+		this.deleteColumn.getColumn().addListener(SWT.Selection, e->{				
+			notifyTableEvent( new TableEvent<IModelLeaf<IDescriptor>, C>( e.widget, TableEvents.DELETE, getInput() ));
+		});
 	}
 
 	protected boolean isInList( IModelLeaf<IDescriptor> element ) {
-		return list.get(element);
+		return selected.get(element);
 	}
 
-	protected abstract void onPrepareInput( IModelLeaf<D> leaf );
+	protected abstract void onPrepareInput( IModelLeaf<IDescriptor> leaf );
 	
 	/* (non-Javadoc)
 	 * @see org.condast.eclipse.swt.composite.AbstractTableComposite#prepareInput(org.condast.concept.model.IModelLeaf)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void prepareInput(IModelLeaf<D> leaf)
+	protected void prepareInput(IModelLeaf<IDescriptor> leaf)
 	{
 		try {
 			onPrepareInput(leaf);
@@ -95,16 +100,16 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 			if(leaf.isLeaf())
 				return;
 			IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) leaf;
-			list.clear();
+			selected.clear();
 			for( IModelLeaf<? extends IDescriptor> child: model.getChildren().keySet())
-				list.put(child,  false);
+				selected.put((IModelLeaf<IDescriptor>) child,  false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	protected boolean setDeleteImage() {
-		IModelLeaf<D> leaf=  getInput();
+		IModelLeaf<IDescriptor> leaf=  getInput();
 		InformationImages images = InformationImages.getInstance();		
 		boolean enable = ( leaf != null) && (leaf.isLeaf() || !Utils.assertNull( getRemoveChildren()));
 		Image image = images.getImage( Information.DELETE, enable );
@@ -114,7 +119,7 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 	
 	@SuppressWarnings("unchecked")
 	protected long[] getRemoveChildren() {
-	    Collection<?> collect = list.entrySet().stream()
+	    Collection<?> collect = selected.entrySet().stream()
 	        .filter(x -> x.getValue())
 	        .collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue())).keySet();
 	    long[] results = new long[ collect.size()];
@@ -126,6 +131,15 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 	    return results;
 	}
 		
+	protected void onNotifyDeleteButton( TableEvent<IModelLeaf<IDescriptor>, Boolean> event ) {
+		Iterator<Map.Entry<IModelLeaf<IDescriptor>, Boolean>> iterator = this.selected.entrySet().iterator();
+		while( iterator.hasNext() ) {
+			Map.Entry<IModelLeaf<IDescriptor>, Boolean> entry = iterator.next();
+			if( entry.getValue())
+				notifyTableEvent(new TableEvent<IModelLeaf<IDescriptor>, C>( this, TableEvents.DELETE, entry.getKey()));
+		}
+	}
+	
 	@Override
 	protected void checkSubclass()
 	{
@@ -140,14 +154,14 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 			IModelLeaf<IDescriptor> leaf = super.getData();
 			if( leaf == null )
 				return;
-			Boolean value = list.get( super.getData());
-			list.put(leaf, (value==null)?false:!value );
+			Boolean value = selected.get( super.getData());
+			selected.put(leaf, (value==null)?false:!value );
 		}
 
 		@Override
 		protected Object doGetValue() {
 			IModelLeaf<IDescriptor> leaf = super.getData();
-			return (leaf == null )?false: list.get( leaf );
+			return (leaf == null )?false: selected.get( leaf );
 		}
 
 		@Override
@@ -155,7 +169,7 @@ public abstract class AbstractSimpleTableComposite<D extends IDescriptor, C exte
 			IModelLeaf<IDescriptor> leaf = super.getData();
 			if( leaf == null )
 				return;
-			list.put(leaf, (Boolean)value);
+			selected.put(leaf, (Boolean)value);
 			setDeleteImage();	
 		}
 	}

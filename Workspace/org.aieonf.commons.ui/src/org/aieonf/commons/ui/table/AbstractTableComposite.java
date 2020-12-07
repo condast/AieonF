@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.aieonf.commons.ui.IBindableWidget;
 import org.aieonf.commons.ui.table.ITableEventListener.TableEvents;
+import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.core.IModelLeaf;
@@ -24,7 +25,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 
-public abstract class AbstractTableComposite<D extends IDescriptor, C extends Object> extends Composite implements IBindableWidget<IModelLeaf<D>>
+public abstract class AbstractTableComposite<D extends IDescribable, C extends Object> extends Composite implements IBindableWidget<IModelLeaf<D>>
 {
 	private static final long serialVersionUID = 976428552549736382L;
 	
@@ -208,10 +209,11 @@ public abstract class AbstractTableComposite<D extends IDescriptor, C extends Ob
 		if(( leaf == null ) || super.isDisposed() )
 			return;
 		this.title = "";
-		if( !Descriptor.assertNull( leaf.getData().getProviderName()))
-			this.title = leaf.getData().getProviderName() + ":";
-		if( !Descriptor.assertNull( leaf.getData().getDescription() )){
-			this.title += leaf.getData().getDescription();
+		IDescriptor descriptor = leaf.getData().getDescriptor();
+		if( !Descriptor.assertNull( descriptor.getProviderName()))
+			this.title = descriptor.getProviderName() + ":";
+		if( !Descriptor.assertNull( descriptor.getDescription() )){
+			this.title += descriptor.getDescription();
 		}
 		else
 			this.title = "{Title}";
