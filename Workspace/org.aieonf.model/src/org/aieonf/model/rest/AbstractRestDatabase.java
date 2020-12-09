@@ -345,7 +345,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	}
 
 	@Override
-	public boolean remove( long parent, long[] children) {
+	public Collection<M> remove( long parent, long[] children) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_CHILDREN;
 		Map<String, String> parameters = new HashMap<>();
@@ -354,19 +354,17 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put( Attributes.MODEL_ID.toString(), String.valueOf(parent));
-		WebClient<long[]> client = new WebClient<>( path );
-		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
-		boolean result = false;
+		WebClient<M[]> client = new WebClient<>( path );
+		Collection<M>results = new ArrayList<>();
 		try {
-			//client.addListener( e->getResults(e, results ));
+			client.addListener( e->getResults(e, results ));
 			Gson gson = new Gson();
 			String str = gson.toJson(children, long[].class);
 			client.sendDelete(request, parameters, str, children);
-			result = Utils.assertNull(results);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return results;
 	}
 
 	@Override
@@ -378,7 +376,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
-		WebClient<long[]> client = new WebClient<>( path );
+		WebClient<M[]> client = new WebClient<>( path );
 		Collection<IModelLeaf<? extends IDescriptor>>results = new ArrayList<>();
 		boolean result = false;
 		try {
@@ -460,6 +458,10 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		@Override
 		public void sendDelete( IDatabaseConnection.Requests request, Map<String, String> parameters, String post, DS data) throws Exception {
 			super.sendDelete(request, parameters, post, data);
+		}
+
+		public void sendDelete( IDatabaseConnection.Requests request, Map<String, String> parameters, String post, long[] data) throws Exception {
+			super.sendDelete(request, parameters, post, null);
 		}
 
 		@Override

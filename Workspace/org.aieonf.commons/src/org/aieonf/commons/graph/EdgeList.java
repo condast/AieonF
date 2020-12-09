@@ -24,7 +24,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
    * tree maps with the objects they contain as keys
   */
   private Map<T, IVertex<T>> verticeMap;
-  private Map<U, IEdge<T,U>> edgeList;
+  private Map<U, IEdge<T,U>> edgeMap;
 
   /**
    *  Determines whether the graph is directed or not
@@ -37,7 +37,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   public EdgeList()
   {
     verticeMap = Collections.synchronizedMap( new HashMap<T, IVertex<T>>() );
-    edgeList    = Collections.synchronizedMap( new HashMap<U, IEdge<T,U>>() );
+    edgeMap    = Collections.synchronizedMap( new HashMap<U, IEdge<T,U>>() );
     this.clear();
   }
 
@@ -51,7 +51,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   public EdgeList( Comparator<U> edgeComparator )
   {
     verticeMap = Collections.synchronizedMap( new HashMap<T, IVertex<T>>() );
-    edgeList   = Collections.synchronizedMap( new TreeMap<U, IEdge<T,U>>( edgeComparator ));
+    edgeMap   = Collections.synchronizedMap( new TreeMap<U, IEdge<T,U>>( edgeComparator ));
     this.clear();
   }
 
@@ -61,7 +61,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   public synchronized void clear()
   {
     verticeMap.clear();
-    edgeList.clear();
+    edgeMap.clear();
     directedGraph = false;
   }
 
@@ -82,7 +82,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   protected synchronized Map<U, IEdge<T,U>> getEdgeList()
   {
-    return edgeList;
+    return edgeMap;
   }
 
   /**
@@ -91,7 +91,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   @Override
 	public Collection<IEdge<T,U>> edges()
   {
-    return this.edgeList.values();
+    return this.edgeMap.values();
   }
 
   /**
@@ -177,7 +177,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   @Override
 	public synchronized int numEdges()
   {
-    return edgeList.size();
+    return edgeMap.size();
   }
 
   /**
@@ -187,7 +187,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized int size()
   {
-    return edgeList.size();
+    return edgeMap.size();
   }
 
   /**
@@ -197,7 +197,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized boolean isEmpty()
   {
-    return edgeList.isEmpty();
+    return edgeMap.isEmpty();
   }
 
   /**
@@ -208,7 +208,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   @Override
 	public synchronized int hashCode ()
   {
-    return edgeList.hashCode();
+    return edgeMap.hashCode();
   }
 
   /**
@@ -218,7 +218,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized Iterator<IEdge<T,U>> iterator()
   {
-     return edgeList.values().iterator();
+     return edgeMap.values().iterator();
   }
 
   /**
@@ -228,7 +228,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized Object[] toArray()
   {
-    Collection<IEdge<T,U>> edgeCollection = edgeList.values();
+    Collection<IEdge<T,U>> edgeCollection = edgeMap.values();
     return edgeCollection.toArray();
   }
 
@@ -241,7 +241,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized Object[] toArray( Object[] array )
   {
-    Collection<IEdge<T,U>> edgeCollection = edgeList.values();
+    Collection<IEdge<T,U>> edgeCollection = edgeMap.values();
     return edgeCollection.toArray( array );
   }
 
@@ -288,7 +288,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized Collection<U> getEdgesContents()
   {
-    List<U> edgeContents = new ArrayList<U>( edgeList.keySet() );
+    List<U> edgeContents = new ArrayList<U>( edgeMap.keySet() );
     return edgeContents;
   }
 
@@ -302,7 +302,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   public synchronized boolean contains ( Object object )
   {
     if( object instanceof Edge<?,?> ){
-      return( edgeList.containsValue( object ));
+      return( edgeMap.containsValue( object ));
     }
 
     if( object instanceof Vertex<?> ){
@@ -320,7 +320,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized boolean contains ( IEdge<T, U> edge )
   {
-    return( edgeList.containsValue( edge ));
+    return( edgeMap.containsValue( edge ));
   }
 
   /**
@@ -355,7 +355,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized boolean containsAll ( Collection<IEdge<T,U>> edgeCollection )
   {
-    List<IEdge<T,U>> edgeArray = new ArrayList<IEdge<T,U>>( edgeList.values() );
+    List<IEdge<T,U>> edgeArray = new ArrayList<IEdge<T,U>>( edgeMap.values() );
     return( edgeArray.containsAll( edgeCollection ));
   }
 
@@ -378,7 +378,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized boolean containsEdgeContents( Object contents )
   {
-    return ( edgeList.containsKey( contents ) == true );
+    return ( edgeMap.containsKey( contents ) == true );
   }
 
   /**
@@ -390,8 +390,8 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized IEdge<T, U> getEdge( Object contents )
   {
-    if( edgeList.containsKey( contents ) == true ){
-      return edgeList.get( contents );
+    if( edgeMap.containsKey( contents ) == true ){
+      return edgeMap.get( contents );
     } else {
       return null;
     }
@@ -407,8 +407,8 @@ public class EdgeList<T, U> implements IGraph<T,U>
   public IEdge<T, U> getEdge( IVertex<T> vertexV, IVertex<T> vertexW )
   {
     // Iterate through the edge list
-    synchronized( edgeList ){
-      Collection<IEdge<T,U>> edges = edgeList.values();
+    synchronized( edgeMap ){
+      Collection<IEdge<T,U>> edges = edgeMap.values();
       Iterator<IEdge<T,U>> iterator = edges.iterator();
       IEdge<T, U> edge;
       while ( iterator.hasNext() == true ) {
@@ -437,7 +437,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
     IEdge<T, U> edge;
 
     // Iterate through the edge list
-    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = Collections.synchronizedSet( edgeList.entrySet() );
+    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = Collections.synchronizedSet( edgeMap.entrySet() );
     Iterator<Map.Entry<U, IEdge<T,U>>> iterator = edgeSet.iterator();
     Map.Entry<U, IEdge<T,U>> mapEntry;
 
@@ -467,7 +467,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
     IEdge<T,U> edge;
 
     // Iterate through the edge list
-    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = Collections.synchronizedSet( edgeList.entrySet() );
+    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = Collections.synchronizedSet( edgeMap.entrySet() );
     Iterator<Map.Entry<U, IEdge<T,U>>> iterator = edgeSet.iterator();
     Map.Entry<U, IEdge<T,U>> mapEntry;
 
@@ -518,7 +518,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
     }
 
     IEdge<T,U> edge = new Edge<T,U>(vertexV, vertexW, object );
-    edgeList.put( edge.get(), edge );
+    edgeMap.put( edge.get(), edge );
     return edge;
   }
 
@@ -541,7 +541,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
       verticeMap.put( vertex.get(), vertex );
     }
 
-    edgeList.put( edge.get(), edge );
+    edgeMap.put( edge.get(), edge );
     return edge;
   }
 
@@ -565,7 +565,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
       verticeMap.put( vertex.get(), vertex );
     }
 
-    edgeList.put( edge.get(), edge );
+    edgeMap.put( edge.get(), edge );
   }
 
   /**
@@ -600,7 +600,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
           verticeMap.put( vertex.get(), vertex );
         }
 
-        edgeList.put( edge.get(), edge );
+        edgeMap.put( edge.get(), edge );
       }else{
         retVal = false;
       }
@@ -619,7 +619,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
   {
     if( object instanceof Edge ){
       IEdge<T, U> edge = ( IEdge<T, U> )object;
-      if ( edgeList.remove( edge.get() ) != null ){
+      if ( edgeMap.remove( edge.get() ) != null ){
         return true;
       }
     }else{
@@ -638,8 +638,16 @@ public class EdgeList<T, U> implements IGraph<T,U>
   */
   public synchronized boolean removeAll( Collection<Edge<T,U>> edgeCollection )
   {
-    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = edgeList.entrySet();
-    return edgeSet.removeAll( edgeCollection );
+	    Iterator<Map.Entry<U, IEdge<T,U>>> iterator = edgeMap.entrySet().iterator();
+	    boolean result = false;
+	    while( iterator.hasNext()){
+	    	Map.Entry<U, IEdge<T,U>> entry = iterator.next();
+	    	if( edgeCollection.contains(entry.getValue())) {
+	    		edgeMap.remove(entry.getKey());
+	    		result = true;
+	    	}
+	    }
+	    return result;
   }
 
   /**
@@ -648,10 +656,18 @@ public class EdgeList<T, U> implements IGraph<T,U>
    * @param edgeCollection Collection
    * @return boolean
   */
-  public synchronized boolean retainAll( Collection<Edge<T,U>> edgeCollection )
+  public synchronized boolean retainAll( Collection<IEdge<T,U>> edgeCollection )
   {
-    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = edgeList.entrySet();
-    return edgeSet.retainAll( edgeCollection );
+    Iterator<Map.Entry<U, IEdge<T,U>>> iterator = edgeMap.entrySet().iterator();
+    boolean result = false;
+    while( iterator.hasNext()){
+    	Map.Entry<U, IEdge<T,U>> entry = iterator.next();
+    	if( !edgeCollection.contains(entry.getValue())) {
+    		edgeMap.remove(entry.getKey());
+    		result = true;
+    	}
+    }
+    return result;
   }
 
   /**
@@ -664,7 +680,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
 	public synchronized void replace( IEdge<T, U> edgeX, IEdge<T,U> edgeY )
   {
     remove ( edgeX );
-    edgeList.put( edgeY.get(), edgeY );
+    edgeMap.put( edgeY.get(), edgeY );
   }
 
   /**
@@ -691,7 +707,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
     IEdge<T, U> edge;
 
     // Iterate through the edge list
-    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = Collections.synchronizedSet( edgeList.entrySet() );
+    Set<Map.Entry<U, IEdge<T,U>>> edgeSet = Collections.synchronizedSet( edgeMap.entrySet() );
     Iterator<Map.Entry<U, IEdge<T,U>>> iterator = edgeSet.iterator();
     Map.Entry<U, IEdge<T,U>> mapEntry;
 
@@ -701,7 +717,7 @@ public class EdgeList<T, U> implements IGraph<T,U>
       edge = mapEntry.getValue();
       if( edge != null ){
         if ( edge.containsVertex( vertex ) == true ) {
-          edgeList.remove( edge );
+          edgeMap.remove( edge );
         }
       }
     }

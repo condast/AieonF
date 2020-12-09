@@ -167,7 +167,7 @@ public class ReadableTemplateParser implements IParser<ITemplateLeaf<? extends I
 		Node root = children.get( 0 );
 		ITemplateAieon aieon = new TemplateAieon();
 		ITemplateNode<IDescriptor> tRoot = new TemplateNode<IDescriptor>( aieon );
-		//parseTemplate( tRoot, root );
+		parseTemplate( tRoot, root );
 		return new TemplateWrapper<IDescriptor>( tRoot );
 	}
 

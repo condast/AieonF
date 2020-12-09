@@ -218,7 +218,11 @@ public class VertexConceptBase implements IConceptBase {
 		Map<String, String> results = new HashMap<>();
 		while( iterator.hasNext() ){
 			String key = StringStyler.toPackageString(iterator.next());
-			results.put( key, (String) vertex.getProperty(key));
+			Object value = vertex.getProperty(key);
+			if( value instanceof String )
+				results.put( key, (String) value );
+			else if( value instanceof Long )
+				results.put( key, String.valueOf((long)value ));
 		}
 		return results.entrySet();
 	}

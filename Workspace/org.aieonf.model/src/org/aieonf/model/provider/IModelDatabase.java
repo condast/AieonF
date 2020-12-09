@@ -83,9 +83,9 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	 * Remove the children from the given parent
 	 * @param parent
 	 * @param children
-	 * @return
+	 * @return the updated model
 	 */
-	boolean remove(long parent, long[] children);
+	public Collection<M> remove(long parent, long[] children);
 
 	/**
 	 * Remove the models with the given ids

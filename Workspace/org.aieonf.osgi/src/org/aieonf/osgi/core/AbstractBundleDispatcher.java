@@ -28,6 +28,9 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 	private IDomainAieon domain; 
 
 	private RestDataProvider restProvider;	
+	
+	//Store the most recent key event
+	private KeyEvent<IDatabaseConnection.Requests> event;
 
 	protected AbstractBundleDispatcher( String path ) {
 		this.path = path;
@@ -42,8 +45,8 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 		this.domain = domain;
 	}
 
-	public ISecureGenerator getGenerator() {
-		return generator;
+	protected KeyEvent<IDatabaseConnection.Requests> getKeyEvent() {
+		return event;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,12 +55,23 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 		return input.toArray( new IModelLeaf[input.size()]);
 	}
 
-	protected abstract IModelDatabase<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> createDatabase( ISecureGenerator generator, IDomainAieon domain, String path );
-	
+	public ISecureGenerator getGenerator() {
+		return generator;
+	}
+
 	public void setGenerator(ISecureGenerator generator) {
 		this.generator = generator;
 		database = createDatabase(generator, domain, path);
 	}
+
+	/**
+	 * Create the database
+	 * @param generator
+	 * @param domain
+	 * @param path
+	 * @return
+	 */
+	protected abstract IModelDatabase<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> createDatabase( ISecureGenerator generator, IDomainAieon domain, String path );
 
 	protected IModelDatabase<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> getDatabase() {
 		return database;
@@ -99,7 +113,16 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 
 	@Override
 	public void notifyKeyEventReceived(KeyEvent<IDatabaseConnection.Requests> event) {
+		this.event = event;
 		restProvider.handleKeyEvent( event);
+	}
+	
+	/**
+	 * Update the system by calling the last key event
+	 */
+	public void update() {
+		if( this.event != null )
+			restProvider.handleKeyEvent( this.event );		
 	}
 	
 	private class RestDataProvider implements IKeyEventDataProvider<IDatabaseConnection.Requests,IModelLeaf<IDescriptor>[]>{

@@ -77,7 +77,7 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 		this.deleteColumn = deleteColumn;
 		this.deleteColumn.setEditingSupport( new CheckBoxEditingSupport<IModelLeaf<IDescriptor>>( super.getTableViewer(), new DeleteCheckBoxEditor() ));
 		this.deleteColumn.getColumn().addListener(SWT.Selection, e->{				
-			notifyTableEvent( new TableEvent<IModelLeaf<IDescriptor>, C>( e.widget, TableEvents.DELETE, getInput() ));
+			onNotifyDeleteButton( new TableEvent<IModelLeaf<IDescriptor>, C>( e.widget, TableEvents.DELETE, getInput() ));
 		});
 	}
 
@@ -85,17 +85,14 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 		return selected.get(element);
 	}
 
-	protected abstract void onPrepareInput( IModelLeaf<IDescriptor> leaf );
-	
 	/* (non-Javadoc)
 	 * @see org.condast.eclipse.swt.composite.AbstractTableComposite#prepareInput(org.condast.concept.model.IModelLeaf)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void prepareInput(IModelLeaf<IDescriptor> leaf)
+	protected void onSetInput(IModelLeaf<IDescriptor> leaf)
 	{
 		try {
-			onPrepareInput(leaf);
 			setDeleteImage();	
 			if(leaf.isLeaf())
 				return;
@@ -131,7 +128,11 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 	    return results;
 	}
 		
-	protected void onNotifyDeleteButton( TableEvent<IModelLeaf<IDescriptor>, Boolean> event ) {
+	protected void onNotifyDeleteButton( TableEvent<IModelLeaf<IDescriptor>, C> event ) {
+		if( Utils.assertNull(this.selected)) {
+			notifyTableEvent(new TableEvent<IModelLeaf<IDescriptor>, C>( this, TableEvents.DELETE, getInput()));
+			return;
+		}
 		Iterator<Map.Entry<IModelLeaf<IDescriptor>, Boolean>> iterator = this.selected.entrySet().iterator();
 		while( iterator.hasNext() ) {
 			Map.Entry<IModelLeaf<IDescriptor>, Boolean> entry = iterator.next();

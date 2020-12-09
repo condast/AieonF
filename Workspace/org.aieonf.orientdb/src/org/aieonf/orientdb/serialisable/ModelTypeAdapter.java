@@ -1,6 +1,7 @@
 package org.aieonf.orientdb.serialisable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -67,7 +68,8 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 			return vertex;
 			
 		vertex = findOrCreateVertex( graph, str, base);
-		vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
+		Edge edge = vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
+		edge.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 		return vertex;
 	}
 
@@ -112,6 +114,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		String idStr = IDescriptor.Attributes.ID.name();
 		vertex = graph.addVertex( ModelDatabase.S_CLASS + IDescriptor.DESCRIPTORS);
 		vertex.setProperty(idStr, createId( vertex.getId()));
+		vertex.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 		
 		Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
 		while( iterator.hasNext() ) {
@@ -126,34 +129,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		}		
 		return vertex;
 	}
-	
-
-	protected Vertex findOrCreateVertex( String domain, long id ) {
-		Vertex vertex = null;
-		String newid = String.valueOf( id );
-		if( id>0) {
-			Collection<Vertex> vertices = findVertices( graph, domain, id);
-			if( !Utils.assertNull(vertices)) {
-				vertex = vertices.iterator().next();
-				return vertex;
-			}else {
-				vertex = graph.addVertex( ModelDatabase.S_CLASS + domain);				
-				newid = createId( vertex.getId() );
-			}
-		}else {
-			vertex = graph.addVertex( ModelDatabase.S_CLASS + domain );
-			newid = createId( vertex.getId() );
-		}
-		vertex.setProperty(IDescriptor.Attributes.ID.name(), String.valueOf(newid));
-		return vertex;
-	}
-	
-	//@Override
-	//protected boolean onAddProperty(Vertex node, String key, String value) {
-	//	node.setProperty(key, value);
-	//	return true;
-	//}
-
+		
 	protected boolean areImplicit( Vertex vreference, Vertex vtest ) {
 		IConceptBase base = new VertexConceptBase( vreference );
 		IConceptBase test = new VertexConceptBase( vreference );
@@ -294,6 +270,7 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 		}else {
 			vertex = graph.addVertex( ModelDatabase.S_CLASS + domain );				
 			vertex.setProperty(IDescriptor.Attributes.ID.name(), createId( vertex.getId()));
+			vertex.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 		}
 		fill(vertex, base );
 		return vertex;
@@ -332,12 +309,15 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 	}
 
 	public static void addChild( Vertex parent, Vertex child, boolean reverse, String label ) {
+		Edge edge = null;
 		if( !reverse ) {
-			parent.addEdge(label,child);
+			edge = parent.addEdge(label,child);
 			child.addEdge(IModelLeaf.IS_PARENT, parent);
+			edge.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 			return;
 		}
-		child.addEdge(label, parent);
+		edge = child.addEdge(label, parent);
+		edge.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 		parent.addEdge( IModelLeaf.IS_PARENT, child );
 		String depth = IModelLeaf.Attributes.DEPTH.name();
 		String pdepth = parent.getProperty( depth);
@@ -352,6 +332,6 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 			Map.Entry<String, String> entry = iterator.next();
 			vertex.setProperty(entry.getKey(), entry.getValue());
 		}
-			
+		vertex.setProperty(IDescriptor.Attributes.UPDATE_DATE.name(), Calendar.getInstance().getTimeInMillis());			
 	}
 }

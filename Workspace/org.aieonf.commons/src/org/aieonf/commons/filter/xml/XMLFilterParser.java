@@ -52,6 +52,11 @@ public class XMLFilterParser<D extends Object> extends DefaultHandler{
 		return stack;
 	}
 
+	
+	protected IFilter<D> getParent() {
+		return parent;
+	}
+
 	protected synchronized IFilter<D> getCurrent() {
 		return current;
 	}
@@ -166,7 +171,6 @@ public class XMLFilterParser<D extends Object> extends DefaultHandler{
 		this.stack.push(node);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		FilterNodes ma = this.stack.pop();

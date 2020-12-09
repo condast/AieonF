@@ -37,6 +37,9 @@ public class TestFactory extends AbstractProviderContextFactory<IDescriptor, IMo
 				break;
 			case PROPERTIES:
 				//concept.set( event., value);model.getDescriptor().set(key, value);e
+				break;
+			default:
+				break;
 			}
 		}	
 	};

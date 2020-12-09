@@ -68,6 +68,32 @@ public class ModelDatabase< T extends IDescriptor > {
 			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(id));
 			IModelNode<IDescriptor> node = null;
 			for( Vertex vertex: vertices ) {
+				IModelNode<IDescriptor> parent = getParent(graph, vertex, nodes);
+				node = new ModelNode( graph, parent, vertex );
+				results.add(node);
+				nodes.put(vertex, node);
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return results;
+	}
+
+	/**
+	 * Get the vertices, which are with descriptors, and create the corresponding models
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	public Collection<IModelLeaf<IDescriptor>> findOnDescriptor( long id ) throws FilterException {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
+		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		try {
+			OrientGraph graph = this.service.getGraph();
+			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(id));
+			IModelNode<IDescriptor> node = null;
+			for( Vertex vertex: vertices ) {
 				try {
 					Iterator<Edge> edges = vertex.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
 					while( edges.hasNext()) {

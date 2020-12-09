@@ -124,7 +124,7 @@ public class LinkTester {
 			return false;
 		}
 		finally{
-			IOUtils.closeInputStream(in);
+			IOUtils.closeQuietly(in);
 		}
 	}
 }

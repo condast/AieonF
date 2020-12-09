@@ -60,7 +60,15 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 	public Model( D descriptor ){
 		this( -1, descriptor );
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public Model( IModelLeaf<D> leaf ) {
+		super(leaf.getDescriptor().getBase() );
+		setParent((IModelNode<? extends IDescriptor>) leaf.getParent());
+		setData(leaf.getData());
+		this.children = new HashMap<>();
+	}
+
 	protected Model(long id, IModelNode<? extends IDescriptor> parent, D descriptor, String type) {
 		super(id, parent, descriptor, type);
 		this.children = new HashMap<>();

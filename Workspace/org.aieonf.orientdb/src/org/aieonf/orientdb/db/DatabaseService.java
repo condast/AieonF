@@ -189,11 +189,18 @@ public class DatabaseService implements Closeable{
 		return index;
 	}
 
-	public int removeChildren( long id, long[] children ) {
-		int counter = 0;
+	/**
+	 * Remove the children from the model with the given id.
+	 * Returns true if one or more children were removed
+	 * @param id
+	 * @param children
+	 * @return
+	 */
+	public boolean removeChildren( long id, long[] children ) {
+		boolean result = false;
 		Iterable<Vertex> iterable = this.graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
 		if( iterable == null )
-			return counter;
+			return false;
 		Iterator<Vertex> iterator = iterable.iterator();
 		while( iterator.hasNext() ) {
 			Vertex vertex = iterator.next();			
@@ -202,14 +209,16 @@ public class DatabaseService implements Closeable{
 				Edge edge = edges.next();
 				Vertex other = getOther( edge, vertex);
 				for( long check: children ) {
-					if( check == getId(other))
+					if( check == getId(other)) {
 						graph.removeEdge(edge);
+						result = true;
+					}
 				}
 				if( !hasEdges( other))
 					graph.removeVertex(other);
 			}
 		}		
-		return counter;
+		return result;
 	}
 
 	protected int countEdges( Vertex vertex, Direction direction ) {

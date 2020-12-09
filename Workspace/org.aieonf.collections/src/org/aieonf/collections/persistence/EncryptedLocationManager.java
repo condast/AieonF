@@ -20,12 +20,12 @@ public class EncryptedLocationManager extends LocationManager
 {
 	//Error messages
 	public static final String S_ERR_FAILED_TO_ENCRYPT = "Failed to encrypt";
-  public static final String S_ERR_CONCEPT_INVALID_MANIFEST =
-      "Could not instantiate the collection because the manifest aieon is invalid";
-		
+	public static final String S_ERR_CONCEPT_INVALID_MANIFEST =
+			"Could not instantiate the collection because the manifest aieon is invalid";
+
 	//The loader contains encryption info
 	private ILoaderAieon loader;
-	
+
 	public EncryptedLocationManager( ILoaderAieon loader ) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeySpecException
 	{
 		super( loader );
@@ -46,52 +46,53 @@ public class EncryptedLocationManager extends LocationManager
 	 * @param location
 	 * @return
 	 * @throws ConceptException
-	*/
+	 */
 	@Override
 	public IDescriptor getDescribable( String location ) throws ConceptException
 	{
-    try{
-    	IDescriptor descriptor = super.getDescribable( location );
-      String name = getDecryptedFileName( loader, descriptor.getName() );
-      long id = descriptor.getID();
-    	IDescriptor newDescriptor = new Descriptor( id );
-      newDescriptor.setVersion( descriptor.getVersion() );
-      return newDescriptor;
-    }
-    catch( Exception ex ){
-      throw new ConceptException( ex.getMessage(), ex );
-    }
+		String name = null;
+		try{
+			IDescriptor descriptor = super.getDescribable( location );
+			name = getDecryptedFileName( loader, descriptor.getName() );
+			long id = descriptor.getID();
+			IDescriptor newDescriptor = new Descriptor( id );
+			newDescriptor.setVersion( descriptor.getVersion() );
+			return newDescriptor;
+		}
+		catch( Exception ex ){
+			throw new ConceptException( name, ex );
+		}
 	}
 
-	
+
 	/**
 	 * Locate the given descriptor
 	 * @param descriptor IDescriptor
 	 * @return
 	 * @throws ConceptException
-	*/
+	 */
 	@Override
 	public String locate(IDescribable changeable) throws ConceptException
 	{
-    IDescriptor descriptor = changeable.getDescriptor();
-    try
-    {
-    	String firstChar = String.valueOf( descriptor.getName().charAt( 0 ));
-      return getEncryptedFile( this.loader, firstChar, descriptor );
-    }
-    catch( Exception e ){
-      throw new ConceptException( descriptor.toString(), S_ERR_FAILED_TO_ENCRYPT, e );
-    }
+		IDescriptor descriptor = changeable.getDescriptor();
+		try
+		{
+			String firstChar = String.valueOf( descriptor.getName().charAt( 0 ));
+			return getEncryptedFile( this.loader, firstChar, descriptor );
+		}
+		catch( Exception e ){
+			throw new ConceptException( descriptor.toString(), S_ERR_FAILED_TO_ENCRYPT, e );
+		}
 	}
 
 	/**
-   * Returns true if the file is consistent with the given name
-   *
-   * @param name String
-   * @param ePosition String
-   * @return boolean
-   * @throws ConceptException
-  */
+	 * Returns true if the file is consistent with the given name
+	 *
+	 * @param name String
+	 * @param ePosition String
+	 * @return boolean
+	 * @throws ConceptException
+	 */
 	/*
 	@Override
   public boolean isCorrectPosition( IDescriptor descriptor, String ePosition )
@@ -108,67 +109,67 @@ public class EncryptedLocationManager extends LocationManager
       throw new ConceptException( ex.getMessage(), ex );
     }
   }
-*/
-	
-  /**
-   * Returns the encrypted file name belonging to a concept
-   *
-   * @param key SecretKey
-   * @param name String
-   * @return String
-   * @throws Exception
-  */
-  public static String getEncryptedFileName( ILoaderAieon manifest, String name )
-    throws Exception
-  {
-    name = name.toLowerCase();
-    if( manifest == null )
-    	throw new NullPointerException( S_ERR_CONCEPT_INVALID_MANIFEST );
-    if( manifest.getEncryptionKey() == null )
-    	throw new NullPointerException( Encryption.S_ERR_NO_KEY );
-    if( manifest.getEncryptionAlgorithm() == null )
-    	throw new NullPointerException( Encryption.S_ERR_NO_ALGORITHM );
-    IEncryption encryption = new AieonFEncryption( manifest );
-    String str = name.charAt( 0 ) + encryption.encryptData( name );
-    return str;
-  }
+	 */
 
-  /**
-   * Returns the decrypted file name belonging to a concept
-   *
-   * @param key SecretKey
-   * @param name String
-   * @return String
-   * @throws Exception
-  */
-  public static String getDecryptedFileName( ILoaderAieon loader, String name )
-    throws Exception
-  {
-    name = name.toLowerCase();
-    IEncryption encryption = new AieonFEncryption( loader );
-    String encr = name.substring( 1 );
-    return encryption.decryptData( encr );
-  }
+	/**
+	 * Returns the encrypted file name belonging to a concept
+	 *
+	 * @param key SecretKey
+	 * @param name String
+	 * @return String
+	 * @throws Exception
+	 */
+	public static String getEncryptedFileName( ILoaderAieon manifest, String name )
+			throws Exception
+	{
+		name = name.toLowerCase();
+		if( manifest == null )
+			throw new NullPointerException( S_ERR_CONCEPT_INVALID_MANIFEST );
+		if( manifest.getEncryptionKey() == null )
+			throw new NullPointerException( Encryption.S_ERR_NO_KEY );
+		if( manifest.getEncryptionAlgorithm() == null )
+			throw new NullPointerException( Encryption.S_ERR_NO_ALGORITHM );
+		IEncryption encryption = new AieonFEncryption( manifest );
+		String str = name.charAt( 0 ) + encryption.encryptData( name );
+		return str;
+	}
 
-  /**
-   * Return the file belonging to a concept, or null if it wasn't found
-   *
-   * @param key SecretKey
-   * @param position String
-   * @param descriptor IDescriptor
-   * @return String
-   * @throws Exception
-  */
-  public static String getEncryptedFile( ILoaderAieon loader, String position, IDescribable changeable )
-    throws Exception
-  {
-    IDescriptor descriptor = changeable.getDescriptor();
-  	File loc =
-      new File( position, getEncryptedFileName( loader, descriptor.getName().toLowerCase() ));
-    String fullName = descriptor.getID() + "_" + descriptor.getVersion();
-    fullName = fullName.replace( '.','_' );
-    fullName = fullName.replace( ':','_' );
-    return new File( loc, fullName + "." + Universe.CPT ).getPath();
-  }
+	/**
+	 * Returns the decrypted file name belonging to a concept
+	 *
+	 * @param key SecretKey
+	 * @param name String
+	 * @return String
+	 * @throws Exception
+	 */
+	public static String getDecryptedFileName( ILoaderAieon loader, String name )
+			throws Exception
+	{
+		name = name.toLowerCase();
+		IEncryption encryption = new AieonFEncryption( loader );
+		String encr = name.substring( 1 );
+		return encryption.decryptData( encr );
+	}
+
+	/**
+	 * Return the file belonging to a concept, or null if it wasn't found
+	 *
+	 * @param key SecretKey
+	 * @param position String
+	 * @param descriptor IDescriptor
+	 * @return String
+	 * @throws Exception
+	 */
+	public static String getEncryptedFile( ILoaderAieon loader, String position, IDescribable changeable )
+			throws Exception
+	{
+		IDescriptor descriptor = changeable.getDescriptor();
+		File loc =
+				new File( position, getEncryptedFileName( loader, descriptor.getName().toLowerCase() ));
+		String fullName = descriptor.getID() + "_" + descriptor.getVersion();
+		fullName = fullName.replace( '.','_' );
+		fullName = fullName.replace( ':','_' );
+		return new File( loc, fullName + "." + Universe.CPT ).getPath();
+	}
 
 }

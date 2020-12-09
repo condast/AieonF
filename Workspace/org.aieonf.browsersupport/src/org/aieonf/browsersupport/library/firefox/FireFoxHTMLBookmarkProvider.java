@@ -204,7 +204,7 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 		if( urlEon.isDataUri() ){
 			IDataURI resource = new DataURI();
 			resource.fill( "ICON", urlEon.getResource());
-			if( !Base64Utils.isArrayByteBase64(resource.getResource().getBytes("UTF-8" ))){
+			if( !Base64Utils.isBase64(resource.getResource().getBytes("UTF-8" ))){
 				String datauri = Base64Utils.getBase64DataURI( this.getClass(), "/images/firefox.png");
 				try {
 					if( !Descriptor.assertNull( datauri ))

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.ui.IBindableWidget;
 import org.aieonf.commons.ui.table.ITableEventListener.TableEvents;
 import org.aieonf.concept.IDescribable;
@@ -198,7 +199,7 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 	 * Prepare the input prior to setting it
 	 * @param leaf
 	 */
-	protected abstract void prepareInput( IModelLeaf<D> leaf );
+	protected abstract void onSetInput( IModelLeaf<D> leaf );
 	
 	/**
 	 * Set the input
@@ -208,17 +209,18 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 	public void setInput( IModelLeaf<D> leaf ){
 		if(( leaf == null ) || super.isDisposed() )
 			return;
-		this.title = "";
-		IDescriptor descriptor = leaf.getData().getDescriptor();
-		if( !Descriptor.assertNull( descriptor.getProviderName()))
-			this.title = descriptor.getProviderName() + ":";
-		if( !Descriptor.assertNull( descriptor.getDescription() )){
-			this.title += descriptor.getDescription();
+		if( StringUtils.isEmpty( this.title )){
+			IDescriptor descriptor = leaf.getData().getDescriptor();
+			if( !Descriptor.assertNull( descriptor.getProviderName()))
+				this.title = descriptor.getProviderName() + ":";
+			if( !Descriptor.assertNull( descriptor.getDescription() )){
+				this.title += descriptor.getDescription();
+			}
+			else
+				this.title = "{Title}";
 		}
-		else
-			this.title = "{Title}";
-		this.prepareInput( leaf );
 		this.input = leaf;
+		this.onSetInput( leaf );
 		if(leaf.isLeaf())
 			return;
 		this.tableViewer.setInput(leaf);

@@ -138,29 +138,26 @@ public class ModelRestService{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/find")
 	public Response findModel( @QueryParam("id") long id, @QueryParam("token") long token, 
 			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, @QueryParam("version") String version) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		IModelLeaf<IDescriptor>[] result = null;
+		IModelLeaf<IDescriptor>[] results = null;
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
-			Collection<IModelLeaf<IDescriptor>> results = factory.find( modelId );
+			results = find( dbService, domain, modelId );
 			if( Utils.assertNull(results))
 				return Response.noContent().build();
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
-			result = results.toArray( new IModelLeaf[ results.size()]); 
-			String str = gson.toJson(result, IModelLeaf[].class );
+			String str = gson.toJson(results, IModelLeaf[].class );
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {
@@ -338,7 +335,6 @@ public class ModelRestService{
 	public synchronized Response removeChildren( @QueryParam("id") long id, @QueryParam("token") long token,
 			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, String data) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		int counter = 0;
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
 				return Response.status( Status.UNAUTHORIZED ).build();
@@ -346,7 +342,9 @@ public class ModelRestService{
 			dbService.open( domain );
 			Gson gson = new Gson();
 			long[] ids = gson.fromJson(data, long[].class);
-			counter = dbService.removeChildren( modelId, ids );
+			dbService.removeChildren( modelId, ids );
+			String str = findAndSerialise(dbService, domain, modelId);
+			return StringUtils.isEmpty(str)? Response.noContent().build(): Response.ok( str ).build();
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -355,7 +353,6 @@ public class ModelRestService{
 		finally {
 			dbService.close();
 		}
-		return (counter == 0)?Response.ok( counter ).build():Response.noContent().build();
 	}
 
 	@DELETE
@@ -384,6 +381,40 @@ public class ModelRestService{
 			dbService.close();
 		}
 		return (counter == 0)?Response.ok( counter ).build():Response.noContent().build();
+	}
+
+	/**
+	 * Find the model with the given model id
+	 * @param dbService
+	 * @param domain
+	 * @param modelId
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected static IModelLeaf<IDescriptor>[] find( DatabaseService dbService, IDomainAieon domain, long modelId ){
+		ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
+		Collection<IModelLeaf<IDescriptor>> results = factory.find( modelId );
+		if( Utils.assertNull(results))
+			return null;
+		return results.toArray( new IModelLeaf[ results.size()]); 
+	}
+
+	/**
+	 * As a above, but now serialises the result
+	 * @param dbService
+	 * @param domain
+	 * @param modelId
+	 * @return
+	 */
+	protected static String findAndSerialise( DatabaseService dbService, IDomainAieon domain, long modelId ){
+		IModelLeaf<IDescriptor>[] results = find( dbService, domain, modelId );
+		if( Utils.assertNull(results))
+			return null;
+		GsonBuilder builder = new GsonBuilder();
+		builder.enableComplexMapKeySerialization();
+		builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+		Gson gson = builder.create();
+		return gson.toJson(results, IModelLeaf[].class );
 	}
 
 }
