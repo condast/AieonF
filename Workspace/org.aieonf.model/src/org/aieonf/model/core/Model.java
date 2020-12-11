@@ -231,27 +231,6 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 	}
 	
 	/**
-	 * Remove a child model from the model
-	 * @param concept
-	*/
-	@Override
-	public boolean removeChild( IModelLeaf<? extends IDescriptor> model )
-	{
-		this.children.remove( model );
-		super.setChanged( true);
-		super.setLeaf( children.isEmpty() );
-		model.setParent( null );
-		if( super.hasChanged() )
-			try {
-				model.setDepth( -1 );
-			}
-			catch (ConceptException e) {
-				e.printStackTrace();
-			}
-		return super.hasChanged();
-	}
-
-	/**
 	 * Returns true if the model, or one of its descendants contains
 	 * the given descriptor
 	 * @param descriptor
@@ -286,7 +265,33 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 				return true;
 		return false;
 	}
-	
+
+	/**
+	 * Remove a child model from the model
+	 * @param concept
+	*/
+	@Override
+	public boolean removeChild( IModelLeaf<? extends IDescriptor> model )
+	{
+		this.children.remove( model );
+		super.setChanged( true);
+		super.setLeaf( children.isEmpty() );
+		model.setParent( null );
+		if( super.hasChanged() )
+			try {
+				model.setDepth( -1 );
+			}
+			catch (ConceptException e) {
+				e.printStackTrace();
+			}
+		return super.hasChanged();
+	}
+
+	@Override
+	public void removeAllChildren() {
+		this.children.clear();
+	}
+
 	/**
 	 * Get the child with the given id
 	 * @param parent
@@ -300,7 +305,7 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Get the descriptors belonging to the given model
 	 * @param model

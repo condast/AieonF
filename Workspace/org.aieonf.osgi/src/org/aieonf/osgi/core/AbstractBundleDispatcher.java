@@ -1,10 +1,8 @@
 package org.aieonf.osgi.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.db.IDatabaseConnection;
 import org.aieonf.commons.security.ISecureGenerator;
 import org.aieonf.commons.strings.StringUtils;
@@ -147,24 +145,23 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 			listeners.remove(listener);
 		}
 	
+		@SuppressWarnings("unchecked")
 		private void notifyDataFound( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
-			IModelLeaf<IDescriptor>[] results = addInput(event.getData());
+			IModelLeaf<IDescriptor>[] results = null;
+			switch( event.getRequest()) {
+			case PREPARE:
+				this.input.clear();
+				break;
+			default:
+				results = input.toArray( new IModelLeaf[this.input.size()]); ;
+				break;
+			}
 			DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> devent = 
 					new DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>( this, event.getKeyEvent(), results);
-			for( IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener: listeners)
-				listener.notifyKeyEventProcessed( devent);
+					for( IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener: listeners)
+						listener.notifyKeyEventProcessed( devent);
 		}
 
-		@SuppressWarnings("unchecked")
-		private IModelLeaf<IDescriptor>[] addInput( IModelLeaf<IDescriptor>[] models ) {
-			IModelLeaf<IDescriptor>[] results = input.toArray( new IModelLeaf[this.input.size()]); 
-			if( Utils.assertNull(models))
-				return results;
-			this.input.addAll(Arrays.asList(models));			
-			results = input.toArray( new IModelLeaf[this.input.size()]); 
-			return results;
-		}
-		
 		@SuppressWarnings("unchecked")
 		@Override
 		public void handleKeyEvent(KeyEvent<IDatabaseConnection.Requests> event ) {

@@ -71,6 +71,12 @@ public interface IModelNode<D extends Object> extends IModelLeaf<D>
 
 	/**
 	 * Remove a child model from the parent
+	 * @param child IModelNode<? extends IDescriptor>
+	*/
+	public void removeAllChildren();
+
+	/**
+	 * Remove a child model from the parent
 	 * @return Collection<IModelNode<? extends IDescriptor>>
 	*/
 	public Map<IModelLeaf<? extends IDescriptor>, String> getChildren();

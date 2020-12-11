@@ -144,8 +144,8 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 					case CHILDREN:
 						node = nodes.peek();
 						jsonReader.beginArray();
+						token = jsonReader.peek();
 						while( !JsonToken.END_ARRAY.equals(token )) {
-							token = jsonReader.peek();
 							jsonReader.beginArray();
 							N child = readNode( jsonReader );
 							token = jsonReader.peek();

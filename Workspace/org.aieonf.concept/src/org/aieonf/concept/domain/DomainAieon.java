@@ -153,8 +153,8 @@ public class DomainAieon extends ImplicitAieon implements IDomainAieon
 	public boolean equals( Object obj ) {
 		if( !(obj instanceof IDescriptor ))
 			return false;
-		if(!super.equals(obj))
-			return false;
+		if(super.equals(obj))
+			return true;
 		IDomainAieon check = (IDomainAieon) obj;
 		return getDomain().equals(check.getDomain());
 	}

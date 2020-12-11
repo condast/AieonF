@@ -205,6 +205,17 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 		return true;
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void removeAllChildren() {
+		if( this.model instanceof IModelNode ){
+			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
+			node.removeAllChildren();
+		}
+		children.clear();
+	}
+
 	/**
 	 * Remove a child model from the parent
 	 * @param concept

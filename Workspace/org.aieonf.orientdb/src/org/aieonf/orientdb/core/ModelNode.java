@@ -71,31 +71,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		super.setLeaf(false);
 		return true;
 	}
-
-	@Override
-	public boolean removeChild(IModelLeaf<? extends IDescriptor> child) {
-		Vertex vertex = getVertex();
-		ModelLeaf leaf = (ModelLeaf) child;
-		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN).iterator();
-		if(!edges.hasNext())
-			return false;
-		
-		while( edges.hasNext()) {
-			Edge edge = edges.next();
-			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
-				continue;
-			if( !leaf.getVertex().equals( edge.getVertex(com.tinkerpop.blueprints.Direction.IN)))
-				continue;
-			Iterator<Edge> vedges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IModelLeaf.IS_PARENT).iterator();
-			while( vedges.hasNext())
-			graph.removeEdge(edge);
-			return true;
-		}
-		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
-		super.setLeaf(Utils.assertNull(children));
-		return true;
-	}
-
+	
 	@Override
 	public Map<IModelLeaf<? extends IDescriptor>, String> getChildren() {
 		Map<IModelLeaf<? extends IDescriptor>, String> children = new HashMap<>();
@@ -161,6 +137,48 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean removeChild(IModelLeaf<? extends IDescriptor> child) {
+		Vertex vertex = getVertex();
+		ModelLeaf leaf = (ModelLeaf) child;
+		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN).iterator();
+		if(!edges.hasNext())
+			return false;
+		
+		while( edges.hasNext()) {
+			Edge edge = edges.next();
+			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
+				continue;
+			if( !leaf.getVertex().equals( edge.getVertex(com.tinkerpop.blueprints.Direction.IN)))
+				continue;
+			Iterator<Edge> vedges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IModelLeaf.IS_PARENT).iterator();
+			while( vedges.hasNext())
+			graph.removeEdge(edge);
+			return true;
+		}
+		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
+		super.setLeaf(Utils.assertNull(children));
+		return true;
+	}
+
+	@Override
+	public void removeAllChildren() {
+		Vertex vertex = getVertex();
+		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN).iterator();
+		if(!edges.hasNext())
+			return;
+		
+		while( edges.hasNext()) {
+			Edge edge = edges.next();
+			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
+				continue;
+			Iterator<Edge> vedges = vertex.getEdges(com.tinkerpop.blueprints.Direction.IN, IModelLeaf.IS_PARENT).iterator();
+			while( vedges.hasNext())
+			graph.removeEdge(edge);
+		}
+		super.setLeaf(true);
 	}
 
 	@Override

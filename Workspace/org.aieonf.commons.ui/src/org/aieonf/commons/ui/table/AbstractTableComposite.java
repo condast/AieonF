@@ -14,7 +14,6 @@ import org.aieonf.model.core.IModelLeaf;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.SWT;
@@ -25,6 +24,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 public abstract class AbstractTableComposite<D extends IDescribable, C extends Object> extends Composite implements IBindableWidget<IModelLeaf<D>>
 {
@@ -111,8 +111,8 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		table.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		table.setData( RWT.CUSTOM_ITEM_HEIGHT, Integer.valueOf( 22 ));		
 		tableViewer.addSelectionChangedListener( e-> onRowSelected( e ));
+		tableViewer.setComparator( new SearchViewerComparator());
 		tableViewer.setContentProvider( new ModelProvider());
-		
 		tclayout = new TableColumnLayout();
 		this.setLayout( tclayout );
 	}
@@ -133,6 +133,10 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		this.columnLabelProviders.remove( labelProvider );
 	}
 
+	protected void setViewerComparator( ViewerComparator comparator ) {
+		tableViewer.setComparator(comparator);		
+	}
+	
 	/**
 	 * Get the column label provider for the column at the given index
 	 * @param index
@@ -224,9 +228,6 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		if(leaf.isLeaf())
 			return;
 		this.tableViewer.setInput(leaf);
-		this.layout( true, true );
-		Rectangle r = table.getClientArea();
-		this.setSize( this.computeSize( r.width, SWT.DEFAULT ));
 	}
 
 	/**
@@ -247,8 +248,7 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		column.addSelectionListener(new SelectionAdapter() {    	
 			private static final long serialVersionUID = 1L;
 			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
+			public void widgetSelected(SelectionEvent e){
 				onHeaderClicked( e );
 			}
 		});
@@ -262,7 +262,22 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 	 * @param e
 	 */
 	protected abstract void onHeaderClicked( SelectionEvent e );
+	
+	protected abstract int compareTables( int columnIndex, IModelLeaf<D> o1, IModelLeaf<D> o2);
 
 	// This will create the columns for the table
 	protected abstract void createColumns(final Composite parent, final TableViewer viewer);	
+	
+	protected class SearchViewerComparator extends AbstractViewerComparator<IModelLeaf<D>>{
+		private static final long serialVersionUID = 1L;
+
+		public SearchViewerComparator() {
+			super();
+		}
+
+		@Override
+		protected int compareColumn(int columnIndex, IModelLeaf<D> o1, IModelLeaf<D> o2) {
+			return compareTables( columnIndex, o1, o2 );
+		}
+	}
 }
