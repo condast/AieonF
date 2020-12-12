@@ -13,6 +13,7 @@ import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
@@ -182,6 +183,8 @@ public class DatabaseService implements Closeable{
 			Edge edge = iterator.next();
 			Vertex child = edge.getVertex(Direction.IN);
 			graph.removeEdge(edge);
+			if(( IDescriptor.DESCRIPTOR.equals( edge.getLabel())) || ( IModelLeaf.IS_PARENT.equals( edge.getLabel())))
+				continue;
 			if(removeChildren && countEdges( child,  Direction.OUT) > 0)
 				index += remove( child, index, removeChildren );
 			}
