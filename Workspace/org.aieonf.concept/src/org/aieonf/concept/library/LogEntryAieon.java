@@ -32,7 +32,7 @@ public class LogEntryAieon extends DateAieon
 	private static final long serialVersionUID = -3112475589933520018L;
 
 	public LogEntryAieon(){
-		super( Attributes.LOG_ENTRY.toString() );
+		super( Attributes.LOG_ENTRY.name() );
 	}
 
 	public LogEntryAieon(String title){
@@ -40,25 +40,25 @@ public class LogEntryAieon extends DateAieon
 	}
 
 	public LogEntryAieon(String title, Calendar calendar){
-		super( Attributes.LOG_ENTRY.toString(), calendar);
+		super( Attributes.LOG_ENTRY.name(), calendar);
 		this.setTitle(title);
 	}
 
 	public LogEntryAieon( String title, Locale locale, Calendar calendar){
-		super( Attributes.LOG_ENTRY.toString(), locale, calendar);
+		super( Attributes.LOG_ENTRY.name(), locale, calendar);
 		this.setTitle(title);
 	}
 
 	public LogEntryAieon(String id, String title, Locale locale, Calendar calendar){
 		super(id, locale, calendar);
 		this.setTitle(title);
-		super.setName( Attributes.LOG_ENTRY.toString() );
+		super.setName( Attributes.LOG_ENTRY.name() );
 	}
 	
 	public LogEntryAieon( IDescriptor descriptor ) {
 		super( descriptor );
 		setClassName(this.getClass().getCanonicalName());
-		super.setName( Attributes.LOG_ENTRY.toString() );
+		super.setName( Attributes.LOG_ENTRY.name() );
 	}
 
 
@@ -71,7 +71,7 @@ public class LogEntryAieon extends DateAieon
 	}
 
 	public String getLogEntry(){
-		String str = super.get(Attributes.LOG_ENTRY ); 
+		String str = super.get(Attributes.LOG_ENTRY.name() ); 
 		return StringUtils.isEmpty(str)?"{new log}": str;
 	}
 	

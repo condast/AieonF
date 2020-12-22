@@ -28,12 +28,13 @@ import org.aieonf.concept.filter.FilterFactory.Filters;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.model.filter.ModelFilter;
+import org.aieonf.model.serialise.ModelTypeAdapter;
 import org.aieonf.orientdb.core.Dispatcher;
 import org.aieonf.orientdb.db.DatabaseService;
-import org.aieonf.orientdb.factory.ModelDatabase;
+import org.aieonf.orientdb.db.ModelDatabase;
 import org.aieonf.orientdb.filter.IGraphFilter;
 import org.aieonf.orientdb.filter.VertexFilterFactory;
-import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
+import org.aieonf.orientdb.serialisable.OrientModelTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -63,7 +64,7 @@ public class ModelRestService{
 			GsonBuilder builder = new GsonBuilder(); 
 			builder.enableComplexMapKeySerialization();
 			dbService.open(domain);
-			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
+			OrientModelTypeAdapter adapter = new OrientModelTypeAdapter( domain, dbService.getGraph());
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();
 			
@@ -97,7 +98,7 @@ public class ModelRestService{
 			dbService.open( domain );
 			GsonBuilder builder = new GsonBuilder(); 
 			builder.enableComplexMapKeySerialization();
-			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
+			OrientModelTypeAdapter adapter = new OrientModelTypeAdapter( domain, dbService.getGraph());
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();			
 			logger.info( data );
@@ -155,7 +156,7 @@ public class ModelRestService{
 				return Response.noContent().build();
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
-			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(results, IModelLeaf[].class );
 			return Response.ok( str ).build();
@@ -215,7 +216,7 @@ public class ModelRestService{
 				return Response.noContent().build();
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
-			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
 			result = results.toArray( new IModelLeaf[ results.size()]); 
 			String str = gson.toJson(result, IModelLeaf[].class );
@@ -257,7 +258,7 @@ public class ModelRestService{
 				return Response.noContent().build();
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
-			builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(results.toArray( new IModelLeaf[ results.size() ]), IModelLeaf[].class);
 			logger.info(str);
@@ -288,12 +289,12 @@ public class ModelRestService{
 			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
 			GsonBuilder builder = new GsonBuilder(); 
 			builder.enableComplexMapKeySerialization();
-			ModelTypeAdapter adapter = new ModelTypeAdapter( domain, dbService.getGraph());
+			ModelTypeAdapter adapter = new ModelTypeAdapter();
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();			
 			logger.info( data );
 			IModelLeaf<IDescriptor>[] results = gson.fromJson(data, IModelLeaf[].class);
-			database.update(results[0] );
+			database.update( results[0] );
 			return Response.ok(0).build();
 		}
 		catch( Exception ex ){
@@ -317,7 +318,8 @@ public class ModelRestService{
 				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			counter = dbService.remove(modelId);
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			counter = database.remove(modelId);
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -342,7 +344,8 @@ public class ModelRestService{
 			dbService.open( domain );
 			Gson gson = new Gson();
 			long[] ids = gson.fromJson(data, long[].class);
-			dbService.removeChildren( modelId, ids );
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			database.removeChildren( modelId, ids );
 			String str = findAndSerialise(dbService, domain, modelId);
 			return StringUtils.isEmpty(str)? Response.noContent().build(): Response.ok( str ).build();
 		}
@@ -366,12 +369,13 @@ public class ModelRestService{
 			if( !dispatcher.isRegistered(id, token, domainstr))
 				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
-			dbService.open( domain );
 			if( StringUtils.isEmpty( data))
 				return Response.noContent().build(); 
 			Gson gson = new Gson();
 			long[] ids = gson.fromJson(data, long[].class);
-			counter = dbService.remove( ids );
+			dbService.open( domain );
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			counter = database.remove( ids );
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();
@@ -412,7 +416,7 @@ public class ModelRestService{
 			return null;
 		GsonBuilder builder = new GsonBuilder();
 		builder.enableComplexMapKeySerialization();
-		builder.registerTypeAdapter(IModelLeaf.class, new ModelTypeAdapter( domain, dbService.getGraph()));
+		builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
 		Gson gson = builder.create();
 		return gson.toJson(results, IModelLeaf[].class );
 	}

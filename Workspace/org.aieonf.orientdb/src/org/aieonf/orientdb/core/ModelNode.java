@@ -10,7 +10,7 @@ import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
-import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
+import org.aieonf.orientdb.serialisable.OrientModelTypeAdapter;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
@@ -67,7 +67,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	public boolean addChild(IModelLeaf<? extends IDescriptor> child, String type) {
 		Vertex vertex = getVertex();
 		ModelLeaf leaf = (ModelLeaf) child;
-		ModelTypeAdapter.addChild(vertex, leaf.getVertex(), this.reverse, type);
+		OrientModelTypeAdapter.addChild(vertex, leaf.getVertex(), this.reverse, type);
 		super.setLeaf(false);
 		return true;
 	}

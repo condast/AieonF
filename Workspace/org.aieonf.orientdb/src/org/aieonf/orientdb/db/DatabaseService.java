@@ -3,17 +3,14 @@ package org.aieonf.orientdb.db;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.commons.security.LoginEvent;
 import org.aieonf.commons.transaction.AbstractTransaction;
 import org.aieonf.commons.transaction.ITransaction;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelListener;
 import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
@@ -22,9 +19,6 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.security.OSecurity;
 import com.orientechnologies.orient.core.metadata.security.OUser;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import com.tinkerpop.blueprints.Direction;
-import com.tinkerpop.blueprints.Edge;
-import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
@@ -134,124 +128,6 @@ public class DatabaseService implements Closeable{
 		return (this.graph != null ) && !this.graph.isClosed();
 	}
 
-	public int remove( long id ) {
-		return remove( id, true );
-	}
-	
-	public int remove( long id, boolean removeChildren ) {
-		int counter = 0;
-		Iterable<Vertex> iterable = this.graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
-		if( iterable == null )
-			return counter;
-		Iterator<Vertex> iterator = iterable.iterator();
-		while( iterator.hasNext() ) {
-			Vertex vertex = iterator.next();			
-			counter += remove( vertex, counter, removeChildren );
-		}		
-		return counter;
-	}
-
-	public int remove( long[] ids ) {
-		return remove( ids, true );
-	}
-
-	public int remove( long[] ids, boolean removeChildren ) {
-		int counter = 0;
-		Iterable<Vertex> iterable = this.graph.getVertices();
-		if( iterable == null )
-			return counter;
-		Iterator<Vertex> iterator = iterable.iterator();
-		while( iterator.hasNext() ) {
-			Vertex vertex = iterator.next();			
-			String idstr = vertex.getProperty(IDescriptor.Attributes.ID.name());
-			long id = Long.parseLong(idstr);
-			for( long check: ids ) {
-				if( check == id )
-					counter += remove( vertex, counter, removeChildren );
-			}
-		}		
-		return counter;
-	}
-
-	protected int remove( Vertex vertex, int counter, boolean removeChildren ) {
-		if( vertex == null )
-			return counter;
-		
-		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
-		int index=  counter;
-		while( iterator.hasNext()) {
-			Edge edge = iterator.next();
-			Vertex child = edge.getVertex(Direction.IN);
-			graph.removeEdge(edge);
-			if(( IDescriptor.DESCRIPTOR.equals( edge.getLabel())) || ( IModelLeaf.IS_PARENT.equals( edge.getLabel())))
-				continue;
-			if(removeChildren && countEdges( child,  Direction.OUT) > 0)
-				index += remove( child, index, removeChildren );
-			}
-		this.graph.removeVertex(vertex);
-		return index;
-	}
-
-	/**
-	 * Remove the children from the model with the given id.
-	 * Returns true if one or more children were removed
-	 * @param id
-	 * @param children
-	 * @return
-	 */
-	public boolean removeChildren( long id, long[] children ) {
-		boolean result = false;
-		Iterable<Vertex> iterable = this.graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
-		if( iterable == null )
-			return false;
-		Iterator<Vertex> iterator = iterable.iterator();
-		while( iterator.hasNext() ) {
-			Vertex vertex = iterator.next();			
-			Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();
-			while( edges.hasNext()) {
-				Edge edge = edges.next();
-				Vertex other = getOther( edge, vertex);
-				for( long check: children ) {
-					if( check == getId(other)) {
-						graph.removeEdge(edge);
-						result = true;
-					}
-				}
-				if( !hasEdges( other))
-					graph.removeVertex(other);
-			}
-		}		
-		return result;
-	}
-
-	protected int countEdges( Vertex vertex, Direction direction ) {
-		int counter = 0;
-		Iterator<Edge> iterator = vertex.getEdges(direction).iterator();
-		while( iterator.hasNext()) {
-			iterator.next();
-			counter++;
-		}
-		return counter;
-	}
-	
-	public static long getId( Vertex vertex ) {
-		return NumberUtils.parseLong( vertex.getProperty(IDescriptor.Attributes.ID.name())); 
-	}
-
-	public static boolean hasEdges( Vertex vertex ) {
-		Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();		
-		return edges.hasNext(); 
-	}
-
-	public static boolean hasEdges( Vertex vertex, Direction direction ) {
-		Iterator<Edge> edges = vertex.getEdges(direction).iterator();		
-		return edges.hasNext(); 
-	}
-
-	public static Vertex getOther( Edge edge, Vertex vertex ) {
-		Vertex check = edge.getVertex( Direction.IN); 
-		return !check.equals(vertex)?check: edge.getVertex(Direction.OUT);
-	}
 	
 	public void sync(){
 		try{

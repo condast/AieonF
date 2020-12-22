@@ -1,4 +1,4 @@
-package org.aieonf.orientdb.factory;
+package org.aieonf.orientdb.db;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +13,10 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
+import org.aieonf.orientdb.core.ModelLeaf;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
-import org.aieonf.orientdb.db.DatabaseService;
-import org.aieonf.orientdb.serialisable.ModelTypeAdapter;
+import org.aieonf.orientdb.serialisable.OrientModelTypeAdapter;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -232,88 +232,273 @@ public class ModelDatabase< T extends IDescriptor > {
 		return parent;
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * Update the given leaf
+	 * @param leaf
+	 */
 	public void update(IModelLeaf<? extends IDescriptor> leaf) {
+		OrientGraph graph = this.service.getGraph();
+		Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(leaf.getID()));
+		for( Vertex vertex: vertices ) {
+			update(vertex, leaf );
+		}
+	}
+
+	/**
+	 * Update the given vertex
+	 * @param leaf
+	 */
+	public void update( ModelLeaf leaf ) {
+		update(leaf.getVertex(), leaf );
+	}
+
+	@SuppressWarnings("unchecked")
+	protected boolean update( Vertex vertex, IModelLeaf<? extends IDescriptor> leaf) {
+		boolean result = false;
 		try {
 			OrientGraph graph = this.service.getGraph();
-			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(leaf.getID()));
+			if( !vertex.getProperty(IDescriptor.Attributes.ID.name()).equals( String.valueOf(leaf.getID())))
+				return false;
 			IModelNode<IDescriptor> model = null;
 			boolean found = false;
-			for( Vertex vertex: vertices ) {
-				updateProperties(leaf.getDescriptor(), vertex, false);
-				Iterator<Edge> edges = vertex.getEdges(Direction.IN).iterator();
-				while( edges.hasNext()) {
-					Edge edge = edges.next();
-					Vertex vnode = edge.getVertex(Direction.OUT);
-					if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
-						updateProperties(leaf.getData(), vnode, false);
-					}
-					if(leaf.isLeaf())
-						continue;
-					//First remove edges that don't exist any more, or update the labels
-					model = (IModelNode<IDescriptor>) leaf;
-					Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>,String>> iterator = model.getChildren().entrySet().iterator();
-					found = false;
-					while( iterator.hasNext() ) {
-						Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
-						String id = vnode.getProperty(IDescriptor.Attributes.ID.name());
-						if( id.equals( String.valueOf(entry.getKey().getID()))){
-							if( !edge.getLabel().equals(entry.getValue())) {
-								graph.removeEdge(edge);
-								vertex.addEdge(entry.getValue(), vnode);
-							}
-						}
-					}
-					if(!found)
-						graph.removeEdge(edge);
+
+			updateProperties(leaf.getDescriptor(), vertex, false);
+			Iterator<Edge> edges = vertex.getEdges(Direction.OUT).iterator();
+			while( edges.hasNext()) {
+				Edge edge = edges.next();
+				Vertex vnode = edge.getVertex(Direction.IN);
+
+				if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
+					updateProperties(leaf.getData(), vnode, false);
+					continue;
 				}
-				if( leaf.isLeaf())
-					return;
+				
+				if(leaf.isLeaf() || !isChildEdge(edge))
+					continue;
+				//First remove edges that don't exist any more, or update the labels
 				model = (IModelNode<IDescriptor>) leaf;
 				Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>,String>> iterator = model.getChildren().entrySet().iterator();
 				found = false;
 				while( iterator.hasNext() ) {
-					Vertex vnode = null;
-					Edge edge = null;
 					Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
-					edges = vertex.getEdges(Direction.IN).iterator();
-					while( edges.hasNext()) {
-						edge = edges.next();
-						vnode = edge.getVertex(Direction.OUT);
-						if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
-							found = true;
-							update( entry.getKey());
-						}
+					if( !isMatch( vnode, entry.getKey()))
+						continue;
+					if( !edge.getLabel().equals(entry.getValue())) {
+						graph.removeEdge(edge);
+						vertex.addEdge(entry.getValue(), vnode);
 					}
+					found = true;
+				}
+				if(!found)
+					graph.removeEdge(edge);
+			}
+			if( leaf.isLeaf())
+				return found;
+				
+			//Update the children
+			model = (IModelNode<IDescriptor>) leaf;
+			Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>,String>> iterator = model.getChildren().entrySet().iterator();
+			result = found;
+			found = false;
+			while( iterator.hasNext() ) {
+				Vertex vnode = null;
+				Edge edge = null;
+				Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
+				edges = vertex.getEdges(Direction.OUT).iterator();
+				while( edges.hasNext()) {
+					edge = edges.next();
+					if( !isChildEdge(edge)) {
+						found = true;
+						continue;
+					}
+					vnode = edge.getVertex(Direction.IN);
+					if( !isMatch( vnode, entry.getKey()))
+						continue;
+					found = true;
+					update( vnode, entry.getKey());
+				}
+				if( found == false ) {
 					String str = domain.getDomain().replace(".", "_");
-					if( found == false ) {
-						ModelTypeAdapter.findOrCreateVertex(graph, str, entry.getKey().getDescriptor().getBase());				
-						vnode = graph.addVertex(ModelDatabase.S_CLASS + IDescriptor.DESCRIPTORS);
-						ModelTypeAdapter.fill(vnode, entry.getKey().getData().getBase());
-						vertex.addEdge(IDescriptor.DESCRIPTOR, vnode);
-					}
+					OrientModelTypeAdapter.findOrCreateVertex(graph, str, entry.getKey().getDescriptor().getBase());				
+					vnode = graph.addVertex(ModelDatabase.S_CLASS + IDescriptor.DESCRIPTORS);
+					OrientModelTypeAdapter.fill(vnode, entry.getKey().getData().getBase());
+					vertex.addEdge(IDescriptor.DESCRIPTOR, vnode);
 				}
 			}
 		}
 		catch( Exception ex ) {
 			ex.printStackTrace();
+			result = false;
 		}
+		return result;
 	}
-	
+
 	protected void updateProperties( IDescriptor descriptor, Vertex vertex, boolean include ) {
 		if(!include ) {
 			for( String key: vertex.getPropertyKeys()) {
-				String attr = descriptor.get(key);
-				if( IDescriptor.Attributes.ID.name().equals(attr) || IDescriptor.Attributes.CREATE_DATE.name().equals(attr))
+				if( IDescriptor.Attributes.ID.name().equals(key) || IDescriptor.Attributes.CREATE_DATE.name().equals(key))
 					continue;
-				if(StringUtils.isEmpty(attr))
+				Object attr = descriptor.get(key);
+				if( attr != null )
 					vertex.removeProperty(key);
 			}
 		}
+
 		Iterator<Map.Entry<String, String>> iterator = descriptor.entrySet().iterator();
 		while( iterator.hasNext() ) {
 			Map.Entry<String, String> entry = iterator.next();
 			vertex.setProperty(entry.getKey(), entry.getValue());
 		}
+	}
+
+	public int remove( long id ) {
+		return remove( id, true );
+	}
+	
+	public int remove( long id, boolean removeChildren ) {
+		int counter = 0;
+		OrientGraph graph = this.service.getGraph();
+		Iterable<Vertex> iterable = graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
+		if( iterable == null )
+			return counter;
+		Iterator<Vertex> iterator = iterable.iterator();
+		while( iterator.hasNext() ) {
+			Vertex vertex = iterator.next();			
+			counter += remove( vertex, counter, removeChildren );
+		}		
+		return counter;
+	}
+
+	public int remove( long[] ids ) {
+		return remove( ids, true );
+	}
+
+	public int remove( long[] ids, boolean removeChildren ) {
+		int counter = 0;
+		OrientGraph graph = this.service.getGraph();
+		Iterable<Vertex> iterable = graph.getVertices();
+		if( iterable == null )
+			return counter;
+		Iterator<Vertex> iterator = iterable.iterator();
+		while( iterator.hasNext() ) {
+			Vertex vertex = iterator.next();			
+			String idstr = vertex.getProperty(IDescriptor.Attributes.ID.name());
+			long id = Long.parseLong(idstr);
+			for( long check: ids ) {
+				if( check == id )
+					counter += remove( vertex, counter, removeChildren );
+			}
+		}		
+		return counter;
+	}
+
+	protected int remove( Vertex vertex, int counter, boolean removeChildren ) {
+		if( vertex == null )
+			return counter;
+		OrientGraph graph = this.service.getGraph();	
+		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT).iterator();
+		int index=  counter;
+		while( iterator.hasNext()) {
+			Edge edge = iterator.next();
+			Vertex child = edge.getVertex(Direction.IN);
+			graph.removeEdge(edge);
+			if(( IDescriptor.DESCRIPTOR.equals( edge.getLabel())) || ( IModelLeaf.IS_PARENT.equals( edge.getLabel())))
+				continue;
+			if(removeChildren && countEdges( child,  Direction.OUT) > 0)
+				index += remove( child, index, removeChildren );
+			}
+		graph.removeVertex(vertex);
+		return index;
+	}
+
+	/**
+	 * Remove the children from the model with the given id.
+	 * Returns true if one or more children were removed
+	 * @param id
+	 * @param children
+	 * @return
+	 */
+	public boolean removeChildren( long id, long[] children ) {
+		boolean result = false;
+		OrientGraph graph = this.service.getGraph();
+		Iterable<Vertex> iterable = graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
+		if( iterable == null )
+			return false;
+		Iterator<Vertex> iterator = iterable.iterator();
+		while( iterator.hasNext() ) {
+			Vertex vertex = iterator.next();			
+			Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();
+			while( edges.hasNext()) {
+				Edge edge = edges.next();
+				Vertex other = getOther( edge, vertex);
+				for( long check: children ) {
+					if( getId(other).equals(String.valueOf(check))) {
+						graph.removeEdge(edge);
+						result = true;
+					}
+				}
+				if( !hasEdges( other))
+					graph.removeVertex(other);
+			}
+		}		
+		return result;
+	}
+
+	protected int countEdges( Vertex vertex, Direction direction ) {
+		int counter = 0;
+		Iterator<Edge> iterator = vertex.getEdges(direction).iterator();
+		while( iterator.hasNext()) {
+			iterator.next();
+			counter++;
+		}
+		return counter;
+	}
+	
+	public static boolean hasEdges( Vertex vertex ) {
+		Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();		
+		return edges.hasNext(); 
+	}
+
+	public static boolean hasEdges( Vertex vertex, Direction direction ) {
+		Iterator<Edge> edges = vertex.getEdges(direction).iterator();		
+		return edges.hasNext(); 
+	}
+
+	public static Vertex getOther( Edge edge, Vertex vertex ) {
+		Vertex check = edge.getVertex( Direction.IN); 
+		return !check.equals(vertex)?check: edge.getVertex(Direction.OUT);
+	}
+
+	/**
+	 * Get the id of the vertex
+	 * @param vertex
+	 * @return
+	 */
+	protected static boolean isMatch( Vertex vertex, IModelLeaf<? extends IDescriptor> leaf ) {
+		String id = vertex.getProperty(IDescriptor.Attributes.ID.name());
+		if( StringUtils.isEmpty(id))
+			return false;
+		return id.equals( leaf.get( IDescriptor.Attributes.ID.name() ));
+	}
+
+	/**
+	 * Get the id of the vertex
+	 * @param vertex
+	 * @return
+	 */
+	protected static String getId( Vertex vertex ) {
+		return vertex.getProperty(IDescriptor.Attributes.ID.name());
+	}
+	
+	/**
+	 * A child can have any label, except descriptor and is_parent
+	 * @param edge
+	 * @return
+	 */
+	protected static boolean isChildEdge( Edge edge) {
+		String label = edge.getLabel();
+		if( IModelLeaf.IS_CHILD.equals(label))
+			return true;
+		return !( IModelLeaf.IS_PARENT.equals(label) || IDescriptor.DESCRIPTOR.equals(label ));
 	}
 }

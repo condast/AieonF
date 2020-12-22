@@ -18,7 +18,7 @@ import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.serialise.AbstractModelTypeAdapter;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
-import org.aieonf.orientdb.factory.ModelDatabase;
+import org.aieonf.orientdb.db.ModelDatabase;
 
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
@@ -32,13 +32,13 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
  * @author Kees
  *
  */
-public class ModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
+public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Vertex> {
 
 	private OrientGraph graph;
 		
 	private IDomainAieon domain; 
 
-	public ModelTypeAdapter( IDomainAieon domain, OrientGraph graph) {
+	public OrientModelTypeAdapter( IDomainAieon domain, OrientGraph graph) {
 		super();
 		this.domain = domain;
 		this.graph = graph;

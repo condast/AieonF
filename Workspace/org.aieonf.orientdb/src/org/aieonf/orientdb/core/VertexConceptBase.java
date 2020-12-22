@@ -68,7 +68,8 @@ public class VertexConceptBase implements IConceptBase {
 	@Override
 	public final String get( String key )
 	{
-		return vertex.getProperty( StringStyler.fromPackageString( key ));
+		Object obj = vertex.getProperty( StringStyler.fromPackageString( key )); 
+		return (( obj == null ) || ( obj instanceof String))? (String)obj: obj.toString();
 	}
 
 	/* (non-Javadoc)

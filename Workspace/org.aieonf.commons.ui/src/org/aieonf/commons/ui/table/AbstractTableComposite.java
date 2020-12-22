@@ -2,6 +2,7 @@ package org.aieonf.commons.ui.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.aieonf.commons.strings.StringUtils;
@@ -195,6 +196,25 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		return tableViewer;
 	}
 
+	@SuppressWarnings("unchecked")
+	protected IModelLeaf<D>[] getSelected(){
+		IStructuredSelection selection = (IStructuredSelection) this.tableViewer.getSelection();
+		Iterator<?> iterator = selection.iterator();
+		Collection<IModelLeaf<D>> results=  new ArrayList<>();
+		while( iterator.hasNext() ) {
+			results.add( (IModelLeaf<D>) iterator.next());
+		}
+		return results.toArray( new IModelLeaf[ results.size()]);
+	}
+
+	public void setSelection( int index ) {
+		this.table.setSelection(index);
+	}
+	
+	public int getSelectionCount() {
+		return this.table.getSelectionCount();
+	}
+	
 	protected TableColumnLayout getTableColumnLayout(){
 		return this.tclayout;
 	}
@@ -228,6 +248,7 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		if(leaf.isLeaf())
 			return;
 		this.tableViewer.setInput(leaf);
+		this.table.setSelection(0);
 	}
 
 	/**
