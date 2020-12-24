@@ -35,6 +35,11 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 		restProvider = new RestDataProvider();
 	}
 	
+	public void clear() {
+		this.restProvider.input.clear();
+		this.event = null;
+	}
+	
 	public IDomainAieon getDomain() {
 		return domain;
 	}
@@ -43,7 +48,7 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 		this.domain = domain;
 	}
 
-	protected KeyEvent<IDatabaseConnection.Requests> getKeyEvent() {
+	public KeyEvent<IDatabaseConnection.Requests> getKeyEvent() {
 		return event;
 	}
 

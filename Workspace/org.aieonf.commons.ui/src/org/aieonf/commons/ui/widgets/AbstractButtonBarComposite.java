@@ -2,6 +2,8 @@ package org.aieonf.commons.ui.widgets;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
@@ -42,6 +44,8 @@ public abstract class AbstractButtonBarComposite extends Composite {
 	private Label lbl_title;
 	
 	private boolean barOnTop;
+	
+	private Map<Buttons, Button> buttons;
 
 	private Collection<SelectionListener> listeners;
 	
@@ -52,6 +56,7 @@ public abstract class AbstractButtonBarComposite extends Composite {
 	protected AbstractButtonBarComposite(Composite parent, int style, boolean barOnTop ) {
 		super(parent,style);
 		this.barOnTop = barOnTop;
+		buttons = new HashMap<>();
 		listeners = new ArrayList<SelectionListener>();
 		createContentComposite( parent, style );
 		this.init();
@@ -101,10 +106,15 @@ public abstract class AbstractButtonBarComposite extends Composite {
 		return buttonBar;
 	}
 
+	public Button getButton( Buttons id ) {
+		return buttons.get(id);
+	}
+	
 	protected abstract void setupButtonbar( Composite buttonBar );
 
 	protected Button includeButton( Buttons id, String text, Image image ){
 		Button btn = new Button(buttonBar, SWT.RIGHT);
+		buttons.put(id, btn);
 		btn.setLayoutData( new GridData(SWT.RIGHT, SWT.FILL));
 		btn.addSelectionListener(new SelectionAdapter() {
 			private static final long serialVersionUID = 1L;

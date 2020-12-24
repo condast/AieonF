@@ -5,7 +5,9 @@ Bundle-SymbolicName: org.aieonf.commons.ui
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: AieonF.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.aieonf.commons,
+Import-Package: javax.servlet;version="3.1.0.20170128",
+ javax.servlet.http;version="3.0.0",
+ org.aieonf.commons,
  org.aieonf.commons.i8n,
  org.aieonf.commons.io,
  org.aieonf.commons.strings,
@@ -38,6 +40,7 @@ Export-Package: org.aieonf.commons.ui,
  org.aieonf.commons.ui.flow,
  org.aieonf.commons.ui.images,
  org.aieonf.commons.ui.language,
+ org.aieonf.commons.ui.persistence,
  org.aieonf.commons.ui.session,
  org.aieonf.commons.ui.swt,
  org.aieonf.commons.ui.table,

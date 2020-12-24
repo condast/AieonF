@@ -1,0 +1,27 @@
+[
+	{"ID":233,
+	 "LEAF":false,
+	 "PROPERTIES":[{"CREATE_DATE":"1607769971119"},{"UPDATE_DATE":"1607769971119"},{"VERSION":"0"},{"TITLE":"Captain\u0027s log"},{"CLASS":"org.aieonf.concept.library.LogEntryAieon"},{"IDENTIFIER":"LOG"},{"DEPTH":"1"},{"NAME":"LogEntry"},{"IMPLICIT":"TIME_IN_MILLIS"}],
+	 "DESCRIPTOR":[{"Locale":"en"},{"CREATE_DATE":"1607769971103"},{"ORG_AIEONF_CONCEPT_LIBRARY_LOCALEAIEON_ATTRIBUTES_COUNTRY":"GB"},{"SCOPE":"UNKNOWN"},{"DESCRIPTION":"{Description}"},{"VERSION":"0"},{"Title":"{Title}"},{"TITLE":"This is an updated log entry"},{"ID":"192"},{"CLASS":"org.aieonf.concept.library.LogEntryAieon"},{"NAME":"LogEntry"},{"IMPLICIT":"TIME_IN_MILLIS"}],
+	 "REVERSED":false,
+	 "CHILDREN":[
+		[{"ID":243,
+		  "LEAF":true,
+		  "PROPERTIES":[{"CREATE_DATE":"1607770928340"},{"UPDATE_DATE":"1607770928340"},{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"2"}],
+		  "DESCRIPTOR":[{"CREATE_DATE":"1607770928340"},{"LOG_ENTRY":"\u003cp\u003ewith text\u003c/p\u003e\n"},{"SCOPE":"UNKNOWN"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"TITLE":"This is an updated log entry"},{"ID":"202"},{"CLASS":"org.aieonf.concept.library.LogEntryAieon"},{"NAME":"LogEntry"},{"IMPLICIT":"TIME_IN_MILLIS"}]
+		  },"isChild"
+		],
+		[{"ID":263,
+		  "LEAF":true,
+		  "PROPERTIES":[{"CREATE_DATE":"1607770155764"},{"UPDATE_DATE":"1607770155765"},{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"2"}],
+		  "DESCRIPTOR":[{"CREATE_DATE":"1607770155764"},{"LOG_ENTRY":"{new log}"},{"SCOPE":"UNKNOWN"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"TITLE":"Supplemental"},{"ID":"222"},{"CLASS":"org.aieonf.concept.library.LogEntryAieon"},{"NAME":"LogEntry"},{"IMPLICIT":"TIME_IN_MILLIS"}]
+		  },"isChild"
+		],
+		{"ID":253,
+		 "LEAF":true,"PROPERTIES":[{"CREATE_DATE":"1607770088111"},{"UPDATE_DATE":"1607770088111"},{"VERSION":"0"},{"CLASS":"org.aieonf.model.core.IModelNode"},{"DEPTH":"2"}],
+		 "DESCRIPTOR":[{"CREATE_DATE":"1607770088111"},{"LOG_ENTRY":"{new log}"},{"SCOPE":"UNKNOWN"},{"DESCRIPTION":"{Description}"},{"VERSION":"0"},{"SOURCE":"http://www.condast.com"},{"TITLE":"This is a new log entry"},{"ID":"212"},{"CLASS":"org.aieonf.concept.library.LogEntryAieon"},{"Url":"{http://www.url.org}"},{"IMPLICIT":"TIME_IN_MILLIS"},{"NAME":"LogEntry"}]
+		},"isChild"
+	 ]
+	 ]
+	}
+]

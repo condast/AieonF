@@ -14,7 +14,6 @@ import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
 
-import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 
@@ -192,14 +191,4 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 		ModelLeaf leaf = (ModelLeaf) obj;
 		return leaf.getVertex().getId().equals(this.getVertex().getId());
 	}
-
-	protected static Vertex getParent( Vertex vertex ) {
-		Iterator<Edge> edges = vertex.getEdges(Direction.IN, IModelLeaf.IS_PARENT).iterator();
-		while( edges.hasNext()) {
-			Edge edge = edges.next();
-			return edge.getVertex(Direction.OUT);
-		}
-		return null;
-	}
-
 }

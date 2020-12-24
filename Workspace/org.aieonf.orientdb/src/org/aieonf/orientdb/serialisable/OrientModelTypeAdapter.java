@@ -312,13 +312,13 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 		Edge edge = null;
 		if( !reverse ) {
 			edge = parent.addEdge(label,child);
-			child.addEdge(IModelLeaf.IS_PARENT, parent);
 			edge.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
+			edge.setProperty( IModelLeaf.IS_PARENT, Boolean.TRUE.booleanValue() );
 			return;
 		}
 		edge = child.addEdge(label, parent);
 		edge.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
-		parent.addEdge( IModelLeaf.IS_PARENT, child );
+		edge.setProperty( IModelLeaf.IS_PARENT, Boolean.TRUE.booleanValue() );
 		String depth = IModelLeaf.Attributes.DEPTH.name();
 		String pdepth = parent.getProperty( depth);
 		String cdepth = child.getProperty(  depth );
@@ -326,6 +326,11 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 		child.setProperty( depth, pdepth);
 	}
 	
+	/**
+	 * Fill the properties of the vertex with the given concept base
+	 * @param vertex
+	 * @param base
+	 */
 	public static void fill( Vertex vertex, IConceptBase base ) {
 		Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
 		while( iterator.hasNext() ) {

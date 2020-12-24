@@ -209,10 +209,12 @@ public class ModelDatabase< T extends IDescriptor > {
 	}
 	
 	protected IModelNode<IDescriptor> getParent( OrientGraph graph, Vertex vertex, Map<Object, IModelNode<IDescriptor>> parents ) {
-		Iterator<Edge> edges = vertex.getEdges(Direction.IN, IModelLeaf.IS_PARENT).iterator();
+		Iterator<Edge> edges = vertex.getEdges(Direction.IN).iterator();
 		IModelNode<IDescriptor> parent = null;
 		while( edges.hasNext()) {
 			Edge edge = edges.next();
+			if(!isParentEdge(edge))
+				continue;
 			Vertex vparent = edge.getVertex(Direction.OUT);
 			if( vparent == null )
 				continue;
@@ -402,7 +404,7 @@ public class ModelDatabase< T extends IDescriptor > {
 			Edge edge = iterator.next();
 			Vertex child = edge.getVertex(Direction.IN);
 			graph.removeEdge(edge);
-			if(( IDescriptor.DESCRIPTOR.equals( edge.getLabel())) || ( IModelLeaf.IS_PARENT.equals( edge.getLabel())))
+			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
 				continue;
 			if(removeChildren && countEdges( child,  Direction.OUT) > 0)
 				index += remove( child, index, removeChildren );
@@ -499,6 +501,16 @@ public class ModelDatabase< T extends IDescriptor > {
 		String label = edge.getLabel();
 		if( IModelLeaf.IS_CHILD.equals(label))
 			return true;
-		return !( IModelLeaf.IS_PARENT.equals(label) || IDescriptor.DESCRIPTOR.equals(label ));
+		return !IDescriptor.DESCRIPTOR.equals(label );
+	}
+	
+	/**
+	 * Returns true if the edge points to a parent 
+	 * @param edge
+	 * @return
+	 */
+	protected static boolean isParentEdge( Edge edge ) {
+		Object parent = edge.getProperty(IModelLeaf.IS_PARENT);
+		return ( parent==null)?false: (boolean) parent;
 	}
 }

@@ -15,7 +15,7 @@ import org.aieonf.concept.core.IConceptBase;
 public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 {	
 	//The concept that is modelled
-	private D descriptor;
+	private D data;
 	private boolean leaf;
 
 	private IModelNode<?> parent;
@@ -54,25 +54,25 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( long id, D descriptor ){
+	public ModelLeaf( long id, D data ){
 		this( id );
-		this.descriptor = descriptor;
+		this.data = data;
 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( D descriptor ){
-		this( -1, descriptor );
+	public ModelLeaf( D data ){
+		this( -1, data );
 	}
 
 	/**
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( long id, D descriptor, String type ){
-		this( id, null, descriptor, type );
+	public ModelLeaf( long id, D data, String type ){
+		this( id, null, data, type );
 	}
 
 	/**
@@ -88,8 +88,8 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D descriptor ){
-		this( id, descriptor );
+	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D data ){
+		this( id, data );
 		this.parent = parent;
 	}
 
@@ -97,8 +97,8 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 * Create the model
 	 * @param concept
 	 */
-	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D descriptor, String type ){
-		this( id, parent, descriptor );
+	public ModelLeaf( long id, IModelNode<? extends IDescriptor> parent, D data, String type ){
+		this( id, parent, data );
 		this.set( IConcept.Attributes.TYPE.name(), type );
 	}
 
@@ -224,12 +224,12 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 */
 	@Override
 	public D getData(){
-		return this.descriptor;
+		return this.data;
 	}
 
 	@Override
 	public void setData(D descriptor) {
-		this.descriptor = descriptor;
+		this.data = descriptor;
 	}
 
 	/**
@@ -280,12 +280,12 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	/**
 	 * Returns true if the model, or one of its descendants contains
 	 * the given descriptor
-	 * @param descriptor
+	 * @param data
 	 * @return
 	 */
 	@Override
 	public boolean contains( IDescriptor descr ){
-		return descr.equals( this.descriptor );
+		return descr.equals( this.data );
 	}
 
 	/**
