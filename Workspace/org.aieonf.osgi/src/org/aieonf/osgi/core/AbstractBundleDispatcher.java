@@ -2,8 +2,12 @@ package org.aieonf.osgi.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpSession;
 
 import org.aieonf.commons.db.IDatabaseConnection;
+import org.aieonf.commons.persistence.ISessionStoreFactory;
 import org.aieonf.commons.security.ISecureGenerator;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
@@ -15,8 +19,9 @@ import org.aieonf.concept.request.IKeyEventListener;
 import org.aieonf.concept.request.KeyEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelDatabase;
+import org.eclipse.rap.rwt.RWT;
 
-public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDatabaseConnection.Requests>{
+public abstract class AbstractBundleDispatcher<D extends Object> implements ISecureGenerator, IKeyEventListener<IDatabaseConnection.Requests>{
 
 	private ISecureGenerator generator;
 
@@ -26,18 +31,21 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 	private IDomainAieon domain; 
 
 	private RestDataProvider restProvider;	
-	
-	//Store the most recent key event
-	private KeyEvent<IDatabaseConnection.Requests> event;
+
+	private ISessionStoreFactory<HttpSession, D> store;
 
 	protected AbstractBundleDispatcher( String path ) {
+		this( path, null );
+	}
+
+	protected AbstractBundleDispatcher( String path, IDomainAieon domain) {
 		this.path = path;
+		this.domain = domain;
 		restProvider = new RestDataProvider();
 	}
 	
 	public void clear() {
 		this.restProvider.input.clear();
-		this.event = null;
 	}
 	
 	public IDomainAieon getDomain() {
@@ -48,8 +56,8 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 		this.domain = domain;
 	}
 
-	public KeyEvent<IDatabaseConnection.Requests> getKeyEvent() {
-		return event;
+	protected RestDataProvider getRestProvider() {
+		return restProvider;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,6 +73,24 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 	public void setGenerator(ISecureGenerator generator) {
 		this.generator = generator;
 		database = createDatabase(generator, domain, path);
+	}
+	
+	@Override
+	public Entry<Long, Long> createIdAndToken(String domain) {
+		return this.generator.createIdAndToken(domain);
+	}
+
+	public void setSessionStore(ISessionStoreFactory<HttpSession, D> store) {
+		this.store = store;
+	}	
+
+	public void removeSessionStore(ISessionStoreFactory<HttpSession, D> store) {
+		this.store = null;
+	}	
+
+	public D getStore() {
+		HttpSession session = RWT.getUISession().getHttpSession();
+		return store.createSessionStore(session);
 	}
 
 	/**
@@ -116,19 +142,28 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 
 	@Override
 	public void notifyKeyEventReceived(KeyEvent<IDatabaseConnection.Requests> event) {
-		this.event = event;
 		restProvider.handleKeyEvent( event);
 	}
 	
 	/**
-	 * Update the system by calling the last key event
+	 * allow other providers to add data
+	 * @param event
 	 */
-	public void update() {
-		if( this.event != null )
-			restProvider.handleKeyEvent( this.event );		
+	protected void notifyDataFound( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
+		this.restProvider.notifyDataFound(event);
 	}
 	
-	private class RestDataProvider implements IKeyEventDataProvider<IDatabaseConnection.Requests,IModelLeaf<IDescriptor>[]>{
+	protected abstract void update();
+	
+	/**
+	 * Update the system by calling the last key event
+	 */
+	protected void update( KeyEvent<IDatabaseConnection.Requests> event ) {
+		if( event != null )
+			restProvider.handleKeyEvent( event );		
+	}
+	
+	protected class RestDataProvider implements IKeyEventDataProvider<IDatabaseConnection.Requests,IModelLeaf<IDescriptor>[]>{
 
 		private Collection<IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>> listeners;
 
@@ -138,6 +173,10 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 			super();
 			this.input = new ArrayList<>();
 			this.listeners = new ArrayList<>();
+		}
+		
+		public Collection<IModelLeaf<IDescriptor>> getInput() {
+			return input;
 		}
 
 		@Override
@@ -150,6 +189,11 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 			listeners.remove(listener);
 		}
 	
+		protected void notifyDataProcessedEvent( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
+			for( IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener: listeners)
+				listener.notifyKeyEventProcessed( event);
+		}
+		
 		@SuppressWarnings("unchecked")
 		private void notifyDataFound( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
 			IModelLeaf<IDescriptor>[] results = null;
@@ -163,8 +207,7 @@ public abstract class AbstractBundleDispatcher implements IKeyEventListener<IDat
 			}
 			DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> devent = 
 					new DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>( this, event.getKeyEvent(), results);
-					for( IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener: listeners)
-						listener.notifyKeyEventProcessed( devent);
+			notifyDataProcessedEvent( devent );
 		}
 
 		@SuppressWarnings("unchecked")

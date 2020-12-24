@@ -9,10 +9,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 
+import org.aieonf.commons.persistence.ISessionStoreFactory;
 import org.eclipse.rap.rwt.RWT;
 import org.eclipse.rap.rwt.service.UISession;
 
-public abstract class AbstractSessionPersistence<S extends Object> {
+public abstract class AbstractSessionPersistence<S extends Object> implements ISessionStoreFactory<HttpSession,S>{
 
 	public static final int DEFAULT_HOURS = 4;
 	
@@ -29,7 +30,22 @@ public abstract class AbstractSessionPersistence<S extends Object> {
 		executor = Executors.newScheduledThreadPool(5);
 		executor.schedule(() -> onScheduledCleanup(), amount, tu );
 	}
-	
+		
+	@Override
+	public S createSessionStore(HttpSession session) {
+		UISession uiSession = RWT.getUISession();
+		S result=  null;
+		if( !sessions.containsKey(session)) {
+			result = createPersistence(session);
+			sessions.put(session, result);
+			session.setMaxInactiveInterval( (int) Duration.ofDays(1).getSeconds() );
+			uiSession.addUISessionListener(e->updateSession(session));
+		}else {
+			result = sessions.get(session);
+		}
+		return result;
+	}
+
 	protected abstract S createPersistence( HttpSession session );
 	
 	protected int getSessionCount() {
@@ -37,13 +53,8 @@ public abstract class AbstractSessionPersistence<S extends Object> {
 	}
 	
 	public HttpSession getSession() {
-		UISession uiSession = RWT.getUISession();
 		HttpSession session = RWT.getUISession().getHttpSession();
-		if( !sessions.containsKey(session)) {
-			sessions.put(session, createPersistence(session));
-			session.setMaxInactiveInterval( (int) Duration.ofDays(1).getSeconds() );
-			uiSession.addUISessionListener(e->updateSession(session));
-		}
+		createPersistence(session);
 		return session;
 	}
 	
