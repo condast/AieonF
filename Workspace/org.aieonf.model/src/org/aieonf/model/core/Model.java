@@ -376,6 +376,19 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 	}
 
 	/**
+	 * Get the first child of the given model if one exists.
+	 * Is a convenience method when creating new models
+	 * @param model
+	 * @return
+	 */
+	public static IModelLeaf<? extends IDescriptor> getFirstChild( IModelNode<? extends IDescriptor> model ){
+		if( !model.hasChildren())
+			return null;
+		return model.getChildren().keySet().iterator().next();
+	}
+
+
+	/**
 	 * Get the model with the given id
 	 */
 	@SuppressWarnings("unchecked")

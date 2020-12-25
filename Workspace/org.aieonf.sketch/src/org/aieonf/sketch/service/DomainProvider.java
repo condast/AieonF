@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.function.IDescribablePredicate;
@@ -20,7 +19,7 @@ public class DomainProvider implements IDomainProvider {
 	SketchFactory factory = SketchFactory.getInstance();
 		
 	@Override
-	public IDomainAieon[] getDomains(ILoginUser user) {
+	public IDomainAieon[] getDomains() {
 		Map<IDomainAieon, SketchModelFactory> factories = new HashMap<>();
 		try {
 			factories = factory.getFactories();

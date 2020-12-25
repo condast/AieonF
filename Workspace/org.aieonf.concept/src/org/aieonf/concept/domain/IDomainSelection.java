@@ -1,7 +1,5 @@
 package org.aieonf.concept.domain;
 
-import org.aieonf.commons.security.ILoginUser;
-
 public interface IDomainSelection {
 
 	public enum SelectionEvents{
@@ -16,7 +14,7 @@ public interface IDomainSelection {
 
 	IDomainAieon getActiveDomain();
 
-	void setActiveDomain(ILoginUser user, String domainId);
+	void setActiveDomain( String domainId);
 
 	void removeListener(IDomainListener listener);
 

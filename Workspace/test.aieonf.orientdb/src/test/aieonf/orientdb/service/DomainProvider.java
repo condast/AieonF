@@ -1,6 +1,5 @@
 package test.aieonf.orientdb.service;
 
-import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.function.IDescribablePredicate;
@@ -17,7 +16,7 @@ public class DomainProvider implements IDomainProvider {
 	}
 		
 	@Override
-	public IDomainAieon[] getDomains( ILoginUser user) {
+	public IDomainAieon[] getDomains() {
 		IDomainAieon[] domains = new IDomainAieon[1];
 		domains[0] = getDomain();
 		return domains;

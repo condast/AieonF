@@ -57,8 +57,8 @@ public class LocaleAieon extends ImplicitAieon
 		super( name, S_LOCALE );
 		Locale locale = Locale.getDefault();
 		super.set( S_LOCALE, locale.getLanguage() );
-		super.set( Attributes.COUNTRY, locale.getCountry() );
-		super.set( Attributes.VARIANT, locale.getVariant() );
+		super.set( Attributes.COUNTRY.name(), locale.getCountry() );
+		super.set( Attributes.VARIANT.name(), locale.getVariant() );
 	}
 
 	/**
@@ -69,8 +69,8 @@ public class LocaleAieon extends ImplicitAieon
 	{
 		super( S_LOCALE, locale.getLanguage() );
 		super.set( S_LOCALE, locale.getLanguage() );
-		super.set( Attributes.COUNTRY, locale.getCountry() );
-		super.set( Attributes.VARIANT, locale.getVariant() );
+		super.set( Attributes.COUNTRY.name(), locale.getCountry() );
+		super.set( Attributes.VARIANT.name(), locale.getVariant() );
 	}
 	
 	public LocaleAieon( IDescriptor descriptor ) {
@@ -87,8 +87,8 @@ public class LocaleAieon extends ImplicitAieon
 		super( name, S_LOCALE);
 		super.set( S_LOCALE, locale.getLanguage() );
 		super.set( S_LOCALE, locale.getLanguage() );
-		super.set( Attributes.COUNTRY, locale.getCountry() );
-		super.set( Attributes.VARIANT, locale.getVariant() );
+		super.set( Attributes.COUNTRY.name(), locale.getCountry() );
+		super.set( Attributes.VARIANT.name(), locale.getVariant() );
 	}
 
 	@Override
@@ -139,7 +139,7 @@ public class LocaleAieon extends ImplicitAieon
 	 */
 	public String getCountry()
 	{
-		return super.get( Attributes.COUNTRY );
+		return super.get( Attributes.COUNTRY.name() );
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class LocaleAieon extends ImplicitAieon
 	 */
 	public String getVariant()
 	{
-		return super.get( Attributes.VARIANT );
+		return super.get( Attributes.VARIANT.name() );
 	}
 
 	/**
@@ -167,13 +167,13 @@ public class LocaleAieon extends ImplicitAieon
 	 */
 	public Locale getLocale( IDescriptor descriptor ) 
 	{
-		String country = descriptor.get( Attributes.COUNTRY );
+		String country = descriptor.get( Attributes.COUNTRY.name() );
 		if( country == null )
 			country = Locale.getDefault().getCountry();
-		String language = descriptor.get( Attributes.LANGUAGE );
+		String language = descriptor.get( Attributes.LANGUAGE.name() );
 		if( language == null )
 			return new Locale( country );
-		String variant = descriptor.get( Attributes.VARIANT );
+		String variant = descriptor.get( Attributes.VARIANT.name() );
 		return new Locale( country, language, variant );
 	}
 }

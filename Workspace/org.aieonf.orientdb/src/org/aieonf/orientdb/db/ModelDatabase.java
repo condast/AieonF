@@ -1,6 +1,7 @@
 package org.aieonf.orientdb.db;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -150,30 +151,6 @@ public class ModelDatabase< T extends IDescriptor > {
 	}
 
 	/**
-	 * Add the given node to the model with the given model id
-	 * @param vertices
-	 * @return
-	 * @throws FilterException
-	 */
-	public boolean addNode( long modelId, IModelLeaf<IDescriptor> node, String label) throws FilterException {
-		try {
-			OrientGraph graph = this.service.getGraph();
-			Iterator<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(modelId)).iterator();
-			if( !vertices.hasNext())
-				return false;
-			Vertex vertex = vertices.next();
-			VertexConceptBase base = (VertexConceptBase) node.getDescriptor().getBase();
-			Vertex child = base.getVertex();
-			vertex.addEdge( label, child);
-			return true;
-		}
-		catch( Exception ex ) {
-			ex.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
 	 * Get the vertices, which are with descriptors, and create the corresponding models
 	 * @param vertices
 	 * @return
@@ -235,6 +212,30 @@ public class ModelDatabase< T extends IDescriptor > {
 	}
 
 	/**
+	 * Add the given node to the model with the given model id
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	public boolean addNode( long modelId, IModelLeaf<IDescriptor> node, String label) throws FilterException {
+		try {
+			OrientGraph graph = this.service.getGraph();
+			Iterator<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(modelId)).iterator();
+			if( !vertices.hasNext())
+				return false;
+			Vertex vertex = vertices.next();
+			VertexConceptBase base = (VertexConceptBase) node.getDescriptor().getBase();
+			Vertex child = base.getVertex();
+			vertex.addEdge( label, child);
+			return true;
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
 	 * Update the given leaf
 	 * @param leaf
 	 */
@@ -270,6 +271,7 @@ public class ModelDatabase< T extends IDescriptor > {
 				Edge edge = edges.next();
 				Vertex vnode = edge.getVertex(Direction.IN);
 
+				//update the descriptor
 				if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
 					updateProperties(leaf.getData(), vnode, false);
 					continue;
@@ -344,6 +346,7 @@ public class ModelDatabase< T extends IDescriptor > {
 				if( attr != null )
 					vertex.removeProperty(key);
 			}
+			vertex.setProperty(IDescriptor.Attributes.UPDATE_DATE.name(), String.valueOf( Calendar.getInstance().getTimeInMillis()));
 		}
 
 		Iterator<Map.Entry<String, String>> iterator = descriptor.entrySet().iterator();
