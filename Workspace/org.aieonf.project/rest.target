@@ -10,23 +10,24 @@
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\core" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\ext" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\log" type="Directory"/>
-<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\nebula" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\http" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\apache" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\freemarker" type="Directory"/>
-<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\rap" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\p2" type="Directory"/>
 	<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\orientdb" type="Directory"/>
 	<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\gson" type="Directory"/>
 	<location path="P:\Target\Junit" type="Directory"/>
+	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+		<repository location="https://download.eclipse.org/rt/rap/3.15"/>
+		<unit id="org.eclipse.rap.feature.feature.group" version="3.15.0.20201021-1259"/>
+	</location>
+	<location path="P:\Virgo\virgo-jetty-server-3.7.2.RELEASE\repository\nebula-2.4.1" type="Directory"/>
 </locations>
 <includeBundles>
 <plugin id="cdi.api"/>
 <plugin id="ch.qos.logback.access"/>
 <plugin id="ch.qos.logback.classic"/>
 <plugin id="ch.qos.logback.core"/>
-<plugin id="com.ibm.icu"/>
-<plugin id="com.ibm.icu.source"/>
 <plugin id="com.mysql.jdbc"/>
 <plugin id="com.springsource.org.apache.commons.httpclient"/>
 <plugin id="com.squareup.okhttp3"/>
@@ -42,21 +43,21 @@
 <plugin id="javax.jms" version="1.1.0.v200906010428"/>
 <plugin id="javax.jms" version="1.1.0.v201205091237"/>
 <plugin id="javax.mail.glassfish" version="1.4.1.v201005082020"/>
-<plugin id="javax.persistence" version="2.1.1.v201509150925"/>
 <plugin id="javax.persistence" version="2.2.0.v201708071007"/>
+<plugin id="javax.persistence" version="2.1.1.v201509150925"/>
 <plugin id="javax.persistence" version="2.0.6.v201308211412"/>
 <plugin id="javax.persistence.javadoc"/>
 <plugin id="javax.persistence.source" version="2.2.0.v201708071007"/>
-<plugin id="javax.persistence.source" version="2.1.1.v201509150925"/>
 <plugin id="javax.persistence.source" version="2.0.6.v201308211412"/>
+<plugin id="javax.persistence.source" version="2.1.1.v201509150925"/>
 <plugin id="javax.resource"/>
-<plugin id="javax.servlet" version="2.4.0.v200806031604"/>
 <plugin id="javax.servlet" version="3.0.0.v201112011016"/>
+<plugin id="javax.servlet" version="3.1.0.v201410161800"/>
 <plugin id="javax.servlet" version="3.1.0.20170128"/>
 <plugin id="javax.servlet.jsp"/>
 <plugin id="javax.servlet.jsp.jstl-api"/>
-<plugin id="javax.transaction" version="1.1.1.v201105210645"/>
 <plugin id="javax.transaction" version="1.1.0.v201002051055"/>
+<plugin id="javax.transaction" version="1.1.1.v201105210645"/>
 <plugin id="javax.validation"/>
 <plugin id="javax.validation.api"/>
 <plugin id="javax.ws.rs"/>
@@ -71,8 +72,6 @@
 <plugin id="oevm.javax.portlet"/>
 <plugin id="oevm.org.aopalliance"/>
 <plugin id="org.apache.commons.codec" version="1.6.0"/>
-<plugin id="org.apache.commons.fileupload"/>
-<plugin id="org.apache.commons.io"/>
 <plugin id="org.apache.commons.lang3"/>
 <plugin id="org.apache.commons.logging"/>
 <plugin id="org.apache.felix.gogo.command"/>
@@ -87,21 +86,11 @@
 <plugin id="org.apache.logging.log4j.to-slf4j"/>
 <plugin id="org.apache.taglibs.standard.glassfish"/>
 <plugin id="org.aspectj.weaver"/>
-<plugin id="org.eclipse.core.commands"/>
-<plugin id="org.eclipse.core.contenttype"/>
-<plugin id="org.eclipse.core.databinding"/>
 <plugin id="org.eclipse.core.databinding.beans"/>
-<plugin id="org.eclipse.core.databinding.observable"/>
-<plugin id="org.eclipse.core.databinding.property"/>
-<plugin id="org.eclipse.core.jobs"/>
-<plugin id="org.eclipse.core.runtime"/>
-<plugin id="org.eclipse.equinox.app"/>
-<plugin id="org.eclipse.equinox.common"/>
 <plugin id="org.eclipse.equinox.console"/>
 <plugin id="org.eclipse.equinox.console.ssh"/>
 <plugin id="org.eclipse.equinox.ds" version="1.6.0.v20190122-0806"/>
 <plugin id="org.eclipse.equinox.http.jetty"/>
-<plugin id="org.eclipse.equinox.http.registry"/>
 <plugin id="org.eclipse.equinox.p2.core"/>
 <plugin id="org.eclipse.equinox.p2.core.source"/>
 <plugin id="org.eclipse.equinox.p2.director"/>
@@ -116,9 +105,7 @@
 <plugin id="org.eclipse.equinox.p2.operations.source"/>
 <plugin id="org.eclipse.equinox.p2.repository"/>
 <plugin id="org.eclipse.equinox.p2.repository.source"/>
-<plugin id="org.eclipse.equinox.preferences"/>
 <plugin id="org.eclipse.equinox.region"/>
-<plugin id="org.eclipse.equinox.registry"/>
 <plugin id="org.eclipse.equinox.security" version="1.2.0.v20130424-1801"/>
 <plugin id="org.eclipse.equinox.util"/>
 <plugin id="org.eclipse.gemini.blueprint.core"/>
@@ -143,8 +130,6 @@
 <plugin id="org.eclipse.jetty.xml"/>
 <plugin id="org.eclipse.orbit.mongodb"/>
 <plugin id="org.eclipse.orbit.mongodb.source"/>
-<plugin id="org.eclipse.osgi"/>
-<plugin id="org.eclipse.osgi.services.source"/>
 <plugin id="org.eclipse.persistence.antlr"/>
 <plugin id="org.eclipse.persistence.antlr.source"/>
 <plugin id="org.eclipse.persistence.asm"/>
@@ -177,12 +162,6 @@
 <plugin id="org.eclipse.persistence.oracleddlparser.source"/>
 <plugin id="org.eclipse.persistence.sdo"/>
 <plugin id="org.eclipse.persistence.sdo.source"/>
-<plugin id="org.eclipse.rap.jface"/>
-<plugin id="org.eclipse.rap.jface.source"/>
-<plugin id="org.eclipse.rap.rwt"/>
-<plugin id="org.eclipse.rap.rwt.osgi"/>
-<plugin id="org.eclipse.rap.rwt.osgi.source"/>
-<plugin id="org.eclipse.rap.rwt.source"/>
 <plugin id="org.eclipse.virgo.kernel.agent.dm"/>
 <plugin id="org.eclipse.virgo.kernel.deployer.dm"/>
 <plugin id="org.eclipse.virgo.kernel.dmfragment"/>
@@ -231,14 +210,9 @@
 <plugin id="org.springframework.webmvc"/>
 <plugin id="org.springframework.webmvc.portlet"/>
 <plugin id="org.springframework.websocket"/>
-<plugin id="osgi.enterprise"/>
-	<plugin id="org.eclipse.osgi.services" version="3.8.0.v20190206-2147"/>
 	<plugin id="org.apache.felix.scr"/>
-	<plugin id="org.eclipse.osgi.util"/>
 	<plugin id="org.eclipse.equinox.http.servlet"/>
 	<plugin id="org.eclipse.nebula.widgets.richtext"/>
-	<plugin id="org.eclipse.rap.nebula.widgets.richtext.source"/>
-	<plugin id="org.eclipse.rap.nebula.widgets.richtext"/>
 	<plugin id="org.tukaani.xz"/>
 	<plugin id="org.tukaani.xz.source"/>
 	<plugin id="org.sat4j.core"/>
@@ -262,15 +236,6 @@
 	<plugin id="org.codehaus.jettison.jettison"/>
 	<plugin id="com.fasterxml.jackson.core.jackson-annotations"/>
 	<plugin id="com.google.gson"/>
-	<plugin id="junit-jupiter"/>
-	<plugin id="junit-jupiter-engine"/>
-	<plugin id="junit-jupiter-params"/>
-	<plugin id="junit-jupiter-migrationsupport"/>
-	<plugin id="org.junit.platform.commons" version="1.6.0.v20200203-2009"/>
-	<plugin id="org.junit.platform.engine" version="1.6.0.v20200203-2009"/>
-	<plugin id="org.junit.platform.launcher" version="1.6.0.v20200203-2009"/>
-	<plugin id="org.junit.platform.runner" version="1.6.0.v20200203-2009"/>
-	<plugin id="org.junit.platform.suite.api" version="1.6.0.v20200203-2009"/>
 	<plugin id="org.eclipse.equinox.simpleconfigurator"/>
 	<plugin id="org.eclipse.equinox.simpleconfigurator.source"/>
 	<plugin id="org.eclipse.equinox.p2.artifact.repository"/>
@@ -279,8 +244,8 @@
 	<plugin id="org.eclipse.equinox.p2.artifact.repository.source"/>
 	<plugin id="org.eclipse.equinox.p2.touchpoint.eclipse.source"/>
 	<plugin id="org.eclipse.equinox.p2.touchpoint.natives.source"/>
-	<plugin id="org.eclipse.equinox.p2.touchpoint.natives" version="1.3.600.v20200511-1530"/>
-	<plugin id="org.eclipse.equinox.p2.touchpoint.eclipse" version="2.2.600.v20200114-1339"/>
+	<plugin id="org.eclipse.equinox.p2.touchpoint.natives"/>
+	<plugin id="org.eclipse.equinox.p2.touchpoint.eclipse"/>
 	<plugin id="org.eclipse.equinox.frameworkadmin"/>
 	<plugin id="org.eclipse.equinox.frameworkadmin.source"/>
 	<plugin id="org.eclipse.equinox.p2.garbagecollector"/>
@@ -289,5 +254,74 @@
 	<plugin id="org.eclipse.equinox.simpleconfigurator.manipulator.source"/>
 	<plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
 	<plugin id="org.eclipse.equinox.frameworkadmin.equinox.source"/>
+	<plugin id="osgi.enterprise"/>
+	<plugin id="com.ibm.icu" version="67.1.0.v20200706-1749"/>
+	<plugin id="com.ibm.icu.source" version="67.1.0.v20200706-1749"/>
+	<plugin id="javax.servlet" version="2.4.0.v200806031604"/>
+	<plugin id="javax.servlet.source"/>
+	<plugin id="org.apache.commons.fileupload" version="1.3.2.v20170320-2229"/>
+	<plugin id="org.apache.commons.io" version="2.6.0.v20190123-2029"/>
+	<plugin id="org.eclipse.core.commands" version="3.9.800.v20201021-1339"/>
+	<plugin id="org.eclipse.core.commands.source"/>
+	<plugin id="org.eclipse.core.contenttype" version="3.7.800.v20200724-0804"/>
+	<plugin id="org.eclipse.core.contenttype.source" version="3.7.800.v20200724-0804"/>
+	<plugin id="org.eclipse.core.databinding" version="1.10.100.v20200926-1123"/>
+	<plugin id="org.eclipse.core.databinding.observable" version="1.10.0.v20200730-0848"/>
+	<plugin id="org.eclipse.core.databinding.observable.source" version="1.10.0.v20200730-0848"/>
+	<plugin id="org.eclipse.core.databinding.property" version="1.8.100.v20200619-0651"/>
+	<plugin id="org.eclipse.core.databinding.property.source" version="1.8.100.v20200619-0651"/>
+	<plugin id="org.eclipse.core.databinding.source" version="1.10.100.v20200926-1123"/>
+	<plugin id="org.eclipse.core.expressions"/>
+	<plugin id="org.eclipse.core.expressions.source"/>
+	<plugin id="org.eclipse.core.jobs" version="3.10.1000.v20200909-1312"/>
+	<plugin id="org.eclipse.core.jobs.source" version="3.10.1000.v20200909-1312"/>
+	<plugin id="org.eclipse.core.runtime" version="3.20.0.v20201027-1526"/>
+	<plugin id="org.eclipse.core.runtime.source" version="3.20.0.v20201027-1526"/>
+	<plugin id="org.eclipse.equinox.app" version="1.5.0.v20200717-0620"/>
+	<plugin id="org.eclipse.equinox.app.source" version="1.5.0.v20200717-0620"/>
+	<plugin id="org.eclipse.equinox.common" version="3.14.0.v20201102-2053"/>
+	<plugin id="org.eclipse.equinox.common.source" version="3.14.0.v20201102-2053"/>
+	<plugin id="org.eclipse.equinox.http.registry" version="1.2.0.v20200614-1851"/>
+	<plugin id="org.eclipse.equinox.http.registry.source" version="1.2.0.v20200614-1851"/>
+	<plugin id="org.eclipse.equinox.preferences" version="3.8.100.v20201102-2042"/>
+	<plugin id="org.eclipse.equinox.preferences.source" version="3.8.100.v20201102-2042"/>
+	<plugin id="org.eclipse.equinox.registry" version="3.10.0.v20201107-1818"/>
+	<plugin id="org.eclipse.equinox.registry.source" version="3.10.0.v20201107-1818"/>
+	<plugin id="org.eclipse.help"/>
+	<plugin id="org.eclipse.help.source"/>
+	<plugin id="org.eclipse.osgi" version="3.16.100.v20201030-1916"/>
+	<plugin id="org.eclipse.osgi.services" version="3.9.0.v20200511-1725"/>
+	<plugin id="org.eclipse.osgi.services.source" version="3.9.0.v20200511-1725"/>
+	<plugin id="org.eclipse.osgi.source" version="3.16.100.v20201030-1916"/>
+	<plugin id="org.eclipse.osgi.util" version="3.5.300.v20190708-1141"/>
+	<plugin id="org.eclipse.osgi.util.source" version="3.5.300.v20190708-1141"/>
+	<plugin id="org.eclipse.rap.filedialog"/>
+	<plugin id="org.eclipse.rap.filedialog.source"/>
+	<plugin id="org.eclipse.rap.fileupload"/>
+	<plugin id="org.eclipse.rap.fileupload.source"/>
+	<plugin id="org.eclipse.rap.jface"/>
+	<plugin id="org.eclipse.rap.jface.databinding"/>
+	<plugin id="org.eclipse.rap.jface.databinding.source"/>
+	<plugin id="org.eclipse.rap.jface.source"/>
+	<plugin id="org.eclipse.rap.nebula.jface.gridviewer"/>
+	<plugin id="org.eclipse.rap.nebula.jface.gridviewer.source"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.grid"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.grid.source"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.richtext"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.richtext.source"/>
+	<plugin id="org.eclipse.rap.rwt"/>
+	<plugin id="org.eclipse.rap.rwt.osgi"/>
+	<plugin id="org.eclipse.rap.rwt.osgi.source"/>
+	<plugin id="org.eclipse.rap.rwt.source"/>
+	<plugin id="org.eclipse.rap.ui"/>
+	<plugin id="org.eclipse.rap.ui.cheatsheets"/>
+	<plugin id="org.eclipse.rap.ui.cheatsheets.source"/>
+	<plugin id="org.eclipse.rap.ui.forms"/>
+	<plugin id="org.eclipse.rap.ui.forms.source"/>
+	<plugin id="org.eclipse.rap.ui.source"/>
+	<plugin id="org.eclipse.rap.ui.views"/>
+	<plugin id="org.eclipse.rap.ui.views.source"/>
+	<plugin id="org.eclipse.rap.ui.workbench"/>
+	<plugin id="org.eclipse.rap.ui.workbench.source"/>
 </includeBundles>
 </target>
