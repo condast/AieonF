@@ -230,10 +230,16 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 					if( CategoryAieon.isCategory( concept )){
 						category = new CategoryAieon( concept );
 						category.setProvider( super.getManifest().getIdentifier() );
-						if( filter.accept( new ModelLeaf<IDescriptor>( category )))
-							categories.put( BookmarkAieon.getPrimKey( category ), new Model<IDescriptor>(category ));
+						IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( category ); 
+						leaf.setReadOnly(true);
+						if( filter.accept( leaf )) {
+							Model<IDescriptor> model = new Model<IDescriptor>(category );
+							model.setReadOnly(true);
+							categories.put( BookmarkAieon.getPrimKey( category ), model );
+						}
 					}else{
 						IModelLeaf<IDescriptor> child = new ModelLeaf<IDescriptor>(concept);
+						child.setReadOnly(true);
 						//if( filter.acceptChild(child))
 						results.add( child );
 					}
@@ -247,6 +253,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			PlacesAieon placesAieon;
 			FireFoxReference faviconAieon;
 			for( IModelLeaf<IDescriptor> result: results ){
+				result.setReadOnly(true);
 				aieon = ( BookmarkAieon )result.getData();
 
 				//skip categories
@@ -266,7 +273,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 				IModelNode<IDescriptor> cat = categories.get( Integer.valueOf( aieon.getParentID()));
 				if( cat == null )
 					continue;
-
+				cat.setReadOnly(true);
 				cat.addChild( result );
 			}
 		}
@@ -318,6 +325,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			super.fill(category);
 			category.setProvider( super.getManifest().getIdentifier() );
 			model = new Model<IDescriptor>( category );
+			model.setReadOnly(true);
 			if( !filter.accept( model ))
 				return null;
 			while(rs.next())
@@ -327,6 +335,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 					concept.fill(rs);
 					super.fill(concept);
 					IModelLeaf<IDescriptor> child = new ModelLeaf<IDescriptor>( concept ); 
+					child.setReadOnly(true);
 					if( filter.acceptChild(child))
 						model.addChild( child );
 				}
@@ -361,6 +370,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			super.fill(category);
 			category.setProvider( super.getManifest().getIdentifier() );
 			model = new Model<IDescriptor>( category );
+			model.setReadOnly(true);
 			if( !filter.accept( model ))
 				return null;
 			while(rs.next())
@@ -369,7 +379,9 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 					concept = new PlacesAieon();
 					concept.fill(rs);
 					super.fill(concept);
-					model.addChild( new ModelLeaf<IDescriptor>( concept ));
+					IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( concept );
+					leaf.setReadOnly(true);
+					model.addChild( leaf );
 				}
 				catch (ConceptException e) {
 					e.printStackTrace();

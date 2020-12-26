@@ -1,11 +1,13 @@
 package org.aieonf.osgi.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpSession;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.commons.db.IDatabaseConnection;
 import org.aieonf.commons.persistence.ISessionStoreFactory;
 import org.aieonf.commons.security.ISecureGenerator;
@@ -150,7 +152,7 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 	 * @param event
 	 */
 	protected void notifyDataFound( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
-		this.restProvider.notifyDataFound(event);
+		this.restProvider.addInput(event);
 	}
 	
 	protected abstract void update();
@@ -195,19 +197,29 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 		}
 		
 		@SuppressWarnings("unchecked")
+		protected DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> createEvent( KeyEvent<IDatabaseConnection.Requests> event ){
+			IModelLeaf<IDescriptor>[] results = input.toArray( new IModelLeaf[this.input.size()]); ;
+			DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> devent = 
+					new DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>( this, event, results);
+			return devent;
+		}
+		
+		protected void addInput( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
+			IModelLeaf<IDescriptor>[] results = event.getData();
+			if(!Utils.assertNull(results))
+				this.input.addAll(Arrays.asList(results));
+			notifyDataFound( createEvent(event.getKeyEvent()));			
+		}
+		
 		private void notifyDataFound( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
-			IModelLeaf<IDescriptor>[] results = null;
 			switch( event.getRequest()) {
 			case PREPARE:
 				this.input.clear();
 				break;
 			default:
-				results = input.toArray( new IModelLeaf[this.input.size()]); ;
 				break;
 			}
-			DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> devent = 
-					new DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>( this, event.getKeyEvent(), results);
-			notifyDataProcessedEvent( devent );
+			notifyDataProcessedEvent( createEvent(event.getKeyEvent()) );
 		}
 
 		@SuppressWarnings("unchecked")

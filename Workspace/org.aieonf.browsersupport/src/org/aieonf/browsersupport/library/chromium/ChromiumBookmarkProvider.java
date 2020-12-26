@@ -104,17 +104,20 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 		case FOLDER:
 			Collection<IModelLeaf<IDescriptor>> models = super.getModels();
 			parent = new Model<IDescriptor>( new CategoryAieon( aieon ));
+			parent.setReadOnly(true);
 			model = parent;
 			if( filter.accept( model ))
 				models.add( model );
 			break;
 		case URL:
 			model = new ModelLeaf<IDescriptor>( aieon );
+			model.setReadOnly(true);
 			if(( parent != null ) && ( filter.acceptChild(model )))
 				parent.addChild( model );
 			break;
 		default:
 			model = new Model<IDescriptor>( aieon );
+			model.setReadOnly(true);
 			break;
 		}
 		Iterator<JsonNode> iterator = node.iterator();

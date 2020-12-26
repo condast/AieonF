@@ -64,6 +64,17 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 		this.model.setIdentifier(identifier);
 	}
 
+	
+	@Override
+	public boolean isReadOnly() {
+		return this.model.isReadOnly();
+	}
+
+	@Override
+	public void setReadOnly(boolean choice) {
+		this.model.setReadOnly(choice);
+	}
+
 	@Override
 	public String get(Enum<?> attr) {
 		return this.model.get(attr);

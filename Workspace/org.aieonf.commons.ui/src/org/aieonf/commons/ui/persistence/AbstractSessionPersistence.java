@@ -28,7 +28,7 @@ public abstract class AbstractSessionPersistence<S extends Object> implements IS
 	protected AbstractSessionPersistence( int amount, TimeUnit tu) {
 		sessions = new HashMap<>();
 		executor = Executors.newScheduledThreadPool(5);
-		executor.schedule(() -> onScheduledCleanup(), amount, tu );
+		executor.scheduleAtFixedRate(() -> onScheduledCleanup(), amount, amount, tu );
 	}
 		
 	@Override

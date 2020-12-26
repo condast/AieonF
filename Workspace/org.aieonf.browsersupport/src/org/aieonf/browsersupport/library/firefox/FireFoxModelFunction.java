@@ -7,6 +7,7 @@ import org.aieonf.commons.Utils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
+import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.loader.ILoaderAieon;
@@ -59,7 +60,6 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 		fillLoader( loader, DEFAULT_FIREFOX_IDENTIFIER, DEFAULT_FIREFOX_PROVIDER_NAME, DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
 	}
 
-	
 	@Override
 	protected IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> onCreateFunction( String functionName) {
 		ILoaderAieon baseLoader = getDefaultLoader( context);
@@ -67,6 +67,8 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context );
 		if( Utils.assertNull( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_FIREFOX_IDENTIFIER );
+		IConcept concept = new Concept( model.getDescriptor());
+		concept.setReadOnly(true);
 		URI uri = AbstractFileConnector.getDefaultSource( DEFAULT_FIREFOX_ROOT, DEFAULT_SQLITE_BOOKMARKS_FILE );
 		baseLoader.set( IConcept.Attributes.SOURCE.name(), uri.getPath());
 

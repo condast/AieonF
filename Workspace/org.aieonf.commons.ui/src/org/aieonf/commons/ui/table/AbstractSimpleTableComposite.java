@@ -73,9 +73,9 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 		return deleteColumn;
 	}
 
-	protected void setDeleteColumn(TableViewerColumn deleteColumn) {
+	protected void setDeleteColumn(TableViewerColumn deleteColumn, boolean skipReadOnly ) {
 		this.deleteColumn = deleteColumn;
-		this.deleteColumn.setEditingSupport( new CheckBoxEditingSupport<IModelLeaf<IDescriptor>>( super.getTableViewer(), new DeleteCheckBoxEditor() ));
+		this.deleteColumn.setEditingSupport( new CheckBoxEditingSupport<IModelLeaf<IDescriptor>>( super.getTableViewer(), new DeleteCheckBoxEditor( skipReadOnly) ));
 		this.deleteColumn.getColumn().addListener(SWT.Selection, e->{				
 			onNotifyDeleteButton( new TableEvent<IModelLeaf<IDescriptor>, C>( e.widget, TableEvents.DELETE, getInput() ));
 		});
@@ -150,8 +150,17 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 	protected class DeleteCheckBoxEditor extends AbstractCheckBoxCellEditor<IModelLeaf<IDescriptor>>{
 		private static final long serialVersionUID = 1L;
 
+		private boolean skipReadonly;
+		
+		public DeleteCheckBoxEditor(boolean skipReadonly) {
+			super();
+			this.skipReadonly = skipReadonly;
+		}
+
 		@Override
 		protected void onToggle() {
+			if( skipReadonly)
+				return;
 			IModelLeaf<IDescriptor> leaf = super.getData();
 			if( leaf == null )
 				return;
@@ -162,11 +171,13 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 		@Override
 		protected Object doGetValue() {
 			IModelLeaf<IDescriptor> leaf = super.getData();
-			return (leaf == null )?false: selected.get( leaf );
+			return ((leaf == null ) || skipReadonly )?false: selected.get( leaf );
 		}
 
 		@Override
 		protected void doSetValue( Object value ) {
+			if( skipReadonly)
+				return;
 			IModelLeaf<IDescriptor> leaf = super.getData();
 			if( leaf == null )
 				return;

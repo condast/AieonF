@@ -132,6 +132,17 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 		return str;
 	}
 
+	@Override
+	public boolean isReadOnly() {
+		String str = get( IConcept.Attributes.READ_ONLY.name() );
+		return StringUtils.isEmpty(str)?false: Boolean.parseBoolean(str);
+	}
+
+	@Override
+	public void setReadOnly(boolean choice) {
+		set( IConcept.Attributes.READ_ONLY.name(), String.valueOf(choice) );
+	}
+
 	/**
 	 * Set the leaf with the given value
 	 * @param attr

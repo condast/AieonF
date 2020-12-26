@@ -116,6 +116,18 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	}
 
 	@Override
+	public boolean isReadOnly() {
+		String str = get( IConcept.Attributes.READ_ONLY.name() );
+		return StringUtils.isEmpty(str)?false: Boolean.parseBoolean(str);
+	}
+
+	@Override
+	public void setReadOnly(boolean choice) {
+		set( IConcept.Attributes.READ_ONLY.name(), String.valueOf(choice) );
+	}
+
+
+	@Override
 	public void set(Enum<?> attr, String value) {
 		Vertex vertex = getVertex();
 		vertex.setProperty(attr.name(), value);

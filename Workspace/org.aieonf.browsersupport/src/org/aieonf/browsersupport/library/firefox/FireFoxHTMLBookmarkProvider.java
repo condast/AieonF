@@ -54,7 +54,9 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 		root.setHidden( true );
 		root.setReadOnly( true );
 		root.setCategory( "root" );
-		stack.push( new Model<IDescriptor>( root ));
+		Model<IDescriptor> model = new Model<IDescriptor>( root );
+		model.setReadOnly(true);
+		stack.push( model );
 
 		URI uri = URI.create( super.getManifest().getSource());
 		File file = new File( uri );
@@ -132,7 +134,9 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 			name = Descriptor.makeValidName( name );
 			urlEon.set( IDescriptor.Attributes.NAME.name(), name );
 			urlEon.setDescription( description );
-			cat.addChild( new ModelLeaf<IConcept>( urlEon ));
+			IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( urlEon ); 
+			leaf.setReadOnly(true);
+			cat.addChild( leaf);
 			if( Descriptor.assertNull( urlEon.getResource() )){
 				String datauri = Base64Utils.getBase64DataURI( this.getClass(), "/images/firefox.png");
 				try {
@@ -178,6 +182,7 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 		cat.set( IConcept.Attributes.SOURCE.name(), super.getManifest().getIdentifier() );
 		BodyFactory.sign( super.getManifest(), cat );
 		IModelNode<IDescriptor> model = new Model<IDescriptor>( cat );
+		model.setReadOnly(true);
 		stack.push( model );
 		return model;
 	}
@@ -216,7 +221,9 @@ public class FireFoxHTMLBookmarkProvider extends AbstractModelProvider<IDomainAi
 			}
 		}
 		super.fill( urlEon );
-		super.getModels().add( new ModelLeaf<IDescriptor>( urlEon ));
+		IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( urlEon ); 
+		leaf.setReadOnly(true);
+		super.getModels().add( leaf );
 		return urlEon;
 	}
 

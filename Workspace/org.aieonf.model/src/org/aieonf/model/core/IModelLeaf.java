@@ -125,7 +125,8 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	public void set( String attr, String value );
 
 	/**
-	 * Returns true if the node is a root
+	 * Returns true @Override
+	if the node is a root
 	 * @return
 	 */
 	public boolean isRoot();
@@ -181,4 +182,8 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	 * @param descriptor
 	 */
 	void setData(D descriptor);
+
+	boolean isReadOnly();
+
+	void setReadOnly(boolean choice);
 }
