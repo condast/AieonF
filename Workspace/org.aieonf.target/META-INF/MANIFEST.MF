@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AieonF Target Definition
+Bundle-SymbolicName: org.aieonf.target
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Condast
+Automatic-Module-Name: org.aieonf.target
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -6,7 +6,8 @@ package org.aieonf.commons.ui;
  *
  */
 
-
+import javax.servlet.*;
+import org.eclipse.core.commands.*;
 
 @SuppressWarnings("unused")
 public interface IHiddenPackages {
