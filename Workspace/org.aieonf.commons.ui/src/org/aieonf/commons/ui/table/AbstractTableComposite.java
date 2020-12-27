@@ -56,6 +56,7 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		this.columnLabelProviders = new ArrayList<>();
 		this.prepare();
 		this.createComposite(parent);
+		this.initComposite();
 	}
 
 	public void addTableEventListener( ITableEventListener<IModelLeaf<D>,C> listener ){
@@ -121,7 +122,7 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 	/**
 	 * Initialise the component
 	 */
-	public void initComposite(){
+	protected void initComposite(){
 		this.createColumns( this, tableViewer);		
 		this.initTableColumnLayout(tclayout);
 	}

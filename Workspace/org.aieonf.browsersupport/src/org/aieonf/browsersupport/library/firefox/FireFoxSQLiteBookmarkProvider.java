@@ -531,14 +531,14 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 		@Override
 		public void fill(String type, String resource)
 		{
-			super.set( IDataResource.Attribute.Type, type);
+			super.set( IDataResource.Attribute.TYPE, type);
 			super.setSource( resource);
 		}
 
 		@Override
 		public String getType()
 		{
-			return super.get( IDataResource.Attribute.Type );
+			return super.get( IDataResource.Attribute.TYPE );
 		}
 
 		@Override

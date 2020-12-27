@@ -4,18 +4,15 @@ import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Concept;
 import org.aieonf.concept.datauri.IDataResource;
 
-public class IEDataResource extends Concept implements IDataResource
-{
-	public IEDataResource(IDescriptor descriptor)
-	{
-		super(descriptor);
-	}
+public class IEDataResource extends Concept implements IDataResource{
+	private static final long serialVersionUID = -1374988386010517700L;
 
 	public static final String S_ICON = "ICON";
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1374988386010517700L;
+
+	public IEDataResource(IDescriptor descriptor){
+		super(descriptor);
+		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
+	}
 
 	@Override
 	public void fill(String type, String resource)
@@ -31,7 +28,7 @@ public class IEDataResource extends Concept implements IDataResource
 			String url = keyValue[1];
 			if( !url.toLowerCase().startsWith("http"))
 				url = "file://" + resource;
-			set( IDataResource.Attribute.Resource, resource );
+			set( IDataResource.Attribute.RESOURCE, resource );
 		}
 		catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
@@ -47,7 +44,7 @@ public class IEDataResource extends Concept implements IDataResource
 	@Override
 	public String getResource()
 	{
-		return get( IDataResource.Attribute.Resource );
+		return get( IDataResource.Attribute.RESOURCE );
 	}
 
 	

@@ -28,6 +28,7 @@ public class InputHistoryAieon extends Concept implements IDataResource
 	public InputHistoryAieon()
 	{
 		super( S_INPUT_HISTORY );
+		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
 	}
 
 	public void fill( ResultSet rs ) throws ConceptException{
@@ -52,20 +53,20 @@ public class InputHistoryAieon extends Concept implements IDataResource
 	@Override
 	public void fill(String type, String resource)
 	{
-		super.set( IDataResource.Attribute.Type, type);
-		super.set( IDataResource.Attribute.Resource, resource);
+		super.set( IDataResource.Attribute.TYPE, type);
+		super.set( IDataResource.Attribute.RESOURCE, resource);
 	}
 
 	@Override
 	public String getType()
 	{
-		return super.get( IDataResource.Attribute.Type );
+		return super.get( IDataResource.Attribute.TYPE );
 	}
 
 	@Override
 	public String getResource()
 	{
-		return super.get( IDataResource.Attribute.Resource );
+		return super.get( IDataResource.Attribute.RESOURCE );
 	}
 	
 	public int getPlacesId(){

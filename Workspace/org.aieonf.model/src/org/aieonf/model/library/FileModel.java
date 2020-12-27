@@ -120,21 +120,21 @@ public class FileModel extends Model<IDescriptor> implements IDataResource
 	@Override
 	public String getType()
 	{
-		return super.get( IDataResource.Attribute.Type );
+		return super.get( IDataResource.Attribute.TYPE );
 	}
 
 	public void setType( String type ) throws ConceptException{
-		super.set(IDataResource.Attribute.Type, type);
+		super.set(IDataResource.Attribute.TYPE, type);
 	}
 
 	@Override
 	public String getResource()
 	{
-		return super.get( IDataResource.Attribute.Resource );
+		return super.get( IDataResource.Attribute.RESOURCE );
 	}
 
 	public void setResource( String resource ) throws ConceptException{
-		super.set(IDataResource.Attribute.Resource, resource);
+		super.set(IDataResource.Attribute.RESOURCE, resource);
 	}
 
 	public static String getFilePath( IDescriptor descriptor ){

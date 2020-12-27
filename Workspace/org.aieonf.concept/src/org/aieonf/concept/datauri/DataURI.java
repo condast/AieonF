@@ -1,6 +1,8 @@
 package org.aieonf.concept.datauri;
 
 import org.aieonf.concept.core.Descriptor;
+import org.aieonf.commons.strings.StringUtils;
+import org.aieonf.commons.xml.URICompletion;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Concept;
 
@@ -14,6 +16,7 @@ public class DataURI extends Concept implements IDataURI
 	public static final String S_BASE64 = "base64";
 	
 	public static final String S_ICON_MIMETYPE = "image/png";
+	public static final String S_DEFAULT_MIMETYPE = "text/plain";
 
 	public static final String S_ERR_ILLEGAL_DATA_URI_1 = 
 			"Illegal Data URI; Should have the form <type>=<value>";
@@ -39,12 +42,16 @@ public class DataURI extends Concept implements IDataURI
 	{
 		super( S_DATA_URI );
 		super.setSource(name);
+		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
 		super.setDescription(name);
 	}
 
 	public DataURI( long id, String name )
 	{
 		super( id, S_DATA_URI );
+		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
 		super.setSource(name);
 		super.setDescription(name);
 	}
@@ -79,7 +86,7 @@ public class DataURI extends Concept implements IDataURI
 	 */
 	@Override
 	public void fill( String key, String datauri ){
-		super.set( IDataResource.Attribute.Type, key);
+		super.set( IDataResource.Attribute.TYPE, key);
 		String str = datauri.replace("\"", "").trim();
 		String[] split = str.split("[:;,]");
 		str = split[0].toLowerCase().trim();
@@ -92,7 +99,7 @@ public class DataURI extends Concept implements IDataURI
 		if( str.split("[/]").length != 2 )
 			throw new  IllegalArgumentException( S_ERR_ILLEGAL_DATA_URI_4 );
 		super.set(IDataURI.Attribute.MIME_TYPE, str);
-		super.set(IDataResource.Attribute.Resource, split[split.length -1]);
+		super.set(IDataResource.Attribute.RESOURCE, split[split.length -1]);
 		if( split.length == 3 )
 			return;
 		for( int i = 2; i < split.length-1 ; i++){
@@ -111,20 +118,17 @@ public class DataURI extends Concept implements IDataURI
 	}
 	
 	@Override
-	public String getType()
-	{
-		return super.get( IDataResource.Attribute.Type );
+	public String getType(){
+		return super.get( IDataResource.Attribute.TYPE );
 	}
 
 	@Override
-	public String getMimeType()
-	{
+	public String getMimeType(){
 		return super.get( IDataURI.Attribute.MIME_TYPE );
 	}
 
 	@Override
-	public String getMimeTypeExtension()
-	{
+	public String getMimeTypeExtension(){
 		String str = super.get( IDataURI.Attribute.MIME_TYPE );
 		String[] split = str.split("[/]");
 		return split[1];
@@ -135,14 +139,12 @@ public class DataURI extends Concept implements IDataURI
 	 * @return
 	*/
 	@Override
-	public String getCharset()	
-	{
+	public String getCharset()	{
 		return super.get( IDataURI.Attribute.CHARSET );
 	}
 
 	@Override
-	public String getEncoding()
-	{
+	public String getEncoding(){
 		return super.get( IDataURI.Attribute.ENCODING );
 	}
 	
@@ -164,7 +166,7 @@ public class DataURI extends Concept implements IDataURI
 	@Override
 	public String getResource()
 	{
-		return super.get( IDataResource.Attribute.Resource );
+		return super.get( IDataResource.Attribute.RESOURCE );
 	}
 	
 	@Override
@@ -174,6 +176,11 @@ public class DataURI extends Concept implements IDataURI
 		return datauri;
 	}
 	
+	public static boolean isDataURI( IDescriptor descriptor ) {
+		String result = descriptor.get( IDataResource.Attribute.IS_DATA_URI );
+		return StringUtils.isEmpty(result)?false: Boolean.parseBoolean(result);
+	}
+
 	/**
 	 * returns a representation of the resource that can be dispalyed in a web page
 	 * @param resource
@@ -187,5 +194,17 @@ public class DataURI extends Concept implements IDataURI
 			return resource.toString();
 		return resource.getResource();
 	}
-
+	
+	/**
+	 * Return the resource as an html string
+	 * @param resource
+	 * @return
+	 */
+	public static String toHtml( IDataURI descriptor ) {
+		if( !isDataURI( descriptor ))
+			return null;
+		String webResource = DataURI.getWebResource( descriptor ).split("[?]")[0];
+		webResource = URICompletion.complete(webResource );
+		return "<a href='' target='_blank'><img src='" + webResource + "' width='16' height='16' /></a>";
+	}	
 }

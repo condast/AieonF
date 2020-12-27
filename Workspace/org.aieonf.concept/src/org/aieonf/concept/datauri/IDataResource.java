@@ -3,8 +3,9 @@ package org.aieonf.concept.datauri;
 public interface IDataResource
 {
 	public enum Attribute{
-		Type,
-		Resource
+		TYPE,
+		RESOURCE,
+		IS_DATA_URI
 	}
 
 	public static final String S_ICON = "ICON";

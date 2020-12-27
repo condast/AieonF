@@ -57,6 +57,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 
 	public FireFoxReference(){
 		super();
+		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
 	}
 
 	/**
@@ -90,6 +91,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 			if(( split.length > 3 ) && ( i==2 )){
 				this.fill( key, value );
 			}
+			setReadOnly(true);
 		}
 		if( correct == false )
 			throw new ConceptException( S_ERR_ILLEGAL_REFERENCE_2 );
@@ -106,8 +108,8 @@ public class FireFoxReference extends Concept implements IDataResource{
 	 */
 	@Override
 	public void fill( String type, String resource ){
-		set( IDataResource.Attribute.Type, type );		
-		set( IDataResource.Attribute.Resource, resource );
+		set( IDataResource.Attribute.TYPE, type );		
+		set( IDataResource.Attribute.RESOURCE, resource );
 		if( resource.startsWith( S_DATA))
 			super.set( Attribute.DataUri.name(), "true");
 		setVersion( 1 );
@@ -116,6 +118,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 		Calendar calendar = Calendar.getInstance();
 		setValue( IDescriptor.Attributes.CREATE_DATE, calendar.getTime().toString() );
 		setValue( IDescriptor.Attributes.UPDATE_DATE, calendar.getTime().toString() );
+		setReadOnly(true);
 	}
 
 	/**
@@ -132,7 +135,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 			set( IDataURI.Attribute.MIME_TYPE, "text/plain" );		
 			str =  rs.getString( Columns.toColumnName( Columns.DATA ));
 			if( !Descriptor.assertNull(str)){
-				set( IDataResource.Attribute.Resource, str );		
+				set( IDataResource.Attribute.RESOURCE, str );		
 				super.set( Attribute.DataUri.name(), "true");
 			}
 			str =  rs.getString( Columns.toColumnName( Columns.ICON_URL ));
@@ -155,7 +158,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 	@Override
 	public String getType()
 	{
-		String str = super.get( IDataResource.Attribute.Type );
+		String str = super.get( IDataResource.Attribute.TYPE );
 		if( Descriptor.assertNull( str ))
 			return S_EMPTY;
 		return str;
@@ -164,11 +167,10 @@ public class FireFoxReference extends Concept implements IDataResource{
 	@Override
 	public String getResource()
 	{
-		return super.get(  IDataResource.Attribute.Resource );
+		return super.get(  IDataResource.Attribute.RESOURCE );
 	}
 
 	public void setResource( String resource ) throws ConceptException{
-		super.set( IDataResource.Attribute.Resource, resource );
+		super.set( IDataResource.Attribute.RESOURCE, resource );
 	}
-
 }

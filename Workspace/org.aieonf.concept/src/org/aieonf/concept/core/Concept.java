@@ -87,16 +87,6 @@ public class Concept extends Descriptor implements IConcept
 	}
 
 	/**
-	 * Set the id of the concept. Is only possible in this package
-	 *
-	 * @param id String
-	 */
-	final void setID( String id )
-	{
-		super.setValue( IDescriptor.Attributes.ID, id );
-	}
-
-	/**
 	 * Set the name of the concept
 	 *
 	 * @param name String
@@ -251,7 +241,7 @@ public class Concept extends Descriptor implements IConcept
 	public Object clone()
 	{
 		try{
-			Concept clone = this.getClass().newInstance();
+			Concept clone = this.getClass().getDeclaredConstructor(Concept.class).newInstance();
 			BodyFactory.transfer( clone, this, true );
 			return clone;
 		}

@@ -19,9 +19,6 @@ import org.aieonf.model.core.IModelNode;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewerColumn;
 
 public abstract class AbstractSimpleTableComposite<C extends Object> extends AbstractTableComposite<IDescriptor, C>
@@ -58,15 +55,6 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 	{
 		super( parent, style);
 		selected = new HashMap<>();
-	}
-
-	@Override
-	protected void initTableColumnLayout(TableColumnLayout tclayout)
-	{
-		Table table = super.getTableViewer().getTable();
-		tclayout.setColumnData( table.getColumn(0), new ColumnWeightData( 88 ) );
-		tclayout.setColumnData( table.getColumn(1), new ColumnWeightData( 7 ) );
-		tclayout.setColumnData( table.getColumn(2), new ColumnWeightData( 5 ) );
 	}
 
 	protected TableViewerColumn getDeleteColumn() {
@@ -107,8 +95,11 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 
 	protected boolean setDeleteImage() {
 		IModelLeaf<IDescriptor> leaf=  getInput();
+		boolean enable = false;
 		InformationImages images = InformationImages.getInstance();		
-		boolean enable = ( leaf != null) && (leaf.isLeaf() || !Utils.assertNull( getRemoveChildren()));
+		if( !leaf.isReadOnly()) {
+			enable = ( leaf != null) && (leaf.isLeaf() || !Utils.assertNull( getRemoveChildren()));
+		}
 		Image image = images.getImage( Information.DELETE, enable );
 		this.deleteColumn.getColumn().setImage(image);
 		return enable;

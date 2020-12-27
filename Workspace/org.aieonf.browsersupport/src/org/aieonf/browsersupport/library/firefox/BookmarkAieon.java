@@ -3,15 +3,17 @@ package org.aieonf.browsersupport.library.firefox;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.core.Concept;
+import org.aieonf.concept.datauri.DataURI;
 import org.aieonf.concept.datauri.IDataResource;
+import org.aieonf.concept.datauri.IDataURI;
 import org.aieonf.concept.library.CategoryAieon;
 
-public class BookmarkAieon extends Concept implements IDataResource
+public class BookmarkAieon extends DataURI implements IDataResource
 {
 	private static final long serialVersionUID = 3919937519277313629L;
 
@@ -28,7 +30,12 @@ public class BookmarkAieon extends Concept implements IDataResource
 		dateAdded,
 		lastModified
 	}
+
 	
+	public BookmarkAieon() {
+		super();
+	}
+
 	public void fill( ResultSet rs ) throws ConceptException{
 		try {
 			setValue( IDescriptor.Attributes.ID, rs.getString( BookmarkAttribute.guid.name() ));
@@ -38,9 +45,11 @@ public class BookmarkAieon extends Concept implements IDataResource
 
 			String fk = rs.getString( BookmarkAttribute.fk.name() );
 			set( BookmarkAttribute.fk, fk );
+			long id = StringUtils.isEmpty(fk)?-1: Long.parseLong(fk);
+			setID( id );
 
 			int type = rs.getInt( BookmarkAttribute.type.name() );
-			set( BookmarkAttribute.type, rs.getString( BookmarkAttribute.type.name() ));
+			set( IDataResource.Attribute.TYPE, rs.getString( BookmarkAttribute.type.name() ));
 
 			int parent = rs.getInt( BookmarkAttribute.parent.name() );
 			set( BookmarkAttribute.primkey, rs.getString( IDescriptor.Attributes.ID.toString().toLowerCase() ));
@@ -78,13 +87,17 @@ public class BookmarkAieon extends Concept implements IDataResource
 		catch (SQLException e) {
 			throw new ConceptException( e );
 		}
+		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
 	}
 
 	@Override
 	public void fill(String type, String resource)
 	{
-		super.set( IDataResource.Attribute.Type, type);
-		super.set( IDataResource.Attribute.Resource, resource);
+		super.set( IDataResource.Attribute.TYPE, type);
+		super.set( IDataResource.Attribute.RESOURCE, resource);
+		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
 	}
 
 
@@ -96,13 +109,13 @@ public class BookmarkAieon extends Concept implements IDataResource
 	@Override
 	public String getType()
 	{
-		return super.get( IDataResource.Attribute.Type );
+		return super.get( IDataResource.Attribute.TYPE );
 	}
 
 	@Override
 	public String getResource()
 	{
-		return super.get( IDataResource.Attribute.Resource );
+		return super.get( IDataResource.Attribute.RESOURCE );
 	}
 
 	public String getPrimKey(){

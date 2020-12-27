@@ -136,8 +136,7 @@ public class Descriptor implements IDescriptor
 	 * @return String
 	 */
 	@Override
-	public final long getID()
-	{
+	public final long getID(){
 		String str = this.get( IDescriptor.Attributes.ID );
 		if(StringUtils.isEmpty(str))
 			str = this.getValue( IDescriptor.Attributes.ID);
@@ -147,13 +146,21 @@ public class Descriptor implements IDescriptor
 	}
 
 	/**
+	 * Set the id of the concept. Is only possible in this package
+	 *
+	 * @param id String
+	 */
+	protected final void setID( long id ){
+		setValue( IDescriptor.Attributes.ID, String.valueOf( id ));
+	}
+
+	/**
 	 * Get the name of the concept
 	 *
 	 * @return String
 	 */
 	@Override
-	public final String getName()
-	{
+	public final String getName(){
 		return this.getValue( IDescriptor.Attributes.NAME );
 	}
 

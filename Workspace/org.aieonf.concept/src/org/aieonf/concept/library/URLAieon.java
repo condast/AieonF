@@ -195,4 +195,14 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	public String getImplicit() {
 		return get( IImplicit.Attributes.IMPLICIT.name());
 	}
+	
+	/**
+	 * This utility replaces some causes of failing markup text exceptions
+	 * @param string
+	 * @return
+	 */
+	public static String createMarkupString( String name, String uri ) {
+		String result = name.replace("&", "en");
+		return " <a href='" + uri + "' target='_blank'>" + result + "</a>"; 
+	}
 }
