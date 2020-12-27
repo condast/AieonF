@@ -50,7 +50,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 
 	@Override
 	public void open(IDomainAieon key) {
-		this.open = true;
+		this.open = domain.equals(key);
 	}
 
 	@Override

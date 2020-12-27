@@ -28,7 +28,7 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 {
 	private static final long serialVersionUID = 976428552549736382L;
 
-	public static final String S_EDIT_LOCATION = "/Saight/edit";
+	public static final String S_EDIT_LOCATION = "/saight/edit";
 
 	public static final String S_ERROR_ICON = "/icons/error_button_16.png";
 	public static final String S_MODIFIED_ICON = "/icons/orangeball.jpg";
