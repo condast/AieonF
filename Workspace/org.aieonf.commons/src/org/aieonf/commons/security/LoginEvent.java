@@ -10,25 +10,35 @@ public class LoginEvent extends EventObject{
 	private LoginEvents loginEvent;
 	
 	private ILoginUser user;
+	
+	private String userName;
 	private String password;
 	
 	private boolean loggedIn;
 
 	public LoginEvent( Object source, LoginEvents loginEvent, ILoginUser user ){
-		this( source, loginEvent, user, null );
+		this( source, loginEvent, user, null, null );
+	}
+
+	public LoginEvent( Object source, LoginEvents loginEvent, String userName, String password ){
+		this( source, loginEvent, null, userName, password);
 	}
 	
-	public LoginEvent( Object source, LoginEvents loginEvent, ILoginUser user, String password )
-	{
+	public LoginEvent( Object source, LoginEvents loginEvent, ILoginUser user, String userName, String password ){
 		super( source );
 		this.loginEvent = loginEvent;
 		this.user = user;
+		this.userName = userName;
 		this.password = password;
 		this.loggedIn = false;
 	}
 
 	public synchronized LoginEvents getLoginEvent() {
 		return loginEvent;
+	}
+
+	public String getUserName() {
+		return userName;
 	}
 
 	public String getPassword() {

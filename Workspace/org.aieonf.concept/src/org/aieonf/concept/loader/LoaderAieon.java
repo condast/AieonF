@@ -51,8 +51,8 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 		super( ILoaderAieon.Attributes.LOADER.name() );
 		super.setName( ILoaderAieon.Attributes.LOADER.name() );
 		super.setScope( IConcept.Scope.APPLICATION );
-		this.set( ILoaderAieon.Attributes.INTERNAL, Boolean.TRUE.toString() );
-		this.set( ILoaderAieon.Attributes.CREATABLE, Boolean.FALSE.toString() );
+		this.set( ILoaderAieon.Attributes.INTERNAL.name(), Boolean.TRUE.toString() );
+		this.set( ILoaderAieon.Attributes.CREATABLE.name(), Boolean.FALSE.toString() );
 		this.setReadOnly( Boolean.TRUE );
 		this.setAieonCreatorClass( ILoaderAieon.class );
 	}
@@ -116,7 +116,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	@Override
 	public String getEncryptionKey()
 	{
-		return super.get( IEncryption.Attributes.ENCRYPTION_KEY );
+		return super.get( IEncryption.Attributes.ENCRYPTION_KEY.name() );
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	 */
 	public void setEncryptionKey( String key )
 	{
-		super.set( IEncryption.Attributes.ENCRYPTION_KEY, key );
+		super.set( IEncryption.Attributes.ENCRYPTION_KEY.name(), key );
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	@Override
 	public IEncryption.Algorithms getEncryptionAlgorithm()
 	{
-		String algorithm = this.get( IEncryption.Attributes.ALGORITHM );
+		String algorithm = this.get( IEncryption.Attributes.ALGORITHM.name() );
 		if( algorithm == null )
 			return IEncryption.Algorithms.NONE;
 		return IEncryption.Algorithms.valueOf( StringStyler.styleToEnum( algorithm ));
@@ -151,7 +151,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	 */
 	public void setEncryptionAlgorithm( IEncryption.Algorithms algorithm )
 	{
-		this.set( IEncryption.Attributes.ALGORITHM, algorithm.toString() );
+		this.set( IEncryption.Attributes.ALGORITHM.name(), algorithm.toString() );
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class LoaderAieon extends LocatorAieon implements ILoaderAieon
 	 */
 	public static boolean isLoaderAieon( IDescriptor descriptor )
 	{
-		return( descriptor.get( ConceptBase.getAttributeKey( ILoaderAieon.Attributes.LOADER )) != null );
+		return( descriptor.get( ILoaderAieon.Attributes.LOADER.name()) != null );
 	}
 
 	/**

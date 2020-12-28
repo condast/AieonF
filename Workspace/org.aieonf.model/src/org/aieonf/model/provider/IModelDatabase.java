@@ -65,6 +65,14 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	public M find(long id);
 
 	/**
+	 * Find the model that belongs to the given descriptor Id, within the 
+	 * domain of the database
+	 * @param id
+	 * @return
+	 */
+	public M findOnDescriptor(long id);
+
+	/**
 	 * search for models that have the given key-value pair
 	 * @param key
 	 * @param value

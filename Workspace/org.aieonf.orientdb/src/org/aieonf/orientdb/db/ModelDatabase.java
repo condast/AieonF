@@ -56,7 +56,7 @@ public class ModelDatabase< T extends IDescriptor > {
 	}
 
 	/**
-	 * Get the vertices, which are with descriptors, and create the corresponding models
+	 * Get the vertices with the given id, and create the corresponding models
 	 * @param vertices
 	 * @return
 	 * @throws FilterException

@@ -13,6 +13,7 @@ public interface IDatabaseConnection {
 		ADD_NODE,
 		CONTAINS,
 		FIND,
+		FIND_ON_DESCRIPTOR,
 		GET,
 		SEARCH,
 		SEARCH_MODELS,

@@ -590,10 +590,10 @@ public class Descriptor implements IDescriptor
 	 * @param descriptor IDescriptor
 	 * @return Date
 	 */
-	public final static Date getDate( IDescribable describable, IDescriptor.Attributes attr )
+	public final static Date getDate( IDescribable describable, String attr )
 	{
 		IDescriptor descriptor = describable.getDescriptor();
-		String str = descriptor.get( attr.name() );
+		String str = descriptor.get( attr );
 		if(( str == null ) || ( str.trim().length() == 0 ))
 			return Calendar.getInstance().getTime();
 
@@ -601,6 +601,17 @@ public class Descriptor implements IDescriptor
 		long time = Long.parseLong( str );
 		calendar.setTimeInMillis( time );
 		return calendar.getTime();
+	}
+
+	/**
+	 * Get the given attribute as a date. Returns numberformat exception if the
+	 * representation is incorrect
+	 *
+	 * @param descriptor IDescriptor
+	 * @return Date
+	 */
+	public final static Date getDate( IDescribable describable, IDescriptor.Attributes attr ){
+		return getDate( describable, attr.name());
 	}
 
 	/**

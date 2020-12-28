@@ -59,6 +59,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		super.setSource( S_DEFAULT_URI );
 		this.setRegister( false );
 		super.setName( IPasswordAieon.Attributes.PASSWORD.name() );
+		super.setImplicit(IPasswordAieon.Attributes.PASSWORD.name());
 		this.setScope( Scope.APPLICATION );
 		super.setClassName( this.getClass().getName() );
 		super.setExtendedKey( IPasswordAieon.Attributes.class.getName() );
@@ -82,6 +83,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		this.setAieonCreatorClass( this.getClass() );
 		this.setScope( Scope.APPLICATION );
 		super.setName( IPasswordAieon.Attributes.PASSWORD.name() );
+		super.setImplicit(IPasswordAieon.Attributes.PASSWORD.name());
 		super.setClassName( this.getClass().getName() );
 		super.setSource( S_DEFAULT_URI );
 		super.setExtendedKey( IPasswordAieon.Attributes.class.getName() );
@@ -108,13 +110,15 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 		this.setScope( Scope.APPLICATION );
 		this.setAieonCreatorClass( this.getClass() );
 		super.setName( IPasswordAieon.Attributes.PASSWORD.name() );
+		super.setImplicit(IPasswordAieon.Attributes.PASSWORD.name());
 		super.setSource( S_DEFAULT_URI );
 		super.setExtendedKey( IPasswordAieon.Attributes.class.getName() );
 	}
 
 	public PasswordAieon( IDescriptor descriptor ) {
 		super( descriptor);
-
+		super.setName( IPasswordAieon.Attributes.PASSWORD.name() );
+		super.setImplicit(IPasswordAieon.Attributes.PASSWORD.name());
 	}
 
 	/* (non-Javadoc)
@@ -143,7 +147,7 @@ public class PasswordAieon extends LoaderAieon implements IPasswordAieon
 	public String getPassword()
 	{
 		String password = this.get(IPasswordAieon.Attributes.PASSWORD.name());
-		return StringUtils.isEmpty(password)? this.get( IPasswordAieon.Attributes.PASSWORD ): password;
+		return StringUtils.isEmpty(password)? this.get( IPasswordAieon.Attributes.PASSWORD.name() ): password;
 	}
 
 	/* (non-Javadoc)

@@ -166,6 +166,7 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 			switch( index ){
 			case MODEL:
 				ma = ModelAttributes.DESCRIPTOR;
+				this.current.setIdentifier(str);
 				this.current.setData( interpreter.create( qName, attributes));
 				break;
 			case CONTEXT:
@@ -252,8 +253,8 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 		String msg = message.format(new Object[]
 				{
 				x.getSystemId(),
-				new Integer(x.getLineNumber()),
-				new Integer(x.getColumnNumber()),
+				Integer.valueOf(x.getLineNumber()),
+				Integer.valueOf(x.getColumnNumber()),
 				x.getMessage()
 				});
 		Logger.getLogger( this.getClass().getName()).info(msg);
