@@ -83,4 +83,22 @@ public class DateUtils {
 	 public static long getDifferenceDays(Date d1, Date d2) {
 		 return getDifference( TimeUnit.DAYS, d1, d2 );
 	 }
+	 
+	 public static Date getTime( int day, int month, int year ) {
+		 Calendar calendar = Calendar.getInstance();
+		 calendar.set( Calendar.DAY_OF_MONTH, day);
+		 calendar.set( Calendar.MONTH, month);
+		 calendar.set( Calendar.YEAR, year);
+		 return calendar.getTime();
+	 }
+
+	 public static int[] getTime( Date date ) {
+		 Calendar calendar = Calendar.getInstance();
+		 calendar.setTime( date);
+		 int[] result = new int[3];
+		 result[0] = calendar.get( Calendar.DAY_OF_MONTH);
+		 result[1] = calendar.get( Calendar.MONTH);
+		 result[2] = calendar.get( Calendar.YEAR);
+		 return result;
+	 }
 }

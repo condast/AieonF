@@ -597,7 +597,7 @@ public class Descriptor implements IDescriptor
 		if(( str == null ) || ( str.trim().length() == 0 ))
 			return Calendar.getInstance().getTime();
 
-		GregorianCalendar calendar = new GregorianCalendar();
+		Calendar calendar = Calendar.getInstance();
 		long time = Long.parseLong( str );
 		calendar.setTimeInMillis( time );
 		return calendar.getTime();
