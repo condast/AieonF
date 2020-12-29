@@ -82,7 +82,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		
 		while( edges.hasNext()) {
 			Edge edge = edges.next();
-			if( !IModelLeaf.IS_CHILD.equals( edge.getLabel()))
+			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
 				continue;
 			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
 			if( vchild == null )

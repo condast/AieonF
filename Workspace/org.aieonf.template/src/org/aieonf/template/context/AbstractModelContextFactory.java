@@ -76,7 +76,10 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 	@Override
 	public IDomainAieon getDomain(){
 		ModelScanner<IContextAieon> search = new ModelScanner<IContextAieon>( this.template );
-		IDomainAieon domain = (IDomainAieon) search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() )[0];
+		IDescriptor[] domains = search.getDescriptors( IDomainAieon.Attributes.DOMAIN.toString() );
+		if( Utils.assertNull(domains))
+			return null;
+		IDomainAieon domain = (IDomainAieon) domains[0];
 		String str = domain.getDomain();
 		domain.set( IDescriptor.Attributes.ID.name(), String.valueOf( str.hashCode() ) );
 		domain.set( IDescriptor.Attributes.VERSION.name(), S_DEFAULT_VERSION );

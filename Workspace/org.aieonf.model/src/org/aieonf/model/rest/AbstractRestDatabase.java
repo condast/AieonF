@@ -210,7 +210,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.CONTAINS;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
@@ -231,7 +230,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.FIND;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
@@ -252,7 +250,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.FIND_ON_DESCRIPTOR;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
@@ -273,7 +270,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.SEARCH_MODELS;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
@@ -295,7 +291,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.GET;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( descriptor.getID() ));
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
@@ -319,7 +314,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map<String, String> parameters = new HashMap<>();
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
-		parameters.put(StringStyler.xmlStyleString( IDomainAieon.Attributes.DOMAIN.name()), domain.getDomain());
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put(FilterFactory.Attributes.FILTER.toString(), StringStyler.xmlStyleString( filter.getType().name() ));
 		parameters.put(FilterFactory.Attributes.RULES.toString(), filter.getRule() );
 		parameters.put(FilterFactory.Attributes.REFERENCE.toString(), filter.getReference() );
@@ -343,7 +338,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( leaf.getID() ));
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
@@ -370,7 +364,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_CHILDREN;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
@@ -393,7 +386,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_ALL;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
 		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
@@ -417,7 +409,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_ALL;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf( ids.getKey() ));
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
@@ -442,7 +433,6 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.UPDATE;
 		Map<String, String> parameters = new HashMap<>();
-		parameters.put(IDomainAieon.Attributes.DOMAIN.toString(), domain.getDomain());
 		parameters.put(Attributes.MODEL_ID.toString(), String.valueOf(  leaf.getID() ));
 		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
 		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));

@@ -11,7 +11,6 @@ import org.aieonf.sketch.controller.SketchController;
 import org.aieonf.sketch.controller.SketchController.Pages;
 import org.aieonf.sketch.factory.SketchFactory;
 import org.aieonf.sketch.factory.SketchModelFactory;
-import org.aieonf.sketch.swt.SketchWizard;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Composite;
 import org.osgi.service.component.annotations.Component;
@@ -22,7 +21,6 @@ public class SketchViewProvider extends AbstractViewFactory<Composite> implement
 	private SketchFactory selected = SketchFactory.getInstance();
 
 	private SketchController barController;
-	private SketchWizard wizard;
 
 	public static final String S_SKETCH_ID = "org.aieonf.sketch.view";	
 
@@ -60,21 +58,22 @@ public class SketchViewProvider extends AbstractViewFactory<Composite> implement
 
 	@Override
 	public Composite onCreateEntry( Views view, Composite parent, int style) {
-		Browser browser = null;
+		Browser browser = new Browser( parent, style );
+		barController = new SketchController( browser );
 		try{
-		switch( view ){
-		case BAR:
-			browser = new Browser( parent, style );
-			//browser.setUrl("http://www.condast.com");
-			barController = new SketchController( browser );
-			barController.setBrowser( Pages.BAR );
-			break;
-		case BODY:
-			wizard = new SketchWizard( parent, style );
-			break;
-		default:
-			break;
-		}
+			switch( view ){
+			case HOME:
+				break;
+			case BAR:
+				//browser.setUrl("http://www.condast.com");
+				barController.setBrowser( Pages.BAR );
+				break;
+			case BODY:
+				barController.setBrowser( Pages.SEARCH );
+				break;
+			default:
+				break;
+			}
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

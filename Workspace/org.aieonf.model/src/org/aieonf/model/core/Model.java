@@ -3,10 +3,12 @@ package org.aieonf.model.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 
 import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.IConceptBase;
@@ -138,15 +140,20 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 		}
 		return null;
 	}
-
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public IModelLeaf<? extends IDescriptor>[] getChildren(String name) {
-		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<IModelLeaf<? extends IDescriptor>>();
-		for( IModelLeaf<? extends IDescriptor> model: this.children.keySet() ){
-			if( model.getDescriptor().getName().equals( name ))
-				results.add( model );
+		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<>();
+		if( StringUtils.isEmpty(name)) {
+			results = this.children.keySet();
+			return results.toArray( new IModelLeaf[ results.size() ]);
+		}
+		Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>, String>> iterator = this.children.entrySet().iterator();
+		while( iterator.hasNext() ) {
+			Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
+			if( name.equals( entry.getValue()))
+				results.add( entry.getKey() );
 		}
 		return results.toArray( new IModelLeaf[ results.size() ]);
 	}
