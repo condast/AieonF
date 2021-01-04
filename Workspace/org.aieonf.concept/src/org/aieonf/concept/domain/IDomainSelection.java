@@ -4,6 +4,7 @@ public interface IDomainSelection {
 
 	public enum SelectionEvents{
 		ADD_PROVIDER,
+		SETUP_DOMAIN,
 		SELECT_DOMAIN,
 		REMOVE_PROVIDER
 	}

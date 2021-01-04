@@ -20,6 +20,7 @@ import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.core.Descriptor;
 import org.aieonf.model.builder.IModelBuilderListener;
 import org.aieonf.model.builder.IModelBuilderListener.ModelAttributes;
 import org.aieonf.model.builder.ModelBuilderEvent;
@@ -151,6 +152,11 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 				if( !index.equals( ModelAttributes.MODEL ))
 					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
 				break;
+			case PROPERTIES:
+				index = stack.lastElement();
+				if( !index.equals( ModelAttributes.MODEL ))
+					throw new IllegalArgumentException( S_ERR_MALFORMED_XML + qName + " The parent is: " + index);
+				break;
 			case CHILDREN:
 				index = this.stack.lastElement();
 				if( !index.equals( ModelAttributes.MODEL ))
@@ -162,12 +168,16 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 				break; //do nothing
 			}
 		}else{
+			//Get the previous node
 			index = this.stack.lastElement();
 			switch( index ){
 			case MODEL:
 				ma = ModelAttributes.DESCRIPTOR;
-				this.current.setIdentifier(str);
+				this.current.setDescriptorId(str);
 				this.current.setData( interpreter.create( qName, attributes));
+				break;
+			case PROPERTIES:
+				ma = ModelAttributes.PROPERTIES;
 				break;
 			case CONTEXT:
 			case DESCRIPTOR:
@@ -185,8 +195,11 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		ModelAttributes ma = this.stack.pop();
+		logger.info("completing: " + ma );
 		switch( ma ){
 		case MODEL:
+			if( this.current.getData() == null )
+				this.current.setData(new Descriptor());
 			this.notifyListeners( new ModelBuilderEvent<M>( this, ma, (M) this.current ));
 			break;
 		case CHILDREN:
@@ -207,18 +220,29 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 	
 	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
-		String value = new String(ch, start, length);
+		String value = new String(ch, start, length).trim();
 		if( Utils.assertNull( value  ))
 			return;
 		try{
-			logger.fine("Setting value for key: " + interpreter.getKey() );
-			IDescriptor descriptor = current.getData();
-			if( StringUtils.isEmpty(value))
-				return;
+			ModelAttributes ma = this.stack.elementAt( this.stack.size()-2);
 			String key = interpreter.getKey();
-			if( StringUtils.isEmpty(key))
-				return;
-			descriptor.set( key, value);
+			logger.fine("Setting value for key: " + interpreter.getKey() );
+			switch( ma ) {
+			case MODEL:
+				this.current.set(key, value);
+				break;
+			case CONTEXT:
+			case DESCRIPTOR:
+				IDescriptor descriptor = current.getData();
+				if( StringUtils.isEmpty(value))
+					return;
+				if( StringUtils.isEmpty(key))
+					return;
+				descriptor.set( key, value);
+				break;
+			default:
+				break;
+			}
 		}
 		catch( Exception ex ){
 			ex.printStackTrace();

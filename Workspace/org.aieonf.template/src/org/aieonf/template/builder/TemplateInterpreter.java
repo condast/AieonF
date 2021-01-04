@@ -1,6 +1,7 @@
 package org.aieonf.template.builder;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -163,8 +164,16 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 				Class<?> cd;
 				try {
 					cd = clss.getClassLoader().loadClass( clss_str );
-					descriptor = (IDescriptor) cd.newInstance();
+					descriptor = (IDescriptor) cd.getDeclaredConstructor(cd).newInstance();
 				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
 					e.printStackTrace();
 				}
 			}else{	

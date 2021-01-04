@@ -203,6 +203,35 @@ public class ModelRestService{
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/get-options")
+	public Response getOptions( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, @QueryParam("user-id") long userId ) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+ 				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			IModelLeaf<IDescriptor>[] results = database.findOptions( userId );
+			GsonBuilder builder = new GsonBuilder();
+			builder.enableComplexMapKeySerialization();
+			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
+			Gson gson = builder.create();
+			String str = gson.toJson(results, IModelLeaf[].class );
+			return Response.ok( str ).build();
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}	
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/get")
 	public Response getModel( @QueryParam("id") long id, @QueryParam("token") long token, 
 			@QueryParam("domain") String domainstr, @QueryParam("name") String name, @QueryParam("version") String version) {
@@ -241,8 +270,8 @@ public class ModelRestService{
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
-			ModelDatabase<IDescriptor> factory = new ModelDatabase<IDescriptor>( dbService, domain );
-			Collection<IModelLeaf<IDescriptor>> results = factory.find( key, value );
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			Collection<IModelLeaf<IDescriptor>> results = database.find( key, value );
 			if( Utils.assertNull(results))
 				return Response.noContent().build();
 			GsonBuilder builder = new GsonBuilder();

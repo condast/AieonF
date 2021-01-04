@@ -64,6 +64,15 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 		this.model.setIdentifier(identifier);
 	}
 
+	@Override
+	public String getDescriptorId() {
+		return this.model.getDescriptorId();
+	}
+
+	@Override
+	public void setDescriptorId(String descriptor) {
+		this.model.setDescriptorId(descriptor);
+	}
 	
 	@Override
 	public boolean isReadOnly() {

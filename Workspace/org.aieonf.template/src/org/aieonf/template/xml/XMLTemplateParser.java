@@ -76,7 +76,7 @@ public class XMLTemplateParser<D extends IDescriptor, M extends IModelLeaf<D>> e
 			ContextAieon ca = (ContextAieon)creator.create( qName, attributes);
 			application.extendContext( ca );
 			this.root.setData( (D) ca );
-			this.root.setIdentifier( ModelAttributes.CONTEXT.toString());
+			this.root.setDescriptorId( ModelAttributes.CONTEXT.toString());
 			break;
 		default:
 			break;

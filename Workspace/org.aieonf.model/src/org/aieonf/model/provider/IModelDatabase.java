@@ -11,6 +11,7 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 
 	public enum Attributes{
 		ID,
+		USER_ID,
 		TOKEN,
 		DOMAIN,
 		MODEL_ID,
@@ -115,4 +116,11 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	 * @return
 	 */
 	public boolean update( M leaf );
+
+	/**
+	 * Get the options for the given user
+	 * @param userId
+	 * @return
+	 */
+	public M getOptions(long userId);
 }

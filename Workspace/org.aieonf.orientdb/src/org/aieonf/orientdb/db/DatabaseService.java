@@ -98,7 +98,7 @@ public class DatabaseService implements Closeable{
 		this.graph = persistence.createDatabase();
 		if( graph.getVertexType(IDescriptor.DESCRIPTORS) == null )
 			graph.createVertexType( IDescriptor.DESCRIPTORS );
-		String domain_id = getDomainClass(domain);
+		String domain_id = getDomainClass(domain).trim();
 		if( graph.getVertexType( domain_id) == null )
 			graph.createVertexType( domain_id );
 		return true;

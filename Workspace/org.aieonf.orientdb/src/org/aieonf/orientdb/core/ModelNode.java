@@ -110,10 +110,11 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	@Override
 	public IModelLeaf<? extends IDescriptor>[] getChildren(String name) {
 		Collection<IModelLeaf<? extends IDescriptor>> results = new ArrayList<>();
-		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
-		for( IModelLeaf<? extends IDescriptor> child: children.keySet() ) {
-			if( child.getData().getName().equals(name))
-				results.add(child);
+		Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>, String>> iterator = getChildren().entrySet().iterator();
+		while( iterator.hasNext() ) {
+			Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
+			if( entry.getValue().equals(name))
+				results.add(entry.getKey());
 		}
 		return results.toArray( new IModelLeaf[ results.size()]);
 	}

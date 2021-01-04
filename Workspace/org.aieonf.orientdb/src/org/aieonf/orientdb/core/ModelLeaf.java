@@ -100,6 +100,18 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	}
 
 	@Override
+	public String getDescriptorId() {
+		Vertex vertex = getVertex();
+		return vertex.getProperty(IModelLeaf.Attributes.DESCRIPTOR.name());
+	}
+
+	@Override
+	public void setDescriptorId(String descriptor) {
+		Vertex vertex = getVertex();
+		vertex.setProperty(IModelLeaf.Attributes.DESCRIPTOR.name(), descriptor);
+	}
+
+	@Override
 	public Scope getScope() {
 		String str = get( IConcept.Attributes.SCOPE.name() ); 
 		Scope scope = StringUtils.isEmpty(str)?Scope.PUBLIC: Scope.valueOf(str);

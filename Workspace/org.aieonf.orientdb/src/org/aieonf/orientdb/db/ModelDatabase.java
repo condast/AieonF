@@ -8,7 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.commons.filter.FilterException;
+import org.aieonf.commons.options.IOptions;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
@@ -148,6 +150,21 @@ public class ModelDatabase< T extends IDescriptor > {
 			ex.printStackTrace();
 		}
 		return results;
+	}
+
+	/**
+	 * Get the options of the given user, or null if it wasn't made yet
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	@SuppressWarnings("unchecked")
+	public IModelLeaf<IDescriptor>[] findOptions( long userId ) throws FilterException {
+		Collection<IModelLeaf<IDescriptor>> results = findOnDescriptor(userId);
+		if( Utils.assertNull(results))
+			return null;
+		IModelNode<IDescriptor> retval = (IModelNode<IDescriptor>) results.iterator().next();
+		return (IModelLeaf<IDescriptor>[]) retval.getChildren(IOptions.S_OPTIONS);
 	}
 
 	/**

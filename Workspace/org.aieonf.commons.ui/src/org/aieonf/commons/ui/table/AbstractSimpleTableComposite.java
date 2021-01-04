@@ -70,6 +70,8 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 	}
 
 	protected boolean isInList( IModelLeaf<IDescriptor> element ) {
+		if(( selected == null ) || ( element == null ))
+			return false;
 		return selected.get(element);
 	}
 

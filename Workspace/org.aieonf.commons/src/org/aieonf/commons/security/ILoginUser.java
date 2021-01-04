@@ -9,6 +9,7 @@ public interface ILoginUser extends IUpdateable, Comparable<ILoginUser>{
 	public static final long AdminToken = -1024;
 	
 	public enum Attributes{
+		USER_ID,
 		USERNAME,
 		FIRST_NAME,
 		SURNAME,

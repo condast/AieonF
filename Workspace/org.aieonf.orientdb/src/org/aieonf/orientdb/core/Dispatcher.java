@@ -2,18 +2,17 @@ package org.aieonf.orientdb.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.aieonf.commons.security.ILoginListener;
 import org.aieonf.commons.security.ILoginUser;
 import org.aieonf.commons.security.ISecureCall;
 import org.aieonf.commons.security.LoginEvent;
-import org.aieonf.concept.IConcept;
-import org.aieonf.concept.IConcept.Scope;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.domain.IDomainListener;
 import org.aieonf.concept.function.IDescribablePredicate;
-import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.osgi.selection.IActiveDomainProvider;
 
 public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecureCall{
@@ -24,14 +23,14 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecur
 
 	private IActiveDomainProvider provider;
 
-	private ILoginUser user;
-	
 	private ISecureCall secureCall;
 	
 	private Collection<ILoginListener> listeners;
 
+	private Map<Long, ILoginUser> users;
+
 	private Dispatcher() {
-		user = null;	
+		users = new TreeMap<>();
 		listeners = new ArrayList<>();
 	}
 
@@ -98,13 +97,6 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecur
 	public IDescribablePredicate<IDescriptor> getPredicates() {
 		return provider.getPredicates();
 	}
-
-	public boolean isAllowed( IModelLeaf<? extends IDescriptor> model ) {
-		IConcept.Scope scope = model.getScope();
-		if( Scope.PUBLIC.equals(scope))
-			return true;
-		return ( user != null );
-	}
 	
 	public IActiveDomainProvider getProvider() {
 		return provider;
@@ -128,24 +120,17 @@ public class Dispatcher implements IActiveDomainProvider, ILoginListener, ISecur
 	public boolean isSecure(long id, long token, String domain) {
 		return this.secureCall.isSecure(id, token, domain);
 	}
-
-	public boolean isLoggedIn( long userId, long token ) {
-		return user.isCorrect(userId, String.valueOf( token ));
-	}
-	
-	public ILoginUser getUser() {
-		return user;
-	}
 	
 	@Override
 	public void notifyLoginEvent(LoginEvent event) {
+		ILoginUser user = event.getUser();
 		switch( event.getLoginEvent() ) {
 		case LOGOFF:
-			user = null;
+			this.users.remove(user.getId());
 			break;
 		default:
-			user = event.getUser();
-		break;
+			this.users.put(user.getId(), user);
+			break;
 		}
 		notifyListeners(event);
 	}

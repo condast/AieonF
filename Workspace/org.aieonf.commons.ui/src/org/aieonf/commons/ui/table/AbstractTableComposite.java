@@ -21,6 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -87,21 +88,6 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 	protected abstract void prepare();
 
 	/**
-	 * Prepare the composite
-	 */
-	@SuppressWarnings("unchecked")
-	protected void onRowSelected( SelectionChangedEvent e ) {
-		try {
-			IStructuredSelection selection = (IStructuredSelection)e.getSelection();
-			IModelLeaf<D> entry = (IModelLeaf<D>) selection.getFirstElement();
-			notifyTableEvent( new TableEvent<IModelLeaf<D>, C>( this, TableEvents.SELECT, entry));
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}		
-	}
-
-	/**
 	 * Create the composite
 	 * @param parent
 	 */
@@ -113,6 +99,7 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		table.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		table.setData( RWT.CUSTOM_ITEM_HEIGHT, Integer.valueOf( 22 ));		
 		tableViewer.addSelectionChangedListener( e-> onRowSelected( e ));
+		tableViewer.addDoubleClickListener( e-> onRowDoubleClicked( e ));
 		tableViewer.setComparator( new SearchViewerComparator());
 		tableViewer.setContentProvider( new ModelProvider());
 		tclayout = new TableColumnLayout();
@@ -278,13 +265,42 @@ public abstract class AbstractTableComposite<D extends IDescribable, C extends O
 		return viewerColumn;
 	}
 
-	
 	/**
 	 * Response to clicking a header
 	 * @param e
 	 */
 	protected abstract void onHeaderClicked( SelectionEvent e );
 	
+	/**
+	 * Prepare the composite
+	 */
+	@SuppressWarnings("unchecked")
+	protected void onRowSelected( SelectionChangedEvent e ) {
+		try {
+			IStructuredSelection selection = (IStructuredSelection)e.getSelection();
+			IModelLeaf<D> entry = (IModelLeaf<D>) selection.getFirstElement();
+			notifyTableEvent( new TableEvent<IModelLeaf<D>, C>( this, TableEvents.SELECT, entry));
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}		
+	}
+
+	/**
+	 * Prepare the composite
+	 */
+	@SuppressWarnings("unchecked")
+	protected void onRowDoubleClicked( DoubleClickEvent e ) {
+		try {
+			IStructuredSelection selection = (IStructuredSelection)e.getSelection();
+			IModelLeaf<D> entry = (IModelLeaf<D>) selection.getFirstElement();
+			notifyTableEvent( new TableEvent<IModelLeaf<D>, C>( this, TableEvents.DOUBLE_CLICK, entry));
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}		
+	}
+
 	protected abstract int compareTables( int columnIndex, IModelLeaf<D> o1, IModelLeaf<D> o2);
 
 	// This will create the columns for the table

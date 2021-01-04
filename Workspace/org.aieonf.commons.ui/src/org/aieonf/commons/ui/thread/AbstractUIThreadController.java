@@ -10,12 +10,14 @@ import org.eclipse.swt.widgets.Display;
  * @author Kees
  *
  */
-public abstract class AbstractUIThreadController implements Runnable {
+public abstract class AbstractUIThreadController<D extends Object> implements Runnable {
 
 	private Display display;
 	
 	private boolean async;
 	private boolean disposed;
+	
+	private D data;
 
 	/**
 	 * Run default asynchronously
@@ -32,18 +34,32 @@ public abstract class AbstractUIThreadController implements Runnable {
 		this.async = async;
 	}
 
+	protected D getData() {
+		return data;
+	}
+
+	protected void setData(D data) {
+		this.data = data;
+	}
+
 	/**
 	 * The actual code to run
 	 */
 	protected abstract void onRun();
 	
+	protected void runThread() {
+		if( disposed )
+			return;
+		onRun();
+	}
+	
 	public void run() {
 		if( disposed || this.display.isDisposed())
 			return;
 		if( async )
-			this.display.asyncExec(()->onRun());
+			this.display.asyncExec(()->runThread());
 		else
-			this.display.syncExec(()->onRun());			
+			this.display.syncExec(()->runThread());			
 	}
 	
 	void onDispose( DisposeEvent event ) {

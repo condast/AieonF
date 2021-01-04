@@ -27,6 +27,7 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 			"Attempting to add a concept that will cause a cycle in the model. ";
 
 	public enum Attributes{
+		DESCRIPTOR,
 		IDENTIFIER,
 		TYPE,
 		ROOT,
@@ -186,4 +187,17 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 	boolean isReadOnly();
 
 	void setReadOnly(boolean choice);
+
+	/**
+	 * Get the (optional) identifier of the model. 
+	 * @return
+	 */
+	String getDescriptorId();
+
+	/**
+	 * Set the identifier for this leaf
+	 * @param descriptor
+	 */
+	void setDescriptorId(String descriptor);
+
 }

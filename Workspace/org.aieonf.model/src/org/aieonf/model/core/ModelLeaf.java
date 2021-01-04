@@ -57,6 +57,7 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	public ModelLeaf( long id, D data ){
 		this( id );
 		this.data = data;
+		set( IModelLeaf.Attributes.DESCRIPTOR.name(), data.getName() );
 	}
 
 	/**
@@ -184,6 +185,24 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	@Override
 	public void setIdentifier( String identifier ){
 		setValue( IModelLeaf.Attributes.IDENTIFIER , identifier );
+	}
+
+	/**
+	 * Get the (optional) identifier of the model. 
+	 * @return
+	 */
+	@Override
+	public String getDescriptorId(){
+		return getValue( IModelLeaf.Attributes.DESCRIPTOR);
+	}
+
+	/**
+	 * Set the identifier for this leaf
+	 * @param descriptor
+	 */
+	@Override
+	public void setDescriptorId( String descriptor ){
+		setValue( IModelLeaf.Attributes.DESCRIPTOR , descriptor );
 	}
 
 	@Override

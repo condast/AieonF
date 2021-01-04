@@ -235,7 +235,7 @@ public class VertexConceptBase implements IConceptBase {
 	public Object clone()
 	{
 		try{
-			IConceptBase clone = this.getClass().newInstance();
+			IConceptBase clone = this.getClass().getDeclaredConstructor(this.getClass()).newInstance();
 			Descriptor.overwrite(( IDescriptor) clone, (IDescriptor)this );
 			return clone;
 		}
