@@ -11,6 +11,7 @@ public interface IDatabaseConnection {
 		CREATE,
 		ADD,
 		ADD_NODE,
+		ADJACENT,
 		CONTAINS,
 		FIND,
 		FIND_ON_DESCRIPTOR,

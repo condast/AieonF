@@ -13,6 +13,7 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 		ID,
 		USER_ID,
 		TOKEN,
+		DIRECTION,
 		DOMAIN,
 		MODEL_ID,
 		KEY,
@@ -30,6 +31,17 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	public enum Roles{
 		ADMIN,
 		READ;
+
+		@Override
+		public String toString() {
+			return this.name().toLowerCase();
+		}
+	}
+
+	public enum Direction{
+		IN,
+		OUT,
+		BOTH;
 
 		@Override
 		public String toString() {
@@ -57,6 +69,14 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	 * @return
 	 */
 	public boolean addNode( long modelId, String label, M child );
+
+	/**
+	 * Get the model of all the nodes that are adjacent the given one
+	 * @param id
+	 * @param direction
+	 * @return
+	 */
+	public M adjacent(long id, Direction direction);
 
 	/**
 	 * Find the model with the given id

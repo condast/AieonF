@@ -13,9 +13,13 @@ import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.options.IOptions;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.core.ConceptBase;
+import org.aieonf.concept.core.Descriptor;
+import org.aieonf.concept.core.IConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
+import org.aieonf.model.core.Model;
 import org.aieonf.orientdb.core.ModelLeaf;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
@@ -32,20 +36,6 @@ public class ModelDatabase< T extends IDescriptor > {
 	
 	public static final String S_ERR_CYCLE_DETECTED = "A cycle has been detected: ";
 
-	public enum Attributes{
-		P,//Properties of the model
-		D,//Descriptor
-		C;//Children
-
-		public static boolean isAttribute( String str ) {
-			for( Attributes attr: values() ){
-				if( attr.name().equals(str.toUpperCase()))
-					return true;
-			}
-			return false;
-		}
-	}
-
 	private DatabaseService service;
 	
 	private IDomainAieon domain; 
@@ -55,6 +45,51 @@ public class ModelDatabase< T extends IDescriptor > {
 	public ModelDatabase( DatabaseService service, IDomainAieon domain ) {
 		this.service = service;
 		this.domain = domain;
+	}
+
+	/**
+	 * Get the vertices with the given id, and create the corresponding models
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	public IModelLeaf<IDescriptor> adjacent( long id, Direction direction ) throws FilterException {
+		IConceptBase base = new ConceptBase();
+		IModelNode<IDescriptor> node = new Model<IDescriptor>( base );
+		try {
+			OrientGraph graph = this.service.getGraph();
+			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(id));
+			IConceptBase descbase = new ConceptBase();
+			node.setData( new Descriptor( descbase ));
+			for( Vertex vertex: vertices ) {
+				boolean descriptorFound = false;
+				for( String key: vertex.getPropertyKeys())
+					base.set(key,  vertex.getProperty(key));
+				Iterable<Edge> edges = vertex.getEdges(direction);
+				for( Edge edge: edges ) {
+					if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
+						descriptorFound = true;
+						Vertex vdesc = edge.getVertex(Direction.IN);
+						for( String key: vdesc.getPropertyKeys())
+							descbase.set(key,  vdesc.getProperty(key));
+					}else {
+						node.addChild(new ModelLeaf( node, getOther(edge, vertex) ), edge.getLabel());
+					}
+				}
+				if(descriptorFound)
+					continue;
+				edges = vertex.getEdges(Direction.OUT, IDescriptor.DESCRIPTOR );
+				for( Edge edge: edges ) {
+					Vertex vdesc = edge.getVertex(Direction.IN);
+					for( String key: vdesc.getPropertyKeys())
+						descbase.set(key,  vdesc.getProperty(key));
+				}
+			}
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+		}
+		return node;
 	}
 
 	/**

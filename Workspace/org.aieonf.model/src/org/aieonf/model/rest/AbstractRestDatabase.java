@@ -226,6 +226,27 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	}
 
 	@Override
+	public M adjacent( long id, Direction direction ) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.ADJACENT;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.MODEL_ID.toString(), String.valueOf(id));
+		parameters.put( Attributes.DIRECTION.toString(), direction.name() );
+		WebClient<M[]> client = new WebClient<>( path );
+		Collection<M>results = new ArrayList<>();
+		try {
+			client.addListener( e->getResults(e, results ));
+			client.sendGet(request, parameters);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Utils.assertNull(results)? null: results.iterator().next();
+	}
+
+	@Override
 	public M find( long id) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.FIND;

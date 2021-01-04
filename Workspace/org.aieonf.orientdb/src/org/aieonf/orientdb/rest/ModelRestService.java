@@ -37,6 +37,7 @@ import org.aieonf.orientdb.filter.VertexFilterFactory;
 import org.aieonf.orientdb.serialisable.OrientModelTypeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.tinkerpop.blueprints.Direction;
 
 //Sets the path to base URL + /rest
 @Path("/")
@@ -137,6 +138,37 @@ public class ModelRestService{
 			ex.printStackTrace();
 			return Response.serverError().build();
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/adjacent")
+	public Response adjacent( @QueryParam("id") long id, @QueryParam("token") long token, 
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, @QueryParam("direction") String direction) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		IModelLeaf<IDescriptor>[] results = new IModelLeaf[1];
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+ 				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			results[0] = database.adjacent( modelId, Direction.valueOf(direction));
+			GsonBuilder builder = new GsonBuilder();
+			builder.enableComplexMapKeySerialization();
+			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
+			Gson gson = builder.create();
+			String str = gson.toJson(results, IModelLeaf.class );
+			return Response.ok( str ).build();
+		}
+		catch( Exception ex ) {
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}	
 	}
 
 	@GET
