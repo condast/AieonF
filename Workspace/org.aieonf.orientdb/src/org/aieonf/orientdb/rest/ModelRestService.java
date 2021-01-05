@@ -159,7 +159,7 @@ public class ModelRestService{
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
-			String str = gson.toJson(results, IModelLeaf.class );
+			String str = gson.toJson(results, IModelLeaf[].class );
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {

@@ -63,15 +63,13 @@ public class ModelDatabase< T extends IDescriptor > {
 			node.setData( new Descriptor( descbase ));
 			for( Vertex vertex: vertices ) {
 				boolean descriptorFound = false;
-				for( String key: vertex.getPropertyKeys())
-					base.set(key,  vertex.getProperty(key));
+				fill(base, vertex);
 				Iterable<Edge> edges = vertex.getEdges(direction);
 				for( Edge edge: edges ) {
 					if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
 						descriptorFound = true;
 						Vertex vdesc = edge.getVertex(Direction.IN);
-						for( String key: vdesc.getPropertyKeys())
-							descbase.set(key,  vdesc.getProperty(key));
+						fill( descbase, vdesc );
 					}else {
 						node.addChild(new ModelLeaf( node, getOther(edge, vertex) ), edge.getLabel());
 					}
@@ -511,6 +509,22 @@ public class ModelDatabase< T extends IDescriptor > {
 		return counter;
 	}
 	
+	public static IConceptBase fill( Vertex vertex ) {
+		IConceptBase base = new ConceptBase();
+		fill( base, vertex );
+		return base;
+	}
+
+	public static void fill( IConceptBase base, Vertex vertex ) {
+		for( String key: vertex.getPropertyKeys()) {
+			Object value = vertex.getProperty(key);
+			if( value instanceof String)
+				base.set(key, (String) value );
+			else
+				base.set(key, value.toString());
+		}
+	}
+
 	public static boolean hasEdges( Vertex vertex ) {
 		Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();		
 		return edges.hasNext(); 
