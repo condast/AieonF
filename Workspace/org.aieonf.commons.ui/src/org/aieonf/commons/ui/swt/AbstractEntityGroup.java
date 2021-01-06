@@ -1,24 +1,24 @@
 package org.aieonf.commons.ui.swt;
 
 import org.eclipse.swt.widgets.Composite;
-
+import org.eclipse.swt.widgets.Group;
 import org.aieonf.commons.ui.verification.IWidgetVerificationDelegate;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyListener;
 
-public abstract class AbstractEntityComposite<D extends Object> extends Composite implements IManagedProvider<D> {
+public abstract class AbstractEntityGroup<T extends Object> extends Group implements IManagedProvider<T> {
 	private static final long serialVersionUID = 1L;
 	
-	private IEntityController<D> controller;
+	private IEntityController<T> controller;
 	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	protected AbstractEntityComposite(Composite parent, int style ) {
-		this( parent, style, new DefaultEntityController<D>( null ), false);
+	protected AbstractEntityGroup(Composite parent, int style ) {
+		this( parent, style, new DefaultEntityController<T>( null ), false);
 	}
 
 	/**
@@ -26,8 +26,8 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 * @param parent
 	 * @param style
 	 */
-	protected AbstractEntityComposite(Composite parent, int style, boolean delayCreation ) {
-		this( parent, style, new DefaultEntityController<D>( null ), delayCreation);
+	protected AbstractEntityGroup(Composite parent, int style, boolean delayCreation ) {
+		this( parent, style, new DefaultEntityController<T>( null ), delayCreation);
 	}
 
 	/**
@@ -35,7 +35,7 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 * @param parent
 	 * @param style
 	 */
-	protected AbstractEntityComposite(Composite parent, int style, IEntityController<D> controller, boolean delayCreation) {
+	protected AbstractEntityGroup(Composite parent, int style, IEntityController<T> controller, boolean delayCreation) {
 		super( parent, style );
 		this.controller = controller;
 		this.controller.setBlockEntry(true);
@@ -49,7 +49,7 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 * @param parent
 	 * @param style
 	 */
-	protected AbstractEntityComposite(Composite parent, int style, IEntityController<D> controller ) {
+	protected AbstractEntityGroup(Composite parent, int style, IEntityController<T> controller ) {
 		this( parent, style, controller, false );
 	}
 	/**
@@ -57,8 +57,8 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 * @param parent
 	 * @param style
 	 */
-	protected AbstractEntityComposite(Composite parent, int style, IWidgetVerificationDelegate verifier, boolean delayCreation ) {
-		this( parent, style, new DefaultEntityController<D>( verifier ), delayCreation );
+	protected AbstractEntityGroup(Composite parent, int style, IWidgetVerificationDelegate verifier, boolean delayCreation ) {
+		this( parent, style, new DefaultEntityController<T>( verifier ), delayCreation );
 	}
 
 	/**
@@ -66,13 +66,13 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 * @param parent
 	 * @param style
 	 */
-	protected AbstractEntityComposite(Composite parent, int style, IWidgetVerificationDelegate verifier) {
+	protected AbstractEntityGroup(Composite parent, int style, IWidgetVerificationDelegate verifier) {
 		this( parent, style, verifier, false );
 	}
 	
 	protected abstract void createComposite( Composite parent, int style );
 
-	protected IEntityController<D> getController() {
+	protected IEntityController<T> getController() {
 		return controller;
 	}
 
@@ -110,7 +110,7 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 * Get the model that is displayed in its current state
 	 * @return
 	 */
-	protected D getModel(){
+	protected T getModel(){
 		return controller.getInput();
 	}
 
@@ -125,12 +125,12 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	}
 
 	@Override
-	public void addEditListener( IEditListener<D> listener) {
+	public void addEditListener( IEditListener<T> listener) {
 		controller.addEditListener(listener);
 	}
 
 	@Override
-	public void removeEditListener( IEditListener<D> listener) {
+	public void removeEditListener( IEditListener<T> listener) {
 		controller.removeEditListener(listener);
 	}
 	
@@ -139,7 +139,7 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	}
 
 	@Override
-	public void notifyInputEdited( EditEvent<D> event ){
+	public void notifyInputEdited( EditEvent<T> event ){
 		controller.getEditListener().notifyInputEdited(event);
 	}
 
@@ -152,14 +152,14 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 * added
 	 * @param input
 	 */
-	protected abstract D onGetInput( D input );
+	protected abstract T onGetInput( T input );
 	
 	@Override
-	public D getInput() {
-		D input = null;
+	public T getInput() {
+		T input = null;
 		try{
 			input = this.controller.getInput();
-			D inp = this.onGetInput(input);
+			T inp = this.onGetInput(input);
 			if(( input != null ) &&  !input.equals( inp ))
 				this.controller.setInput(inp);
 			this.controller.setDirty(false);//reset..it should be synchronized
@@ -176,10 +176,10 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 *input source
 	 * @param input
 	 */
-	protected abstract void onSetInput( D input, boolean overwrite );
+	protected abstract void onSetInput( T input, boolean overwrite );
 
 	@Override
-	public void setInput( D input, boolean overwrite) {
+	public void setInput( T input, boolean overwrite) {
 		try{
 			this.controller.setBlockEntry( true );
 			IWidgetVerificationDelegate wvd = this.controller.getVerifier();

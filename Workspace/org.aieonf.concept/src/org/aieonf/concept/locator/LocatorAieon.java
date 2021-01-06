@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
@@ -110,7 +110,7 @@ implements ILocatorAieon
 	public URI getURI()
 	{
 		String str = super.get( IConcept.Attributes.URI.name() );
-		if( Utils.assertNull(str))
+		if( StringUtils.isEmpty(str))
 			return null;
 		return URI.create( str );
 	}

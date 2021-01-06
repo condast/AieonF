@@ -10,8 +10,8 @@ package org.aieonf.concept.file;
 import java.io.File;
 import java.net.URI;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.loader.ILoaderAieon;
 
 public class ProjectFolderUtils {
@@ -117,7 +117,7 @@ public class ProjectFolderUtils {
 		String[] split = str.split("[/]");
 		StringBuffer buffer = new StringBuffer();
 		for( String line: split ){
-			if( Utils.assertNull( line ) ||  line.equals( S_FILE ))
+			if( StringUtils.isEmpty( line ) ||  line.equals( S_FILE ))
 				continue;
 			if( line.equals( S_USER_HOME ))
 				buffer.append( System.getProperty( S_USER_HOME_PROPERTY ));
@@ -186,7 +186,7 @@ public class ProjectFolderUtils {
 	{
 		String folder = loader.getSource();
 		String name = loader.getIdentifier();
-		String ext = ( Utils.assertNull( extension ))? S_DEFAULT_EXTENSION: extension;
+		String ext = ( StringUtils.isEmpty( extension ))? S_DEFAULT_EXTENSION: extension;
 		File file = new File( System.getProperty( S_USER_HOME_PROPERTY ) + File.separator + 
 				S_SAIGHT + File.separator +
 				folder + File.separator +  StringStyler.prettyString( name ) + "." + ext );

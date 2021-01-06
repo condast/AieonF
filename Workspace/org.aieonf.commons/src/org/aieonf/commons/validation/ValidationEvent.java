@@ -2,7 +2,7 @@ package org.aieonf.commons.validation;
 
 import java.util.EventObject;
 
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 
 public class ValidationEvent<T,U extends Object> extends EventObject
 {
@@ -115,7 +115,7 @@ public class ValidationEvent<T,U extends Object> extends EventObject
 	public String getExtendedMessage()
 	{
 		String val = this.getValue().toString();
-		if( Utils.assertNull(val ))
+		if( StringUtils.isEmpty(val ))
 			val = "null";
 		return msg + ": (" + this.getKey() + ", " + val + ")";
 	}

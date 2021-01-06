@@ -2,7 +2,7 @@ package org.aieonf.browsersupport.library.chromium;
 
 import java.net.URI;
 
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -49,7 +49,7 @@ public class ChromiumModelFunctionProvider extends AbstractFunctionProvider<Stri
 		baseLoader.setURI( uri );
 		baseLoader.setDescription( DEFAULT_CHROMIUM_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context);
-		if( Utils.assertNull( model.getIdentifier() ))
+		if( StringUtils.isEmpty( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_CHROMIUM_IDENTIFIER );
 		IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> gdb = new ChromiumBookmarkProvider( baseLoader );
 		return gdb;

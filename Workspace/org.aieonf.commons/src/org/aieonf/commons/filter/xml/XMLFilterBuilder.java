@@ -22,9 +22,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.io.IOUtils;
+import org.aieonf.commons.strings.StringUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 
@@ -172,7 +172,7 @@ public class XMLFilterBuilder<D extends Object> {
 	}
 
 	public static String getLocation( String defaultLocation ){
-		if( !Utils.assertNull( defaultLocation ))
+		if( !StringUtils.isEmpty( defaultLocation ))
 			return defaultLocation;
 		return defaultLocation;
 	}

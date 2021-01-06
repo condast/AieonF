@@ -1,6 +1,6 @@
 package org.aieonf.model.xml;
 
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
@@ -20,7 +20,7 @@ public class XMLModel extends Model<IDescriptor>{
 		set( IModelLeaf.Attributes.IDENTIFIER.name(), identifier);
 		data.set(IDescriptor.Attributes.ID.name(), String.valueOf(-1));
 		String name = getName();
-		if(!Utils.assertNull( name )) {
+		if(!StringUtils.isEmpty( name )) {
 			data.set( IDescriptor.Attributes.NAME.name(), name);
 		}
 	}

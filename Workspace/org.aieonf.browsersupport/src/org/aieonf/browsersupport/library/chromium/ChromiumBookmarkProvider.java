@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
@@ -92,7 +92,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 		//	models.add( leaf );
 
 		String type = node.path("type").textValue();
-		ChromiumAieon.Types ctype = ( Utils.assertNull( type )? ChromiumAieon.Types.OTHER: ChromiumAieon.Types.valueOf( StringStyler.styleToEnum( type )));
+		ChromiumAieon.Types ctype = ( StringUtils.isEmpty( type )? ChromiumAieon.Types.OTHER: ChromiumAieon.Types.valueOf( StringStyler.styleToEnum( type )));
 		IModelLeaf<IDescriptor> model = null;
 		ChromiumAieon aieon = new ChromiumAieon( ctype );
 		aieon.fill(node );

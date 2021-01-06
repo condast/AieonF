@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -54,7 +54,7 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 	 */
 	@Override
 	public boolean hasFunction( String name ){
-		if( Utils.assertNull( name ))
+		if( StringUtils.isEmpty( name ))
 			return false;
 		for( IFunctionProvider<String, IModelProvider<String, D, M>> function: functions ){
 			if( function.canProvide( name ))
@@ -93,7 +93,7 @@ extends AbstractModelContextFactory<D,M> implements IProviderContextFactory<Stri
 		ITemplateLeaf<IContextAieon> template  = this.createDefaultTemplate( bundle_id, factory );	
 		IDescriptor descriptor = template.getDescriptor();
 		String source = descriptor.get( IConcept.Attributes.SOURCE.name() );
-		if( Utils.assertNull( source ))
+		if( StringUtils.isEmpty( source ))
 			descriptor.set( IConcept.Attributes.SOURCE.name(), template.getID()+ File.separator + S_MODEL );
 		return template;
 	}

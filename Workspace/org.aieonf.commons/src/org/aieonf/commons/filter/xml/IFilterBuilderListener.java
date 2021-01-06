@@ -7,8 +7,8 @@
  *******************************************************************************/
 package org.aieonf.commons.filter.xml;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 
 public interface IFilterBuilderListener<M extends Object> {
 		
@@ -34,7 +34,7 @@ public interface IFilterBuilderListener<M extends Object> {
 		 */
 		public static boolean isNode( String attr ){
 			String str = StringStyler.styleToEnum( attr );
-			if( Utils.assertNull(str))
+			if( StringUtils.isEmpty(str))
 				return false;
 			for( FilterNodes ma: FilterNodes.values() ){
 				if( str.equals( ma.name()))
@@ -68,7 +68,7 @@ public interface IFilterBuilderListener<M extends Object> {
 		 */
 		public static boolean isAttribute( String attr ){
 			String str = StringStyler.styleToEnum( attr );
-			if( Utils.assertNull(str))
+			if( StringUtils.isEmpty(str))
 				return false;
 			for( FilterAttributes ma: FilterAttributes.values() ){
 				if( str.equals( ma.name()))
@@ -101,7 +101,7 @@ public interface IFilterBuilderListener<M extends Object> {
 		 */
 		public static boolean isType( String attr ){
 			String str = StringStyler.styleToEnum( attr );
-			if( Utils.assertNull(str))
+			if( StringUtils.isEmpty(str))
 				return false;
 			for( FilterTypes ma: FilterTypes.values() ){
 				if( str.equals( ma.name()))

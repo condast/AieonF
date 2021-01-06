@@ -242,7 +242,7 @@ public class BodyFactory<T extends Object>
 
 		IConcept result = null;
 		try{
-			result = clazz.newInstance();
+			result = clazz.getDeclaredConstructor(clazz).newInstance();
 		}
 		catch( Exception ex ){
 			throw new ConceptException( ex.getMessage(), ex );

@@ -10,9 +10,9 @@ package org.aieonf.concept.core;
 
 import java.util.*;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 
 /**
  * Create a concept, using a properties file
@@ -80,7 +80,7 @@ public class ConceptBase implements IConceptBase
 			throw new IllegalArgumentException( "Invalid key " + key + " contains <space> character" );
 		}
 
-		if( Utils.assertNull( value ))
+		if( StringUtils.isEmpty( value ))
 			properties.remove(key);
 		else
 			properties.put( key, value );

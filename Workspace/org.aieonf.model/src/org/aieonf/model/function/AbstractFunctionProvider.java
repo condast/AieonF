@@ -3,8 +3,8 @@ package org.aieonf.model.function;
 import java.io.File;
 import java.net.URI;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.encryption.IEncryption.Algorithms;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -106,7 +106,7 @@ public abstract class AbstractFunctionProvider<K extends Object, F extends Objec
 	protected static IModelLeaf<IDescriptor> getModelForLoader( ILoaderAieon loader, IContextAieon context ){
 		Descriptor.overwrite( loader, context.getDescriptor() );
 		IModelLeaf<IDescriptor> model = new ModelLeaf<IDescriptor>( loader.getID(), loader, IContextAieon.Attributes.CONTEXT.name() );
-		if( !Utils.assertNull( context.getName()))
+		if( !StringUtils.isEmpty( context.getName()))
 			model.setIdentifier( context.getName() );
 		return model;
 	}

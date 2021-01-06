@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
@@ -51,7 +51,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 		LOCALE;
 
 		public static boolean isValid( String name ){
-			if( Utils.assertNull( name ))
+			if( StringUtils.isEmpty( name ))
 				return false;
 			String str = StringStyler.styleToEnum( name );
 			for( Concepts concept: Concepts.values()){
@@ -124,7 +124,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 		switch( dc ){
 		case CONTEXT:
 			this.context = new ContextAieon();
-			if(!Utils.assertNull( name_attr))
+			if(!StringUtils.isEmpty( name_attr))
 				this.context.set( IContextAieon.Attributes.CONTEXT, name_attr);
 			descriptor = this.context;
 			break;
@@ -133,7 +133,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 			break;
 		case LOADER:
 			descriptor = new LoaderAieon( this.context );
-			if(!Utils.assertNull( name_attr))
+			if(!StringUtils.isEmpty( name_attr))
 				this.context.set( ILoaderAieon.Attributes.LOADER, name_attr);
 			break;
 		case CONCEPT:
@@ -141,7 +141,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 			break;			
 		case CATEGORY:
 			descriptor = new CategoryAieon();
-			if(!Utils.assertNull( name_attr))
+			if(!StringUtils.isEmpty( name_attr))
 				this.context.set( CategoryAieon.Attributes.CATEGORY, name_attr);
 			break;
 		case URL:
@@ -155,12 +155,12 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 			break;
 		case LOCALE:
 			descriptor = new LocaleAieon();
-			if(!Utils.assertNull( name_attr))
+			if(!StringUtils.isEmpty( name_attr))
 				this.context.set( LocaleAieon.Attributes.LOCALE, name_attr);
 			break;
 		default:
 			String clss_str = attributes.getValue( ITemplateProperty.Attributes.CLASS.toString());
-			if(!Utils.assertNull(clss_str)){
+			if(!StringUtils.isEmpty(clss_str)){
 				Class<?> cd;
 				try {
 					cd = clss.getClassLoader().loadClass( clss_str );
@@ -265,7 +265,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 	public static Map<ITemplateProperty.Attributes, String> convertAttributes( Attributes attributes ){
 		Map<ITemplateProperty.Attributes,String> attrs = new HashMap<ITemplateProperty.Attributes, String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.assertNull( attributes.getLocalName(i))){
+			if( !StringUtils.isEmpty( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 				ITemplateProperty.Attributes attr = ITemplateProperty.Attributes.valueOf( str );
 				attrs.put( attr, attributes.getValue(i));
@@ -281,7 +281,7 @@ public class TemplateInterpreter extends AbstractModelInterpreter<IDescriptor, I
 	 */
 	public static void setLocale( LocaleAieon locale, Attributes attributes ){
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.assertNull( attributes.getLocalName(i))){
+			if( !StringUtils.isEmpty( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 				LocaleAieon.Attributes key = LocaleAieon.Attributes.valueOf( str );
 				locale.set( key, attributes.getValue(i));

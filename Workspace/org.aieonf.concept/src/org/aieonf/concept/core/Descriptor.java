@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
@@ -738,7 +737,7 @@ public class Descriptor implements IDescriptor
 			return element.toString();
 		IDescribable desc = ( IDescribable )element;
 		String retval = desc.getDescriptor().getDescription();
-		if( Utils.assertNull( retval ))
+		if( StringUtils.isEmpty( retval ))
 			retval = desc.getDescriptor().getName();
 		return retval;
 	}
@@ -815,7 +814,7 @@ public class Descriptor implements IDescriptor
 	 */
 	public static boolean getBoolean( IDescriptor descriptor, Enum<?> attribute, boolean defaultValue ){
 		String str = descriptor.get(attribute);
-		return Utils.assertNull(str)?defaultValue: Boolean.valueOf(str );
+		return StringUtils.isEmpty(str)?defaultValue: Boolean.valueOf(str );
 	}
 	
 	/**

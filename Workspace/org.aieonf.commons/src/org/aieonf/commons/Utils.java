@@ -29,6 +29,7 @@ public class Utils
 	 * @param str
 	 * @return
 	 */
+	@Deprecated //: Use Stringutils.isEmpty();
 	public static final boolean assertNull( String str ){
 		return (( str == null) || ( str.trim().length() == 0 ));
 	}

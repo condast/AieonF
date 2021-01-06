@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Logger;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescribable;
@@ -221,7 +220,7 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String value = new String(ch, start, length).trim();
-		if( Utils.assertNull( value  ))
+		if( StringUtils.isEmpty( value  ))
 			return;
 		try{
 			ModelAttributes ma = this.stack.elementAt( this.stack.size()-2);
@@ -306,7 +305,7 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 	 */
 	public static void fillAttributes( IModelLeaf<IDescriptor> leaf, Attributes attributes ){
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.assertNull( attributes.getLocalName(i))){
+			if( !StringUtils.isEmpty( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 				IModelLeaf.Attributes attr = IModelLeaf.Attributes.valueOf( str );
 				leaf.set( attr, attributes.getValue(i));
@@ -332,7 +331,7 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 	public static Map<String, String> convertAttributes( Attributes attributes ){
 		Map<String,String> attrs = new HashMap<String,String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.assertNull( attributes.getLocalName(i))){
+			if( !StringUtils.isEmpty( attributes.getLocalName(i))){
 				attrs.put( attributes.getLocalName( i ), attributes.getValue(i));
 			}
 		}

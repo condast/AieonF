@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.ConceptException;
@@ -400,7 +399,7 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 	 */
 	@SuppressWarnings("unchecked")
 	public static IModelLeaf<IDescriptor> getModel( IModelLeaf<? extends IDescriptor> root, String id ){
-		if( Utils.assertNull( id ))
+		if( StringUtils.isEmpty( id ))
 			return null;
 		if( id.equals( root.getIdentifier() ))
 			return (IModelLeaf<IDescriptor>) root;

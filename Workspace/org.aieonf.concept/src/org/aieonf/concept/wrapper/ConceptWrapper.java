@@ -1,7 +1,7 @@
 package org.aieonf.concept.wrapper;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptException;
@@ -67,7 +67,7 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 	public final Scope getScope()
 	{
 		String str = super.getDescriptor().get( IConcept.Attributes.SCOPE.name() );
-		if( Utils.assertNull(str))
+		if( StringUtils.isEmpty(str))
 			return Scope.APPLICATION;
 		return Scope.valueOf(  StringStyler.styleToEnum( str ));
 	}

@@ -3,7 +3,7 @@ package org.aieonf.browsersupport.library.ie;
 import java.io.File;
 import java.net.URI;
 
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -48,7 +48,7 @@ IModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>>
 		ILoaderAieon baseLoader = getDefaultLoader(context);
 		baseLoader.setDescription( DEFAULT_EXPLORER_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context );
-		if( Utils.assertNull( model.getIdentifier() ))
+		if( StringUtils.isEmpty( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_IE_IDENTIFIER );
 		baseLoader.set( IConcept.Attributes.SOURCE.name(), getDefaultSource().getPath());
 		return new IEFavoritesProvider( baseLoader );

@@ -22,8 +22,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.io.IOUtils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.builder.IModelBuilder;
 import org.aieonf.model.builder.IModelBuilderListener;
@@ -192,7 +192,7 @@ public class XMLModelBuilder<D extends IDescriptor, M extends IModelLeaf<D>> imp
 	}
 
 	public static String getLocation( String defaultLocation ){
-		if( !Utils.assertNull( defaultLocation ))
+		if( !StringUtils.isEmpty( defaultLocation ))
 			return defaultLocation;
 		return defaultLocation;
 	}

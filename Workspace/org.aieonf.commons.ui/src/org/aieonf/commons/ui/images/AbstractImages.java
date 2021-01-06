@@ -11,8 +11,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -183,7 +183,7 @@ public abstract class AbstractImages implements IImageProvider {
 	 */
 	protected URL getImageURL( String location ){
 		URL url = null;
-		if( Utils.assertNull( this.bundleName )){
+		if( StringUtils.isEmpty( this.bundleName )){
 			if( !location.startsWith("/"))
 				location = "/" + location;
 			url = this.getClass().getResource( location );

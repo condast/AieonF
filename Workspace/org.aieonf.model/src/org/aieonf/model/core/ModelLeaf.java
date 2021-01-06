@@ -3,7 +3,6 @@ package org.aieonf.model.core;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.IConcept.Scope;
@@ -285,7 +284,7 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	public int getDepth()
 	{
 		String str = getValue( IModelLeaf.Attributes.DEPTH);
-		if( Utils.assertNull(str))
+		if( StringUtils.isEmpty(str))
 			str = "0";
 		return Integer.parseInt( str );
 	}

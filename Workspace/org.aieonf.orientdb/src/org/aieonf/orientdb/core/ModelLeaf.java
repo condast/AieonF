@@ -2,7 +2,6 @@ package org.aieonf.orientdb.core;
 
 import java.util.Iterator;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.number.NumberUtils;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
@@ -168,7 +167,7 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	@Override
 	public int getDepth() {
 		String str = getValue( IModelLeaf.Attributes.DEPTH);
-		if( Utils.assertNull(str))
+		if( StringUtils.isEmpty(str))
 			str = "0";
 		return Integer.parseInt( str );
 	}

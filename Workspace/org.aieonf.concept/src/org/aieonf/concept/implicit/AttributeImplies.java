@@ -1,7 +1,7 @@
 package org.aieonf.concept.implicit;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.implicit.IImplicit.Conditions;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
 
@@ -27,11 +27,11 @@ public class AttributeImplies<T extends IDescriptor, U extends IDescriptor>
 	protected int compareOnAttribute(U obj) {
 		String reference = super.getReference().get( key );
 		String compare = obj.get( key );
-		if( Utils.assertNull( reference ) && Utils.assertNull( compare ))
+		if( StringUtils.isEmpty( reference ) && StringUtils.isEmpty( compare ))
 			return 0;
-		if( !Utils.assertNull( reference ) && Utils.assertNull( compare ))
+		if( !StringUtils.isEmpty( reference ) && StringUtils.isEmpty( compare ))
 			return 1;
-		if( Utils.assertNull( reference ) && !Utils.assertNull( compare ))
+		if( StringUtils.isEmpty( reference ) && !StringUtils.isEmpty( compare ))
 			return -1;		
 		return reference.compareTo( compare );
 	}

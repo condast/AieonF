@@ -2,8 +2,8 @@ package org.aieonf.commons.ui.verification;
 
 import java.util.regex.Pattern;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
@@ -53,7 +53,7 @@ public interface IWidgetVerificationDelegate {
 		 * @return
 		 */
 		public boolean verify( String text ){
-			if( Utils.assertNull(text))
+			if( StringUtils.isEmpty(text))
 				return false;
 			VerificationTypes type = valueOf( name());
 			Pattern pattern = null;

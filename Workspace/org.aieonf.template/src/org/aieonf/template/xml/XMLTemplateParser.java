@@ -10,8 +10,8 @@ package org.aieonf.template.xml;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.ContextAieon;
 import org.aieonf.model.builder.IModelBuilderListener.ModelAttributes;
@@ -127,7 +127,7 @@ public class XMLTemplateParser<D extends IDescriptor, M extends IModelLeaf<D>> e
 			context.setApplicationName( this.getName() );
 			context.setApplicationVersion( this.getVersion() );
 			String id = this.getID();
-			if( !Utils.assertNull(id))
+			if( !StringUtils.isEmpty(id))
 				context.setApplicationID(id);
 		}
 	}

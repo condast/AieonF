@@ -4,7 +4,7 @@ package org.aieonf.concept.body;
 import java.io.*;
 import java.util.*;
 
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.*;
 import org.aieonf.concept.core.*;
 
@@ -51,10 +51,10 @@ public class ConceptBody<T extends IDescriptor>
 		Class<?> conceptClass = null;
 		try{
 			String className = descriptor.getClassName();
-			if( Utils.assertNull( className ))
+			if( StringUtils.isEmpty( className ))
 				throw new NullPointerException( S_ERR_NO_CLASS_NAME );
 			conceptClass = Class.forName( className );
-			T newConcept = ( T )conceptClass.newInstance();
+			T newConcept = ( T )conceptClass.getDeclaredConstructor(conceptClass).newInstance();
 			BodyFactory.transfer( newConcept, descriptor, true );
 			newConcept.set( IDescriptor.Attributes.CLASS.name(), newConcept.getClass().getName() );
 			if( newConcept instanceof IConcept ){

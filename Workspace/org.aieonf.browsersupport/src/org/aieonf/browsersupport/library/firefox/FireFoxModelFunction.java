@@ -3,7 +3,7 @@ package org.aieonf.browsersupport.library.firefox;
 import java.net.URI;
 
 import org.aieonf.collections.connector.AbstractFileConnector;
-import org.aieonf.commons.Utils;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -65,7 +65,7 @@ public class FireFoxModelFunction extends AbstractFunctionProvider<String,
 		ILoaderAieon baseLoader = getDefaultLoader( context);
 		baseLoader.setDescription( DEFAULT_FIREFOX_PROVIDER_NAME );
 		IModelLeaf<IDescriptor> model = getModelForLoader(baseLoader, context );
-		if( Utils.assertNull( model.getIdentifier() ))
+		if( StringUtils.isEmpty( model.getIdentifier() ))
 			model.setIdentifier( DEFAULT_FIREFOX_IDENTIFIER );
 		IConcept concept = new Concept( model.getDescriptor());
 		concept.setReadOnly(true);

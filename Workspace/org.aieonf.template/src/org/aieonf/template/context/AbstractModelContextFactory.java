@@ -110,10 +110,10 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 
 	@SuppressWarnings("unchecked")
 	protected ITemplateLeaf<IContextAieon> getTemplate( ITemplateLeaf<? extends IDescriptor> leaf, String identifier ){
-		if( Utils.assertNull( identifier ))
+		if( StringUtils.isEmpty( identifier ))
 			return null;
 		if( identifier.equals( String.valueOf( leaf.getID()))){
-			if( Utils.assertNull( leaf.getDescriptor().get( IConcept.Attributes.SOURCE.name() ) )){
+			if( StringUtils.isEmpty( leaf.getDescriptor().get( IConcept.Attributes.SOURCE.name() ) )){
 				leaf.getDescriptor().set( IConcept.Attributes.SOURCE.name(), String.valueOf( template.getID() ));
 			}
 			return (ITemplateLeaf<IContextAieon>) leaf;

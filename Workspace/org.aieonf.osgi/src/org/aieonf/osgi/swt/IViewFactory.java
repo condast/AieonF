@@ -13,6 +13,7 @@ public interface IViewFactory<T,U extends Control>
 		ADD,
 		EDIT,
 		HOME,
+		HELP,
 		AUTHENTICATION,
 		OPTIONS,
 		OPTIONS_SELECT,

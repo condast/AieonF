@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Logger;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.filter.FilterChain;
 import org.aieonf.commons.filter.IFilter;
 import org.aieonf.commons.filter.xml.IFilterBuilderListener.FilterNodes;
@@ -189,7 +188,7 @@ public class XMLFilterParser<D extends Object> extends DefaultHandler{
 	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		String value = new String(ch, start, length);
-		if( Utils.assertNull( value  ))
+		if( StringUtils.isEmpty( value  ))
 			return;
 		try{
 			logger.fine("Setting value for key: " );
@@ -229,8 +228,8 @@ public class XMLFilterParser<D extends Object> extends DefaultHandler{
 		String msg = message.format(new Object[]
 				{
 				x.getSystemId(),
-				new Integer(x.getLineNumber()),
-				new Integer(x.getColumnNumber()),
+				x.getLineNumber(),
+				x.getColumnNumber(),
 				x.getMessage()
 				});
 		Logger.getLogger( this.getClass().getName()).info(msg);
@@ -258,7 +257,7 @@ public class XMLFilterParser<D extends Object> extends DefaultHandler{
 	 */
 	public static <D> void fillAttributes( IFilter<D> filter, Attributes attributes ){
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.assertNull( attributes.getLocalName(i))){
+			if( !StringUtils.isEmpty( attributes.getLocalName(i))){
 				String str = StringStyler.styleToEnum( attributes.getLocalName( i ));
 			}
 		}
@@ -282,7 +281,7 @@ public class XMLFilterParser<D extends Object> extends DefaultHandler{
 	public static Map<String, String> convertAttributes( Attributes attributes ){
 		Map<String,String> attrs = new HashMap<String,String>();
 		for( int i=0; i<attributes.getLength(); i++  ){
-			if( !Utils.assertNull( attributes.getLocalName(i))){
+			if( !StringUtils.isEmpty( attributes.getLocalName(i))){
 				attrs.put( attributes.getLocalName( i ), attributes.getValue(i));
 			}
 		}

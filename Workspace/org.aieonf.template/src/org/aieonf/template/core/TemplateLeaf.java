@@ -1,7 +1,7 @@
 package org.aieonf.template.core;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
@@ -25,11 +25,11 @@ public class TemplateLeaf<T extends IDescriptor> extends Model<T> implements ITe
 	
 	private void fill( org.xml.sax.Attributes attributes ){
 		String name = attributes.getValue( StringStyler.xmlStyleString( IDescriptor.Attributes.NAME.name() ));
-		if(!Utils.assertNull( name )) {
+		if(!StringUtils.isEmpty( name )) {
 			super.set( IDescriptor.Attributes.NAME.name(), name );
 		}
 		String id = attributes.getValue( StringStyler.xmlStyleString( IDescriptor.Attributes.ID.name() ));
-		if(!Utils.assertNull( id )) {
+		if(!StringUtils.isEmpty( id )) {
 			set( IModelLeaf.Attributes.IDENTIFIER.name(), id);
 		}
 	}

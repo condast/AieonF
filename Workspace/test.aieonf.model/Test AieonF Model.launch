@@ -11,24 +11,18 @@
     <booleanAttribute key="default_auto_start" value="true"/>
     <intAttribute key="default_start_level" value="4"/>
     <setAttribute key="deselected_workspace_bundles">
+        <setEntry value="com.condast.ads"/>
         <setEntry value="org.aieonf.browsersupport"/>
         <setEntry value="org.aieonf.collections"/>
         <setEntry value="org.aieonf.commons.base64"/>
         <setEntry value="org.aieonf.commons.support"/>
         <setEntry value="org.aieonf.commons.ui"/>
-        <setEntry value="org.aieonf.graph"/>
-        <setEntry value="org.aieonf.legacy"/>
         <setEntry value="org.aieonf.orientdb"/>
         <setEntry value="org.aieonf.osgi"/>
-        <setEntry value="org.aieonf.serialisable"/>
         <setEntry value="org.aieonf.sketch"/>
         <setEntry value="org.aieonf.tinkerpop"/>
         <setEntry value="org.condast.aieonf.osgi"/>
-        <setEntry value="org.condast.commons.bugzilla"/>
-        <setEntry value="org.condast.commons.data"/>
         <setEntry value="org.condast.commons.p2"/>
-        <setEntry value="org.condast.commons.persistence"/>
-        <setEntry value="org.condast.commons.ui"/>
         <setEntry value="org.condast.saight"/>
         <setEntry value="org.condast.saight.authentication"/>
         <setEntry value="org.condast.saight.options"/>
@@ -36,17 +30,13 @@
         <setEntry value="org.condast.saight.sponsor"/>
         <setEntry value="org.condast.saight.swt"/>
         <setEntry value="org.condast.saight.tray"/>
-        <setEntry value="org.saight.concept.provider"/>
         <setEntry value="org.saight.forum"/>
         <setEntry value="org.saight.help"/>
         <setEntry value="org.saight.links"/>
         <setEntry value="test.aieonf.orientdb"/>
-        <setEntry value="test.aieonf.serialise"/>
-        <setEntry value="test.aioenf.orientdb.rcp"/>
-        <setEntry value="test.condast.commons"/>
-        <setEntry value="test.condast.rwt"/>
     </setAttribute>
     <booleanAttribute key="includeOptional" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console"/>
@@ -115,15 +105,16 @@
         <setEntry value="osgi.enterprise@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="com.condast.saight.core@default:default"/>
         <setEntry value="org.aieonf.commons@default:default"/>
         <setEntry value="org.aieonf.concept@default:default"/>
         <setEntry value="org.aieonf.model@default:default"/>
+        <setEntry value="org.aieonf.target@default:default"/>
         <setEntry value="org.aieonf.template@default:default"/>
         <setEntry value="org.condast.commons.messaging@default:default"/>
         <setEntry value="org.condast.commons.test@default:default"/>
         <setEntry value="org.condast.commons@default:default"/>
         <setEntry value="test.aieonf.model@default:default"/>
-        <setEntry value="test.org.condast.commons.p2@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>

@@ -174,7 +174,7 @@ public class Signer implements ISigner
 				if( i > 0 ){
 					if( value < 0 )
 						value = -value;
-					longs.add( new Long( value ));
+					longs.add( value );
 				}else{
 					value = bytes[ i ];
 				}

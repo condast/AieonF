@@ -2,8 +2,8 @@ package test.aieonf.orientdb.model;
 
 import java.util.logging.Logger;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.context.IContextAieon;
@@ -39,7 +39,7 @@ public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IMod
 		COUNTRY;
 
 		public static boolean isValid( String name ){
-			if( Utils.assertNull( name ))
+			if( StringUtils.isEmpty( name ))
 				return false;
 			String str = StringStyler.styleToEnum( name );
 			for( Models concept: Models.values()){

@@ -10,8 +10,6 @@ package org.aieonf.commons.strings;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.aieonf.commons.Utils;
-
 public class StringStyler 
 {
 
@@ -150,7 +148,7 @@ public class StringStyler
 	 */
 	public static String xmlStyleString( String strng ){
 		String str = styleToEnum(strng);
-		if( Utils.assertNull( str ))
+		if( StringUtils.isEmpty( str ))
 			return null;
 		return str.replace("_", "-").toLowerCase();
 	}

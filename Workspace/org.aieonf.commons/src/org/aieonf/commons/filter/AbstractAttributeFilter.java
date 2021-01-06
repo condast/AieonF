@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.strings.StringStyler;
+import org.aieonf.commons.strings.StringUtils;
 
 /**
  * <p>Title: Conceptual Network Database</p>
@@ -221,7 +221,7 @@ public abstract class AbstractAttributeFilter<D,U extends Object> extends Abstra
 
 		case WILDCARD:
 			String str = this.getValueAsString( this.refKey );
-			if( Utils.assertNull(str))
+			if( StringUtils.isEmpty(str))
 				return false;
 			WildcardFilter filter = new WildcardFilter( this.refVal );
 			return filter.accept( str );
