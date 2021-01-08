@@ -130,7 +130,6 @@ public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IMod
 
 	@Override
 	public boolean setProperty(String id, Attributes attrs ) {
-		IModelLeaf<IDescriptor> template = super.getModel();
 		IDescriptor descriptor = super.getModel().getDescriptor();
 		String str = StringStyler.styleToEnum( descriptor.getName() );
 		Models dc = Models.valueOf( str);
@@ -144,7 +143,6 @@ public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IMod
 			return true;
 		}
 		if( LocaleAieon.S_LOCALE.toUpperCase().equals( key )){
-			LocaleAieon locale = new LocaleAieon( descriptor );
 			super.setKey(  key );
 			return true;
 		}
@@ -202,7 +200,7 @@ public class ModelInterpreter extends AbstractModelInterpreter<IDescriptor, IMod
 		String name = descriptor.getName();
 		if( super.getKey() == null )
 			throw new NullPointerException( S_ERR_NULL_KEY + name + "{" + value + "}" );
-		String key = super.getKey().toString();
+		//String key = super.getKey().toString();
 		Models concept = Models.valueOf( StringStyler.styleToEnum( name ));
 		boolean retval = false;
 		switch( concept ){

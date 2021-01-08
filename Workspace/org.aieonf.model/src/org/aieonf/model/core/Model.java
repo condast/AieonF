@@ -413,4 +413,26 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 		}
 		return null;
 	}
+	
+	/**
+	 * Transfer the source model to the target model leaf. The result is a model that contains all the
+	 * properties of the target leaf. This method is sometimes convenient if an existing leaf needs to
+	 * be expanded to a full model, given a certain template 
+	 * @param <D>
+	 * @param target
+	 * @param source
+	 * @return
+	 */
+	public static <D extends IDescriptor> IModelNode<D>transfer( IModelLeaf<D> target, IModelLeaf<D> source){
+		IModelNode<D> model = new Model<D>( target );
+		if( source.isLeaf())
+			return model;
+		IModelNode<D> node = (IModelNode<D>) source;
+		Iterator<Map.Entry<IModelLeaf<? extends IDescriptor>, String>> iterator = node.getChildren().entrySet().iterator();
+		while( iterator.hasNext()) {
+			Map.Entry<IModelLeaf<? extends IDescriptor>, String> entry = iterator.next();
+			model.addChild(entry.getKey(), entry.getValue());
+		}
+		return model;
+	}
 }

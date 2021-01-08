@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.aieonf.commons.Utils;
 import org.aieonf.commons.db.IDatabaseConnection;
 import org.aieonf.commons.db.IDatabaseConnection.Requests;
 import org.aieonf.commons.http.ResponseEvent;
@@ -30,7 +31,6 @@ import org.condast.commons.test.core.ITestEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import test.aieonf.orientdb.core.Dispatcher;
 import test.aieonf.orientdb.core.TestFactory;
 
 public class TestSuite extends AbstractTestSuite<String, String> {
@@ -114,6 +114,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		logger.info( model2.toString());
 	}
 
+	@SuppressWarnings("unchecked")
 	private final void testSerialise() throws Exception{
 		TestFactory factory = TestFactory.getInstance();
 		IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) factory.createModel();
@@ -136,6 +137,7 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		String data = gson.toJson(arr, IModelLeaf[].class);
 		logger.info( "\n\n" + data + "\n\n" );
 		IModelLeaf<?>[] results = gson.fromJson(data, IModelLeaf[].class);
+		logger.info( "Emopty: " + Utils.assertNull(results));;
 	}
 
 	private final void testDeserialise() throws Exception{
@@ -156,11 +158,11 @@ public class TestSuite extends AbstractTestSuite<String, String> {
 		Gson gson = builder.create();
 		logger.info( data );
 		IModelLeaf<?> results = gson.fromJson(data, IModelLeaf.class);
-
+		logger.info( "Emopty: " + ( results == null ));
 	}
 
 	private final void testRegister() throws Exception{
-		Dispatcher dispatcher = Dispatcher.getInstance();
+		//Dispatcher dispatcher = Dispatcher.getInstance();
 		/*
 		LoginEvent le = new LoginEvent( this, LoginEvents.REGISTER, "test", "test_pwd" );
 		dispatcher.setLoginEvent(le);

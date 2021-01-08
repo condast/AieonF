@@ -106,11 +106,7 @@ public class XMLFilterParser<D extends Object> extends DefaultHandler{
 		String str = StringStyler.styleToEnum(qName);
 		FilterNodes node = null;
 		FilterNodes index = FilterNodes.FILTERS;
-		String id = getAttributeValue(IFilterBuilderListener.FilterAttributes.ID.name().toLowerCase(), attributes);
 		String typestr = getAttributeValue(IFilterBuilderListener.FilterAttributes.TYPE.name().toLowerCase(), attributes);
-		String rule = getAttributeValue(IFilterBuilderListener.FilterAttributes.RULE.name().toLowerCase(), attributes);
-		String reference = getAttributeValue(IFilterBuilderListener.FilterAttributes.REFERENCE.name().toLowerCase(), attributes);
-		String value = getAttributeValue(IFilterBuilderListener.FilterAttributes.VALUE.name().toLowerCase(), attributes);
 		IFilterBuilderListener.FilterTypes type = StringUtils.isEmpty(typestr)?IFilterBuilderListener.FilterTypes.AND:
 			IFilterBuilderListener.FilterTypes.valueOf(StringStyler.styleToEnum(typestr));
 		if( FilterNodes.isNode( qName )){

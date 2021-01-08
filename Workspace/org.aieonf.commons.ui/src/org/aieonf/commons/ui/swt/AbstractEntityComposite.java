@@ -176,7 +176,7 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 	 *input source
 	 * @param input
 	 */
-	protected abstract void onSetInput( D input, boolean overwrite );
+	protected abstract D onSetInput( D input, boolean overwrite );
 
 	@Override
 	public void setInput( D input, boolean overwrite) {
@@ -185,8 +185,8 @@ public abstract class AbstractEntityComposite<D extends Object> extends Composit
 			IWidgetVerificationDelegate wvd = this.controller.getVerifier();
 			if( wvd != null )
 				wvd.disable(true);
-			this.onSetInput(input, overwrite );
-			this.controller.setInput(input);
+			D result = this.onSetInput(input, overwrite );
+			this.controller.setInput(result);
 			if( wvd != null )
 				wvd.disable(false);
 		}

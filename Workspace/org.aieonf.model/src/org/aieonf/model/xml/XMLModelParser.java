@@ -194,7 +194,7 @@ public class XMLModelParser<D extends IDescriptor, M extends IDescribable> exten
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		ModelAttributes ma = this.stack.pop();
-		logger.info("completing: " + ma );
+		logger.fine("completing: " + ma );
 		switch( ma ){
 		case MODEL:
 			if( this.current.getData() == null )

@@ -135,6 +135,8 @@ public class ModelDatabase< T extends IDescriptor > {
 					while( edges.hasNext()) {
 						Edge edge = edges.next();
 						Vertex vnode = edge.getVertex(Direction.OUT);
+						if(!isOfDomain(domain, vnode))
+							continue;
 						IModelNode<IDescriptor> parent = getParent(graph, vnode, nodes);
 						node = new ModelNode( graph, parent, vnode );
 						results.add(node);
@@ -361,10 +363,9 @@ public class ModelDatabase< T extends IDescriptor > {
 				edges = vertex.getEdges(Direction.OUT).iterator();
 				while( edges.hasNext()) {
 					edge = edges.next();
-					if( !isChildEdge(edge)) {
-						found = true;
+					if( !isChildEdge(edge))
 						continue;
-					}
+					
 					vnode = edge.getVertex(Direction.IN);
 					if( !isMatch( vnode, entry.getKey()))
 						continue;
@@ -523,6 +524,11 @@ public class ModelDatabase< T extends IDescriptor > {
 			else
 				base.set(key, value.toString());
 		}
+	}
+
+	public static boolean isOfDomain( IDomainAieon domain, Vertex vertex ) {
+		String domstr = domain.getDomain().replace(".", "_");		
+		return vertex.toString().contains(domstr); 
 	}
 
 	public static boolean hasEdges( Vertex vertex ) {

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.implicit.IImplicit;
@@ -37,6 +38,8 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 	private OrientGraph graph;
 		
 	private IDomainAieon domain; 
+
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	public OrientModelTypeAdapter( IDomainAieon domain, OrientGraph graph) {
 		super();
@@ -74,11 +77,16 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 	}
 
 	@Override
-	protected void handleCycle(Vertex parent, Vertex child, String label) {
+	protected boolean handleCycle(Vertex parent, Vertex child, String label) {
 		Iterator<Edge> edges = parent.getEdges(Direction.BOTH, label).iterator();
 		while( edges.hasNext())
 			this.graph.removeEdge(edges.next());
-		super.handleCycle(parent, child, label);
+		String parentId = getID( parent); 
+		String childId = getID( child ); 
+		if( !parentId.equals( childId ))
+			return false;
+		logger.warning( S_ERR_CYCLE_DETECTED + "(" + label + "):" + parentId + "->" + getID( child ));
+		return true;
 	}
 
 	@Override

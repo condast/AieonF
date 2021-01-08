@@ -8,14 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.aieonf.concept.filter.AttributeFilter;
 import org.aieonf.commons.db.IDatabaseConnection.Requests;
 import org.aieonf.commons.filter.WildcardFilter;
-import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.Descriptor;
-import org.aieonf.concept.library.CategoryAieon;
-import org.aieonf.model.core.IModelLeaf;
-import org.aieonf.model.filter.HierarchicalModelAttributeFilter;
 import org.aieonf.osgi.js.AbstractJavascriptController;
 import org.aieonf.sketch.factory.SketchFactory;
 import org.aieonf.sketch.factory.SketchModelFactory;
@@ -127,11 +122,11 @@ public class SketchController extends AbstractJavascriptController {
 	{
 		if( Descriptor.assertNull( wildcard ))
 			wildcard = WildcardFilter.S_ALL;
-		AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
-				CategoryAieon.Attributes.CATEGORY, wildcard );
-		AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
-				IDescriptor.Attributes.DESCRIPTION, wildcard );
-		HierarchicalModelAttributeFilter<IDescriptor> filter = new HierarchicalModelAttributeFilter<IDescriptor>( categoryFilter, urlFilter );
+		//AttributeFilter<IModelLeaf<IDescriptor>> categoryFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
+		//		CategoryAieon.Attributes.CATEGORY, wildcard );
+		//AttributeFilter<IModelLeaf<IDescriptor>> urlFilter = new AttributeFilter<IModelLeaf<IDescriptor>>( AttributeFilter.Rules.WILDCARD, 
+		//		IDescriptor.Attributes.DESCRIPTION, wildcard );
+		//HierarchicalModelAttributeFilter<IDescriptor> filter = new HierarchicalModelAttributeFilter<IDescriptor>( categoryFilter, urlFilter );
 		/*
 		switch( choice ){
 		case NAME:
@@ -142,9 +137,9 @@ public class SketchController extends AbstractJavascriptController {
 			break;
 		}
 		*/
-		SketchModelFactory modelFactory = factory.getFactory();
-		if( factory == null )
-			return;
+		//SketchModelFactory modelFactory = factory.getFactory();
+		//if( factory == null )
+		//	return;
 		//factory.getFunction( IModelProvider.S_MODEL_PROVIDER_ID).search(filter);
 		SketchPreferences preferences = SketchPreferences.getInstance();
 		preferences.setGetDate();

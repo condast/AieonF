@@ -82,8 +82,22 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 
 	protected abstract D onCreateDescriptor( IConceptBase properties );
 
-	protected void handleCycle( N parent, N child, String label ) {
-		logger.warning( S_ERR_CYCLE_DETECTED + "(" + label + "):" + getID( parent ) + "->" + getID( child ));
+	/**
+	 * Handle cycles. Returns true if a cycle was detected
+	 * @param parent
+	 * @param child
+	 * @param label
+	 * @return
+	 */
+	protected boolean handleCycle( N parent, N child, String label ) {
+		long parentId = Long.parseLong( getID( parent ));
+		long childId = Long.parseLong( getID( child ));
+		if(( parentId < 0 ) && ( childId < 0 ))
+			return false;
+		if( parentId != childId)
+			return false;
+		logger.warning( S_ERR_CYCLE_DETECTED + "(" + label + "):" + parentId + "->" + getID( child ));
+		return true;
 	}
 
 	/**
@@ -156,9 +170,8 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 							else if( JsonToken.NULL.equals(token))
 								jsonReader.nextNull();
 							if( child != null ) {
-								if( getID( child ).equals( getID( node )))
-									handleCycle(node, child, label);
-								else								
+								boolean cycle = handleCycle(node, child, label);
+								if(!cycle )			
 									onAddChild( node, child, reversed, label);
 							}
 							jsonReader.endArray();
