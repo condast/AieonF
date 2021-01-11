@@ -35,21 +35,6 @@ public abstract class AbstractTemplateNode<T extends IDescriptor> extends Templa
 	}
 
 	/**
-	 * Returns true if the child is valid for the given parent
-	 * @param parent
-	 * @param child
-	 * @return
-	*/
-	public boolean validateChild( ITemplateNode<? extends IDescriptor> parent, ITemplateNode<? extends IDescriptor> child )
-	{
-		if( this.isParent( parent ) && this.isChild( child ))
-			return this.validate( child.getDescriptor() );
-		if( parent.getDirection().equals( Direction.BI_DIRECTIONAL ) == false )
-			return false;
-		return(( this.isParent( child ) && this.isChild( parent )));
-	}
-	
-	/**
 	 * Validate the given descriptor. Returns true if the 
 	 * descriptor is valid in this template
 	 * @return

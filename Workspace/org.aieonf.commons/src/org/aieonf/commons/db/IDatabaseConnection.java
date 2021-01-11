@@ -16,6 +16,7 @@ public interface IDatabaseConnection {
 		FIND,
 		FIND_ON_DESCRIPTOR,
 		GET,
+		GET_ALL,
 		GET_OPTIONS,
 		SEARCH,
 		SEARCH_MODELS,

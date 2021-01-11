@@ -18,28 +18,6 @@ public interface IModelNode<D extends Object> extends IModelLeaf<D>
 	}
 
 	/**
-	 * Get the possible directions for the model
-	 * @author Kees Pieters
-	 */
-	public enum Direction
-	{
-		UNI_DIRECTIONAL,
-		BI_DIRECTIONAL;
-
-		@Override
-		public String toString() {
-			return StringStyler.prettyString( super.toString());
-		}
-	}
-
-	/**
-	 * Get the direction of this model with 
-	 * respect to its children
-	 * @return
-	 */
-	public IModelNode.Direction getDirection();
-
-	/**
 	 * Sometimes the parent-child hierarchy can be reversed. This boolean can then 
 	 * tell the database to look for in- rather than out edges 
 	 * respect to its children

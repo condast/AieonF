@@ -170,22 +170,6 @@ public class TemplateWrapper<D extends IDescriptor> implements ITemplate
 	}
 
 	/**
-	 * Get the direction of this model with 
-	 * respect to its children
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public Direction getDirection()
-	{
-		if( this.model instanceof IModelNode ){
-			IModelNode<IDescriptor> node = (org.aieonf.model.core.IModelNode<IDescriptor> )this.model;
-			return node.getDirection();
-		}
-		return Direction.UNI_DIRECTIONAL;
-	}
-
-	/**
 	 * Add a child model to the model
 	 * @param model
 	 * @returns the created model

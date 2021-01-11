@@ -3,8 +3,10 @@ package org.aieonf.model.search;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.aieonf.commons.parser.ParseException;
+import org.aieonf.commons.filter.IAttributeFilter;
 import org.aieonf.concept.IDescriptor;
+import org.aieonf.concept.filter.AttributeFilter;
+import org.aieonf.concept.filter.DescribableFilter;
 import org.aieonf.concept.filter.IDescribableFilter;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
@@ -41,7 +43,7 @@ public class ModelScanner<D extends IDescriptor>{
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<IModelLeaf<IDescriptor>> get(IDescriptor descriptor) throws ParseException {
+	public Collection<IModelLeaf<IDescriptor>> get(IDescriptor descriptor) {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		getModel( results, descriptor, (IModelLeaf<IDescriptor>) model );
 		return results;
@@ -63,10 +65,33 @@ public class ModelScanner<D extends IDescriptor>{
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<IModelLeaf<IDescriptor>> search(IDescribableFilter<IModelLeaf<D>> filter) throws ParseException {
+	public Collection<IModelLeaf<IDescriptor>> search(IDescribableFilter<IModelLeaf<D>> filter) {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
 		searchModel( results, filter, (IModelLeaf<D>) model );
 		return results;
+	}
+
+	/**
+	 * Search the models with the given key-value pairs
+	 * @param key
+	 * @param value
+	 * @return
+	 * @throws ParseException
+	 */
+	public Collection<IModelLeaf<IDescriptor>> search( String key, String value) {
+		IAttributeFilter<IDescriptor> filter = new AttributeFilter<>( AttributeFilter.Rules.EQUALS, key, value );
+		IDescribableFilter<IModelLeaf<D>> modelFilter = new DescribableFilter<>( filter);
+		return search( modelFilter);
+	}
+
+	/**
+	 * Search the models with the given descriptor name
+	 * @param descriptorName
+	 * @return
+	 * @throws ParseException
+	 */
+	public Collection<IModelLeaf<IDescriptor>> search( String descriptorName ) {
+		return search( IModelLeaf.Attributes.DESCRIPTOR.name(), descriptorName );
 	}
 
 	@SuppressWarnings("unchecked")

@@ -94,17 +94,6 @@ public class Model<D extends IDescriptor> extends ModelLeaf<D> implements IModel
 		this.children = new HashMap<>();
 	}
 	
-	/**
-	 * Get the direction of this model with 
-	 * respect to its children
-	 * @return
-	 */
-	@Override
-	public Direction getDirection()
-	{
-		return Direction.valueOf( get( IModelNode.Attributes.DIRECTION ));
-	}
-
 	@Override
 	public boolean isReverse() {
 		return this.reverse;

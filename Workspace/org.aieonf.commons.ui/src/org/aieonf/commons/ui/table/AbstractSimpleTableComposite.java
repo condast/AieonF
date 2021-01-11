@@ -45,6 +45,8 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 	private TableViewerColumn deleteColumn;
 	
 	private Map<IModelLeaf<IDescriptor>, Boolean> selected;
+	
+	private DeleteCheckBoxEditor deleteEditor;
 
 	/**
 	 * Create the composite.
@@ -63,7 +65,8 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 
 	protected void setDeleteColumn(TableViewerColumn deleteColumn, boolean skipReadOnly ) {
 		this.deleteColumn = deleteColumn;
-		this.deleteColumn.setEditingSupport( new CheckBoxEditingSupport<IModelLeaf<IDescriptor>>( super.getTableViewer(), new DeleteCheckBoxEditor( skipReadOnly) ));
+		this.deleteEditor = new DeleteCheckBoxEditor( skipReadOnly);
+		this.deleteColumn.setEditingSupport( new CheckBoxEditingSupport<IModelLeaf<IDescriptor>>( super.getTableViewer(), this.deleteEditor ));
 		this.deleteColumn.getColumn().addListener(SWT.Selection, e->{				
 			onNotifyDeleteButton( new TableEvent<IModelLeaf<IDescriptor>, C>( e.widget, TableEvents.DELETE, getInput() ));
 		});
@@ -89,6 +92,7 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 	protected void onSetInput(IModelLeaf<IDescriptor> leaf)
 	{
 		try {
+			this.deleteEditor.setSkipReadonly( leaf.isReadOnly());
 			setDeleteImage();	
 			if(leaf.isLeaf())
 				return;
@@ -153,6 +157,10 @@ public abstract class AbstractSimpleTableComposite<C extends Object> extends Abs
 		
 		public DeleteCheckBoxEditor(boolean skipReadonly) {
 			super();
+			this.skipReadonly = skipReadonly;
+		}
+
+		protected void setSkipReadonly(boolean skipReadonly) {
 			this.skipReadonly = skipReadonly;
 		}
 

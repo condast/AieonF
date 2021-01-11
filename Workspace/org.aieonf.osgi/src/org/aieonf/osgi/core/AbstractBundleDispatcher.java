@@ -1,29 +1,25 @@
 package org.aieonf.osgi.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpSession;
 
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.db.IDatabaseConnection;
+import org.aieonf.commons.db.IDatabaseConnection.Requests;
 import org.aieonf.commons.persistence.ISessionStoreFactory;
 import org.aieonf.commons.security.ISecureGenerator;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.domain.IDomainAieon;
-import org.aieonf.concept.request.DataProcessedEvent;
-import org.aieonf.concept.request.IKeyEventDataListener;
-import org.aieonf.concept.request.IKeyEventDataProvider;
 import org.aieonf.concept.request.IKeyEventListener;
 import org.aieonf.concept.request.KeyEvent;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.provider.IModelDatabase;
-import org.eclipse.rap.rwt.RWT;
 
-public abstract class AbstractBundleDispatcher<D extends Object> implements ISecureGenerator, IKeyEventListener<IDatabaseConnection.Requests>{
+public abstract class AbstractBundleDispatcher<D extends Object> implements ISecureGenerator, 
+IKeyEventListener<IDatabaseConnection.Requests>{
 
 	private ISecureGenerator generator;
 
@@ -32,9 +28,9 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 	
 	private IDomainAieon domain; 
 
-	private RestDataProvider restProvider;	
-
 	private ISessionStoreFactory<HttpSession, D> store;
+
+	private Collection<IKeyEventListener<IDatabaseConnection.Requests>> listeners;
 
 	protected AbstractBundleDispatcher( String path ) {
 		this( path, null );
@@ -43,29 +39,15 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 	protected AbstractBundleDispatcher( String path, IDomainAieon domain) {
 		this.path = path;
 		this.domain = domain;
-		restProvider = new RestDataProvider();
+		this.listeners = new ArrayList<>();
 	}
-	
-	public void clear() {
-		this.restProvider.input.clear();
-	}
-	
+		
 	public IDomainAieon getDomain() {
 		return domain;
 	}
 
 	protected void setDomain(IDomainAieon domain) {
 		this.domain = domain;
-	}
-
-	protected RestDataProvider getRestProvider() {
-		return restProvider;
-	}
-
-	@SuppressWarnings("unchecked")
-	public IModelLeaf<IDescriptor>[] getInput(){
-		Collection<IModelLeaf<IDescriptor>> input = this.restProvider.input;
-		return input.toArray( new IModelLeaf[input.size()]);
 	}
 
 	public ISecureGenerator getGenerator() {
@@ -82,6 +64,19 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 		return this.generator.createIdAndToken(domain);
 	}
 
+	public void addKeyEventListener(IKeyEventListener<IDatabaseConnection.Requests> listener) {
+		listeners.add(listener);
+	}
+
+	public void removeKeyEventListener(IKeyEventListener<IDatabaseConnection.Requests> listener) {
+		listeners.remove(listener);
+	}
+
+	public void notifyKeyEventReceived( KeyEvent<IDatabaseConnection.Requests> event ) {
+		for( IKeyEventListener<Requests> listener: this.listeners )
+			listener.notifyKeyEventReceived(event);	
+	}	
+
 	public void setSessionStore(ISessionStoreFactory<HttpSession, D> store) {
 		this.store = store;
 	}	
@@ -90,8 +85,12 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 		this.store = null;
 	}	
 
-	public D getStore() {
-		HttpSession session = RWT.getUISession().getHttpSession();
+	/**
+	 * Get the store for the given session
+	 * @param session
+	 * @return
+	 */
+	public D getStore( HttpSession session ) {
 		return store.createSessionStore(session);
 	}
 
@@ -106,14 +105,6 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 
 	protected IModelDatabase<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>> getDatabase() {
 		return database;
-	}
-
-	public void addKeyEventDataListener(IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener) {
-		this.restProvider.addKeyEventDataListener(listener);
-	}
-
-	public void removeKeyEventDataListener(IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener) {
-		this.restProvider.removeKeyEventDataListener(listener);
 	}
 
 	public boolean isRegistered(long id, String name) {
@@ -139,96 +130,4 @@ public abstract class AbstractBundleDispatcher<D extends Object> implements ISec
 		results.add( domain);
 		return results.toArray( new IDomainAieon[results.size()]);	
 	}
-
-	protected abstract void onHandleKeyEvent(KeyEvent<IDatabaseConnection.Requests> event, Collection<IModelLeaf<IDescriptor>> input);
-
-	@Override
-	public void notifyKeyEventReceived(KeyEvent<IDatabaseConnection.Requests> event) {
-		restProvider.handleKeyEvent( event);
-	}
-	
-	/**
-	 * allow other providers to add data
-	 * @param event
-	 */
-	protected void notifyDataFound( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
-		this.restProvider.addInput(event);
-	}
-	
-	protected abstract void update();
-	
-	/**
-	 * Update the system by calling the last key event
-	 */
-	protected void update( KeyEvent<IDatabaseConnection.Requests> event ) {
-		if( event != null )
-			restProvider.handleKeyEvent( event );		
-	}
-	
-	protected class RestDataProvider implements IKeyEventDataProvider<IDatabaseConnection.Requests,IModelLeaf<IDescriptor>[]>{
-
-		private Collection<IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>> listeners;
-
-		private Collection<IModelLeaf<IDescriptor>> input;
-
-		private RestDataProvider() {
-			super();
-			this.input = new ArrayList<>();
-			this.listeners = new ArrayList<>();
-		}
-		
-		public Collection<IModelLeaf<IDescriptor>> getInput() {
-			return input;
-		}
-
-		@Override
-		public void addKeyEventDataListener(IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener) {
-			listeners.add(listener);
-		}
-
-		@Override
-		public void removeKeyEventDataListener(IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener) {
-			listeners.remove(listener);
-		}
-	
-		protected void notifyDataProcessedEvent( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
-			for( IKeyEventDataListener<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> listener: listeners)
-				listener.notifyKeyEventProcessed( event);
-		}
-		
-		@SuppressWarnings("unchecked")
-		protected DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> createEvent( KeyEvent<IDatabaseConnection.Requests> event ){
-			IModelLeaf<IDescriptor>[] results = input.toArray( new IModelLeaf[this.input.size()]); ;
-			DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> devent = 
-					new DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>( this, event, results);
-			return devent;
-		}
-		
-		protected void addInput( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
-			IModelLeaf<IDescriptor>[] results = event.getData();
-			if(!Utils.assertNull(results))
-				this.input.addAll(Arrays.asList(results));
-			notifyDataFound( createEvent(event.getKeyEvent()));			
-		}
-		
-		private void notifyDataFound( DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]> event ) {
-			switch( event.getRequest()) {
-			case PREPARE:
-				this.input.clear();
-				break;
-			default:
-				break;
-			}
-			notifyDataProcessedEvent( createEvent(event.getKeyEvent()) );
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public void handleKeyEvent(KeyEvent<IDatabaseConnection.Requests> event ) {
-			onHandleKeyEvent(event, input);
-			notifyDataFound( new DataProcessedEvent<IDatabaseConnection.Requests, IModelLeaf<IDescriptor>[]>(this, event, input.toArray( new IModelLeaf[input.size()])));
-		}
-
-	}
-
 }

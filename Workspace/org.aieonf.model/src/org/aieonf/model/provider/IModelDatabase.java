@@ -15,6 +15,7 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 		TOKEN,
 		DIRECTION,
 		DOMAIN,
+		DOMAIN_ONLY,
 		MODEL_ID,
 		KEY,
 		VALUE,
@@ -100,6 +101,13 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	 * @return
 	 */
 	public Collection<M> searchModels(String key, String value);
+
+	/**
+	 * Get all the models, or only within a doamin if this is required
+	 * @param domainOnly
+	 * @return
+	 */
+	public Collection<M> getAll(boolean domainOnly);
 
 	/**
 	 * Remove a model 

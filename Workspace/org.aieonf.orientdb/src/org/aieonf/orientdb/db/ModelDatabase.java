@@ -203,6 +203,29 @@ public class ModelDatabase< T extends IDescriptor > {
 	}
 
 	/**
+	 * Get all the models, or within the domain if this is selected
+	 * @param withinDomain
+	 * @return
+	 */
+	public Collection<IModelLeaf<IDescriptor>> getAllModels( boolean withinDomain ){
+		OrientGraph graph = this.service.getGraph();
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
+		Iterator<Vertex> vertices = graph.getVertices().iterator();
+		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		IModelNode<IDescriptor> node = null;
+		while( vertices.hasNext()) {
+			Vertex vertex = vertices.next();
+			if( withinDomain && !isOfDomain(domain, vertex))
+				continue;
+			IModelNode<IDescriptor> parent = getParent(graph, vertex, nodes);
+			node = new ModelNode( graph, parent, vertex );
+			results.add(node);
+			nodes.put(vertex, node);
+		}
+		return results;
+		
+	}
+	/**
 	 * Get the vertices, which are with descriptors, and create the corresponding models
 	 * @param vertices
 	 * @return
@@ -219,7 +242,9 @@ public class ModelDatabase< T extends IDescriptor > {
 					Iterator<Edge> edges = vertex.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
 					while( edges.hasNext()) {
 						Edge edge = edges.next();
-						Vertex vnode = edge.getVertex(Direction.OUT);
+						Vertex vnode = edge.getVertex(Direction.OUT);//The corresponding parent vertex
+						if( !isOfDomain(domain, vnode))
+							continue;
 						IModelNode<IDescriptor> parent = getParent(graph, vnode, nodes);
 						node = new ModelNode( graph, parent, vnode );
 						results.add(node);
@@ -245,7 +270,7 @@ public class ModelDatabase< T extends IDescriptor > {
 			if(!isParentEdge(edge))
 				continue;
 			Vertex vparent = edge.getVertex(Direction.OUT);
-			if( vparent == null )
+			if(( vparent == null ) || !isOfDomain(domain, vparent))
 				continue;
 			if( vparent.getId().equals(vertex.getId())) {
 				graph.removeEdge(edge);

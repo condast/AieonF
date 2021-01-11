@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.filter.IAttributeFilter;
-import org.aieonf.commons.parser.ParseException;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescribable;
@@ -137,13 +136,9 @@ public abstract class AbstractModelContextFactory<D extends IDescriptor, M exten
 		IAttributeFilter<IDescriptor> filter = new AttributeFilter<>( AttributeFilter.Rules.EQUALS, IModelLeaf.Attributes.IDENTIFIER.name(), S_MODEL_ID);
 		IDescribableFilter<IModelLeaf<IDescriptor>> modelFilter = new DescribableFilter<>( filter);
 		M model = null;
-		try {
-			Collection<IModelLeaf<IDescriptor>> models = scanner.search(modelFilter);
-			if( !Utils.assertNull(models))
-				model = (M) models.iterator().next(); 
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		Collection<IModelLeaf<IDescriptor>> models = scanner.search(modelFilter);
+		if( !Utils.assertNull(models))
+			model = (M) models.iterator().next();
 		return model;
 	}
 

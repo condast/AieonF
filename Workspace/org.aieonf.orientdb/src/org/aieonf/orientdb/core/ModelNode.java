@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.aieonf.commons.Utils;
-import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
@@ -42,12 +41,6 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		super.setLeaf( !hasChildren());
 	}
 	
-	@Override
-	public IModelNode.Direction getDirection() {
-		String str = super.get(IModelNode.Attributes.DIRECTION.name());
-		return StringUtils.isEmpty(str)? Direction.UNI_DIRECTIONAL: Direction.valueOf(str);
-	}
-
 	@Override
 	public boolean isReverse() {
 		return this.reverse;
