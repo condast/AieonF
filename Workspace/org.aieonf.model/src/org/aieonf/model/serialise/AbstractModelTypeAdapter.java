@@ -32,6 +32,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		CHILDREN,
 		ID,
 		LEAF,
+		PARENT,
 		REVERSED;
 
 		public static boolean isAttribute( String str ) {
@@ -66,7 +67,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		}
 		IModelLeaf<IDescriptor>  result = null;
 		try {
-			result= onTransform( readNode(reader ));
+			result= onTransform( readNode(reader, true ));
 			token = reader.peek();
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -77,6 +78,8 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 	protected abstract IModelLeaf<IDescriptor> onTransform( N node );
 
 	protected abstract N onCreateNode( long id, IConceptBase base, boolean leaf, D descriptor );
+
+	protected abstract boolean onAddParent( N model, N parent );
 
 	protected abstract boolean onAddChild( N model, N child, boolean reversed, String label );
 
@@ -107,12 +110,31 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 	 */
 	protected abstract String getID( N node );
 
-	protected N readNode( JsonReader jsonReader ) throws ParseException, IOException {
+	protected Store readLeaf( JsonReader jsonReader) throws IOException {
+		JsonToken token = jsonReader.peek();
+		if( JsonToken.END_OBJECT == token ) {
+			return null;
+		}
+		jsonReader.nextName().toUpperCase();
+		long id = Descriptor.parseId( jsonReader.nextString());
+		jsonReader.nextName().toUpperCase();
+		boolean leaf = jsonReader.nextBoolean(); 
+		String name = jsonReader.nextName();
+		IConceptBase base = null;
+		if( name.equals(IConceptBase.S_PROPERTIES)) {
+			base = createBase(jsonReader, token);
+		}
+		else
+			base = new ConceptBase();
+		store = new Store( id, leaf, base );
+		return store;
+	}
+	
+	protected N readNode( JsonReader jsonReader, boolean root ) throws ParseException, IOException {
 		String label;
 		String key = null;
 		N node = null;
 		IConceptBase base;//stores intermediate key-value pairs
-		String name = null;
 		JsonToken token = null;
 		boolean completed = false;
 		while(!completed && jsonReader.hasNext() ) {
@@ -121,35 +143,23 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 			switch( token) {
 			case BEGIN_OBJECT:
 				jsonReader.beginObject();
-				token = jsonReader.peek();
-				if( JsonToken.END_OBJECT == token ) {
-					jsonReader.endObject();
-					continue;
-				}
-				key = jsonReader.nextName().toUpperCase();
-				long id = Descriptor.parseId( jsonReader.nextString());
-				key = jsonReader.nextName().toUpperCase();
-				boolean leaf = jsonReader.nextBoolean(); 
-				name = jsonReader.nextName();
-				if( name.equals(IConceptBase.S_PROPERTIES)) {
-					base = createBase(jsonReader, token);
-				}
-				else
-					base = new ConceptBase();
-				store = new Store( id, leaf, base );
+				store = readLeaf( jsonReader);
 				token = jsonReader.peek();
 				if( JsonToken.END_OBJECT.equals(token)) {
 					logger.warning(S_ERR_NO_DESCRIPTOR );
 					node = onCreateNode( store.id, store.base, store.leaf, null);
 					nodes.push(node);
 					jsonReader.endObject();
-					completed = true;
 				}
+
+				if( node != null )
+					completed = true;
 				token = jsonReader.peek();
 				break;
 			case NAME:
 				key = jsonReader.nextName().toUpperCase();
 				logger.fine(key);
+				D descriptor = null;
 				if( Attributes.isAttribute( key )) {
 					switch( Attributes.valueOf( key )) {
 					case REVERSED:
@@ -161,7 +171,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 						token = jsonReader.peek();
 						while( !JsonToken.END_ARRAY.equals(token )) {
 							jsonReader.beginArray();
-							N child = readNode( jsonReader );
+							N child = readNode( jsonReader, false );
 							token = jsonReader.peek();
 							logger.fine( token.name());
 							label = IModelLeaf.IS_CHILD;
@@ -183,7 +193,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 						break;
 					case DESCRIPTOR:
 						base = createBase( jsonReader, token);
-						D descriptor = onCreateDescriptor( base);
+						descriptor = onCreateDescriptor( base);
 						node = onCreateNode( store.id, store.base, store.leaf, descriptor);
 						nodes.push(node);
 						//Close if it is a leaf
@@ -192,6 +202,23 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 							jsonReader.endObject();
 							completed = true;
 						}
+						break;
+					case PARENT:
+						if( !root ) {
+							break;
+						}
+						jsonReader.beginObject();
+						token = jsonReader.peek();	
+						Store pstore = readLeaf( jsonReader);
+						jsonReader.nextName();
+						base = createBase( jsonReader, token);
+						descriptor = onCreateDescriptor( base);
+						N pnode = onCreateNode( pstore.id, pstore.base, pstore.leaf, descriptor);
+						onAddParent( node, pnode);
+						jsonReader.endObject();
+						token = jsonReader.peek();	
+						jsonReader.endObject();
+						token = jsonReader.peek();	
 						break;
 					case LEAF:
 						jsonReader.nextBoolean();
@@ -234,14 +261,15 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 			token = jsonReader.peek();
 		}
 		jsonReader.endArray();
-		token = jsonReader.peek();
 		return base;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void write(JsonWriter arg0, IModelLeaf<IDescriptor> leaf) throws IOException {
-		arg0.beginObject();
+		write( arg0, leaf, true );
+	}
+
+	protected void writeLeaf(JsonWriter arg0, IModelLeaf<IDescriptor> leaf) throws IOException {
 		if( leaf == null ) {
 			arg0.endObject();
 			return;
@@ -276,6 +304,18 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 			}
 			arg0.endArray();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected void write(JsonWriter arg0, IModelLeaf<IDescriptor> leaf, boolean root ) throws IOException {
+		arg0.beginObject();
+		writeLeaf( arg0, leaf );
+		if( root && leaf.getParent() != null ) {
+			arg0.name(Attributes.PARENT.name());
+			arg0.beginObject();
+			writeLeaf( arg0, (IModelLeaf<IDescriptor>) leaf.getParent() );
+			arg0.endObject();
+		}
 		if( !leaf.isLeaf()) {
 			IModelNode<IDescriptor> model = (IModelNode<IDescriptor>) leaf;
 			arg0.name(Attributes.REVERSED.name());
@@ -289,7 +329,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 					continue;
 				}
 				arg0.beginArray();
-				write( arg0, (IModelLeaf<IDescriptor>) child);
+				write( arg0, (IModelLeaf<IDescriptor>) child, false);
 				if( entry.getValue() == null)
 					arg0.value( IModelLeaf.IS_CHILD);
 				else
@@ -300,7 +340,7 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 		}
 		arg0.endObject();
 	}
-	
+
 	private class Store{
 		
 		private long id;

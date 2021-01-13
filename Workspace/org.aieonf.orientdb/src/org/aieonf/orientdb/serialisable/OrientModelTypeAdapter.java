@@ -89,6 +89,12 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 		return true;
 	}
 
+	
+	@Override
+	protected boolean onAddParent(Vertex model, Vertex parent) {
+		return true;
+	}
+
 	@Override
 	protected boolean onAddChild(Vertex model, Vertex child, boolean reversed, String label) {
 		if( exists( model, child ))

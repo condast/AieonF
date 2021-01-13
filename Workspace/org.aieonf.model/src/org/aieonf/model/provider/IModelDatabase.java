@@ -95,6 +95,13 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	public M findOnDescriptor(long id);
 
 	/**
+	 * Get all the models that are use the descriptor with the given id
+	 * @param descriptorId
+	 * @return
+	 */
+	public Collection<M> findModels(long descriptorId);
+
+	/**
 	 * search for models that have the given key-value pair
 	 * @param key
 	 * @param value

@@ -32,6 +32,15 @@ public class ModelTypeAdapter extends AbstractModelTypeAdapter<IModelLeaf<IDescr
 		return result;
 	}
 
+	
+	@Override
+	protected boolean onAddParent(IModelLeaf<IDescriptor> model, IModelLeaf<IDescriptor> parent) {
+		if( parent == null )
+			return false;
+		model.setParent( new Model<IDescriptor>( parent));
+		return true;
+	}
+
 	@Override
 	protected boolean onAddChild(IModelLeaf<IDescriptor> model, IModelLeaf<IDescriptor> child,
 			boolean reverse, String label) {

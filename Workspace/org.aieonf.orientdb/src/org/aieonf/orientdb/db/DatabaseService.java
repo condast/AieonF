@@ -22,7 +22,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 /**
- * Handles the Orient Databae
+ * Handles the Orient Database
  * @See :https://orientdb.com/docs/2.2/documenttx-Database-Tinkerpop.html
  * @author Kees
  *

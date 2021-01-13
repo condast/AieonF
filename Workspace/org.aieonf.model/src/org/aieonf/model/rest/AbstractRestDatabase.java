@@ -287,6 +287,26 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	}
 
 	@Override
+	public Collection<M> findModels( long descriptorId) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.FIND_ON_DESCRIPTOR;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.MODEL_ID.toString(), String.valueOf(descriptorId));
+		WebClient<M[]> client = new WebClient<>( path );
+		Collection<M>results = new ArrayList<>();
+		try {
+			client.addListener( e->getResults(e, results ));
+			client.sendGet(request, parameters);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+
+	@Override
 	public Collection<M> getAll( boolean domainOnly) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.GET_ALL;
