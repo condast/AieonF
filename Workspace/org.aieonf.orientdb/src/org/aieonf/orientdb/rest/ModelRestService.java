@@ -1,5 +1,6 @@
 package org.aieonf.orientdb.rest;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class ModelRestService{
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();
 			
-			logger.info( data );
+			logger.fine( data );
 			IModelLeaf<?>[] results = gson.fromJson(data, IModelLeaf[].class);
 			response = ( Utils.assertNull(results))? Response.noContent().build(): 
 				Response.ok( gson.toJson(results[0].getID(), Long.class)).build();
@@ -140,26 +141,25 @@ public class ModelRestService{
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/adjacent")
 	public Response adjacent( @QueryParam("id") long id, @QueryParam("token") long token, 
 			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, @QueryParam("direction") String direction) {
 		DatabaseService dbService = DatabaseService.getInstance();
-		IModelLeaf<IDescriptor>[] results = new IModelLeaf[1];
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
 		try{
 			if( !dispatcher.isRegistered(id, token, domainstr))
  				return Response.status( Status.UNAUTHORIZED ).build();
 			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
 			dbService.open( domain );
 			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
-			results[0] = database.adjacent( modelId, Direction.valueOf(direction));
+			results = database.adjacent( modelId, Direction.valueOf(direction));
 			GsonBuilder builder = new GsonBuilder();
 			builder.enableComplexMapKeySerialization();
 			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
-			String str = gson.toJson(results, IModelLeaf[].class );
+			String str = gson.toJson(results.toArray( new IModelLeaf[ results.size()]), IModelLeaf[].class );
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {
@@ -345,7 +345,7 @@ public class ModelRestService{
 			params.put(FilterFactory.Attributes.VALUE, wildcard);
 			IGraphFilter filter = ff.createFilter(type, params);
 			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
-			Collection<IModelLeaf<IDescriptor>> results = database.get(filter.doFilter());
+			Collection<IModelLeaf<IDescriptor>> results = database.search(filter.doFilter());
 			//for( IModelLeaf<IDescriptor> model: results)
 			//	logger.fine( PrintModel.printModel(model, true));
 			if( Utils.assertNull(results))
@@ -355,7 +355,7 @@ public class ModelRestService{
 			builder.registerTypeAdapter(IModelLeaf.class, new OrientModelTypeAdapter( domain, dbService.getGraph()));
 			Gson gson = builder.create();
 			String str = gson.toJson(results.toArray( new IModelLeaf[ results.size() ]), IModelLeaf[].class);
-			logger.info(str);
+			logger.fine(str);
 			return Response.ok( str ).build();
 		}
 		catch( Exception ex ) {
@@ -386,7 +386,7 @@ public class ModelRestService{
 			ModelTypeAdapter adapter = new ModelTypeAdapter();
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();			
-			logger.info( data );
+			logger.fine( data );
 			IModelLeaf<IDescriptor>[] results = gson.fromJson(data, IModelLeaf[].class);
 			database.update( results[0] );
 			return Response.ok(0).build();
@@ -440,6 +440,33 @@ public class ModelRestService{
 			long[] ids = gson.fromJson(data, long[].class);
 			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
 			database.removeChildren( modelId, ids );
+			String str = findAndSerialise(dbService, domain, modelId);
+			return StringUtils.isEmpty(str)? Response.noContent().build(): Response.ok( str ).build();
+		}
+		catch( Exception ex ){
+			ex.printStackTrace();
+			return Response.serverError().build();
+		}
+		finally {
+			dbService.close();
+		}
+	}
+
+	@DELETE
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/remove-children-on-descriptor")
+	public synchronized Response removeChildrenOnDescriptor( @QueryParam("id") long id, @QueryParam("token") long token,
+			@QueryParam("domain") String domainstr, @QueryParam("model-id") long modelId, String data) {
+		DatabaseService dbService = DatabaseService.getInstance();
+		try{
+			if( !dispatcher.isRegistered(id, token, domainstr))
+				return Response.status( Status.UNAUTHORIZED ).build();
+			IDomainAieon domain = dispatcher.getDomain(id, token, domainstr);
+			dbService.open( domain );
+			Gson gson = new Gson();
+			long ids = gson.fromJson(data, long.class);
+			ModelDatabase<IDescriptor> database = new ModelDatabase<IDescriptor>( dbService, domain );
+			database.removeChildrenOnDescriptors( modelId, ids );
 			String str = findAndSerialise(dbService, domain, modelId);
 			return StringUtils.isEmpty(str)? Response.noContent().build(): Response.ok( str ).build();
 		}

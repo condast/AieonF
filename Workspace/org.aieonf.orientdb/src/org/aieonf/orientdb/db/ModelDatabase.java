@@ -14,12 +14,11 @@ import org.aieonf.commons.options.IOptions;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.concept.core.ConceptBase;
-import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.core.IConceptBase;
 import org.aieonf.concept.domain.IDomainAieon;
+import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
-import org.aieonf.model.core.Model;
 import org.aieonf.orientdb.core.ModelLeaf;
 import org.aieonf.orientdb.core.ModelNode;
 import org.aieonf.orientdb.core.VertexConceptBase;
@@ -48,46 +47,53 @@ public class ModelDatabase< T extends IDescriptor > {
 	}
 
 	/**
-	 * Get the vertices with the given id, and create the corresponding models
+	 * Get the vertices, which are with descriptors, and create the corresponding models
 	 * @param vertices
 	 * @return
 	 * @throws FilterException
 	 */
-	public IModelLeaf<IDescriptor> adjacent( long id, Direction direction ) throws FilterException {
-		IConceptBase base = new ConceptBase();
-		IModelNode<IDescriptor> node = new Model<IDescriptor>( base );
+	protected void collect( long id, Direction direction, Collection<IModelLeaf<IDescriptor>> results, Map<Object, IModelLeaf<IDescriptor>> nodes, boolean skipBase ) throws FilterException {
 		try {
 			OrientGraph graph = this.service.getGraph();
 			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(id));
-			IConceptBase descbase = new ConceptBase();
-			node.setData( new Descriptor( descbase ));
+			IModelNode<IDescriptor> node = null;
 			for( Vertex vertex: vertices ) {
-				boolean descriptorFound = false;
-				fill(base, vertex);
-				Iterable<Edge> edges = vertex.getEdges(direction);
-				for( Edge edge: edges ) {
-					if( IDescriptor.DESCRIPTOR.equals(edge.getLabel())) {
-						descriptorFound = true;
-						Vertex vdesc = edge.getVertex(Direction.IN);
-						fill( descbase, vdesc );
-					}else {
-						node.addChild(new ModelLeaf( node, getOther(edge, vertex) ), edge.getLabel());
+				try {
+					Iterator<Edge> edges = vertex.getEdges(direction, IDescriptor.DESCRIPTOR).iterator();
+					while( edges.hasNext()) {
+						Edge edge = edges.next();
+						Vertex vnode = edge.getVertex( OrientModelTypeAdapter.opposite( direction));
+						IModelNode<IDescriptor> parent = getParent(graph, vnode, nodes);
+						node = new ModelNode( graph, parent, vnode );
+						logger.info( "Node: " + node.getData().getID() + " Parent: " + ((parent==null)?"null": parent.getData().get( CategoryAieon.Attributes.CATEGORY.name() )));
+						if(!isOfDomain(domain, vnode))
+							continue;
+						results.add(node);
+						if(!skipBase )
+							nodes.put(vnode, node);
 					}
 				}
-				if(descriptorFound)
-					continue;
-				edges = vertex.getEdges(Direction.OUT, IDescriptor.DESCRIPTOR );
-				for( Edge edge: edges ) {
-					Vertex vdesc = edge.getVertex(Direction.IN);
-					for( String key: vdesc.getPropertyKeys())
-						descbase.set(key,  vdesc.getProperty(key));
+				catch( Exception ex ) {
+					ex.printStackTrace();
 				}
 			}
 		}
 		catch( Exception ex ) {
 			ex.printStackTrace();
 		}
-		return node;
+	}
+
+	/**
+	 * Get the vertices, which are with descriptors, and find the adjacent models
+	 * @param vertices
+	 * @return
+	 * @throws FilterException
+	 */
+	public Collection<IModelLeaf<IDescriptor>> adjacent( long id, Direction direction ) throws FilterException {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
+		Map<Object, IModelLeaf<IDescriptor>> nodes = new HashMap<>();
+		collect( id, direction, results, nodes, true );		
+		return nodes.values();
 	}
 
 	/**
@@ -98,7 +104,7 @@ public class ModelDatabase< T extends IDescriptor > {
 	 */
 	public Collection<IModelLeaf<IDescriptor>> find( long id ) throws FilterException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
-		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		Map<Object, IModelLeaf<IDescriptor>> nodes = new HashMap<>();
 		try {
 			OrientGraph graph = this.service.getGraph();
 			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(id));
@@ -124,33 +130,8 @@ public class ModelDatabase< T extends IDescriptor > {
 	 */
 	public Collection<IModelLeaf<IDescriptor>> findOnDescriptor( long id ) throws FilterException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
-		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
-		try {
-			OrientGraph graph = this.service.getGraph();
-			Iterable<Vertex> vertices = graph.getVertices( IDescriptor.Attributes.ID.name(), String.valueOf(id));
-			IModelNode<IDescriptor> node = null;
-			for( Vertex vertex: vertices ) {
-				try {
-					Iterator<Edge> edges = vertex.getEdges(Direction.IN, IDescriptor.DESCRIPTOR).iterator();
-					while( edges.hasNext()) {
-						Edge edge = edges.next();
-						Vertex vnode = edge.getVertex(Direction.OUT);
-						if(!isOfDomain(domain, vnode))
-							continue;
-						IModelNode<IDescriptor> parent = getParent(graph, vnode, nodes);
-						node = new ModelNode( graph, parent, vnode );
-						results.add(node);
-						nodes.put(vnode, node);
-					}
-				}
-				catch( Exception ex ) {
-					ex.printStackTrace();
-				}
-			}
-		}
-		catch( Exception ex ) {
-			ex.printStackTrace();
-		}
+		Map<Object, IModelLeaf<IDescriptor>> nodes = new HashMap<>();
+		collect( id, Direction.IN, results, nodes, false );
 		return results;
 	}
 
@@ -162,7 +143,7 @@ public class ModelDatabase< T extends IDescriptor > {
 	 */
 	public Collection<IModelLeaf<IDescriptor>> find( String key, String value ) throws FilterException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
-		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		Map<Object, IModelLeaf<IDescriptor>> nodes = new HashMap<>();
 		try {
 			OrientGraph graph = this.service.getGraph();
 			Iterable<Vertex> vertices = graph.getVertices( service.getDomainClass(domain) + "." + key, value );
@@ -211,7 +192,7 @@ public class ModelDatabase< T extends IDescriptor > {
 		OrientGraph graph = this.service.getGraph();
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
 		Iterator<Vertex> vertices = graph.getVertices().iterator();
-		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		Map<Object, IModelLeaf<IDescriptor>> nodes = new HashMap<>();
 		IModelNode<IDescriptor> node = null;
 		while( vertices.hasNext()) {
 			Vertex vertex = vertices.next();
@@ -231,9 +212,9 @@ public class ModelDatabase< T extends IDescriptor > {
 	 * @return
 	 * @throws FilterException
 	 */
-	public Collection<IModelLeaf<IDescriptor>> get( Collection<Vertex> vertices ) throws FilterException {
+	public Collection<IModelLeaf<IDescriptor>> search( Collection<Vertex> vertices ) throws FilterException {
 		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
-		Map<Object, IModelNode<IDescriptor>> nodes = new HashMap<>();
+		Map<Object, IModelLeaf<IDescriptor>> nodes = new HashMap<>();
 		try {
 			OrientGraph graph = this.service.getGraph();
 			IModelNode<IDescriptor> node = null;
@@ -262,7 +243,7 @@ public class ModelDatabase< T extends IDescriptor > {
 		return results;
 	}
 	
-	protected IModelNode<IDescriptor> getParent( OrientGraph graph, Vertex vertex, Map<Object, IModelNode<IDescriptor>> parents ) {
+	protected IModelNode<IDescriptor> getParent( OrientGraph graph, Vertex vertex, Map<Object, IModelLeaf<IDescriptor>> parents ) {
 		Iterator<Edge> edges = vertex.getEdges(Direction.IN).iterator();
 		IModelNode<IDescriptor> parent = null;
 		while( edges.hasNext()) {
@@ -270,7 +251,7 @@ public class ModelDatabase< T extends IDescriptor > {
 			if(!isParentEdge(edge))
 				continue;
 			Vertex vparent = edge.getVertex(Direction.OUT);
-			if(( vparent == null ) || !isOfDomain(domain, vparent))
+			if(( vparent == null ) || !hasSameDomain( vertex, vparent))
 				continue;
 			if( vparent.getId().equals(vertex.getId())) {
 				graph.removeEdge(edge);
@@ -278,11 +259,10 @@ public class ModelDatabase< T extends IDescriptor > {
 				continue;
 			}
 			if( parents.containsKey(vparent.getId()))
-				parent = parents.get(vparent.getId());
+				parent = (IModelNode<IDescriptor>) parents.get(vparent.getId());
 			else {
 				parent = new ModelNode( graph, getParent( graph, vparent, parents ), vparent );
-				if( parent != null )
-					parents.put(vparent.getId(), parent);
+				parents.put(vparent.getId(), parent);
 			}
 		}
 		return parent;
@@ -398,8 +378,7 @@ public class ModelDatabase< T extends IDescriptor > {
 					update( vnode, entry.getKey());
 				}
 				if( found == false ) {
-					String str = domain.getDomain().replace(".", "_");
-					OrientModelTypeAdapter.findOrCreateVertex(graph, str, entry.getKey().getDescriptor().getBase());				
+					OrientModelTypeAdapter.findOrCreateVertex(graph, domain, entry.getKey().getDescriptor().getBase());				
 					vnode = graph.addVertex(ModelDatabase.S_CLASS + IDescriptor.DESCRIPTORS);
 					OrientModelTypeAdapter.fill(vnode, entry.getKey().getData().getBase());
 					vertex.addEdge(IDescriptor.DESCRIPTOR, vnode);
@@ -525,6 +504,36 @@ public class ModelDatabase< T extends IDescriptor > {
 		return result;
 	}
 
+	/**
+	 * Remove the children from the model with the given id.
+	 * Returns true if one or more children were removed
+	 * @param id
+	 * @param children
+	 * @return
+	 */
+	public boolean removeChildrenOnDescriptors( long id, long descriptor ) {
+		boolean result = false;
+		OrientGraph graph = this.service.getGraph();
+		Iterable<Vertex> iterable = graph.getVertices(IDescriptor.Attributes.ID.name(), String.valueOf(id));
+		if( iterable == null )
+			return false;
+		Iterator<Vertex> iterator = iterable.iterator();
+		while( iterator.hasNext() ) {
+			Vertex vertex = iterator.next();			
+			Iterator<Edge> edges = vertex.getEdges(Direction.OUT).iterator();
+			while( edges.hasNext()) {
+				Edge edge = edges.next();
+				Vertex vchild = getOther( edge, vertex);
+				Map<String, Vertex> vdescs = getDescriptors(vchild);
+				if( vdescs.containsKey(String.valueOf(descriptor))) {
+					graph.removeEdge(edge);
+					result = true;
+				}
+			}
+		}		
+		return result;
+	}
+
 	protected int countEdges( Vertex vertex, Direction direction ) {
 		int counter = 0;
 		Iterator<Edge> iterator = vertex.getEdges(direction).iterator();
@@ -556,6 +565,12 @@ public class ModelDatabase< T extends IDescriptor > {
 		return vertex.toString().contains(domstr); 
 	}
 
+	public static boolean hasSameDomain( Vertex source, Vertex target ) {
+		String domstr = source.toString();
+		String result = domstr.substring(domstr.indexOf("(")+1,domstr.indexOf(")"));
+		return target.toString().contains( result );
+	}
+
 	public static boolean hasEdges( Vertex vertex ) {
 		Iterator<Edge> edges = vertex.getEdges(Direction.BOTH).iterator();		
 		return edges.hasNext(); 
@@ -569,6 +584,18 @@ public class ModelDatabase< T extends IDescriptor > {
 	public static Vertex getOther( Edge edge, Vertex vertex ) {
 		Vertex check = edge.getVertex( Direction.IN); 
 		return !check.equals(vertex)?check: edge.getVertex(Direction.OUT);
+	}
+
+	public static Map<String, Vertex> getDescriptors( Vertex vertex ) {
+		Map<String,Vertex> results = new HashMap<>();
+		Iterator<Edge> iterator = vertex.getEdges(Direction.OUT, IDescriptor.DESCRIPTOR).iterator();
+		while( iterator.hasNext()) {
+			Edge edge=  iterator.next();
+			Vertex vdesc = edge.getVertex( Direction.IN );
+			String id = getId(vdesc);
+			results.put( id, vdesc );
+		}
+		return results;
 	}
 
 	/**

@@ -70,7 +70,7 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 		if( vertex != null )
 			return vertex;
 			
-		vertex = findOrCreateVertex( graph, str, base);
+		vertex = findOrCreateVertex( graph, domain, base);
 		Edge edge = vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
 		edge.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 		return vertex;
@@ -127,7 +127,7 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 		//The new descriptor is not already available, so create a new vertex and add the properties of the base
 		String idStr = IDescriptor.Attributes.ID.name();
 		vertex = graph.addVertex( ModelDatabase.S_CLASS + IDescriptor.DESCRIPTORS);
-		vertex.setProperty(idStr, createId( vertex.getId()));
+		vertex.setProperty(idStr, createId( domain, vertex.getId()));
 		vertex.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 		
 		Iterator<Map.Entry<String, String>> iterator = base.entrySet().iterator();
@@ -138,7 +138,7 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 			else {
 				long id = Long.parseLong( entry.getValue());
 				if( id < 0 )
-					vertex.setProperty(idStr, createId( vertex.getId() ));
+					vertex.setProperty(idStr, createId( domain, vertex.getId() ));
 			}
 		}		
 		return vertex;
@@ -166,9 +166,13 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 	 * @param obj
 	 * @return
 	 */
-	public static String createId( Object obj ) {
+	public static String createId( IDomainAieon domain, Object obj ) {
 		String str = obj.toString().replaceAll("[^0-9]", "");
-		return str;
+		long id = domain.toString().hashCode();
+		id = id<<31 + Long.parseLong(str);
+		if( id < 0 )
+			id = -id;
+		return String.valueOf(id);
 	}
 	
 	public static Direction opposite( Direction direction ) {
@@ -275,15 +279,16 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 		return results;
 	}
 
-	public static Vertex findOrCreateVertex( OrientGraph graph, String domain, IConceptBase base ) {
+	public static Vertex findOrCreateVertex( OrientGraph graph, IDomainAieon domain, IConceptBase base ) {
 		Vertex vertex = null;
-		Collection<Vertex> vertices = findVertices( graph, domain, base);
+		String str = domain.getDomain().replace(".", "_");
+		Collection<Vertex> vertices = findVertices( graph, str, base);
 		if( !Utils.assertNull(vertices)) {
 			vertex = vertices.iterator().next();
 			return vertex;
 		}else {
-			vertex = graph.addVertex( ModelDatabase.S_CLASS + domain );				
-			vertex.setProperty(IDescriptor.Attributes.ID.name(), createId( vertex.getId()));
+			vertex = graph.addVertex( ModelDatabase.S_CLASS + str );				
+			vertex.setProperty(IDescriptor.Attributes.ID.name(), createId( domain, vertex.getId()));
 			vertex.setProperty(IDescriptor.Attributes.CREATE_DATE.name(), Calendar.getInstance().getTimeInMillis());
 		}
 		fill(vertex, base );

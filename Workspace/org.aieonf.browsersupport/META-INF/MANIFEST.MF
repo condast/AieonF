@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.aieonf.browsersupport
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Condast
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Service-Component: OSGI-INF/org.aieonf.browsersupport.key.data.service.xml
 Import-Package: org.aieonf.collections,
  org.aieonf.collections.connector,
  org.aieonf.collections.persistence,
@@ -52,3 +51,4 @@ Bundle-ClassPath: lib/htmlparser.jar,
  lib/sqlite-jdbc-3.16.1.jar
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.aieonf.browsersupport
+Service-Component: OSGI-INF/org.aieonf.browsersupport.key.data.service.xml

@@ -24,8 +24,12 @@ public class Activator implements BundleActivator {
 	 */
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
-		graph.connect();
+		try {
+			Activator.context = bundleContext;
+			graph.connect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*

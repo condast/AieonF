@@ -15,7 +15,6 @@
 <location path="P:\Virgo\virgo-jetty-server-3.7.4.RELEASE\repository\orientdb" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.4.RELEASE\repository\gson" type="Directory"/>
 <location path="P:\Virgo\virgo-jetty-server-3.7.4.RELEASE\repository\nebula-2.4.1" type="Directory"/>
-	<location path="P:\Virgo\virgo-jetty-server-3.7.4.RELEASE\repository\rap" type="Directory"/>
 </locations>
 <includeBundles>
 <plugin id="cdi.api"/>
@@ -33,11 +32,11 @@
 <plugin id="javax.jms" version="1.1.0.v200906010428"/>
 <plugin id="javax.mail.glassfish" version="1.4.1.v201005082020"/>
 <plugin id="javax.persistence" version="2.0.6.v201308211412"/>
-<plugin id="javax.persistence" version="2.2.0.v201708071007"/>
 <plugin id="javax.persistence" version="2.1.1.v201509150925"/>
+<plugin id="javax.persistence" version="2.2.0.v201708071007"/>
 <plugin id="javax.resource"/>
-<plugin id="javax.servlet" version="3.0.0.v201112011016"/>
 <plugin id="javax.servlet" version="3.1.0.20200621"/>
+<plugin id="javax.servlet" version="3.0.0.v201112011016"/>
 <plugin id="javax.servlet" version="2.4.0.v200806031604"/>
 <plugin id="javax.servlet.jsp"/>
 <plugin id="javax.servlet.jsp.jstl-api"/>
@@ -144,23 +143,6 @@
 <plugin id="org.slf4j.api" version="1.7.2.v20121108-1250"/>
 <plugin id="org.slf4j.jcl"/>
 <plugin id="org.slf4j.jul"/>
-<plugin id="org.springframework.aop"/>
-<plugin id="org.springframework.aspects"/>
-<plugin id="org.springframework.beans"/>
-<plugin id="org.springframework.context"/>
-<plugin id="org.springframework.context.support"/>
-<plugin id="org.springframework.core"/>
-<plugin id="org.springframework.expression"/>
-<plugin id="org.springframework.jdbc"/>
-<plugin id="org.springframework.jms"/>
-<plugin id="org.springframework.messaging"/>
-<plugin id="org.springframework.orm"/>
-<plugin id="org.springframework.oxm"/>
-<plugin id="org.springframework.transaction"/>
-<plugin id="org.springframework.web"/>
-<plugin id="org.springframework.webmvc"/>
-<plugin id="org.springframework.webmvc.portlet"/>
-<plugin id="org.springframework.websocket"/>
 	<plugin id="org.eclipse.equinox.http.servlet"/>
 	<plugin id="org.tukaani.xz"/>
 	<plugin id="org.sat4j.core"/>
@@ -196,10 +178,6 @@
 	<plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
 	<plugin id="osgi.enterprise"/>
 	<plugin id="org.apache.commons.fileupload"/>
-	<plugin id="org.eclipse.rap.jface"/>
-	<plugin id="org.eclipse.rap.nebula.widgets.richtext"/>
-	<plugin id="org.eclipse.rap.rwt"/>
-	<plugin id="org.eclipse.rap.rwt.osgi"/>
 	<plugin id="org.eclipse.nebula.cwt"/>
 	<plugin id="org.eclipse.nebula.effects.stw"/>
 	<plugin id="org.eclipse.nebula.effects.stw.example"/>
@@ -312,8 +290,8 @@
 	<plugin id="org.eclipse.nebula.widgets.xviewer"/>
 	<plugin id="org.eclipse.nebula.widgets.xviewer.core"/>
 	<plugin id="org.eclipse.nebula.widgets.xviewer.example"/>
-	<plugin id="org.apache.commons.codec" version="1.10.0.v20151023-1447"/>
 	<plugin id="org.apache.commons.codec" version="1.6.0"/>
+	<plugin id="org.apache.commons.codec" version="1.10.0.v20151023-1447"/>
 	<plugin id="org.eclipse.core.runtime"/>
 	<plugin id="org.eclipse.equinox.http.servlet.source"/>
 	<plugin id="org.eclipse.nebula.effects.stw.example.source"/>

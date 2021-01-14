@@ -23,7 +23,8 @@ public interface IDatabaseConnection {
 		UPDATE,
 		REMOVE,
 		REMOVE_ALL,
-		REMOVE_CHILDREN;
+		REMOVE_CHILDREN,
+		REMOVE_CHILDREN_ON_DESCRIPTOR;
 
 		@Override
 		public String toString() {

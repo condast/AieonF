@@ -77,7 +77,7 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	 * @param direction
 	 * @return
 	 */
-	public M adjacent(long id, Direction direction);
+	public Collection<M> adjacent(long id, Direction direction);
 
 	/**
 	 * Find the model with the given id
@@ -130,6 +130,14 @@ public interface IModelDatabase<K extends Object, D extends IDescriptor, M exten
 	 * @return the updated model
 	 */
 	public Collection<M> remove(long parent, long[] children);
+
+	/**
+	 * Remove the children from the given parent, with the given descriptor id
+	 * @param parent
+	 * @param children
+	 * @return the updated model
+	 */
+	public Collection<M> removeOnDescriptorId(long parent, long descriptor);
 
 	/**
 	 * Remove the models with the given ids

@@ -226,7 +226,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 	}
 
 	@Override
-	public M adjacent( long id, Direction direction ) {
+	public Collection<M> adjacent( long id, Direction direction ) {
 		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
 		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.ADJACENT;
 		Map<String, String> parameters = new HashMap<>();
@@ -243,7 +243,7 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Utils.assertNull(results)? null: results.iterator().next();
+		return results;
 	}
 
 	@Override
@@ -456,6 +456,30 @@ public abstract class AbstractRestDatabase<D extends IDescriptor, M extends IMod
 			Gson gson = new Gson();
 			String str = gson.toJson(children, long[].class);
 			client.sendDelete(request, parameters, str, children);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+
+	@Override
+	public Collection<M> removeOnDescriptorId( long parent, long descriptor) {
+		Map.Entry<Long, Long> entry = generator.createIdAndToken( domain.getDomain());
+		IDatabaseConnection.Requests request = IDatabaseConnection.Requests.REMOVE_CHILDREN_ON_DESCRIPTOR;
+		Map<String, String> parameters = new HashMap<>();
+		parameters.put( Attributes.ID.toString(), String.valueOf(entry.getKey()));
+		parameters.put( Attributes.TOKEN.toString(), String.valueOf( entry.getValue()));
+		parameters.put( Attributes.DOMAIN.toString(), domain.getDomain());
+		parameters.put( Attributes.MODEL_ID.toString(), String.valueOf(parent));
+		WebClient<M[]> client = new WebClient<>( path );
+		long[] ids = new long[1];
+		ids[0] = descriptor;
+		Collection<M>results = new ArrayList<>();
+		try {
+			client.addListener( e->getResults(e, results ));
+			Gson gson = new Gson();
+			String str = gson.toJson(descriptor, Long.class);
+			client.sendDelete(request, parameters, str, ids);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
