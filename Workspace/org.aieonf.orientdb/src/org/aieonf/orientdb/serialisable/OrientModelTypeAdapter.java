@@ -67,8 +67,12 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 		String str = domain.getDomain().replace(".", "_");
 		
 		Vertex vertex = getParent( this.graph, str, descriptor, IDescriptor.DESCRIPTOR);
-		if( vertex != null )
+		if( vertex != null ) {
+			String domstr = domain.getDomain().replace(".", "_");		
+			Collection<Vertex> children = getChildren(graph, domstr, vertex);
+			logger.info("Children found for (create) " + vertex.getId() + ": " + children.size());
 			return vertex;
+		}
 			
 		vertex = findOrCreateVertex( graph, domain, base);
 		Edge edge = vertex.addEdge(IDescriptor.DESCRIPTOR, descriptor);
@@ -78,13 +82,13 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 
 	@Override
 	protected boolean handleCycle(Vertex parent, Vertex child, String label) {
-		Iterator<Edge> edges = parent.getEdges(Direction.BOTH, label).iterator();
-		while( edges.hasNext())
-			this.graph.removeEdge(edges.next());
 		String parentId = getID( parent); 
 		String childId = getID( child ); 
 		if( !parentId.equals( childId ))
 			return false;
+		Iterator<Edge> edges = parent.getEdges(Direction.BOTH, label).iterator();
+		while( edges.hasNext())
+			this.graph.removeEdge(edges.next());
 		logger.warning( S_ERR_CYCLE_DETECTED + "(" + label + "):" + parentId + "->" + getID( child ));
 		return true;
 	}
@@ -99,6 +103,9 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 	protected boolean onAddChild(Vertex model, Vertex child, boolean reversed, String label) {
 		if( exists( model, child ))
 			return false;
+		String domstr = domain.getDomain().replace(".", "_");		
+		Collection<Vertex> children = getChildren(graph, domstr, model);
+		logger.info("Children found for ( add ) " + model.getId() + ": " + children.size());
 		addChild( model, child, reversed, label);
 		return true;
 	}
@@ -197,7 +204,7 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 	 * @return
 	 */
 	protected static Vertex getParent( OrientGraph graph, String domain, Vertex vertex, String label ) {
-		Collection<Vertex> results = getConnected( graph, domain, vertex, Direction.IN, label);
+		Collection<Vertex> results = getConnected( graph, domain, vertex, Direction.IN, label, false);
 		return Utils.assertNull(results)? null: results.iterator().next();
 	}
 
@@ -207,13 +214,30 @@ public class OrientModelTypeAdapter extends AbstractModelTypeAdapter<Vertex, Ver
 	 * @param label
 	 * @return
 	 */
-	protected static Collection<Vertex> getConnected( OrientGraph graph, String domain, Vertex vertex, Direction direction, String label ) {
+	public static Collection<Vertex> getChildren( OrientGraph graph, String domain, Vertex vertex  ) {
+		return getConnected(graph, domain, vertex, Direction.OUT, null, true);
+	}
+	
+	/**
+	 * Get the vertices that are connected to the given vertex, by domain, direction and label
+	 * @param vertex
+	 * @param label
+	 * @return
+	 */
+	public static Collection<Vertex> getConnected( OrientGraph graph, String domain, Vertex vertex, Direction direction, String label, boolean skipDescriptor ) {
 		Collection<Vertex> results = new ArrayList<>();
 		Collection<Object> ids = new ArrayList<>();
-		Iterator<Edge> edges = vertex.getEdges(direction, label).iterator();
+		Iterator<Edge> edges = null;
+		if( StringUtils.isEmpty(label))
+			edges = vertex.getEdges(direction).iterator();
+		else
+			edges = vertex.getEdges(direction, label).iterator();
+			
 		Vertex connected = null;
 		while( edges.hasNext()) {
 			Edge edge = edges.next();
+			if( skipDescriptor && IDescriptor.DESCRIPTOR.equals(edge.getLabel()))
+				continue;
 			connected = edge.getVertex( opposite( direction ));
 			ids.add(connected.getId());
 		}

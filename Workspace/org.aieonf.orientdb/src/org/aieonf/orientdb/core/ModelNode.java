@@ -22,6 +22,8 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 	//Needed to remove children
 	private transient OrientGraph graph;
 	
+	private Map<IModelLeaf<? extends IDescriptor>, String> children;
+	
 	/**
 	 * It is possible to reverse the parent-child relationship, 
 	 * which allows the database to create a more convenient layout.
@@ -38,9 +40,33 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		vertex.setProperty(IDescriptor.Attributes.CLASS.name(), IModelNode.class.getCanonicalName());
 		this.graph = graph;
 		this.reverse = false;
+		children = new HashMap<>();
 		super.setLeaf( !hasChildren());
+		if( !isLeaf())
+			parseChildren();
 	}
-	
+
+	protected void parseChildren() {
+		Vertex vertex = getVertex();
+		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
+		if(!edges.hasNext())
+			return;
+		
+		while( edges.hasNext()) {
+			Edge edge = edges.next();
+			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
+				continue;
+			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
+			if( vchild == null )
+				continue;
+			if( vertex.getId().equals(vchild.getId()))
+				graph.removeEdge(edge);
+			IModelLeaf<IDescriptor> child = new ModelNode( graph, this, vchild); 
+			//logger.fine( child.getData().toString());	
+			children.put(child, edge.getLabel());
+		}
+	}
+
 	@Override
 	public boolean isReverse() {
 		return this.reverse;
@@ -61,37 +87,18 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 		Vertex vertex = getVertex();
 		ModelLeaf leaf = (ModelLeaf) child;
 		OrientModelTypeAdapter.addChild(vertex, leaf.getVertex(), this.reverse, type);
+		children.put(leaf, type);
 		super.setLeaf(false);
 		return true;
 	}
 	
 	@Override
 	public Map<IModelLeaf<? extends IDescriptor>, String> getChildren() {
-		Map<IModelLeaf<? extends IDescriptor>, String> children = new HashMap<>();
-		Vertex vertex = getVertex();
-		Iterator<Edge> edges = vertex.getEdges(com.tinkerpop.blueprints.Direction.OUT).iterator();
-		if(!edges.hasNext())
-			return children;
-		
-		while( edges.hasNext()) {
-			Edge edge = edges.next();
-			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
-				continue;
-			Vertex vchild = edge.getVertex(com.tinkerpop.blueprints.Direction.IN);
-			if( vchild == null )
-				continue;
-			if( vertex.getId().equals(vchild.getId()))
-				graph.removeEdge(edge);
-			IModelLeaf<IDescriptor> child = new ModelNode( graph, this, vchild); 
-			//logger.fine( child.getData().toString());	
-			children.put(child, edge.getLabel());
-		}
 		return children;
 	}
 
 	@Override
 	public IModelLeaf<? extends IDescriptor> getChild(IDescriptor descriptor) {
-		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
 		for( IModelLeaf<? extends IDescriptor> child: children.keySet() ) {
 			if( child.getData().equals(descriptor))
 				return child;
@@ -114,8 +121,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 
 	@Override
 	public String getChildIdentifier(IModelLeaf<? extends IDescriptor> child) {
-		// TODO Auto-generated method stub
-		return null;
+		return child.get(IModelLeaf.Attributes.IDENTIFIER.name());
 	}
 
 	@Override
@@ -150,6 +156,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 			return true;
 		}
 		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
+		children.remove(child);
 		super.setLeaf(Utils.assertNull(children));
 		return true;
 	}
@@ -166,12 +173,12 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 			if( IDescriptor.DESCRIPTOR.equals( edge.getLabel()))
 				continue;
 		}
+		children.clear();
 		super.setLeaf(true);
 	}
 
 	@Override
 	public int nrOfchildren() {
-		Map<IModelLeaf<? extends IDescriptor>, String> children = getChildren();
 		return children.size();
 	}
 }
