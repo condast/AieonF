@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<application version="0" name="saight"
+	id="6B2F71AFDFCD4947815FA4CDE5C5F392E4CD9463A3F74ACD954CCB0E49E0ED9F04">
+	<model id="org.saight.Product" name="Product">
+		<context name="Product">
+			<version type="int">1</version>
+			<read-only>true</read-only>
+			<id type="string" regex="[a..z\\.]*[:]//d">org.condast.concept.template:-4914886299605302745
+			</id>
+			<scope type="enum">Application</scope>
+			<organisation>Condast</organisation>
+			<website>"www.saight.com"</website>
+			<author>Kees Pieters</author>
+			<copyright>2004-2014 condast.com</copyright>
+			<license>Apache 2.0</license>
+		</context>
+		<children>
+			<model>
+				<domain>
+					<domain type="string" use="mandatory" create="template">org.aieonf.domain.Product
+					</domain>
+					<short-name type="string" use="mandatory"
+						create="template">Product</short-name>
+				</domain>
+			</model>
+			<model id="org.aieonf.database">
+				<loader>
+					<read-only>false</read-only>
+					<creatable>true</creatable>
+					<user-name>admin</user-name>
+					<password>admin</password>
+				</loader>
+			</model>
+			<model id="org.aieonf.model">
+				<properties>
+					<title init="clear" use="mandatory">{Title}</title>
+					<description init="clear" use="mandatory">{Description}
+					</description>
+					<scope type="enum" use="mandatory">PUBLIC</scope>
+				</properties>
+				<children>
+					<model>
+						<properties>
+							<description type="string" use="optional">{Description}
+							</description>
+							<scope type="enum" use="mandatory">PUBLIC</scope>
+						</properties>
+						<url id="descriptor">
+							<version type="int" use="mandatory" create="auto">1</version>
+							<url type="url" use="mandatory">{http://www.url.org}</url>
+						</url>
+					</model>
+				</children>
+			</model>
+		</children>
+	</model>
+</application>
