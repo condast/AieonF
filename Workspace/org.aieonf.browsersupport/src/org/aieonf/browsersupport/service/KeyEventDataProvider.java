@@ -126,7 +126,7 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 		@Override
 		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
 			Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
-			results.addAll( cmf.search( filter ));
+			//results.addAll( cmf.search( filter )); VERY SLOW
 			results.addAll( ffmf.search( filter ));
 			results.addAll( ieff.search( filter ));
 			Dispatcher dispatcher = Dispatcher.getInstance();
