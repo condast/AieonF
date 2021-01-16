@@ -63,6 +63,15 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 * Create the model
 	 * @param concept
 	 */
+	public ModelLeaf( IModelLeaf<D> leaf ){
+		this( leaf.getDescriptor().getBase());
+		this.data = leaf.getData();
+	}
+
+	/**
+	 * Create the model
+	 * @param concept
+	 */
 	public ModelLeaf( D data ){
 		this( -1, data );
 	}

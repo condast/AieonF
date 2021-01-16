@@ -97,17 +97,17 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 
 		@Override
 		protected boolean onOpen( IDomainAieon key) {
-			cmf.open(domain);
-			ffmf.open(domain);
-			ieff.open(domain);
+			//cmf.open(domain);
+			//ffmf.open(domain);
+			//ieff.open(domain);
 			return true;
 		}
 
 		@Override
 		public void close() {
-			cmf.close();
-			ffmf.close();
-			ieff.close();
+			//cmf.close();
+			//ffmf.close();
+			//ieff.close();
 			super.close();
 		}
 

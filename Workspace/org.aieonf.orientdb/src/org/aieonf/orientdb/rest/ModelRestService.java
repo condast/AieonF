@@ -386,7 +386,7 @@ public class ModelRestService{
 			ModelTypeAdapter adapter = new ModelTypeAdapter();
 			builder.registerTypeAdapter( IModelLeaf.class, adapter);
 			Gson gson = builder.create();			
-			logger.fine( data );
+			logger.info( data );
 			IModelLeaf<IDescriptor>[] results = gson.fromJson(data, IModelLeaf[].class);
 			database.update( results[0] );
 			return Response.ok(0).build();

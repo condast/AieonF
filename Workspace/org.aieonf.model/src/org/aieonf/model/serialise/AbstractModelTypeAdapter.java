@@ -217,8 +217,10 @@ public abstract class AbstractModelTypeAdapter<N extends Object, D extends Objec
 						onAddParent( node, pnode);
 						jsonReader.endObject();
 						token = jsonReader.peek();	
-						jsonReader.endObject();
-						token = jsonReader.peek();	
+						if( !JsonToken.END_OBJECT.equals(token))
+							break;
+						jsonReader.endObject();	
+						token = jsonReader.peek();
 						break;
 					case LEAF:
 						jsonReader.nextBoolean();

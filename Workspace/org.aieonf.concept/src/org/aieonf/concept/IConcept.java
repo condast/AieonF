@@ -54,14 +54,13 @@ public interface IConcept extends IDescriptor
   */
   public static enum Scope
   {
-    UNKNOWN,
+    PUBLIC,
     MESSAGE,
     APPLICATION,
     PRIVATE,
     DOMAIN,
     MEMBERSHIP,
     CONSTRAINED,
-    PUBLIC,
     SHARED;
 
 	@Override

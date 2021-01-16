@@ -3,7 +3,6 @@ package org.aieonf.orientdb.filter;
 import org.aieonf.commons.Utils;
 import org.aieonf.commons.filter.FilterException;
 import org.aieonf.commons.filter.WildcardFilter;
-import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
 import org.aieonf.concept.filter.AttributeFilter;
 
@@ -49,8 +48,8 @@ public class VertexAttributeFilter extends AbstractGraphFilter {
 		default:
 			if( StringUtils.isEmpty(val))
 				break;
-			WildcardFilter filter = new WildcardFilter( StringStyler.styleToEnum( val ));
-			return filter.accept( this.refVal );
+			WildcardFilter filter = new WildcardFilter( this.refVal);
+			return filter.accept( val );
 		}
 		return false;
 	}

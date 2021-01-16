@@ -42,23 +42,22 @@ public class DataURI extends Concept implements IDataURI
 	{
 		super( S_DATA_URI );
 		super.setSource(name);
-		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
-		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
+		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE.name(), S_DEFAULT_MIMETYPE );
 		super.setDescription(name);
 	}
 
 	public DataURI( long id, String name )
 	{
 		super( id, S_DATA_URI );
-		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
-		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
+		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE.name(), S_DEFAULT_MIMETYPE );
 		super.setSource(name);
 		super.setDescription(name);
 	}
 
 	public DataURI( IDescriptor descriptor ) {
 		super( descriptor.getBase() );
-		setClassName(this.getClass().getCanonicalName());
 	}
 
 	public String getDataName(){
@@ -86,7 +85,7 @@ public class DataURI extends Concept implements IDataURI
 	 */
 	@Override
 	public void fill( String key, String datauri ){
-		super.set( IDataResource.Attribute.TYPE, key);
+		super.set( IDataResource.Attribute.TYPE.name(), key);
 		String str = datauri.replace("\"", "").trim();
 		String[] split = str.split("[:;,]");
 		str = split[0].toLowerCase().trim();
@@ -98,8 +97,8 @@ public class DataURI extends Concept implements IDataURI
 		str = split[1];
 		if( str.split("[/]").length != 2 )
 			throw new  IllegalArgumentException( S_ERR_ILLEGAL_DATA_URI_4 );
-		super.set(IDataURI.Attribute.MIME_TYPE, str);
-		super.set(IDataResource.Attribute.RESOURCE, split[split.length -1]);
+		super.set(IDataURI.Attribute.MIME_TYPE.name(), str);
+		super.set(IDataResource.Attribute.RESOURCE.name(), split[split.length -1]);
 		if( split.length == 3 )
 			return;
 		for( int i = 2; i < split.length-1 ; i++){
@@ -108,10 +107,10 @@ public class DataURI extends Concept implements IDataURI
 				String[] charsetsplit = str.split("[=]");
 				if( charsetsplit.length != 2 )
 					continue;
-				super.set( IDataURI.Attribute.CHARSET, charsetsplit[1]);
+				super.set( IDataURI.Attribute.CHARSET.name(), charsetsplit[1]);
 			}
 			if( str.equals( S_BASE64)){
-				super.set( IDataURI.Attribute.ENCODING, str);
+				super.set( IDataURI.Attribute.ENCODING.name(), str);
 			}
 		}
 		this.datauri = datauri;
@@ -119,12 +118,12 @@ public class DataURI extends Concept implements IDataURI
 	
 	@Override
 	public String getType(){
-		return super.get( IDataResource.Attribute.TYPE );
+		return super.get( IDataResource.Attribute.TYPE.name() );
 	}
 
 	@Override
 	public String getMimeType(){
-		return super.get( IDataURI.Attribute.MIME_TYPE );
+		return super.get( IDataURI.Attribute.MIME_TYPE.name() );
 	}
 
 	@Override
@@ -166,7 +165,7 @@ public class DataURI extends Concept implements IDataURI
 	@Override
 	public String getResource()
 	{
-		return super.get( IDataResource.Attribute.RESOURCE );
+		return super.get( IDataResource.Attribute.RESOURCE.name() );
 	}
 	
 	@Override
@@ -177,7 +176,7 @@ public class DataURI extends Concept implements IDataURI
 	}
 	
 	public static boolean isDataURI( IDescriptor descriptor ) {
-		String result = descriptor.get( IDataResource.Attribute.IS_DATA_URI );
+		String result = descriptor.get( IDataResource.Attribute.IS_DATA_URI.name() );
 		return StringUtils.isEmpty(result)?false: Boolean.parseBoolean(result);
 	}
 

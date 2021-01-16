@@ -28,6 +28,8 @@ package org.aieonf.commons.filter;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import org.aieonf.commons.strings.StringUtils;
+
 /**
  *
  * <p>Title: Conceptual Network Database</p>
@@ -110,6 +112,8 @@ public class WildcardFilter implements FilenameFilter
     	return false;
     if( this.rule.equals( Rules.CaseInsensitive ))
     	name = name.trim().toLowerCase();
+    if( StringUtils.isEmpty(this.sWild) || S_ALL.equals(sWild))
+    	return true;
     return( name.matches( sWild ));
   }
 
@@ -122,15 +126,21 @@ public class WildcardFilter implements FilenameFilter
   */
   private String replaceWildcards( String wild )
   {
-    if( wild == null )
+    if( wild == null ) {
     	wild = "";
+    	return wild;
+    }
+    if( S_ALL.equals(wild)) {
+    	wild = S_ALL;
+    	return wild;
+    }
   	StringBuffer buffer = new StringBuffer();
     char [] chars = wild.toCharArray();
     for (int i = 0; i < chars.length; ++i)
     {
       if (chars[i] == '*')
         buffer.append(".*");
-      else if (chars[i] == '?')
+      else if ((chars[i] == '?') || (chars[i] == '.'))
         buffer.append(".");
       else if ("+()^$.{}[]|\\".indexOf(chars[i]) != -1)
         buffer.append('\\').append(chars[i]);

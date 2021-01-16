@@ -80,7 +80,6 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 		super.setSource( uri );
 		super.setDescription(uri);
-	    super.setClassName( this.getClass().getCanonicalName() );
 		DataURI data = (DataURI) super.getDescriptor();
 		data.setDataName(uri);
 	}
@@ -91,10 +90,9 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	 */
 	public URLAieon( String name, String uri ) 
 	{
-		super( IConcept.Attributes.SOURCE.name() );
+		super( name );
 		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 		super.setSource( uri );
-	    super.setClassName( this.getClass().getCanonicalName() );
 		super.setDescription(name);
 		DataURI data = (DataURI) super.getDescriptor();
 		data.setDataName(name);
@@ -107,7 +105,6 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	public URLAieon( IDescriptor descriptor ) {
 		super( descriptor );
 		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
-		setClassName(this.getClass().getCanonicalName());
 	}
 	
 	/**
