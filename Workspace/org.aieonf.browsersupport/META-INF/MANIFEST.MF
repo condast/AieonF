@@ -51,4 +51,5 @@ Bundle-ClassPath: lib/htmlparser.jar,
  lib/sqlite-jdbc-3.16.1.jar
 Bundle-ActivationPolicy: lazy
 Automatic-Module-Name: org.aieonf.browsersupport
-Service-Component: OSGI-INF/org.aieonf.browsersupport.key.data.service.xml
+Service-Component: OSGI-INF/org.aieonf.browsersupport.key.data.service.xml,
+ OSGI-INF/org.condast.saight.domain.selection.service.xml

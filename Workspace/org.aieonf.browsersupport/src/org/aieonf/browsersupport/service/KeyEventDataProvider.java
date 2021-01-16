@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.aieonf.browsersupport.context.ContextFactory;
+import org.aieonf.browsersupport.core.Dispatcher;
 import org.aieonf.browsersupport.library.chromium.ChromiumModelFunctionProvider;
 import org.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.aieonf.browsersupport.library.ie.IEFavoritesFunction;
@@ -24,6 +25,7 @@ import org.aieonf.concept.request.IKeyEventDataProvider;
 import org.aieonf.concept.request.KeyEvent;
 import org.aieonf.model.builder.IFunctionProvider;
 import org.aieonf.model.core.IModelLeaf;
+import org.aieonf.model.core.IModelNode;
 import org.aieonf.model.core.ModelEvent;
 import org.aieonf.model.filter.IModelFilter;
 import org.aieonf.model.filter.ModelFilter;
@@ -44,6 +46,7 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 	private KeyEvent<IDatabaseConnection.Requests> request;
 	
 	public KeyEventDataProvider() {
+		super( S_COMPONENT_NAME, ProviderTypes.LINKS );
 		ContextFactory factory = ContextFactory.getInstance();
 		ITemplateLeaf<IContextAieon> template = factory.createTemplate();
 		domain = factory.getDomain();
@@ -123,9 +126,12 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 		@Override
 		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
 			Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
-			//results.addAll( cmf.search( filter ));
+			results.addAll( cmf.search( filter ));
 			results.addAll( ffmf.search( filter ));
 			results.addAll( ieff.search( filter ));
+			Dispatcher dispatcher = Dispatcher.getInstance();
+			for( IModelLeaf<IDescriptor> leaf: results)
+				dispatcher.complete( (IModelNode<IDescriptor>) leaf );
 			return results;
 		}
 

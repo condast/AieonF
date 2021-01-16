@@ -2,8 +2,8 @@ package org.aieonf.template.core;
 
 import org.aieonf.commons.strings.StringStyler;
 import org.aieonf.commons.strings.StringUtils;
+import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
-import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.Model;
 import org.aieonf.template.def.ITemplateLeaf;
 
@@ -30,7 +30,7 @@ public class TemplateLeaf<T extends IDescriptor> extends Model<T> implements ITe
 		}
 		String id = attributes.getValue( StringStyler.xmlStyleString( IDescriptor.Attributes.ID.name() ));
 		if(!StringUtils.isEmpty( id )) {
-			set( IModelLeaf.Attributes.IDENTIFIER.name(), id);
+			set( IConcept.Attributes.IDENTIFIER.name(), id);
 		}
 	}
 }

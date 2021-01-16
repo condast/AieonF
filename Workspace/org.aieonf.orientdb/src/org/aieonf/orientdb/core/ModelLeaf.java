@@ -89,13 +89,13 @@ public class ModelLeaf extends VertexConceptBase implements IModelLeaf<IDescript
 	@Override
 	public String getIdentifier() {
 		Vertex vertex = getVertex();
-		return vertex.getProperty(IModelLeaf.Attributes.IDENTIFIER.name());
+		return vertex.getProperty(IConcept.Attributes.IDENTIFIER.name());
 	}
 
 	@Override
 	public void setIdentifier(String identifier) {
 		Vertex vertex = getVertex();
-		vertex.setProperty(IModelLeaf.Attributes.IDENTIFIER.name(), identifier);
+		vertex.setProperty(IConcept.Attributes.IDENTIFIER.name(), identifier);
 	}
 
 	@Override

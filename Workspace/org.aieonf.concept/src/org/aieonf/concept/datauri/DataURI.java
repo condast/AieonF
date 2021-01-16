@@ -44,6 +44,7 @@ public class DataURI extends Concept implements IDataURI
 		super.setSource(name);
 		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
 		super.set(IDataURI.Attribute.MIME_TYPE.name(), S_DEFAULT_MIMETYPE );
+		super.setIdentifier(name);
 		super.setDescription(name);
 	}
 
@@ -53,6 +54,7 @@ public class DataURI extends Concept implements IDataURI
 		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
 		super.set(IDataURI.Attribute.MIME_TYPE.name(), S_DEFAULT_MIMETYPE );
 		super.setSource(name);
+		super.setIdentifier(name);
 		super.setDescription(name);
 	}
 
@@ -205,5 +207,30 @@ public class DataURI extends Concept implements IDataURI
 		String webResource = DataURI.getWebResource( descriptor ).split("[?]")[0];
 		webResource = URICompletion.complete(webResource );
 		return "<a href='' target='_blank'><img src='" + webResource + "' width='16' height='16' /></a>";
-	}	
+	}
+
+	
+	/**
+	 * Return the resource as an html string
+	 * @param resource
+	 * @return
+	 */
+	public static String toHtml( IDataResource resource ) {
+		if( Descriptor.assertNull( resource.getResource() ))
+			return null;
+		
+		String webResource = DataURI.getWebResource( resource ).split("[?]")[0];
+		webResource = URICompletion.complete(webResource );
+		return "<a href='' target='_blank'><img src='" + webResource + "' width='16' height='16' /></a>";
+	}
+
+	/**
+	 * Return the resource as an html string
+	 * @param resource
+	 * @return
+	 */
+	public static String toHtml( IDescriptor descriptor ) {
+		IDataURI uri = new DataURI( descriptor );
+		return toHtml(uri);
+	}
 }

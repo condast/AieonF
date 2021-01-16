@@ -183,7 +183,7 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 */
 	@Override
 	public String getIdentifier(){
-		return getValue( IModelLeaf.Attributes.IDENTIFIER);
+		return get( IConcept.Attributes.IDENTIFIER.name());
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class ModelLeaf<D extends IDescriptor> implements IModelLeaf<D>
 	 */
 	@Override
 	public void setIdentifier( String identifier ){
-		setValue( IModelLeaf.Attributes.IDENTIFIER , identifier );
+		set( IConcept.Attributes.IDENTIFIER.name() , identifier );
 	}
 
 	/**

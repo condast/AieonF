@@ -5,10 +5,24 @@ import java.util.Collection;
 
 public abstract class AbstractKeyEventDataProvider<R, D> implements IKeyEventDataProvider<R, D> {
 
+	private String name;
+	
+	private ProviderTypes type;
+	
 	private Collection<IKeyEventDataListener<R, D>> listeners;
 	
-	public AbstractKeyEventDataProvider() {
+	protected AbstractKeyEventDataProvider( String name, ProviderTypes type ) {
+		this.name = name;
+		this.type = type;
 		listeners = new ArrayList<>();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public ProviderTypes getType() {
+		return type;
 	}
 
 	@Override

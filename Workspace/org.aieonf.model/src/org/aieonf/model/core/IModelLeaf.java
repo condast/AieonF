@@ -28,7 +28,6 @@ public interface IModelLeaf<D extends Object> extends IDescribable, Comparable<I
 
 	public enum Attributes{
 		DESCRIPTOR,
-		IDENTIFIER,
 		TYPE,
 		ROOT,
 		LEAF,

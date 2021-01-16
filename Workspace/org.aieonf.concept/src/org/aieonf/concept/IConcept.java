@@ -26,7 +26,8 @@ public interface IConcept extends IDescriptor
   */
   public static enum Attributes
   {
-    AUTHOR,
+    IDENTIFIER,
+	AUTHOR,
     COPYRIGHT,
     HIDDEN,
     READ_ONLY,
@@ -90,7 +91,8 @@ public interface IConcept extends IDescriptor
   }
 
   /**
-   * Get the scope of the concept (default public)
+   * Get the scope of the con@Override
+	cept (default public)
    *
    * @return Scope
   */
@@ -185,4 +187,6 @@ public interface IConcept extends IDescriptor
   */
   @Override
 	public String toString();
+
+String getIdentifier();
 }

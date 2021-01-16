@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="activate" deactivate="deactivate" name="org.condast.aieonf.provider.various">
+   <implementation class="org.condast.aieonf.provider.client.ConceptProviderComponent"/>
+   <reference bind="addClientRegistry" cardinality="1..1" interface="org.condast.osgi.client.IClientRegistry" name="IClientRegistry" policy="static" unbind="removeClientRegistry"/>
+</scr:component>

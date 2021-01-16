@@ -86,6 +86,15 @@ public class Concept extends Descriptor implements IConcept
 		super.fill();
 	}
 
+	@Override
+	public String getIdentifier() {
+		return getValue( IConcept.Attributes.IDENTIFIER );
+	}
+	
+	protected void setIdentifier( String identifier ) {
+		setValue(IConcept.Attributes.IDENTIFIER, identifier);
+	}
+	
 	/**
 	 * Set the name of the concept
 	 *

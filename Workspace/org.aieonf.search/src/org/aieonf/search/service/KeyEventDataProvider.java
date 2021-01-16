@@ -41,6 +41,7 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 	private KeyEvent<IDatabaseConnection.Requests> request;
 	
 	public KeyEventDataProvider() {
+		super( S_COMPONENT_NAME, ProviderTypes.SEARCH );
 		ContextFactory factory = ContextFactory.getInstance();
 		ITemplateLeaf<IContextAieon> template = factory.createTemplate();
 		domain = factory.getDomain();

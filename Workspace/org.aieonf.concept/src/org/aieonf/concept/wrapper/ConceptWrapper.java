@@ -33,6 +33,12 @@ public class ConceptWrapper extends DescriptorWrapper implements IConcept
 		super( id, descriptor );
 	}
 
+	
+	@Override
+	public String getIdentifier() {
+		return get( IConcept.Attributes.IDENTIFIER.name() );
+	}
+
 	/**
 	 * Get the descriptor
 	 * @return

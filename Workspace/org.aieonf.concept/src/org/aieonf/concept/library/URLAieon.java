@@ -93,6 +93,7 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 		super( name );
 		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 		super.setSource( uri );
+		super.setIdentifier(name);
 		super.setDescription(name);
 		DataURI data = (DataURI) super.getDescriptor();
 		data.setDataName(name);

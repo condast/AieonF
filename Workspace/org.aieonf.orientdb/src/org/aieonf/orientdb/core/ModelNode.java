@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.aieonf.commons.Utils;
+import org.aieonf.concept.IConcept;
 import org.aieonf.concept.IDescriptor;
 import org.aieonf.model.core.IModelLeaf;
 import org.aieonf.model.core.IModelNode;
@@ -121,7 +122,7 @@ public class ModelNode extends ModelLeaf implements IModelNode<IDescriptor> {
 
 	@Override
 	public String getChildIdentifier(IModelLeaf<? extends IDescriptor> child) {
-		return child.get(IModelLeaf.Attributes.IDENTIFIER.name());
+		return child.get(IConcept.Attributes.IDENTIFIER.name());
 	}
 
 	@Override

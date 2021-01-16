@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.condast.saight.domain.selection.service">
+   <reference bind="addDomainProvider" cardinality="1..n" interface="org.aieonf.model.provider.IConceptProvider" name="DomainProvider" policy="dynamic" unbind="removeDomainProvider"/>
+   <implementation class="org.aieonf.browsersupport.service.ConceptProviderClient"/>
+</scr:component>
