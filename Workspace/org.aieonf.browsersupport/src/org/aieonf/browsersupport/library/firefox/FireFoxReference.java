@@ -57,7 +57,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 
 	public FireFoxReference(){
 		super();
-		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
+		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
 	}
 
 	/**
@@ -108,8 +108,8 @@ public class FireFoxReference extends Concept implements IDataResource{
 	 */
 	@Override
 	public void fill( String type, String resource ){
-		set( IDataResource.Attribute.TYPE, type );		
-		set( IDataResource.Attribute.RESOURCE, resource );
+		set( IDataResource.Attribute.TYPE.name(), type );		
+		set( IDataResource.Attribute.RESOURCE.name(), resource );
 		if( resource.startsWith( S_DATA))
 			super.set( Attribute.DataUri.name(), "true");
 		setVersion( 1 );
@@ -135,7 +135,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 			set( IDataURI.Attribute.MIME_TYPE, "text/plain" );		
 			str =  rs.getString( Columns.toColumnName( Columns.DATA ));
 			if( !Descriptor.assertNull(str)){
-				set( IDataResource.Attribute.RESOURCE, str );		
+				set( IDataResource.Attribute.RESOURCE.name(), str );		
 				super.set( Attribute.DataUri.name(), "true");
 			}
 			str =  rs.getString( Columns.toColumnName( Columns.ICON_URL ));
@@ -158,7 +158,7 @@ public class FireFoxReference extends Concept implements IDataResource{
 	@Override
 	public String getType()
 	{
-		String str = super.get( IDataResource.Attribute.TYPE );
+		String str = super.get( IDataResource.Attribute.TYPE.name() );
 		if( Descriptor.assertNull( str ))
 			return S_EMPTY;
 		return str;
@@ -167,10 +167,10 @@ public class FireFoxReference extends Concept implements IDataResource{
 	@Override
 	public String getResource()
 	{
-		return super.get(  IDataResource.Attribute.RESOURCE );
+		return super.get(  IDataResource.Attribute.RESOURCE.name() );
 	}
 
 	public void setResource( String resource ) throws ConceptException{
-		super.set( IDataResource.Attribute.RESOURCE, resource );
+		super.set( IDataResource.Attribute.RESOURCE.name(), resource );
 	}
 }

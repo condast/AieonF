@@ -11,7 +11,7 @@ public class IEDataResource extends Concept implements IDataResource{
 
 	public IEDataResource(IDescriptor descriptor){
 		super(descriptor);
-		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
+		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class IEDataResource extends Concept implements IDataResource{
 			String url = keyValue[1];
 			if( !url.toLowerCase().startsWith("http"))
 				url = "file://" + resource;
-			set( IDataResource.Attribute.RESOURCE, resource );
+			set( IDataResource.Attribute.RESOURCE.name(), resource );
 		}
 		catch (ArrayIndexOutOfBoundsException e) {
 			e.printStackTrace();
@@ -44,7 +44,7 @@ public class IEDataResource extends Concept implements IDataResource{
 	@Override
 	public String getResource()
 	{
-		return get( IDataResource.Attribute.RESOURCE );
+		return get( IDataResource.Attribute.RESOURCE.name() );
 	}
 
 	

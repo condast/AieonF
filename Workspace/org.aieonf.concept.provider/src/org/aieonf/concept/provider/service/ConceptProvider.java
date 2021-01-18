@@ -65,6 +65,7 @@ public class ConceptProvider implements IConceptProvider
 		concept.set( IDescriptor.Attributes.NAME.name(), S_WIKIPEDIA_NAME);
 		concept.setDescription( S_WIKIPEDIA_DESC );
 		concept.setURI(url);
+		concept.setReadOnly(true);
 		IDataURI dataURI = ( IDataURI )concept;
 		String base64 = this.createBase64Image();
 		dataURI.fill( IDataURI.S_ICON, base64 );

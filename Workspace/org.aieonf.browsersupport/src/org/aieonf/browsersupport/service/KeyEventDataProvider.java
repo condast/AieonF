@@ -8,7 +8,6 @@ import org.aieonf.browsersupport.core.Dispatcher;
 import org.aieonf.browsersupport.library.chromium.ChromiumModelFunctionProvider;
 import org.aieonf.browsersupport.library.firefox.FireFoxModelFunction;
 import org.aieonf.browsersupport.library.ie.IEFavoritesFunction;
-import org.aieonf.commons.Utils;
 import org.aieonf.commons.db.IDatabaseConnection;
 import org.aieonf.commons.db.IDatabaseConnection.Requests;
 import org.aieonf.commons.parser.ParseException;
@@ -56,16 +55,20 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 	@SuppressWarnings("unchecked")
 	@Override
 	protected IModelLeaf<IDescriptor>[] onProcesskeyEvent(KeyEvent<Requests> event) {
+		Collection<IModelLeaf<IDescriptor>> results = new ArrayList<>();
 		try {
 			request = event;
 			provider.open(domain);
-			IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = 
-					new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, 
-							IDescriptor.Attributes.NAME.name(), CategoryAieon.Attributes.CATEGORY.name()));
-			Collection<IModelLeaf<IDescriptor>> results = provider.search( filter );
-			if( Utils.assertNull(results))
-				return null;
-			return results.toArray( new IModelLeaf[ results.size()]);
+			switch( event.getRequest()) {
+			case SEARCH:
+				IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter = 
+				new ModelFilter<IDescriptor, IModelLeaf<IDescriptor>>( new AttributeFilter<IDescriptor>( AttributeFilter.Rules.WILDCARD, 
+						IDescriptor.Attributes.NAME.name(), CategoryAieon.Attributes.CATEGORY.name()));
+				results = provider.search( filter );
+				break;
+			default:
+				break;
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -73,9 +76,9 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 		finally {
 			provider.close();
 		}
-		return null;
+		return results.toArray( new IModelLeaf[ results.size()]);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void notifyResultsFound( ModelEvent<IModelLeaf<IDescriptor>> event ) {
 		IModelLeaf<IDescriptor>[] results = event.getModel().toArray( new IModelLeaf[ event.getModel().size()]);
@@ -126,7 +129,7 @@ public class KeyEventDataProvider extends AbstractKeyEventDataProvider<IDatabase
 		@Override
 		protected Collection<IModelLeaf<IDescriptor>> onSearch(IModelFilter<IDescriptor, IModelLeaf<IDescriptor>> filter) throws ParseException {
 			Collection<IModelLeaf<IDescriptor>> results = new ArrayList<IModelLeaf<IDescriptor>>();
-			//results.addAll( cmf.search( filter )); VERY SLOW
+			results.addAll( cmf.search( filter )); //VERY SLOW
 			results.addAll( ffmf.search( filter ));
 			results.addAll( ieff.search( filter ));
 			Dispatcher dispatcher = Dispatcher.getInstance();

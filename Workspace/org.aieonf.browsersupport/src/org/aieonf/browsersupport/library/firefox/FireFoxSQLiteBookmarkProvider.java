@@ -124,7 +124,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	}
 
 	/**
-	 * Get the resources (places and favicons)
+	 * Get the places
 	 * @param file
 	 * @return
 	 * @throws ConceptException
@@ -204,7 +204,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 	}
 
 	/**
-	 * Get the 
+	 * Get the bookamrks, and add the resources that were found earlier, like fav-icons
 	 * @param file
 	 * @return
 	 * @throws ConceptException
@@ -219,16 +219,14 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			ResultSet rs = statement.executeQuery( query_bookmarks );
-			BookmarkAieon concept = null;
-			CategoryAieon category;
 			while(rs.next())
 			{
 				try {
-					concept = new BookmarkAieon();
+					BookmarkAieon concept = new BookmarkAieon();
 					concept.fill(rs);
 					super.fill(concept);
 					if( CategoryAieon.isCategory( concept )){
-						category = new CategoryAieon( concept );
+						CategoryAieon category = new CategoryAieon( concept );
 						category.setProvider( super.getManifest().getIdentifier() );
 						IModelLeaf<IDescriptor> leaf = new ModelLeaf<IDescriptor>( category ); 
 						leaf.setReadOnly(true);
@@ -240,8 +238,8 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 					}else{
 						IModelLeaf<IDescriptor> child = new ModelLeaf<IDescriptor>(concept);
 						child.setReadOnly(true);
-						//if( filter.acceptChild(child))
-						results.add( child );
+						if( filter.acceptChild(child))
+							results.add( child );
 					}
 				}
 				catch (ConceptException e) {
@@ -249,25 +247,22 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 				}
 			}
 
-			BookmarkAieon aieon;
-			PlacesAieon placesAieon;
-			FireFoxReference faviconAieon;
 			for( IModelLeaf<IDescriptor> result: results ){
 				result.setReadOnly(true);
-				aieon = ( BookmarkAieon )result.getData();
+				BookmarkAieon aieon = ( BookmarkAieon )result.getData();
 
 				//skip categories
 				String fk = aieon.getFK();
 				if( Descriptor.assertNull(fk))
 					continue;
 
-				placesAieon = places.get( Integer.parseInt( fk ));
+				PlacesAieon placesAieon = places.get( Integer.parseInt( fk ));
 
 				String uri = placesAieon.getSource();
 				if( uri.startsWith("place:"))
 					continue;
 				aieon.setSource(uri );
-				faviconAieon = resources.get( placesAieon.getFavIconID() );
+				FireFoxReference faviconAieon = resources.get( placesAieon.getFavIconID() );
 				if(( faviconAieon != null ) && ! Descriptor.assertNull( faviconAieon.getSource()))
 					aieon.fill("ICON", faviconAieon.getSource() );
 				IModelNode<IDescriptor> cat = categories.get( Integer.valueOf( aieon.getParentID()));
@@ -469,59 +464,62 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 		private static final long serialVersionUID = 3919937519277313629L;
 
 		public enum PlacesAttribute{
-			id,
-			url,
-			title,
-			guid,
-			rev_host,
-			visit_count,
-			hidden,
-			typed,
-			favicon_id,
-			frecency,
-			last_visit_date
+			ID,
+			URL,
+			TITLE,
+			GUID,
+			REV_HOST,
+			VISIT_COUNT,
+			HIDDEN,
+			TYPED,
+			FAVICON_ID,
+			FRECENCY,
+			LAST_VISIT_DATE;
+
+			@Override
+			public String toString() {
+				return this.name().toLowerCase();
+			}
 		}
 
 		public void fill( ResultSet rs ) throws ConceptException{
 			try {
-				setValue( IDescriptor.Attributes.ID, rs.getString( PlacesAttribute.guid.name() ));
-				setVersion( 1 );
-				setValue( IDescriptor.Attributes.UPDATE_DATE, rs.getString( PlacesAttribute.last_visit_date.name() ));
-
-				String str = rs.getString( PlacesAttribute.id.name() );
-				set( BookmarkAttribute.primkey, str );
-				str = rs.getString( PlacesAttribute.url.name() );
-				if( !Descriptor.assertNull(str))
-					set( IConcept.Attributes.SOURCE.name(), str );
-				str = rs.getString( PlacesAttribute.title.name() );
-				if( !Descriptor.assertNull(str)){
-					String name = Descriptor.createValidName( str );
-					this.setName( name );
-					if( name.length() < str.length() )
-						this.setDescription( str );
+				for( PlacesAttribute pa: PlacesAttribute.values()) {
+					int index = rs.findColumn(pa.toString());
+					String value;
+					switch( pa ) {
+					case GUID:
+						value = rs.getString( index );
+						setValue( IDescriptor.Attributes.ID, value );
+						setVersion( 1 );
+						setValue( IDescriptor.Attributes.UPDATE_DATE, value );
+						break;
+					case ID:
+						value = rs.getString( index );
+						set( BookmarkAttribute.primkey, value );
+						break;
+					case URL:
+						value = rs.getString( index );
+						if( !Descriptor.assertNull(value))
+							set( IConcept.Attributes.SOURCE.name(), value );
+						break;
+					case TITLE:
+						value = rs.getString( index );
+						if( !Descriptor.assertNull(value)){
+							String name = Descriptor.createValidName( value );
+							this.setName( name );
+							if( name.length() < value.length() )
+								this.setDescription( value );
+						}
+						break;
+					default:
+						value = rs.getString( index );
+						if( !Descriptor.assertNull(value))
+							set( pa, value );
+						break;
+						
+					}
 				}
-				str = rs.getString( PlacesAttribute.rev_host.name() );
-				if( !Descriptor.assertNull(str))
-					set( PlacesAttribute.rev_host, str );
-				str = rs.getString( PlacesAttribute.visit_count.name() );
-				if( !Descriptor.assertNull(str))
-					set( PlacesAttribute.visit_count, str );
-				str = rs.getString( PlacesAttribute.rev_host.name() );
-				if( !Descriptor.assertNull(str))
-					set( PlacesAttribute.rev_host, str );
-				str = rs.getString( PlacesAttribute.hidden.name() );
-				if( !Descriptor.assertNull(str))
-					set( IConcept.Attributes.HIDDEN.name(), str );
-				str = rs.getString( PlacesAttribute.typed.name() );
-				if( !Descriptor.assertNull(str))
-					set( PlacesAttribute.typed, str );
-				str = rs.getString( PlacesAttribute.favicon_id.name() );
-				if( !Descriptor.assertNull(str))
-					set( PlacesAttribute.favicon_id, str );
-				str = rs.getString( PlacesAttribute.frecency.name() );
-				if( !Descriptor.assertNull(str))
-					set( PlacesAttribute.frecency, str );
-
 			}
 			catch (SQLException e) {
 				throw new ConceptException( e );
@@ -531,14 +529,14 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 		@Override
 		public void fill(String type, String resource)
 		{
-			super.set( IDataResource.Attribute.TYPE, type);
+			super.set( IDataResource.Attribute.TYPE.name(), type);
 			super.setSource( resource);
 		}
 
 		@Override
 		public String getType()
 		{
-			return super.get( IDataResource.Attribute.TYPE );
+			return super.get( IDataResource.Attribute.TYPE.name() );
 		}
 
 		@Override
@@ -549,7 +547,7 @@ class FireFoxSQLiteBookmarkProvider extends AbstractModelProvider<IDomainAieon, 
 
 		public int getFavIconID()
 		{
-			String str = super.get( PlacesAttribute.favicon_id );
+			String str = super.get( PlacesAttribute.FAVICON_ID );
 			if( !Descriptor.isEmpty( str ))
 				return Integer.parseInt( str );
 			return -1;

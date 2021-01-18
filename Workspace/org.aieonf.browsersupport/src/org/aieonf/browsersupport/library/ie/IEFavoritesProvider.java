@@ -35,6 +35,8 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 {
 	public static final String S_IDENTIFER = "InternetExplorerFavourites";
 
+	public static final String S_INTERNET_EXPLORER = "Internet Explorer: ";
+
 	private IFilePersistence<IModelLeaf<IDescriptor>> persistence;
 	
 	private File root;
@@ -105,8 +107,9 @@ public class IEFavoritesProvider extends AbstractModelProvider<IDomainAieon, IDe
 		fileEon.set( IDescriptor.Attributes.UPDATE_DATE.name(), calendar.getTime().toString() );
 		if( model.getFile().isDirectory() ){
 			fileEon.set( IDescriptor.Attributes.NAME.name(), CategoryAieon.Attributes.CATEGORY.name() );
-			fileEon.set( CategoryAieon.Attributes.CATEGORY.name(), fileEon.getName() );
+			fileEon.set( CategoryAieon.Attributes.CATEGORY.name(), S_INTERNET_EXPLORER + fileEon.getName() );
 		}else{
+			fileEon.set(IConcept.Attributes.IDENTIFIER.name(), fileEon.getName());
 			fileEon.set( IDescriptor.Attributes.NAME.name(), URLAieon.Attributes.URL.toString() );
 		}
 	}

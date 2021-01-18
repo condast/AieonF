@@ -15,6 +15,7 @@ public abstract class AbstractUIThreadController<D extends Object> implements Ru
 	private Display display;
 	
 	private boolean async;
+	private boolean busy;
 	private boolean disposed;
 	
 	private D data;
@@ -32,6 +33,7 @@ public abstract class AbstractUIThreadController<D extends Object> implements Ru
 		control.addDisposeListener(e->onDispose(e) );
 		this.disposed = false;
 		this.async = async;
+		this.busy = false;
 	}
 
 	protected D getData() {
@@ -48,14 +50,18 @@ public abstract class AbstractUIThreadController<D extends Object> implements Ru
 	protected abstract void onRun();
 	
 	protected void runThread() {
-		if( disposed )
+		if( disposed || busy )
 			return;
 		onRun();
+		this.busy = false;
 	}
 	
 	public void run() {
-		if( disposed || this.display.isDisposed())
+		if( disposed || this.display.isDisposed() || busy ) {
+			busy = false;
 			return;
+		}
+		//this.busy = true;
 		if( async )
 			this.display.asyncExec(()->runThread());
 		else

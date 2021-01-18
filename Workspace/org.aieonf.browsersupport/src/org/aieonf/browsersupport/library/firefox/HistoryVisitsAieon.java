@@ -64,20 +64,20 @@ public class HistoryVisitsAieon extends Concept implements IDataResource
 	@Override
 	public void fill(String type, String resource)
 	{
-		super.set( IDataResource.Attribute.TYPE, type);
-		super.set( IDataResource.Attribute.RESOURCE, resource);
+		super.set( IDataResource.Attribute.TYPE.name(), type);
+		super.set( IDataResource.Attribute.RESOURCE.name(), resource);
 	}
 
 	@Override
 	public String getType()
 	{
-		return super.get( IDataResource.Attribute.TYPE );
+		return super.get( IDataResource.Attribute.TYPE.name() );
 	}
 
 	@Override
 	public String getResource()
 	{
-		return super.get( IDataResource.Attribute.RESOURCE );
+		return super.get( IDataResource.Attribute.RESOURCE.name() );
 	}
 	
 	public int getPlacesId(){

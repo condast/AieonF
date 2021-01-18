@@ -1,6 +1,5 @@
 package org.aieonf.template.provider;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -184,16 +183,10 @@ public abstract class AbstractModelProvider<K extends IDescriptor, D extends IDe
 	 * @throws ConceptException
 	 */
 	protected void fill( IConcept concept ) throws ConceptException{
-		try {
-			IDFactory( concept );
-			concept.setProvider( manifest.getIdentifier() );
-			concept.setProviderName( manifest.getProviderName() );
-			concept.set( IConcept.Attributes.SOURCE.name(), manifest.getIdentifier() );
-			signer.sign( concept );
-		}
-		catch (IOException e) {
-			throw new ConceptException( e );
-		}
+		concept.setProvider( manifest.getIdentifier() );
+		concept.setProviderName( manifest.getProviderName() );
+		concept.set( IConcept.Attributes.SOURCE.name(), manifest.getIdentifier() );
+		//IDFactory( concept );
 	}
 
 	/**

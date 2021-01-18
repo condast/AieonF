@@ -25,6 +25,7 @@ import org.aieonf.concept.core.ConceptException;
 import org.aieonf.concept.core.Descriptor;
 import org.aieonf.concept.domain.IDomainAieon;
 import org.aieonf.concept.core.Concept;
+import org.aieonf.concept.core.ConceptBase;
 import org.aieonf.concept.library.CategoryAieon;
 import org.aieonf.concept.library.ManifestAieon;
 import org.aieonf.concept.library.URLAieon;
@@ -38,12 +39,11 @@ import org.aieonf.template.provider.AbstractModelProvider;
 
 class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDescriptor, IModelLeaf<IDescriptor>>
 {
-	private static final String S_CHROMIUM = "Chromiun";
+	private static final String S_CHROMIUM = "Chrome";
 	private static final String S_ROOTS = "roots";
 
 
-	ChromiumBookmarkProvider( IDescriptor context )
-	{
+	ChromiumBookmarkProvider( IDescriptor context ){
 		super( S_CHROMIUM, context );
 	}
 	
@@ -97,7 +97,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 		ChromiumAieon aieon = new ChromiumAieon( ctype );
 		aieon.fill(node );
 		fill(aieon);
-		IDFactory( aieon );
+		//IDFactory( aieon );
 
 		IModelNode<IDescriptor> parent = leaf;
 		switch( ctype ){
@@ -112,7 +112,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 		case URL:
 			model = new ModelLeaf<IDescriptor>( aieon );
 			model.setReadOnly(true);
-			if(( parent != null ) && ( filter.acceptChild(model )))
+			if(( parent != null )/* && ( filter.acceptChild(model ))*/)
 				parent.addChild( model );
 			break;
 		default:
@@ -203,7 +203,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			BodyFactory.sign( super.getManifest(), concept );
 			long id = IDFactory( concept, super.getModels() );
 			id = ( id<0 )? id: id + id_def;
-			concept.set( IDescriptor.Attributes.ID, String.valueOf( id ));
+			concept.set( IDescriptor.Attributes.ID.name(), String.valueOf( id ));
 		}
 		catch( Exception ex ){
 			throw new ConceptException( ex );
@@ -252,6 +252,7 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			CHILDREN,
 			TYPE,
 			NAME,
+			GUID,
 			ID,
 			URL,
 			DATE_ADDED,
@@ -270,25 +271,30 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 				return false;
 			}
 			
-			public static Enum<?> convert( Attributes attr ){
-				Enum<?> convert = null;
+			public static String convert( Attributes attr ){
+				String convert = null;
 				switch( attr ){
+				case NAME:
+					break;
+				case ID:
+					convert = attr.name();
+					break;
 				case DATE_ADDED:
-					convert = IDescriptor.Attributes.CREATE_DATE;
+					convert = IDescriptor.Attributes.CREATE_DATE.name();
 					break;
 				case DATE_MODIFIED:
-					convert = IDescriptor.Attributes.UPDATE_DATE;
+					convert = IDescriptor.Attributes.UPDATE_DATE.name();
 					break;
 				case URL:
-					convert = IConcept.Attributes.SOURCE;
+					convert = IConcept.Attributes.SOURCE.name();
 					break;
 				case TYPE:
-					convert = ILoaderAieon.Attributes.TYPE;
+					convert = ConceptBase.getAttributeKey( ILoaderAieon.Attributes.TYPE );
 					break;
 				case CHILDREN:
 					break;
 				default:
-					convert = IDescriptor.Attributes.valueOf( attr.name());
+					convert = ConceptBase.getAttributeKey( attr );
 					break;
 				}
 				return convert;
@@ -328,16 +334,33 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 				if( !Attributes.isAttribute( entry.getKey() ))
 					continue;
 				Attributes attr = Attributes.valueOf( entry.getKey().toUpperCase());
-				if( Attributes.CHILDREN.equals( attr ))
+				String value =  entry.getValue().textValue();
+				if( Descriptor.assertNull( value ))
 					continue;
-				
-				if( !Descriptor.assertNull( entry.getValue().textValue() ))
-					set( Attributes.convert(attr), entry.getValue().textValue() );
+				switch( attr) {
+				case ID:
+				case CHILDREN:
+					break;
+				case NAME:
+					setIdentifier( value );
+					setDescription(value);
+					break;
+				case URL:
+					setValue( IConcept.Attributes.SOURCE, value );
+					break;
+				case GUID:
+					long id = (long)S_CHROMIUM.hashCode();
+					id <<=32;
+					id += (long)value.hashCode();
+					setID( id );
+				default:
+					set( Attributes.convert(attr), value );
+					break;
+				}
 			}
 			String type = super.get( Attributes.TYPE );
-			super.setDescription( super.getName());
 			if( type.equals( Types.FOLDER.toString() )){
-				super.set( CategoryAieon.Attributes.CATEGORY.name(), super.getName());
+				super.set( CategoryAieon.Attributes.CATEGORY.name(), S_CHROMIUM + ": " + getIdentifier());
 				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 			}else{
 				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.toString() );
@@ -357,11 +380,11 @@ class ChromiumBookmarkProvider extends AbstractModelProvider<IDomainAieon, IDesc
 			String type = super.get( Attributes.TYPE );
 			if( type.equals( Types.FOLDER.name() )){
 				super.setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
-				super.set( CategoryAieon.Attributes.CATEGORY.name(), super.get( Attributes.NAME.name() ));
+				super.set( CategoryAieon.Attributes.CATEGORY.name(), S_CHROMIUM + ": " + getIdentifier() );
 			}else{
 				String name = super.get( Attributes.NAME );
 				super.setValue( IDescriptor.Attributes.NAME, URLAieon.Attributes.URL.name() );
-				super.set( IConcept.Attributes.SOURCE.name(), URLAieon.Attributes.URL.name() );
+				super.setValue( IConcept.Attributes.SOURCE, URLAieon.Attributes.URL.name() );
 				super.setDescription( name );
 			}
 			super.remove( IDescriptor.Attributes.NAME.name() );

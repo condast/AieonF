@@ -282,12 +282,9 @@ public class BodyFactory<T extends Object>
 	 * @throws IOException
 	 */
 	public static int hashCode( ILoaderAieon loader, IDescriptor descriptor )
-			throws IOException
-	{
-		
+			throws IOException{
 		try{
 			IEncryption encryption = new AieonFEncryption( loader );
-			//if( encryption.get)
 			return hashCode( encryption, descriptor );
 		}
 		catch( Exception ex ){
@@ -417,12 +414,15 @@ public class BodyFactory<T extends Object>
 	 * @throws ConceptException, IOException
 	 */
 	public static void sign( ILoaderAieon loader, IDescribable descriptor ) 
-			throws ConceptException, IOException
-	{
-		int hashCode = BodyFactory.hashCode( loader, loader );
-		long signature = ( long )hashCode << 32;
-		signature += BodyFactory.hashCode( loader, descriptor.getDescriptor() );
-		descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE.name(), String.valueOf( signature ));
+			throws ConceptException, IOException{
+		try {
+			int hashCode = BodyFactory.hashCode( loader, loader );
+			long signature = ( long )hashCode << 32;
+			signature += BodyFactory.hashCode( loader, descriptor.getDescriptor() );
+			descriptor.getDescriptor().set( IDescriptor.Attributes.SIGNATURE.name(), String.valueOf( signature ));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

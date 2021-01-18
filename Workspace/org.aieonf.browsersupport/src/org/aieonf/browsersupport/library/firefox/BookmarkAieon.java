@@ -13,9 +13,10 @@ import org.aieonf.concept.datauri.IDataResource;
 import org.aieonf.concept.datauri.IDataURI;
 import org.aieonf.concept.library.CategoryAieon;
 
-public class BookmarkAieon extends DataURI implements IDataResource
-{
+public class BookmarkAieon extends DataURI implements IDataResource{
 	private static final long serialVersionUID = 3919937519277313629L;
+
+	private static final String S_FIREFOX = "Firefox: ";
 
 	public enum BookmarkAttribute{
 		fk,
@@ -49,7 +50,7 @@ public class BookmarkAieon extends DataURI implements IDataResource
 			setID( id );
 
 			int type = rs.getInt( BookmarkAttribute.type.name() );
-			set( IDataResource.Attribute.TYPE, rs.getString( BookmarkAttribute.type.name() ));
+			set( IDataResource.Attribute.TYPE.name(), rs.getString( BookmarkAttribute.type.name() ));
 
 			int parent = rs.getInt( BookmarkAttribute.parent.name() );
 			set( BookmarkAttribute.primkey, rs.getString( IDescriptor.Attributes.ID.toString().toLowerCase() ));
@@ -69,14 +70,14 @@ public class BookmarkAieon extends DataURI implements IDataResource
 						if( name.length() < title.length() )
 							this.setDescription( title );
 					}else{
-						set( CategoryAieon.Attributes.CATEGORY.name(), title );
+						set( CategoryAieon.Attributes.CATEGORY.name(), S_FIREFOX + title );
 						setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );							
 					}
 				}
 				break;
 			case 2:
 				if( !Descriptor.assertNull( title )) {
-					set( CategoryAieon.Attributes.CATEGORY.name(), title );
+					set( CategoryAieon.Attributes.CATEGORY.name(), S_FIREFOX + title );
 					setValue( IDescriptor.Attributes.NAME, CategoryAieon.Attributes.CATEGORY.name() );
 				}
 				break;
@@ -87,17 +88,17 @@ public class BookmarkAieon extends DataURI implements IDataResource
 		catch (SQLException e) {
 			throw new ConceptException( e );
 		}
-		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
-		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
+		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE.name(), S_DEFAULT_MIMETYPE );
 	}
 
 	@Override
 	public void fill(String type, String resource)
 	{
-		super.set( IDataResource.Attribute.TYPE, type);
-		super.set( IDataResource.Attribute.RESOURCE, resource);
-		super.set(IDataResource.Attribute.IS_DATA_URI, Boolean.TRUE.toString());
-		super.set(IDataURI.Attribute.MIME_TYPE, S_DEFAULT_MIMETYPE );
+		super.set( IDataResource.Attribute.TYPE.name(), type);
+		super.set( IDataResource.Attribute.RESOURCE.name(), resource);
+		super.set(IDataResource.Attribute.IS_DATA_URI.name(), Boolean.TRUE.toString());
+		super.set(IDataURI.Attribute.MIME_TYPE.name(), S_DEFAULT_MIMETYPE );
 	}
 
 
@@ -109,13 +110,13 @@ public class BookmarkAieon extends DataURI implements IDataResource
 	@Override
 	public String getType()
 	{
-		return super.get( IDataResource.Attribute.TYPE );
+		return super.get( IDataResource.Attribute.TYPE.name() );
 	}
 
 	@Override
 	public String getResource()
 	{
-		return super.get( IDataResource.Attribute.RESOURCE );
+		return super.get( IDataResource.Attribute.RESOURCE.name() );
 	}
 
 	public String getPrimKey(){

@@ -90,7 +90,7 @@ public class URLAieon extends DataURI implements IImplicitAieon<IDescriptor>
 	 */
 	public URLAieon( String name, String uri ) 
 	{
-		super( name );
+		super( Attributes.URL.name() );
 		set( IImplicit.Attributes.IMPLICIT.name(), IConcept.Attributes.SOURCE.name());
 		super.setSource( uri );
 		super.setIdentifier(name);
